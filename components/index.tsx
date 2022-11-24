@@ -16,7 +16,6 @@ export * from "./GlobalMaxWidthWrapper";
 export * from "./FormFieldErrorMessage";
 export * from "./Dialog";
 export * from "./Elements";
-export * from "./AutoCompleteHospitalSearch";
 export * from "./Checkbox";
 export * from "./RadioGroup";
 
