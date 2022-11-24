@@ -121,9 +121,10 @@ export interface GenerateTokenRequestPayload {
 }
 
 export interface GenerateTokenResponse {
-  token: string;
-  counselorUserId: number;
-  userSessionId: number;
+  token?: string;
+  counselorUserId?: number;
+  userSessionId?: number;
+  hospitalUserId?: number;
 }
 
 export interface VerifyTokenRequestPayload {
