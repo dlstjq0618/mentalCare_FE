@@ -21,6 +21,7 @@ const moduleExports = {
 };
 
 const sentryWebpackPluginOptions = {
+  dryRun: process.env.NODE_ENV !== "production",
   // additional config options for the sentry webpack plugin. keep in mind that
   // the following options are set automatically, and overriding them is not
   // recommended:
@@ -34,7 +35,3 @@ const sentryWebpackPluginOptions = {
 module.exports = withBundleAnalyzer(
   withSentryConfig(moduleExports, sentryWebpackPluginOptions)
 );
-
-module.exports = withSentryConfig(moduleExports, {
-  dryRun: process.env.VERCEL_ENV !== "production",
-});

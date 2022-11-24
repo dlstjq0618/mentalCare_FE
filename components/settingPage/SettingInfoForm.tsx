@@ -434,9 +434,7 @@ function SettingInfoForm(props: IProps) {
                     </Label>
                     <Input
                         {...register("consultation_fee_night", {
-                            onChange: (e) => {
-                                onlyNumberText(e.target.value)
-                            }
+                            valueAsNumber: true,
                         })}
                         autoComplete='off'
                         id="PmPrice"
