@@ -29,13 +29,13 @@ export const doctorApi = createApi({
   }),
   tagTypes: ["DoctorInfo", "OpeningTimes"],
   endpoints: (builder) => ({
-    getDoctorInfo: builder.query<DoctorInfoResponse, void>({
-      query: () => URLS.DOCTOR.INFO,
-      transformResponse: (response) => {
-        return camelcaseKeys(response as DoctorInfoResponse, { deep: true });
-      },
-      providesTags: ["DoctorInfo"],
-    }),
+    // getDoctorInfo: builder.query<DoctorInfoResponse, void>({
+    //   query: () => URLS.DOCTOR.INFO,
+    //   transformResponse: (response: DoctorInfoResponse) => {
+    //     return camelcaseKeys(response as DoctorInfoResponse, { deep: true });
+    //   },
+    //   providesTags: ["DoctorInfo"],
+    // }),
     updateDoctorInfo: builder.mutation<
       DoctorInfoUpdateResponse,
       Partial<DoctorInfoUpdatePayload>
@@ -124,7 +124,7 @@ export const doctorApi = createApi({
 });
 
 export const {
-  useGetDoctorInfoQuery,
+  // useGetDoctorInfoQuery,
   useUpdateDoctorInfoMutation,
   useGetSpecialListQuery,
   useGetReimbursementListQuery,
@@ -134,5 +134,5 @@ export const {
   useCreateOpeningTimesMutation,
 } = doctorApi;
 
-export const useGetDoctorInfoQueryState =
-  doctorApi.endpoints.getDoctorInfo.useQueryState;
+// export const useGetDoctorInfoQueryState =
+//   doctorApi.endpoints.getDoctorInfo.useQueryState;

@@ -13,7 +13,6 @@ import { Divider } from "antd";
 import { styled } from "~/stitches.config";
 import { signOut } from "~/utils/nextAuth.utils";
 import { api } from "~/woozooapi"
-import { useGetDoctorInfoQuery } from "~/services/doctor";
 import Badge from '@mui/material/Badge';
 import { useDispatch, useSelector } from "react-redux";
 import { selectNoticeCount, setNoticeCount } from "~/store/settingsSlice";

@@ -30,6 +30,9 @@ export const URLS = {
     CERTIFICATE_PHONE_NUMBER: "/certification/danal",
   },
   DOCTOR: {
+    SIGN_UP: "/api/user/doctor",
+    SIGN_UP_V2: "/api/user/v2/doctor/",
+    INFO: `/api/user/doctor/info?lang_type=ko`,
     TREATMENT_SUBJECT_LIST: "/api/service/treatment/subject",
     REIMBURSEMENT_ITEMS_LIST: "/api/service/treatment/item",
     NO_REIMBURSEMENT_ITEMS_LIST:

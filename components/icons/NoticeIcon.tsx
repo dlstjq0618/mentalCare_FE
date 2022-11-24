@@ -1,4 +1,5 @@
 export const NoticeIcon = () => (
+
   <svg
     width="16"
     height="16"
