@@ -1,0 +1,40 @@
+export const SettingIcon = () => (
+  <svg
+    width="30"
+    height="30"
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M7 7v16M15 7v16M23 7v16"
+      stroke="#fff"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <circle
+      cx="23"
+      cy="11"
+      r="2"
+      fill="#272729"
+      stroke="#fff"
+      strokeWidth="1.5"
+    />
+    <circle
+      cx="15"
+      cy="19"
+      r="2"
+      fill="#272729"
+      stroke="#fff"
+      strokeWidth="1.5"
+    />
+    <circle
+      cx="7"
+      cy="14"
+      r="2"
+      fill="#272729"
+      stroke="#fff"
+      strokeWidth="1.5"
+    />
+  </svg>
+);

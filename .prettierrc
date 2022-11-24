@@ -1,0 +1,19 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": false,
+  "printWidth": 80,
+  "trailingComma": "es5",
+  "semi": true,
+  "jsxSingleQuote": false,
+  "bracketSameLine": false,
+  "importOrder": [
+    "^@(.*)/(.*)$",
+    "^(stitches)(.*)$",
+    "^(interfaces)(.*)$",
+    "^(components)(.*)$",
+    "^antd/dist/antd.css",
+    "^(..|~)/styles/(.*).css",
+    "^(../|./)(.*)$"
+  ]
+}
