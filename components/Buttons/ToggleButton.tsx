@@ -54,16 +54,16 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   }, [])
 
 
-  const handleToggleState = (data: any) => {
-    api.doctor.activate(doctorId, {
-      isActive: data
-    }).then(() => api.doctor.info().then((res) => { dispatch(setToggleState(res.hospitalUser.isPublic)) }))
-  }
+  // const handleToggleState = (data: any) => {
+  //   api.doctor.activate(doctorId, {
+  //     isActive: data
+  //   }).then(() => api.doctor.info().then((res) => { dispatch(setToggleState(res.hospitalUser.isPublic)) }))
+  // }
 
   return (
     <>
       <Toggle
-        onClick={() => { setActivate(!activate), handleToggleState(!activate) }}
+        // onClick={() => { setActivate(!activate), handleToggleState(!activate) }}
         checkedChildren={"진료가능"}
         unCheckedChildren={"진료불가"}
         checked={activate}
