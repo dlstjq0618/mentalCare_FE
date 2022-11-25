@@ -47,7 +47,6 @@
     - 국외 협업자였던 Annie가 사용한 부분들에 쓰였습니다.
     - 진료실 레이아웃, 진료 리스트 페이지네이션 등에 쓰였는데 이후 마이그레이션이 필요할 것 같습니다.
   - [downshift](https://github.com/downshift-js/downshift)
-    - `AutocompleteHospitalSearch` 등 자동완성이 적용된 부분들에 쓰였습니다.
   - [react-select](https://react-select.com)
   - [h6s/calendar](https://h6s.dev/docs/calendar/get-started)
     - headless 방식의 캘린더 컴포넌트입니다.

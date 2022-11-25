@@ -1,6 +1,5 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import * as Sentry from "@sentry/nextjs";
 import {
   getTokenExpireTime,
   NextAuthToken,
@@ -122,9 +121,6 @@ export default NextAuth({
   debug: process.env.NODE_ENV !== "production",
   secret: process.env.NEXTAUTH_SECRET, // For next-auth's internal jwt. Not related any of our codebase.
   logger: {
-    error(code, metadata) {
-      Sentry.captureException({ code, metadata });
-    },
     warn: () => {
       // no-op
     },
