@@ -12,7 +12,6 @@ import {
     Section,
     BankAccountInfoForm,
     RegisterForm,
-    RoundedButton,
     Input
 } from "~/components";
 import LayoutComponent from "~/components/Layout";
