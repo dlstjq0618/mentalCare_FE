@@ -1,7 +1,7 @@
 import { DateStringKebab } from "~/interfaces";
 
 export const HOST =
-  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+  process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
     ? "https://server.woozoo.clinic" // TODO: production api base url
     : // : "https://devserver.woozoo.clinic";
       "https://dev.server.woozoo.clinic/";
