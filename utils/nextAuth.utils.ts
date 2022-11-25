@@ -5,11 +5,9 @@ import {
   signOut as nextAuthSignOut,
   SignOutParams,
 } from "next-auth/react";
-import { useDispatch } from "react-redux";
 import { diagnosisApi } from "~/services/diagnosis";
 import { doctorApi } from "~/services/doctor";
 import { store } from "~/store";
-import { setSessionId } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 
 export const resetDoctorInfoApiState = () => {
@@ -61,7 +59,7 @@ export const signIn = async ({
     console.error(e);
   }
 
-  return nextAuthSignIn<"credentials">("rocket-doctor", {
+  return nextAuthSignIn<"credentials">("mental-care", {
     uid,
     password,
     redirect,

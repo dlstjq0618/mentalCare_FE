@@ -10,8 +10,8 @@ import { api } from "~/woozooapi";
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      id: "rocket-doctor",
-      name: "rocket-doctor",
+      id: "mental-care",
+      name: "mental-care",
       type: "credentials",
       credentials: {
         uid: {
@@ -35,6 +35,7 @@ export default NextAuth({
        *  - User: if api.auth.generateToken() is successful. Will be passed to `signIn` with `user` property.
        *  - null: if api.auth.generateToken() is failed. next-auth will handle it.
        */
+
       async authorize(credentials) {
         if (!credentials) return null;
 

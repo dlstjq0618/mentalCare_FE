@@ -87,7 +87,7 @@ const Header = ({ notificationsNo }: Props) => {
           정산
         </LinkComponent>
         <Divider type="vertical" />
-        <LinkComponent as="button" colors="gray" onClick={logOut}>
+        <LinkComponent as="button" colors="gray" onClick={() => router.push("/auth/login")}>
           로그아웃
         </LinkComponent>
       </NavBar>
