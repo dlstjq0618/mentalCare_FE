@@ -178,8 +178,6 @@ function sortDate2(chatData: any) {
     return sorted_list;
 }
 
-console.log("sort", sortDate2(chatData.map((res) => { return res.time })))
-
 function ChattingPage() {
     const [state, setState] = useState("finish");
     return (
