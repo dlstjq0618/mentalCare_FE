@@ -20,7 +20,6 @@ import { selectDiagnosisEditState } from "~/store/settingsSlice";
 import SettingInfoForm from "~/components/settingPage/SettingInfoForm";
 import OpeningTimeForm from "~/components/settingPage/OpeningTimeForm";
 
-
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
     const { register, handleSubmit } = useForm()
