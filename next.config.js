@@ -21,6 +21,7 @@ const moduleExports = {
 };
 
 const sentryWebpackPluginOptions = {
+  autoToken: "ea50b788892d40c183a299fbe78c76a77f8339a922fe49c6ae43a526b12299c4",
   // additional config options for the sentry webpack plugin. keep in mind that
   // the following options are set automatically, and overriding them is not
   // recommended:
