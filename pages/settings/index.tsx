@@ -83,7 +83,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     };
     const onError = (e: any) => { // v1 error message
         console.error("e", e);
-        console.log("e", e)
         // if (e.phone) {
         //     return alert("휴대폰 번호를 확인해주세요.")
         // }
