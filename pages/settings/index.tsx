@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { rem } from 'polished';
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
-import { FC, ReactNode, ReducerState, useEffect, useState, useReducer, Reducer } from "react";
+import { FC, ReactNode, useEffect, useState, useReducer, Reducer } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useSelector } from "react-redux";
 import {
