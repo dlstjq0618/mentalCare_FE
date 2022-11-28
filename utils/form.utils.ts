@@ -67,6 +67,31 @@ export const registerFormSchema = yup
   })
   .concat(passwordSchema);
 
+export const registerFormSchema2 = yup
+  .object({
+    email: yup
+      .string()
+      .email(ERROR_MESSAGES.email)
+      .required(ERROR_MESSAGES.required),
+    username: yup.string().required(ERROR_MESSAGES.required),
+    mobile: yup
+      .string()
+      .phone("KR", "휴대폰을 인증해주세요.")
+      .required("휴대폰을 인증해주세요."),
+    termsChecked: yup
+      .string()
+      .oneOf(["true"], "약관에 동의해주세요.")
+      .default("true"),
+    accountHolder: yup.string().required("예금주명을 입력해주세요."),
+    accountHolderBirthdate: yup.string().required("생년월일을 입력해주세요."),
+    bankName: yup
+      .string()
+      .oneOf(Object.values(BANKS), "은행을 선택해주세요.")
+      .required("은행을 선택해주세요."),
+    accountNumber: yup.string().required("계좌번호를 입력해주세요."),
+  })
+  .concat(passwordSchema);
+
 export const loginFormSchema = yup.object().shape({
   email: yup
     .string()

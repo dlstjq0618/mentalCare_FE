@@ -50,6 +50,7 @@ export const BankAccountInfoForm = (props: IProps) => {
   const { register, control, setValue, formState } = useFormContext();
 
   return (
+
     <RegisterFormSection>
       {props.title ? <h2>계좌 정보</h2> : <Text>계좌 정보</Text>}
       <FormRowItemWrapper>

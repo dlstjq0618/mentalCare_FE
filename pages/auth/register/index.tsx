@@ -16,7 +16,7 @@ import {
   BankAccountInfoForm,
 } from "~/components";
 import { PageTitle } from "~/components/PageTitle";
-import { registerFormSchema } from "~/utils/form.utils";
+import { registerFormSchema2 } from "~/utils/form.utils";
 import { api } from "~/woozooapi";
 
 const isDev = process.env.NODE_ENV !== "production";
@@ -24,7 +24,7 @@ const isDev = process.env.NODE_ENV !== "production";
 export const RegisterPageLayout: FC = ({ children }) => {
   const formMethods = useForm({
     mode: "onChange",
-    resolver: yupResolver(registerFormSchema),
+    resolver: yupResolver(registerFormSchema2),
     defaultValues: {
       termsChecked: "false",
     },
@@ -56,7 +56,7 @@ export const RegisterPageLayout: FC = ({ children }) => {
   };
 
   const onError = (e: any) => {
-    console.log("onEorror");
+    console.log("onError", e);
     // if (e.phone) {
     //   return alert("휴대폰 번호를 확인해주세요.")
     // }
