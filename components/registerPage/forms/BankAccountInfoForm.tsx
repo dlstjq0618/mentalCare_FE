@@ -50,99 +50,97 @@ export const BankAccountInfoForm = (props: IProps) => {
   const { register, control, setValue, formState } = useFormContext();
 
   return (
-    <InfoGrid width={900}>
-      <RegisterFormSection>
-        {props.title ? <h2>계좌 정보</h2> : <Text>계좌 정보</Text>}
-        <FormRowItemWrapper>
-          <Label htmlFor="owner" required={false}>
-            예금주
-          </Label>
-          <Input
-            id="accountHolder"
-            type="text"
-            placeholder="예금주명을 입력해주세요"
-            usage="registerPage"
-            {...register("accountHolder")}
-          />
-          {formState.errors.accountHolder?.message && (
-            <FormFieldErrorMessage
-              css={{ gridArea: "message", marginTop: rem(6) }}
-            >
-              {formState.errors.accountHolder?.message}
-            </FormFieldErrorMessage>
-          )}
-        </FormRowItemWrapper>
-        <FormRowItemWrapper>
-          <Label htmlFor="accountHolderBirthdate" required={false}>
-            생년월일
-          </Label>
-          <Controller
-            name="accountHolderBirthdate"
-            control={control}
-            render={() => (
-              <DropdownDatePicker
-                onComplete={(date) => setValue("accountHolderBirthdate", date)}
-              />
-            )}
-          />
-          {formState.errors.accountHolderBirthdate?.message && (
-            <FormFieldErrorMessage
-              css={{ gridArea: "message", marginTop: rem(6) }}
-            >
-              {formState.errors.accountHolderBirthdate?.message}
-            </FormFieldErrorMessage>
-          )}
-        </FormRowItemWrapper>
-        <FormRowItemWrapper>
-          <Label htmlFor="bankName" required={false}>
-            은행
-          </Label>
-          <Controller
-            name="bankName"
-            control={control}
-            render={() => (
-              <Dropdown
-                id="bankName"
-                placeholder="은행을 선택해주세요"
-                options={Object.values(BANKS)?.map((bank) => ({
-                  label: bank,
-                  value: bank,
-                }))}
-                onChange={(bank) => setValue("bankName", bank?.value)}
-              />
-            )}
-          />
-          {formState.errors.bankName?.message && (
-            <FormFieldErrorMessage
-              css={{ gridArea: "message", marginTop: rem(6) }}
-            >
-              {formState.errors.bankName?.message}
-            </FormFieldErrorMessage>
-          )}
-        </FormRowItemWrapper>
-        <FormRowItemWrapper>
-          <Label htmlFor="accountNumber" required={false}>
-            계좌번호
-          </Label>
-          <Div css={{ display: "flex", gap: rem(10) }}>
-            <Input
-              id="accountNumber"
-              type="number"
-              usage="registerPage"
-              placeholder="계좌번호를 입력해주세요"
-              {...register("accountNumber")}
-              css={{ width: rem(240), flex: "auto" }}
+    <RegisterFormSection>
+      {props.title ? <h2>계좌 정보</h2> : <Text>계좌 정보</Text>}
+      <FormRowItemWrapper>
+        <Label htmlFor="owner" required={false}>
+          예금주
+        </Label>
+        <Input
+          id="accountHolder"
+          type="text"
+          placeholder="예금주명을 입력해주세요"
+          usage="registerPage"
+          {...register("accountHolder")}
+        />
+        {formState.errors.accountHolder?.message && (
+          <FormFieldErrorMessage
+            css={{ gridArea: "message", marginTop: rem(6) }}
+          >
+            {formState.errors.accountHolder?.message}
+          </FormFieldErrorMessage>
+        )}
+      </FormRowItemWrapper>
+      <FormRowItemWrapper>
+        <Label htmlFor="accountHolderBirthdate" required={false}>
+          생년월일
+        </Label>
+        <Controller
+          name="accountHolderBirthdate"
+          control={control}
+          render={() => (
+            <DropdownDatePicker
+              onComplete={(date) => setValue("accountHolderBirthdate", date)}
             />
-          </Div>
-          {formState.errors.accountNumber?.message && (
-            <FormFieldErrorMessage
-              css={{ gridArea: "message", marginTop: rem(6) }}
-            >
-              {formState.errors.accountNumber?.message}
-            </FormFieldErrorMessage>
           )}
-        </FormRowItemWrapper>
-      </RegisterFormSection>
-    </InfoGrid>
+        />
+        {formState.errors.accountHolderBirthdate?.message && (
+          <FormFieldErrorMessage
+            css={{ gridArea: "message", marginTop: rem(6) }}
+          >
+            {formState.errors.accountHolderBirthdate?.message}
+          </FormFieldErrorMessage>
+        )}
+      </FormRowItemWrapper>
+      <FormRowItemWrapper>
+        <Label htmlFor="bankName" required={false}>
+          은행
+        </Label>
+        <Controller
+          name="bankName"
+          control={control}
+          render={() => (
+            <Dropdown
+              id="bankName"
+              placeholder="은행을 선택해주세요"
+              options={Object.values(BANKS)?.map((bank) => ({
+                label: bank,
+                value: bank,
+              }))}
+              onChange={(bank) => setValue("bankName", bank?.value)}
+            />
+          )}
+        />
+        {formState.errors.bankName?.message && (
+          <FormFieldErrorMessage
+            css={{ gridArea: "message", marginTop: rem(6) }}
+          >
+            {formState.errors.bankName?.message}
+          </FormFieldErrorMessage>
+        )}
+      </FormRowItemWrapper>
+      <FormRowItemWrapper>
+        <Label htmlFor="accountNumber" required={false}>
+          계좌번호
+        </Label>
+        <Div css={{ display: "flex", gap: rem(10) }}>
+          <Input
+            id="accountNumber"
+            type="number"
+            usage="registerPage"
+            placeholder="계좌번호를 입력해주세요"
+            {...register("accountNumber")}
+            css={{ width: rem(240), flex: "auto" }}
+          />
+        </Div>
+        {formState.errors.accountNumber?.message && (
+          <FormFieldErrorMessage
+            css={{ gridArea: "message", marginTop: rem(6) }}
+          >
+            {formState.errors.accountNumber?.message}
+          </FormFieldErrorMessage>
+        )}
+      </FormRowItemWrapper>
+    </RegisterFormSection>
   );
 };
