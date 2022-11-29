@@ -13,7 +13,6 @@ const initialState: {
   hospitalData: Partial<Hospital>;
   hospitalDataForUpdate: Partial<Hospital>;
   workTime: string;
-  openingTime: any;
   breakTime: any;
   scheduleTime: "on" | "off";
   tabIndex: number;
@@ -28,6 +27,7 @@ const initialState: {
   noticeCount: boolean | undefined;
   noticeDescription: any;
   waitingData: boolean;
+  openingTimes: any;
 } = {
   global: "idle",
   doctor: "idle",
@@ -39,7 +39,6 @@ const initialState: {
   workState: "",
   workDay: [],
   workTime: "",
-  openingTime: {},
   breakTime: {},
   scheduleTime: "on",
   tabIndex: 0,
@@ -54,6 +53,7 @@ const initialState: {
   noticeCount: true,
   noticeDescription: [],
   waitingData: false,
+  openingTimes: [],
 };
 
 export const settingsSlice = createSlice({
@@ -133,12 +133,6 @@ export const settingsSlice = createSlice({
       action: PayloadAction<typeof initialState["workTime"]>
     ) {
       state.workTime = action.payload;
-    },
-    setTutorialHospitalOpeningArray(
-      state,
-      action: PayloadAction<typeof initialState["openingTime"]>
-    ) {
-      state.openingTime = action.payload;
     },
     setTutorialHospitalBreakArray(
       state,
@@ -224,6 +218,12 @@ export const settingsSlice = createSlice({
     ) {
       state.waitingData = action.payload;
     },
+    setCounselorOpeningTimes(
+      state,
+      action: PayloadAction<typeof initialState["openingTimes"]>
+    ) {
+      state.openingTimes = action.payload;
+    },
   },
 });
 
@@ -240,7 +240,6 @@ export const {
   setTutorialWorkWeekState,
   setTutorialWorkWeekDay,
   setTutorialHospitalWorkTimeData,
-  setTutorialHospitalOpeningArray,
   setTutorialHospitalBreakArray,
   setScheduleTimeState,
   setSettingTabIndex,
@@ -255,6 +254,7 @@ export const {
   setNoticeCount,
   setNoticeDescription,
   setWaitingData,
+  setCounselorOpeningTimes,
 } = settingsSlice.actions;
 
 export const selectGlobalEditState = (state: RootState) =>
@@ -277,8 +277,6 @@ export const selectTutorialWorkWeekDay = (state: RootState) =>
   state.settings.workDay;
 export const selectTutorialHospitalWorkTimeData = (state: RootState) =>
   state.settings.workTime;
-export const selectTutorialHospitalOpeningArray = (state: RootState) =>
-  state.settings.openingTime;
 export const selectTutorialHospitalBreakArray = (state: RootState) =>
   state.settings.breakTime;
 export const selectScheduleTimeState = (state: RootState) =>
@@ -307,4 +305,6 @@ export const selectNoticeDescription = (state: RootState) =>
   state.settings.noticeDescription;
 export const selectWaitingData = (state: RootState) =>
   state.settings.waitingData;
+export const selectCounselorOpeningTimes = (state: RootState) =>
+  state.settings.openingTimes;
 export default settingsSlice.reducer;

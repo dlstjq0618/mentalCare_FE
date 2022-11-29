@@ -19,12 +19,16 @@ import { PageTitle } from "~/components/PageTitle";
 import { selectDiagnosisEditState } from "~/store/settingsSlice";
 import SettingInfoForm from "~/components/settingPage/SettingInfoForm";
 import OpeningTimeForm from "~/components/settingPage/OpeningTimeForm";
+import { api } from "~/woozooapi";
+import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
     const { register, handleSubmit } = useForm()
     const methods = useForm();
     const state = useSelector(selectDiagnosisEditState);
+    const userId = useSelector(selectCounselorId);
+
     useSession({
         required: true,
         onUnauthenticated() {
@@ -44,40 +48,32 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         }
     }, [open])
 
+
     const onSubmit = (data: any) => { // vi signUp Api request
-        console.log("onsubmit", data);
-        // api.doctor
-        //   .signUp({
-        //     email: data.email,
-        //     username: data.name,
-        //     password: data.pw1,
-        //     mobile: data.phone,
-        //     hospitalId: data.hospital.id,
-        //     imageUrl: data.profilePic,
-        //     doctorLicenseUrl: data.doctorLicense,
-        //     specialistLicenseUrl: data.specialLicense,
-        //     specialist: data.special,
-        //     hospitalName: data.hospitalName,
-        //     hospitalPhone: data.hospitalTel,
-        //     postcode: data.hospital.zonecode,
-        //     address1: data.hospitalAddress1,
-        //     address2: data.hospitalAddress2,
-        //     state: data.hospital.sido,
-        //     city: data.hospital.sigungu,
-        //     lat: data.hospital.lat,
-        //     lng: data.hospital.lng,
-        //     hospitalImageUrls: data.hospitalPics,
-        //     accountHolder: data.accountHolder,
-        //     bankName: data.bankName,
-        //     accountNumber: data.accountNumber,
-        //     accountHolderBirthdate: data.accountHolderBirthdate
-        //   })
-        //   .then(() => {
-        //     router.push("/auth/register/complete");
-        //   })
-        //   .catch((e) => {
-        //     console.error(e);
-        //   });
+        console.log("data", data);
+        api.counselor
+            .update(userId, {
+                password: data.password,
+                mobile: data.mobile,
+                imageUrl: "", // 프로필 사진
+                certificate_image: data.certificate_image,
+                career: data.career,
+                qualification_level: data.qualification_level,
+                education: data.education,
+                other_history: data.other_history,
+                consultation_fee_day: data.consultation_fee_day,
+                consultation_fee_night: data.consultation_fee_night,
+                bank_name: data.bankName,
+                account_holder: data.accountHolder,
+                account_holder_birthdate: data.accountHolderBirthdate,
+                account_number: data.accountNumber,
+            })
+            .then(() => {
+                router.push("/auth/register/complete");
+            })
+            .catch((e: any) => {
+                console.error(e);
+            });
     };
     const onError = (e: any) => { // v1 error message
         console.error("e", e);
@@ -104,7 +100,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             <FormProvider {...methods}>
                 <RegisterForm onSubmit={methods.handleSubmit(onSubmit)}>
                     <SettingInfoForm />
-                    <BankAccountInfoForm title={false} />
+                    <BankAccountInfoForm title={true} />
                     <OpeningTimeForm />
                     <Div css={{
                         width: rem(900),

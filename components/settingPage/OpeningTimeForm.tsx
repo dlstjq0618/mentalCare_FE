@@ -5,37 +5,54 @@ import { TermsCheckbox1 } from '../registerPage';
 import IconCheckboxes from './circleCheckbox';
 import { ALL_TIME_OPTIONS } from '~/utils/constants';
 import { useFormContext } from "react-hook-form";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCounselorOpeningTimes, setCounselorOpeningTimes } from '~/store/settingsSlice';
 const weekDay = [
     {
+        active: false,
+        id: 0,
         value: 0,
         label: "월요일"
     },
     {
+        active: false,
+        id: 1,
         value: 1,
         label: "화요일"
     },
     {
+        active: false,
+        id: 2,
         value: 2,
         label: "수요일"
     },
     {
+        active: false,
+        id: 3,
         value: 3,
         label: "목요일"
     },
     {
+        active: false,
+        id: 4,
         value: 4,
         label: "금요일"
     },
     {
+        active: false,
+        id: 5,
         value: 5,
         label: "토요일"
     },
     {
+        active: false,
+        id: 6,
         value: 6,
         label: "일요일"
     },
     {
+        active: false,
+        id: 7,
         value: 7,
         label: "공휴일"
     },
@@ -115,9 +132,50 @@ const Select = styled.select<IStyled>`
 function OpeningTimeForm() {
     const { register, setValue, setError, trigger, getValues, formState, watch } =
         useFormContext();
+    const [inputs, setInputs] = useState({
+        id: 0,
+        weekday: 0,
+        start_time: '',
+        end_time: '',
+    })
+    const { id, weekday, start_time, end_time } = inputs;
+    const [users, setUsers] = useState<any>([]);
+    const dispatch = useDispatch();
+    const opData = useSelector(selectCounselorOpeningTimes);
+
+
+    const onCreate = (data: any) => {
+        console.log('data', data);
+        const user = {
+            id,
+            weekday,
+            start_time,
+            end_time
+        }
+        setUsers([...users, user])
+        setInputs({
+            id: data.id,
+            weekday: data.value,
+            start_time: '08:00',
+            end_time: '08:00'
+        })
+    }
+
+    const onRemove = (id: number) => {
+        setUsers(users.filter((user: { id: number; }) => user.id !== id));
+    }
+
+    useEffect(() => {
+        onCreate;
+        console.log("users", users);
+    }, [inputs, users]);
+
+    useEffect(() => {
+        setValue('time', users)
+    }, [users])
     return (
         <InfoGrid width={900}>
-            <Div margin={24}>
+            <Div className='OpeningTime' margin={24}>
                 <Text size={18} bold='bold' color='#333'>
                     운영시간
                 </Text>
@@ -126,14 +184,16 @@ function OpeningTimeForm() {
                 {weekDay.map((res: any, index: number) => {
                     return <>
                         <Div key={index} flex margin={10}>
-                            <IconCheckboxes />
+                            <div key={index} onClick={() => { onCreate(res) }}>
+                                <IconCheckboxes />
+                            </div>
                             <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                                 {res.label}
                             </div>
                             <div>
                                 <Select>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
-                                        <option key={index} value={res.value}>
+                                        <option key={index} value={res.value} defaultValue={'07:00:00'}>
                                             {res.label}
                                         </option>
                                     ))}
@@ -141,7 +201,7 @@ function OpeningTimeForm() {
                                 ~
                                 <Select>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
-                                        <option key={index} value={res.value}>
+                                        <option key={index} value={res.value} defaultValue={'23:00:00'}>
                                             {res.label}
                                         </option>
                                     ))}

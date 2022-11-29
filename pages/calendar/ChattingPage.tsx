@@ -153,6 +153,7 @@ const Text = styled.div<IStyled>`
         css`
         height: ${rem(props.height)};
     `}
+
     ${(props) =>
         props.type === "finish" &&
         css`
@@ -188,14 +189,14 @@ function ChattingPage() {
                         우주 상담소
                     </Text>
                 </Div>
-                <Text >
+                <Text>
                     <Div type='time' >
                         <Text size={13} color='#b53e14' >상담시간이 49분 남았습니다.</Text>
                         <Text size={12} type='button' color='#e8440a'>
                             상담 경과 44:15
                         </Text>
                     </Div>
-                    <Div className='chat_main' style={{ height: "600px", overflowY: "auto" }}>
+                    <Div className='chat_main' style={{ height: 600, overflowY: "auto" }}>
                         {
                             chatData.map((res: any, index: number) => (
                                 <>
@@ -242,8 +243,8 @@ function ChattingPage() {
                                 : ""
                         }
                     </Div>
-                    <Div type='footer'>
-                        <InputAdornments></InputAdornments>
+                    <Div type='footer' >
+                        <InputAdornments state={state} />
                     </Div>
                 </Text>
             </Div>

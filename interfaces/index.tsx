@@ -203,7 +203,6 @@ export interface CounselorPayload {
   account_holder: string;
   account_holder_birthdate: string;
   account_number: string;
-
 }
 
 export interface DoctorSignUpRequestPayload2 {

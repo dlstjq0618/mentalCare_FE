@@ -23,6 +23,8 @@ interface IStyled {
     flex?: boolean;
     width?: number;
     bottom?: number;
+    button?: boolean;
+
 }
 
 const StyledDiv = styled.div`
@@ -92,6 +94,22 @@ const Text = styled.span<IStyled>`
         props.margin &&
         css`
         margin-left: ${rem(props.margin)};
+    `}
+    ${(props) =>
+        props.button &&
+        css`
+        cursor: pointer;
+        flex-grow: 0;
+        width: 42px;
+        height: 25px;
+        flex-direction: row;
+        text-align: center;
+        padding: 1px 10px;
+        align-items: flex-start;
+        margin: 8px 3px 1px 14px;
+        gap: 10px;
+        border-radius: 4px;
+        border: solid 1px rgba(0, 0, 0, 0.3);
     `}
 `;
 
@@ -290,7 +308,7 @@ function SettingInfoForm(props: IProps) {
                                 {"휴대폰번호"}
                             </Text>
                             <Text size={17} color={"#333"} margin={140}>
-                                {"010-5555-5555"}
+                                {"010-5555-5555"}<Text button>수정</Text>
                             </Text>
                         </MainDiv>
                     </div>
@@ -404,9 +422,9 @@ function SettingInfoForm(props: IProps) {
                         </span>
                     </Label>
                     <Input
-                        {...register("consultation_fee_day", {
-                            valueAsNumber: true,
-                        })}
+                        onChange={(e) => {
+                            setValue("consultation_fee_day", e.target.value)
+                        }}
                         autoComplete='off'
                         id="AmPrice"
                         type="number"
@@ -433,9 +451,9 @@ function SettingInfoForm(props: IProps) {
                         </span>
                     </Label>
                     <Input
-                        {...register("consultation_fee_night", {
-                            valueAsNumber: true,
-                        })}
+                        onChange={(e) => {
+                            setValue("consultation_fee_night", e.target.value)
+                        }}
                         autoComplete='off'
                         id="PmPrice"
                         type="number"

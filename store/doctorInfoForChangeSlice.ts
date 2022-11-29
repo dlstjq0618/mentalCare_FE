@@ -31,7 +31,7 @@ export const doctorInfoForChangeSlice = createSlice({
     setCounselorName(state, action: PayloadAction<string>) {
       state.username = action.payload;
     },
-    setCounselorId(state, action: PayloadAction<number>) {
+    setCounselorId(state, action: PayloadAction<any>) {
       state.id = action.payload;
     },
     setDoctorImage(state, action: PayloadAction<string>) {

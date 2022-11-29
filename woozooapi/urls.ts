@@ -52,7 +52,7 @@ export const URLS = {
   COUNSELOR: {
     SIGN_UP: "/api/user/v1/counselor",
     INFO: (id: number) => `/api/user/v1/counselor/${id}/info`,
-    UPDATE: (id: number) => `/api/user/v1/counselor/${id}/info`,
+    UPDATE: (id: number | undefined) => `/api/user/v1/counselor/${id}/info`,
   },
   DIAGNOSIS: {
     GET_LIST: `/api/service/diagnosis`,

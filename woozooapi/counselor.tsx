@@ -44,7 +44,7 @@ export const counselor = {
         return data;
     },
 
-    update: async (payload: CounselorPayload, id: number) => {
+    update: async (id: number | undefined, payload: CounselorPayload) => {
         const sessions = await getSession();
         const { data } = await axios.request<
             DoctorInfoResponse,

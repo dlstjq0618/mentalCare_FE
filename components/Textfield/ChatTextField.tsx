@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -6,7 +6,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-export default function InputAdornments() {
+interface IProps {
+    state?: string;
+
+}
+
+export default function InputAdornments(props: IProps) {
     // const state = useSelector(selectCounselingState); // api 상태체크
     const [state, setState] = React.useState("");
     const [values, setValues] = React.useState("");
@@ -14,6 +19,8 @@ export default function InputAdornments() {
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
+
+    console.log("props", props.state);
 
     return (
         <Box sx={{
@@ -24,7 +31,7 @@ export default function InputAdornments() {
                 '& fieldset': { top: 0 },
             }} variant="outlined">
                 <OutlinedInput
-                    disabled={state === "finish" ? true : false}
+                    disabled={props.state === "finish" ? true : false}
                     placeholder={`${state === "finish" ? "상담이 완료 되었습니다." : ""}`}
                     id="outlined-adornment-password"
                     value={values}
