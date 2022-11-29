@@ -28,6 +28,7 @@ const initialState: {
   noticeDescription: any;
   waitingData: boolean;
   openingTimes: any;
+  openingTime: any;
 } = {
   global: "idle",
   doctor: "idle",
@@ -36,6 +37,7 @@ const initialState: {
   openingHours: "idle",
   hospitalData: {},
   hospitalDataForUpdate: {},
+  openingTime: {},
   workState: "",
   workDay: [],
   workTime: "",
@@ -121,6 +123,12 @@ export const settingsSlice = createSlice({
       action: PayloadAction<typeof initialState["workState"]>
     ) {
       state.workState = action.payload;
+    },
+    setTutorialHospitalOpeningArray(
+      state,
+      action: PayloadAction<typeof initialState["openingTime"]>
+    ) {
+      state.openingTime = action.payload;
     },
     setTutorialWorkWeekDay(
       state,
@@ -239,6 +247,7 @@ export const {
   setOpeningHoursEditState,
   setTutorialWorkWeekState,
   setTutorialWorkWeekDay,
+  setTutorialHospitalOpeningArray,
   setTutorialHospitalWorkTimeData,
   setTutorialHospitalBreakArray,
   setScheduleTimeState,
@@ -307,4 +316,6 @@ export const selectWaitingData = (state: RootState) =>
   state.settings.waitingData;
 export const selectCounselorOpeningTimes = (state: RootState) =>
   state.settings.openingTimes;
+export const selectTutorialHospitalOpeningArray = (state: RootState) =>
+  state.settings.openingTime;
 export default settingsSlice.reducer;
