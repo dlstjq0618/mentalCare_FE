@@ -7,6 +7,8 @@ import { BaseDialog, IconButton } from "~/components";
 import { ScheduleCalendar } from "~/components/Calendar";
 import { Div, Heading } from "~/components/Elements";
 import { NextMonthIcon, PrevMonthIcon } from "~/components/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCounselingDate, setCounselingDate } from "~/store/calendarDetailSlice";
 
 export const DatePickerContext = createContext<{
   pickedDate: Date;
@@ -27,7 +29,7 @@ export function DatePicker({
 }): ReactElement {
   const [showCalendar, setShowCalendar] = useState(open);
   const [selectedDate, setSelectedDate] = useState(date);
-
+  const dispatch = useDispatch();
   let handlePrevDateClick = useCallback(() => {
     setSelectedDate(sub(selectedDate, { days: 1 }));
   }, [selectedDate]);
@@ -39,6 +41,7 @@ export function DatePicker({
   let handleDateSelect = () => {
     setDate(selectedDate);
     setShowCalendar(false);
+    dispatch(setCounselingDate(selectedDate));
   };
 
   return (

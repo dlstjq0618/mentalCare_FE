@@ -156,8 +156,8 @@ function OpeningTimeForm() {
         setInputs({
             id: data.id,
             weekday: data.value,
-            start_time: '08:00',
-            end_time: '08:00'
+            start_time: '07:00:00',
+            end_time: '23:00:00'
         })
     }
 
@@ -171,7 +171,7 @@ function OpeningTimeForm() {
     }, [inputs, users]);
 
     useEffect(() => {
-        setValue('time', users)
+        setValue('opening_times', users)
     }, [users])
     return (
         <InfoGrid width={900}>

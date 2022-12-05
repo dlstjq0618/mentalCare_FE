@@ -18,6 +18,7 @@ import {
 import { PageTitle } from "~/components/PageTitle";
 import { registerFormSchema2 } from "~/utils/form.utils";
 import { api } from "~/woozooapi";
+import { useSelector } from "react-redux";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -31,7 +32,6 @@ export const RegisterPageLayout: FC = ({ children }) => {
   });
 
   const router = useRouter();
-
   const onSubmit = (data: any) => { // vi signUp Api request
     api.counselor
       .signUp({
@@ -48,18 +48,27 @@ export const RegisterPageLayout: FC = ({ children }) => {
       .then((e: any) => {
         router.push("/auth/register/complete");
       })
-      .catch((error: { response: { data: { password: any; }; }; }) => {
+      .catch((error: {
+        response: {
+          data: {
+            detail: string; password: string;
+          };
+        };
+      }) => {
         if (error.response.data.password) {
           return alert("비밀번호 8자리 이상 입력 하세요.")
+        }
+        if (error.response.data.detail) {
+          return alert(error.response.data.detail)
         }
       });
   };
 
   const onError = (e: any) => {
     console.log("onError", e);
-    // if (e.phone) {
-    //   return alert("휴대폰 번호를 확인해주세요.")
-    // }
+    if (e.phone) {
+      return alert("휴대폰 번호를 확인해주세요.")
+    }
     // if (e.doctorLicense) {
     //   return alert(e.doctorLicense.message)
     // }

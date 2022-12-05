@@ -20,6 +20,12 @@ export default function InputAdornments(props: IProps) {
         event.preventDefault();
     };
 
+    const handleEnter = (e: any) => {
+        if (e.key === "Enter") {
+            alert("메세지 입력")
+        }
+    }
+
     console.log("props", props.state);
 
     return (
@@ -39,6 +45,7 @@ export default function InputAdornments(props: IProps) {
                     size={"small"}
                     onChange={(e) => setValues(e.target.value)}
                     autoComplete={"off"}
+                    onKeyPress={handleEnter}
                     endAdornment={
                         <InputAdornment position="end">
                             <IconButton

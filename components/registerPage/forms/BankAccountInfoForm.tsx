@@ -1,5 +1,7 @@
 import { rem } from "polished";
+import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import {
   Div,
@@ -11,6 +13,7 @@ import {
   Dropdown,
   FormFieldErrorMessage,
 } from "~/components";
+import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
 import { BANKS } from "~/utils/constants";
 
 interface IStyled {
@@ -48,6 +51,19 @@ font-weight: bold;
 
 export const BankAccountInfoForm = (props: IProps) => {
   const { register, control, setValue, formState } = useFormContext();
+  const bankInfoData = useSelector(selectCounselingInfoData);
+
+  const [bankName, setBankName] = useState();
+  const [accountNumber, setAccountNumber] = useState();
+
+  //   useEffect(() => {
+  //     setDayPrice(infoData.consultationFeeDay);
+  //     setNightPrice(infoData.consultationFeeNight);
+  // }, [infoData.consultationFeeDay, infoData.consultationFeeNight])
+
+  useEffect(() => {
+
+  }, [bankInfoData])
 
   return (
     <>
@@ -63,9 +79,12 @@ export const BankAccountInfoForm = (props: IProps) => {
                 <Input
                   id="accountHolder"
                   type="text"
-                  placeholder="예금주명을 입력해주세요"
+                  placeholder={bankInfoData?.accountInfo?.accountHolder}
                   usage="registerPage"
-                  {...register("accountHolder")}
+                  // {...register("accountHolder")}
+                  onChange={(e) => {
+                    setValue("accountHolder", e.target.value);
+                  }}
                 />
                 {formState.errors.accountHolder?.message && (
                   <FormFieldErrorMessage
@@ -106,7 +125,7 @@ export const BankAccountInfoForm = (props: IProps) => {
                   render={() => (
                     <Dropdown
                       id="bankName"
-                      placeholder="은행을 선택해주세요"
+                      placeholder={bankInfoData?.accountInfo?.bankName}
                       options={Object.values(BANKS)?.map((bank) => ({
                         label: bank,
                         value: bank,
@@ -132,7 +151,7 @@ export const BankAccountInfoForm = (props: IProps) => {
                     id="accountNumber"
                     type="number"
                     usage="registerPage"
-                    placeholder="계좌번호를 입력해주세요"
+                    placeholder={bankInfoData?.accountInfo?.accountNumber}
                     {...register("accountNumber")}
                     css={{ width: rem(240), flex: "auto" }}
                   />

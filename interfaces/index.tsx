@@ -108,11 +108,11 @@ export interface IFinalStep {
 export type TermsResponse = string;
 
 export interface BooleanResponse {
-  isSuccess: boolean;
+  isSuccess?: boolean;
 }
 
 export interface FileUploadResponse extends BooleanResponse {
-  url?: string;
+  url?: string | undefined;
 }
 
 export interface GenerateTokenRequestPayload {
@@ -189,9 +189,9 @@ export interface Counselor {
 }
 
 export interface CounselorPayload {
-  password: string;
+  password?: string;
   mobile: string;
-  imageUrl: string;
+  image: string;
   certificate_image: string;
   career: string;
   qualification_level: string;
@@ -199,10 +199,14 @@ export interface CounselorPayload {
   other_history: string;
   consultation_fee_day: number;
   consultation_fee_night: number;
-  bank_name: string;
-  account_holder: string;
-  account_holder_birthdate: string;
-  account_number: string;
+  opening_times?: any;
+  account_info?: {
+    bank_name: string;
+    account_holder: string;
+    account_holder_birthdate: string;
+    account_number: string;
+  };
+  counseling_subject: any;
 }
 
 export interface DoctorSignUpRequestPayload2 {

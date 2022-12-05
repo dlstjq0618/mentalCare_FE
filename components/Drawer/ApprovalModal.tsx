@@ -10,6 +10,8 @@ import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
+import { useSelector } from 'react-redux';
+import { selectCounselingDate } from '~/store/calendarDetailSlice';
 
 interface IProps {
     open: boolean;
@@ -127,6 +129,7 @@ function ApprovalModal(props: IProps) {
     const [userName, setUserName] = useState("");
     const [userDate, setUserDate] = useState("");
     const [datePicker, setDatePicker] = useState(false);
+    const storeData = useSelector(selectCounselingDate);
 
     const handleClose = props.close
 
@@ -160,9 +163,6 @@ function ApprovalModal(props: IProps) {
     const selectedDate = watch("date");
     const selectedTime = watch("time");
 
-
-
-
     const handleDateChange = useCallback(
         (date) => {
             console.log({ date });
@@ -173,7 +173,7 @@ function ApprovalModal(props: IProps) {
     );
     return (
         <>
-            <BaseDialog2 showDialog={props.open} close={handleClose} style={{ paddingBottom: `${rem(40)}` }} >
+            <BaseDialog2 style={{ paddingBottom: `${rem(40)}` }} showDialog={props.open} close={handleClose} >
                 <Div button>
                     <Text size={20} bold="bold">
                         {"기분좋아 2031"} 님
@@ -237,9 +237,11 @@ function ApprovalModal(props: IProps) {
             {
                 datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
             }
-            <BaseDialog2 showDialog={show} close={close} style={{ height: `${rem(387)}`, textAlign: 'center' }}>
+            <BaseDialog2 showDialog={show} close={close} style={{
+                height: `${rem(387)}`, textAlign: 'center', marginTop: " 14vh"
+            }}>
                 <Text size={17} bold='normal' center>
-                    <Text >기분좋아293</Text>님에게
+                    <Text>기분좋아293</Text>님에게
                     <div>상담 예정 알림이 발송됩니다.</div>
                 </Text>
                 <Text bg>

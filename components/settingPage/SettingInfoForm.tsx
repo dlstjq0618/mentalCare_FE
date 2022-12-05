@@ -6,12 +6,18 @@ import styled, { css } from 'styled-components';
 import { useForm, FormProvider } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 import {
-    LicenceField,
+    FileProfileInput,
     Input,
     Label,
+    SettingLicenceField,
+    TextArea
 } from "~/components";
 import BadgeAvatars from "~/components/settingPage/AvatarBadge";
 import { api } from "~/woozooapi";
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCounselorName } from '~/store/doctorInfoForChangeSlice';
+import { selectCounselingInfoData, setCounselingProfileImage, selectCounselingProfileImage, setSettingSaveControlls } from '~/store/calendarDetailSlice';
+import { info } from 'console';
 
 interface IProps {
 
@@ -152,13 +158,39 @@ const initialState: ReducerState<typeof reducer> = {
 
 function SettingInfoForm(props: IProps) {
     const [registerFormState, dispatch] = useReducer(reducer, initialState);
+    const dispatch2 = useDispatch();
     const [textValue, setTextValue] = useState("");
     const { register, setValue, setError, trigger, getValues, formState, watch } =
         useFormContext();
     const password = useRef({});
     password.current = watch("password", "");
-    const formatter = new Intl.NumberFormat('ko');
+    const userName = useSelector(selectCounselorName);
+    const infoData = useSelector(selectCounselingInfoData);
+    const [dayPrice, setDayPrice] = useState(infoData.consultationFeeDay)
+    const [nightPrice, setNightPrice] = useState(infoData.consultationFeeNight);
 
+    const [isPassword, setIsPassword] = useState("")
+    const [isPasswordConfirm, setIsPasswordConfirm] = useState("")
+
+    const phoneNumber = infoData.mobile?.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '0$2-$3-$4');
+
+
+    const handleProfilePicUpload = async (file: File) => {
+        const result = validateImageFile(file);
+
+        if (!result.valid) {
+            setError("profilePic", {
+                types: result.message,
+            });
+            return;
+        }
+        const res = await api.fileUpload({
+            file,
+            prefix: "image",
+            name: "image",
+        }).then((data) => { return setValue("image", data.url), dispatch2(setCounselingProfileImage(data.url)) })
+        await trigger("image");
+    };
 
 
     const handleDoctorLicenseUpload = async (file: File) => {
@@ -178,73 +210,22 @@ function SettingInfoForm(props: IProps) {
         await trigger("certificate_image");
     };
 
-    const handleCareerLicenseUpload = async (file: File) => {
-        const result = validateImageFile(file);
-        if (!result.valid) {
-            setError("career", {
-                types: result.message,
-            });
-            return;
-        }
-        dispatch({ type: "setCareerLicenseFileName", payload: file.name });
-        const response = await api.fileUpload({
-            file,
-            name: "career",
-        });
-        setValue("career", response.url);
-        await trigger("career");
-    };
-
-    const handleQualificationLavelLicenseUpload = async (file: File) => {
-        const result = validateImageFile(file);
-        if (!result.valid) {
-            setError("qualification_level", {
-                types: result.message,
-            });
-            return;
-        }
-        dispatch({ type: "setQualificationLevelFileName", payload: file.name });
-        const response = await api.fileUpload({
-            file,
-            name: "qualification_level",
-        });
-        setValue("qualification_level", response.url);
-        await trigger("qualification_level");
-    };
-
-    const handleEducationLicenseUpload = async (file: File) => {
-        const result = validateImageFile(file);
-        if (!result.valid) {
-            setError("education", {
-                types: result.message,
-            });
-            return;
-        }
-        dispatch({ type: "setEducationFileName", payload: file.name });
-        const response = await api.fileUpload({
-            file,
-            name: "education",
-        });
-        setValue("education", response.url);
-        await trigger("education");
-    };
-
-    const handleOtherLicenseUpload = async (file: File) => {
-        const result = validateImageFile(file);
-        if (!result.valid) {
-            setError("other_history", {
-                types: result.message,
-            });
-            return;
-        }
-        dispatch({ type: "setOtherHistoryFileName", payload: file.name });
-        const response = await api.fileUpload({
-            file,
-            name: "other_history",
-        });
-        setValue("other_history", response.url);
-        await trigger("other_history");
-    };
+    // const handleCareerLicenseUpload = async (file: File) => {
+    //     const result = validateImageFile(file);
+    //     if (!result.valid) {
+    //         setError("career", {
+    //             types: result.message,
+    //         });
+    //         return;
+    //     }
+    //     dispatch({ type: "setCareerLicenseFileName", payload: file.name });
+    //     const response = await api.fileUpload({
+    //         file,
+    //         name: "career",
+    //     });
+    //     setValue("career", response.url);
+    //     await trigger("career");
+    // };
 
 
     // file Delete
@@ -254,45 +235,34 @@ function SettingInfoForm(props: IProps) {
         dispatch({ type: "setDoctorLicenceFileName", payload: "" });
     };
 
-    const handleCareerLicenseDelete = async () => { // 경력 삭제
-        setValue("career", undefined);
-        await trigger("career");
-        dispatch({ type: "setCareerLicenseFileName", payload: "" });
-    };
-    const handleQualificationLavelLicenseDelete = async () => { // 자격급수 삭제
-        setValue("qualification_level", undefined);
-        await trigger("qualification_level");
-        dispatch({ type: "setQualificationLevelFileName", payload: "" });
-    };
-    const handleEducationLicenseDelete = async () => { // 학력삭제
-        setValue("education", undefined);
-        await trigger("education");
-        dispatch({ type: "setEducationFileName", payload: "" });
-    };
-    const handleOtherLicenseDelete = async () => { // 기타이력
-        setValue("other_history", undefined);
-        await trigger("other_history");
-        dispatch({ type: "setOtherHistoryFileName", payload: "" });
-    };
 
-    const onlyNumberText = (data: string) => {
-        setTextValue(data)
-        if (data) {
-            const replaceData = data.replace(/[^0-9]/g, "")
-            return setTextValue(replaceData)
+
+    useEffect(() => {
+        setDayPrice(infoData.consultationFeeDay);
+        setNightPrice(infoData.consultationFeeNight);
+    }, [infoData.consultationFeeDay, infoData.consultationFeeNight])
+
+    useEffect(() => {
+        if (isPassword === isPasswordConfirm) {
+            dispatch2(setSettingSaveControlls(true))
+        } else {
+            dispatch2(setSettingSaveControlls(false))
         }
-    };
-
+        console.log("password", isPassword);
+        console.log("password2", isPasswordConfirm);
+    }, [isPassword, isPasswordConfirm])
 
     return (
         <>
             <InfoGrid width={900}>
                 <MainDiv>
-                    <BadgeAvatars />
+                    <FileProfileInput
+                        handleFile={handleProfilePicUpload}
+                    />
                     <div className="profile" style={{ width: "100%" }}>
                         <MainDiv margin={40} className="name" bottom={22}>
                             <Text size={22} bold={"bold"} color={"#333"}>
-                                {"김의사"}
+                                {userName}
                             </Text>
                         </MainDiv>
                         <MainDiv margin={40} className="email" flex bottom={10}>
@@ -300,15 +270,15 @@ function SettingInfoForm(props: IProps) {
                                 {"email"}
                             </Text>
                             <Text size={17} color={"#333"}>
-                                {"sean@correctionvitale.com "}
+                                {infoData.uid}
                             </Text>
                         </MainDiv>
                         <MainDiv margin={40} className="phone">
                             <Text size={17} color={"#999"}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} margin={140}>
-                                {"010-5555-5555"}<Text button>수정</Text>
+                            <Text size={17} color={"#333"} margin={135}>
+                                {phoneNumber}<Text button>수정</Text>
                             </Text>
                         </MainDiv>
                     </div>
@@ -320,7 +290,7 @@ function SettingInfoForm(props: IProps) {
                         css={{
                             marginBottom: rem(10),
                             fontSize: rem(15),
-                            marginTop: rem(44.5)
+                            marginTop: rem(33)
                         }}
                     >
                         비밀번호
@@ -329,6 +299,10 @@ function SettingInfoForm(props: IProps) {
                         </span>
                     </Label>
                     <Input
+                        value={isPassword}
+                        onChange={(e) => {
+                            setIsPassword(e.target.value)
+                        }}
                         autoComplete='off'
                         id="password"
                         type="password"
@@ -346,7 +320,7 @@ function SettingInfoForm(props: IProps) {
                         css={{
                             marginBottom: rem(10),
                             fontSize: rem(15),
-                            marginTop: rem(44.5)
+                            marginTop: rem(33)
                         }}
                     >
                         비밀번호 확인
@@ -355,7 +329,9 @@ function SettingInfoForm(props: IProps) {
                         </span>
                     </Label>
                     <Input
-                        {...register("password")}
+                        onChange={(e) => {
+                            setValue("password", e.target.value), setIsPasswordConfirm(e.target.value)
+                        }}
                         autoComplete='off'
                         id="password2"
                         type="password"
@@ -367,7 +343,7 @@ function SettingInfoForm(props: IProps) {
                         }}
                     />
                 </StyledDiv>
-                <LicenceField
+                <SettingLicenceField
                     required
                     label='상담사 자격증'
                     name="certificate_image"
@@ -375,45 +351,142 @@ function SettingInfoForm(props: IProps) {
                     handleUpload={handleDoctorLicenseUpload}
                     handleDelete={handleDoctorLicenseDelete}
                 />
-                <LicenceField
+                <StyledDiv style={{ marginTop: '20px' }}>
+                    <Label
+                        htmlFor="cereer"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            paddingTop: "0.5rem",
+                        }}
+                    >
+                        경력
+                        <span style={{ color: "#eb541e" }}>
+                            *
+                        </span>
+                    </Label>
+                    <TextArea
+                        onChange={(e) => {
+                            setValue("career", e.target.value)
+                        }}
+                        defaultValue={infoData.career}
+                        css={{
+                            maxHeight: rem(150),
+                            minHeight: rem(80),
+                            height: rem(80),
+                            width: rem(480),
+                            border: "1px solid $gray06",
+                            borderRadius: rem(20),
+                            padding: `${rem(16)} ${rem(30)} ${rem(20)}`,
+                        }}
+                    />
+                </StyledDiv>
+                <StyledDiv style={{ marginTop: '20px' }}>
+                    <Label
+                        htmlFor="qualification_level"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            paddingTop: "0.5rem",
+                        }}
+                    >
+                        자격급수
+                        <span style={{ color: "#eb541e" }}>
+                            *
+                        </span>
+                    </Label>
+                    <TextArea
+                        onChange={(e) => {
+                            setValue("qualification_level", e.target.value)
+                        }}
+                        defaultValue={infoData.qualificationLevel}
+                        css={{
+                            maxHeight: rem(150),
+                            minHeight: rem(80),
+                            height: rem(80),
+                            width: rem(480),
+                            border: "1px solid $gray06",
+                            borderRadius: rem(20),
+                            padding: `${rem(16)} ${rem(30)} ${rem(20)}`,
+                        }}
+                    />
+                </StyledDiv>
+                <StyledDiv style={{ marginTop: '20px' }}>
+                    <Label
+                        htmlFor="education"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            paddingTop: "0.5rem",
+                        }}
+                    >
+                        학력
+                        <span style={{ color: "#eb541e" }}>
+                            *
+                        </span>
+                    </Label>
+                    <TextArea
+                        onChange={(e) => {
+                            setValue("education", e.target.value)
+                        }}
+                        defaultValue={infoData.education}
+                        css={{
+                            maxHeight: rem(150),
+                            minHeight: rem(80),
+                            height: rem(80),
+                            width: rem(480),
+                            border: "1px solid $gray06",
+                            borderRadius: rem(20),
+                            padding: `${rem(16)} ${rem(30)} ${rem(20)}`,
+                        }}
+                    />
+                </StyledDiv>
+                <StyledDiv style={{ marginTop: '20px' }}>
+                    <Label
+                        htmlFor="other_history"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            paddingTop: "0.5rem",
+                        }}
+                    >
+                        기타 이력
+                        <span style={{ color: "#eb541e" }}>
+                            *
+                        </span>
+                    </Label>
+                    <TextArea
+                        onChange={(e) => {
+                            setValue("other_history", e.target.value)
+                        }}
+                        defaultValue={infoData.otherHistory}
+                        css={{
+                            maxHeight: rem(150),
+                            minHeight: rem(80),
+                            height: rem(80),
+                            width: rem(480),
+                            border: "1px solid $gray06",
+                            borderRadius: rem(20),
+                            padding: `${rem(16)} ${rem(30)} ${rem(20)}`,
+                        }}
+                    />
+                </StyledDiv>
+                {/* <SettingLicenceField
                     required
                     label='경력'
                     name="career"
                     fileName={registerFormState.careerLicenseFileName}
                     handleUpload={handleCareerLicenseUpload}
                     handleDelete={handleCareerLicenseDelete}
-                />
-                <LicenceField
-                    required
-                    label='자격급수'
-                    name="qualification_level"
-                    fileName={registerFormState.qualificationLevelFileName}
-                    handleUpload={handleQualificationLavelLicenseUpload}
-                    handleDelete={handleQualificationLavelLicenseDelete}
-                />
-                <LicenceField
-                    required
-                    label='학력'
-                    name="education"
-                    fileName={registerFormState.educationFileName}
-                    handleUpload={handleEducationLicenseUpload}
-                    handleDelete={handleEducationLicenseDelete}
-                />
-                <LicenceField
-                    required
-                    label='기타 이력'
-                    name="other_history"
-                    fileName={registerFormState.otherHistoryFileName}
-                    handleUpload={handleOtherLicenseUpload}
-                    handleDelete={handleOtherLicenseDelete}
-                />
+                /> */}
+
                 <StyledDiv>
                     <Label
                         htmlFor="AmPrice"
                         css={{
                             marginBottom: rem(10),
                             fontSize: rem(15),
-                            marginTop: rem(44.5)
+                            marginTop: rem(33)
                         }}
                     >
                         주간 상담비
@@ -423,13 +496,15 @@ function SettingInfoForm(props: IProps) {
                     </Label>
                     <Input
                         onChange={(e) => {
-                            setValue("consultation_fee_day", e.target.value)
+                            setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
+                        defaultValue={dayPrice}
                         autoComplete='off'
                         id="AmPrice"
                         type="number"
                         placeholder="비밀번호를 입력해주세요."
                         css={{
+                            textAlign: "right",
                             paddingInline: rem(30),
                             width: rem(475),
                             marginTop: rem(29.5)
@@ -442,7 +517,7 @@ function SettingInfoForm(props: IProps) {
                         css={{
                             marginBottom: rem(10),
                             fontSize: rem(15),
-                            marginTop: rem(44.5)
+                            marginTop: rem(33)
                         }}
                     >
                         야간 상담비
@@ -452,13 +527,15 @@ function SettingInfoForm(props: IProps) {
                     </Label>
                     <Input
                         onChange={(e) => {
-                            setValue("consultation_fee_night", e.target.value)
+                            setNightPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
+                        defaultValue={nightPrice}
                         autoComplete='off'
                         id="PmPrice"
                         type="number"
                         placeholder="비밀번호를 한번 더 입력해주세요."
                         css={{
+                            textAlign: "right",
                             paddingInline: rem(30),
                             width: rem(475),
                             marginTop: rem(29.5)

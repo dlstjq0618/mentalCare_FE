@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, selectCalendarMonthState, selectCalendarUserList, selectSessionId, setCalendarModalState, setCounselingState, selectCounselingState } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, selectCalendarMonthState, selectCalendarUserList, selectSessionId, setCalendarModalState, setCounselingState, selectCounselingState, selectCounselingDate } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -224,7 +224,7 @@ function DayComponents(props: IProps) {
     const userList: any = useSelector(selectCalendarUserList);
     const dispatch = useDispatch();
     const [day_ko, setDay_ko] = useState(props.days.format('ddd'));
-    const options = "toolbar=no,locatipon=no,resizable=no,status=no,menubar=no,width=300, height=700, top=10,left=0";
+    const options = "toolbar=no,locatipon=no,scrollbars=no,resizable=no,status=no,menubar=no,width=300, height=700, top=10,left=0";
     const seeMonth: any = useSelector(selectCalendarMonthState);
     const [show2, setShow2] = useState(false);
     const [userName, setUserName] = useState("");
@@ -248,7 +248,6 @@ function DayComponents(props: IProps) {
     useEffect(() => {
         // console.log("userList", userList);
     }, [userList])
-
     // 영어 => 월화수목금토일 한글로  
     useEffect(() => {
         if (day_ko === 'Sun') {
@@ -369,7 +368,8 @@ function DayComponents(props: IProps) {
                         <RoundedButton
                             onClick={() => {
                                 start(), userType === "채팅" ?
-                                    window.open("https://mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
+                                    // window.open("https://mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
+                                    window.open("http://localhost:3000/calendar/ChattingPage", "", options)
                                     :
                                     console.log("전화상담")
                             }}
@@ -446,8 +446,7 @@ function DayComponents(props: IProps) {
                     width: `${rem(376)}`,
                     height: `${rem(422)}`,
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
-                    marginTop: `18vh`,
-                }} >
+                }}>
                 <Text center size={17} color={"#333"}>
                     상담을 취소 하시겠습니까?
                     <div style={{ fontSize: 15, fontWeight: "normal" }} >

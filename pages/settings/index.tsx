@@ -7,6 +7,9 @@ import { FC, ReactNode, useEffect, useState, useReducer, Reducer } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useSelector } from "react-redux";
 import {
+    MainTitle,
+} from "~/components/settlementAccount";
+import {
     Div,
     Heading,
     Section,
@@ -21,6 +24,7 @@ import SettingInfoForm from "~/components/settingPage/SettingInfoForm";
 import OpeningTimeForm from "~/components/settingPage/OpeningTimeForm";
 import { api } from "~/woozooapi";
 import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
+import { selectCounselingInfoData, selectSettingSaveControlls } from "~/store/calendarDetailSlice";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -28,6 +32,8 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     const methods = useForm();
     const state = useSelector(selectDiagnosisEditState);
     const userId = useSelector(selectCounselorId);
+    const fileUploadDate = useSelector(selectCounselingInfoData)
+    const passwordSave = useSelector(selectSettingSaveControlls);
 
     useSession({
         required: true,
@@ -48,14 +54,21 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         }
     }, [open])
 
+    useEffect(() => {
+        console.log("passwordSave", passwordSave);
+    })
+
 
     const onSubmit = (data: any) => { // vi signUp Api request
+        if (!passwordSave) {
+            return alert("비밀번호가 일치하지 않습니다.")
+        }
         console.log("data", data);
         api.counselor
             .update(userId, {
                 password: data.password,
                 mobile: data.mobile,
-                imageUrl: "", // 프로필 사진
+                image: data.image === "" ? fileUploadDate.image : data.image, // 프로필 사진
                 certificate_image: data.certificate_image,
                 career: data.career,
                 qualification_level: data.qualification_level,
@@ -63,13 +76,30 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 other_history: data.other_history,
                 consultation_fee_day: data.consultation_fee_day,
                 consultation_fee_night: data.consultation_fee_night,
-                bank_name: data.bankName,
-                account_holder: data.accountHolder,
-                account_holder_birthdate: data.accountHolderBirthdate,
-                account_number: data.accountNumber,
+                account_info: {
+                    bank_name: data.bankName === "" ? fileUploadDate.accountInfo.bankName : data.bankName,
+                    account_holder: data.accountHolder === "" ? fileUploadDate.accountInfo.accountHolder : data.accountHolder,
+                    account_holder_birthdate: data.accountHolderBirthdate === "" ? fileUploadDate.accountInfo.accountHolderBirthdate : data.accountHolderBirthdate,
+                    account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
+                },
+                opening_times: [
+                    {
+                        id: null,
+                        weekday: 0,
+                        start_time: "07:00:00",
+                        end_time: "20:00:00"
+                    },
+                    {
+                        id: null,
+                        weekday: 1,
+                        start_time: "07:00:00",
+                        end_time: "22:00:00"
+                    },
+                ],
+                counseling_subject: null,
             })
-            .then(() => {
-                router.push("/auth/register/complete");
+            .then((res) => {
+                console.log("res", res)
             })
             .catch((e: any) => {
                 console.error(e);
@@ -134,16 +164,20 @@ export const SettingsPageBaseLayout: FC = ({ children }) => {
                     flexDirection: "column",
                 }}
             >
-                <Heading
+                {/* <Heading
                     as="h1"
                     css={{
-                        fontSize: rem(20),
+                        marginTop: rem(32),
+                        fontSize: "1.25rem",
                         fontWeight: "bold",
                         paddingBottom: rem(20),
                     }}
                 >
                     설정
-                </Heading>
+                </Heading> */}
+                <MainTitle>
+                    설정
+                </MainTitle>
                 {children}
             </Section>
         </LayoutComponent>

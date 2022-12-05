@@ -29,6 +29,7 @@ const initialState: {
   waitingData: boolean;
   openingTimes: any;
   openingTime: any;
+  imageUrl: any;
 } = {
   global: "idle",
   doctor: "idle",
@@ -56,6 +57,7 @@ const initialState: {
   noticeDescription: [],
   waitingData: false,
   openingTimes: [],
+  imageUrl: "",
 };
 
 export const settingsSlice = createSlice({
@@ -232,6 +234,12 @@ export const settingsSlice = createSlice({
     ) {
       state.openingTimes = action.payload;
     },
+    setCounselorProfileIamge(
+      state,
+      action: PayloadAction<typeof initialState["imageUrl"]>
+    ) {
+      state.imageUrl = action.payload;
+    },
   },
 });
 
@@ -264,6 +272,7 @@ export const {
   setNoticeDescription,
   setWaitingData,
   setCounselorOpeningTimes,
+  setCounselorProfileIamge,
 } = settingsSlice.actions;
 
 export const selectGlobalEditState = (state: RootState) =>
@@ -318,4 +327,6 @@ export const selectCounselorOpeningTimes = (state: RootState) =>
   state.settings.openingTimes;
 export const selectTutorialHospitalOpeningArray = (state: RootState) =>
   state.settings.openingTime;
+export const selectCounselorProfileImage = (state: RootState) =>
+  state.settings.imageUrl;
 export default settingsSlice.reducer;

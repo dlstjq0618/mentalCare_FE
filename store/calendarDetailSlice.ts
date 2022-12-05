@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "~/store";
 import { DIAGNOSIS_STATUS } from "~/utils/constants";
 import { getDiagnosisStatus } from "~/utils/diagnosis.utils";
+import { FileUploadResponse } from "~/interfaces";
 
 type DiagnosisStatus = typeof DIAGNOSIS_STATUS;
 type DiagnosisDetailStoreState = {
@@ -13,6 +14,10 @@ type DiagnosisDetailStoreState = {
   month: string;
   session: number;
   counseling: string;
+  date: any;
+  info: any;
+  imageUrl: any;
+  password: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -24,6 +29,10 @@ const initialState: DiagnosisDetailStoreState = {
   month: "",
   session: 0,
   counseling: "",
+  date: "",
+  info: {},
+  imageUrl: "",
+  password: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -92,6 +101,30 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.counseling = action.payload;
     },
+    setCounselingDate(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["date"]>
+    ) {
+      state.date = action.payload;
+    },
+    setCounselingInfoData(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["info"]>
+    ) {
+      state.info = action.payload;
+    },
+    setCounselingProfileImage(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["imageUrl"]>
+    ) {
+      state.imageUrl = action.payload;
+    },
+    setSettingSaveControlls(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["password"]>
+    ) {
+      state.password = action.payload;
+    },
   },
 });
 
@@ -103,6 +136,10 @@ export const {
   setCalendarMonthState,
   setSessionId,
   setCounselingState,
+  setCounselingDate,
+  setCounselingInfoData,
+  setCounselingProfileImage,
+  setSettingSaveControlls,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -121,5 +158,12 @@ export const selectSessionId = (state: RootState) =>
   state.calendarDetail.session;
 export const selectCounselingState = (state: RootState) =>
   state.calendarDetail.counseling;
-
+export const selectCounselingDate = (state: RootState) =>
+  state.calendarDetail.date;
+export const selectCounselingInfoData = (state: RootState) =>
+  state.calendarDetail.info;
+export const selectCounselingProfileImage = (state: RootState) =>
+  state.calendarDetail.imageUrl;
+export const selectSettingSaveControlls = (state: RootState) =>
+  state.calendarDetail.password;
 export default calendarDetailSilce.reducer;

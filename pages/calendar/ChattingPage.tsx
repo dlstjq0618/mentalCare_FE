@@ -53,6 +53,67 @@ const chatData = [{
     discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
     time: "PM 10:38"
 },
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+{
+    id: "",
+    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
+    time: "PM 10:38"
+},
+
 ]
 
 interface IStyled {
@@ -80,8 +141,10 @@ ${(props) =>
     ${(props) =>
         props.type === "footer" &&
         css`
-        position: absolute;
-        bottom: 0;
+        clear: both;
+        position: relative;
+        height: auto;
+        margin-top: 4%;
         width: 100%;
         padding: 7.3px;
         background: #fff;
@@ -180,7 +243,7 @@ function sortDate2(chatData: any) {
 }
 
 function ChattingPage() {
-    const [state, setState] = useState("finish");
+    const [state, setState] = useState("");
     return (
         <>
             <Div type='main'>
@@ -196,7 +259,7 @@ function ChattingPage() {
                             상담 경과 44:15
                         </Text>
                     </Div>
-                    <Div className='chat_main' style={{ height: 600, overflowY: "auto" }}>
+                    <Div className='chat_main'>
                         {
                             chatData.map((res: any, index: number) => (
                                 <>
@@ -243,10 +306,10 @@ function ChattingPage() {
                                 : ""
                         }
                     </Div>
-                    <Div type='footer' >
-                        <InputAdornments state={state} />
-                    </Div>
                 </Text>
+                <Div type='footer'>
+                    <InputAdornments state={state} />
+                </Div>
             </Div>
         </>
     );

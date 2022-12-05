@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CalendarIndex from "~/components/googleCalendar.tsx";
 import Layout from "~/components/Layout";
+import { PageTitle } from "~/components/PageTitle";
 import {
     MainTitle,
 } from "~/components/settlementAccount";
 import { setCalendarUserList } from "~/store/calendarDetailSlice";
+import LayoutComponent from "~/components/Layout";
 
 // api는 page component 안에서 호출 및 스토어 저장
 
@@ -114,10 +116,10 @@ function ScheduleIndex() {
     }, [testData]);
 
     return (
-        <Layout>
+        <LayoutComponent>
             <MainTitle>대기실</MainTitle>
             <CalendarIndex />
-        </Layout>
+        </LayoutComponent>
     );
 };
 

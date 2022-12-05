@@ -46,7 +46,8 @@ export const SettlementList = () => {
   const [list, setList] = useState<any>();
   const [year, setYear] = useState<number>(currentYear);
 
-  useEffect(() => {
+  /*
+    useEffect(() => {
     api.settlementAccount.getSettlementList(year).then((response) => {
       setList(response[year]);
       // Object.keys(list[year]).forEach((key)=> {
@@ -54,6 +55,9 @@ export const SettlementList = () => {
       // })
     });
   }, [year]);
+   */
+
+
 
   const handlePrevious = () => {
     setYear(year - 1);

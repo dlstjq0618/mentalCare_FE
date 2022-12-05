@@ -29,7 +29,7 @@ import { selectDiagnosisCallStatus, selectDiagnosisNotificationNumber, setDiagno
 import {
   isMobile
 } from "react-device-detect";
-import { selectCalendarUserList, setSessionId } from "~/store/calendarDetailSlice";
+import { selectCalendarUserList, setCounselingInfoData, setSessionId } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 
 const { Sider } = Layout;
@@ -115,8 +115,9 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
     console.log("sessionId", sessionId);
 
     api.counselor.info(id).then((res) => {
-      dispatch(setCounselorName(res.accountInfo.accountHolder))
-    })
+      dispatch(setCounselorName(res.username)),
+        dispatch(setCounselingInfoData(res));
+    }).then((res) => console.log("res", res));
   }, [])
 
   useEffect(() => {

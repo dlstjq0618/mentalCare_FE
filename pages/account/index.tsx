@@ -10,7 +10,7 @@ const Accounts = () => {
   return (
     <Layout>
       <MainTitle>정산</MainTitle>
-      <DoctorAccountDetails />
+      {/* <DoctorAccountDetails /> */}
       <SettlementList />
     </Layout>
   );

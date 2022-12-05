@@ -4,22 +4,10 @@ import { Reducer, ReducerState, useEffect, useReducer, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { PhoneNumberCertificationResult } from "~//interfaces";
 import {
-  Dropdown,
   RegisterFormRowItem,
-  FormRowItemWrapper,
   RegisterFormSection,
-  FileDropInput,
-  Label,
-  PhoneNumberCertificationButton,
-  CheckedIcon,
-  ProfilePic,
-  PlaceHolder,
   LicenceField,
-  Input,
-  DropdownOnChange,
-  FormFieldErrorMessage,
 } from "~/components";
-import { SPECIAL_OPTIONS } from "~/utils/constants";
 import { validateImageFile } from "~/utils/validation.utils";
 import { api } from "~/woozooapi";
 

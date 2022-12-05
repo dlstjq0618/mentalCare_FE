@@ -2,6 +2,8 @@ import { rem } from "polished";
 import { useEffect, useReducer } from "react";
 import { Dropdown, Div, DropdownOnChange } from "~/components";
 import { styled } from "~/stitches.config";
+import { useSelector } from "react-redux";
+import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
 import {
   getDayOptions,
   getDaysInMonth,
@@ -45,13 +47,13 @@ function dateStateReducer(
   },
   action:
     | {
-        type: "year" | "month" | "day";
-        payload: string;
-      }
+      type: "year" | "month" | "day";
+      payload: string;
+    }
     | {
-        type: "days";
-        payload: { year: string; month: string };
-      }
+      type: "days";
+      payload: { year: string; month: string };
+    }
 ) {
   switch (action.type) {
     case "year":
@@ -104,12 +106,17 @@ export const DropdownDatePicker = ({
   useEffect(() => {
     if (onComplete && dateState.year && dateState.month && dateState.day) {
       onComplete(
-        `${dateState.year}-${
-          dateState.month.length === 1 ? "0" + dateState.month : dateState.month
+        `${dateState.year}-${dateState.month.length === 1 ? "0" + dateState.month : dateState.month
         }-${dateState.day.length === 1 ? "0" + dateState.day : dateState.day}`
       );
     }
   }, [dateState.year, dateState.month, dateState.day, onComplete]);
+
+  const infoData = useSelector(selectCounselingInfoData);
+  const placeAccountBirthdate = infoData?.accountInfo?.accountHolderBirthdate
+  const placeYear = placeAccountBirthdate?.substr(0, 4)
+  const placeMonth = placeAccountBirthdate?.substr(5, 2)
+  const placeDay = placeAccountBirthdate?.substr(8, 2)
 
   const handleYearChange: DropdownOnChange = (year) => {
     if (!year?.value) return;
@@ -139,7 +146,7 @@ export const DropdownDatePicker = ({
         <Dropdown
           aria-label="년도 선택"
           id="date-picker-yyyy"
-          placeholder="YYYY"
+          placeholder={placeYear}
           options={yearOptions}
           onChange={handleYearChange}
         />
@@ -150,7 +157,7 @@ export const DropdownDatePicker = ({
           aria-label="월 선택"
           id="date-picker-mm"
           instanceId="date-picker-mm"
-          placeholder="MM"
+          placeholder={placeMonth}
           options={monthOptions}
           onChange={handleMonthChange}
         />
@@ -161,7 +168,7 @@ export const DropdownDatePicker = ({
           aria-label="일 선택"
           id="date-picker-dd"
           instanceId="date-picker-dd"
-          placeholder="DD"
+          placeholder={placeDay}
           options={getDayOptions(dateState.days)}
           onChange={handleDayChange}
         />

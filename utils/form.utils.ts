@@ -48,7 +48,7 @@ export const registerFormSchema = yup
       .string()
       .phone("KR", "휴대폰을 인증해주세요.")
       .required("휴대폰을 인증해주세요."),
-    certificate_image: yup.string().required("의사 면허증을 등록해주세요."),
+    certificate_image: yup.string().required("상담자격증을 등록해주세요."),
     qualification_level: yup.string().required("자격급수를 등록해주세요."),
     career: yup.string().required("경력 증명서를 등록해주세요."),
     education: yup.string().required("학력을 등록해주세요."),
@@ -78,6 +78,7 @@ export const registerFormSchema2 = yup
       .string()
       .phone("KR", "휴대폰을 인증해주세요.")
       .required("휴대폰을 인증해주세요."),
+    certificate_image: yup.string().required("상담자격증을 등록해주세요."),
     termsChecked: yup
       .string()
       .oneOf(["true"], "약관에 동의해주세요.")

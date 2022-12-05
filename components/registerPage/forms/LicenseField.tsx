@@ -1,6 +1,7 @@
 import { rem } from "polished";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
 import {
   Label,
   FormRowItemWrapper,
@@ -12,6 +13,7 @@ import {
   FormFieldErrorMessage,
   FormRowItemWrapperSetting
 } from "~/components";
+import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
 
 export const LicenceField: FC<{
   required?: boolean;
@@ -26,6 +28,8 @@ export const LicenceField: FC<{
     getValues,
     formState: { errors },
   } = useFormContext();
+
+  const fileHistoryData = useSelector(selectCounselingInfoData);
 
   return (
     <FormRowItemWrapperSetting>
@@ -79,7 +83,6 @@ export const SettingLicenceField: FC<{
     getValues,
     formState: { errors },
   } = useFormContext();
-
   return (
     <FormRowItemWrapperSetting>
       <Label required={required}>{label}</Label>
