@@ -12,6 +12,7 @@ import LayoutComponent from "~/components/Layout";
 // api는 page component 안에서 호출 및 스토어 저장
 
 function ScheduleIndex() {
+    { /** 테스트용 데이터 리스트*/ }
     const testData = [{
         id: "Sean",
         date: "2022-10-18",

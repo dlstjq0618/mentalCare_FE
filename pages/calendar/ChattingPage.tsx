@@ -236,7 +236,7 @@ function ChattingPage() {
                     <Div type='time' >
                         <Text size={13} color='#b53e14' >상담시간이 49분 남았습니다.</Text>
                         <Text size={12} type='button' color='#e8440a'>
-                            상담 경과 44:15
+                            상담 경과 44:15 { /** 상담시간 체크*/}
                         </Text>
                     </Div>
                     <Div className='chat_main'>
@@ -275,6 +275,7 @@ function ChattingPage() {
 
                             ))
                         }
+                        { /** 대화가 끝났을때 이벤트 체크 후 종료 안내*/}
                         {
                             state === "finish" ?
                                 <>

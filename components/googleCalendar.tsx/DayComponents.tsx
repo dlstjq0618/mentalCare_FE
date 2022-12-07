@@ -369,8 +369,8 @@ function DayComponents(props: IProps) {
                         <RoundedButton
                             onClick={() => {
                                 start(), userType === "채팅" ?
-                                    // window.open("https://mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
-                                    window.open("http://localhost:3000/calendar/ChattingPage", "", options)
+                                    window.open("https://dev.mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
+                                    // window.open("http://localhost:3000/calendar/ChattingPage", "", options)
                                     :
                                     console.log("전화상담")
                             }}
