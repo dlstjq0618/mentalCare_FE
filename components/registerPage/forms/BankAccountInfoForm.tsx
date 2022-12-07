@@ -10,6 +10,7 @@ import {
   FormRowItemWrapper,
   RegisterFormSection,
   DropdownDatePicker,
+  DropdownDatePicker2,
   Dropdown,
   FormFieldErrorMessage,
 } from "~/components";
@@ -196,7 +197,7 @@ export const BankAccountInfoForm = (props: IProps) => {
                 name="accountHolderBirthdate"
                 control={control}
                 render={() => (
-                  <DropdownDatePicker
+                  <DropdownDatePicker2
                     onComplete={(date) => setValue("accountHolderBirthdate", date)}
                   />
                 )}

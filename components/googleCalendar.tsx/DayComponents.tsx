@@ -363,6 +363,7 @@ function DayComponents(props: IProps) {
                             상담 경과<Text left>44:30</Text>
                         </Text>
                 }
+                { /** 채팅상담일 때 새로운 창 생성*/}
                 {
                     !startButton ?
                         <RoundedButton

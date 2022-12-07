@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BaseDialog2, RoundedButton } from '~/components';
+import ko from "date-fns/locale/ko";
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -12,6 +13,7 @@ import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
 import { useSelector } from 'react-redux';
 import { selectCounselingDate } from '~/store/calendarDetailSlice';
+import { selectTutorialTimeState } from '~/store/settingsSlice';
 
 interface IProps {
     open: boolean;
@@ -128,10 +130,15 @@ function ApprovalModal(props: IProps) {
     const [show2, setShow2] = useState<boolean>(props.open);
     const [userName, setUserName] = useState("");
     const [userDate, setUserDate] = useState("");
+    const [selectTimes, setSelectTimes] = useState("");
     const [datePicker, setDatePicker] = useState(false);
     const storeData = useSelector(selectCounselingDate);
 
     const handleClose = props.close
+    const handleSelectTime = (e: any) => { // 예약시간 핸들러
+        console.log("e", e)
+        setSelectTimes(e.target.value)
+    }
 
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
@@ -171,6 +178,8 @@ function ApprovalModal(props: IProps) {
         },
         [setValue]
     );
+    console.log("selectTimes", selectTimes);
+    console.log("storeData", storeData);
     return (
         <>
             <BaseDialog2 style={{ paddingBottom: `${rem(40)}` }} showDialog={props.open} close={handleClose} >
@@ -213,7 +222,7 @@ function ApprovalModal(props: IProps) {
                     <Text style={{ marginLeft: `${rem(10)}` }}>날짜 선택</Text>
                 </Input>
 
-                <Select style={{ marginBottom: `${rem(40)}` }}>
+                <Select style={{ marginBottom: `${rem(40)}` }} onChange={handleSelectTime}>
                     <option value={"none"}>날짜선택</option>
                     {
                         UPDATE_OPEN_TIMES_ALL.map((time: { label: string, value: string }, index: number) => {
@@ -249,7 +258,7 @@ function ApprovalModal(props: IProps) {
                         상담 예정 시간
                     </Text>
                     <Info>
-                        2022.10.12 오후 12:30
+                        {storeData ? format(storeData, "PPP", { locale: ko }) + " " + selectTimes : ""}
                     </Info>
                 </Text>
                 <Text size={17} color={"#333"} bold={"normal"}>

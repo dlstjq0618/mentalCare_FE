@@ -54,11 +54,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         }
     }, [open])
 
-    useEffect(() => {
-        console.log("passwordSave", passwordSave);
-    })
-
-
+    console.log("aaaa", fileUploadDate)
     const onSubmit = (data: any) => { // vi signUp Api request
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
@@ -82,20 +78,50 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_holder_birthdate: data.accountHolderBirthdate === "" ? fileUploadDate.accountInfo.accountHolderBirthdate : data.accountHolderBirthdate,
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
-                opening_times: [
-                    {
-                        id: null,
-                        weekday: 0,
-                        start_time: "07:00:00",
-                        end_time: "20:00:00"
-                    },
-                    {
-                        id: null,
-                        weekday: 1,
-                        start_time: "07:00:00",
-                        end_time: "22:00:00"
-                    },
-                ],
+                opening_times: data.opening_times,
+                // opening_times: [{
+                //     id: 113,
+                //     end_time: "07:00:00",
+                //     start_time: "23:00:00",
+                //     weekday: 2
+                // },
+                // {
+                //     id: 114,
+                //     end_time: "07:00:00",
+                //     start_time: "23:00:00",
+                //     weekday: 3
+                // },
+                // {
+                //     id: null,
+                //     end_time: "07:00:00",
+                //     start_time: "23:00:00",
+                //     weekday: 6
+                // },
+                // {
+                //     id: null,
+                //     end_time: "07:00:00",
+                //     start_time: "23:00:00",
+                //     weekday: 7
+                // },
+                // {
+                //     id: null,
+                //     end_time: "07:00:00",
+                //     start_time: "23:00:00",
+                //     weekday: 1
+                //     },
+                //     {
+                //         id: null,
+                //         end_time: "07:00:00",
+                //         start_time: "23:00:00",
+                //         weekday: 1
+                //     },
+                //     {
+                //         id: null,
+                //         end_time: "07:00:00",
+                //         start_time: "23:00:00",
+                //         weekday: 1
+                //     },
+                // ],
                 counseling_subject: null,
             })
             .then((res) => {

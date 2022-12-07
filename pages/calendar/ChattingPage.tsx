@@ -93,26 +93,6 @@ const chatData = [{
     discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
     time: "PM 10:38"
 },
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
 
 ]
 

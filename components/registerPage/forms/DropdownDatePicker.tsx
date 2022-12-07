@@ -177,3 +177,97 @@ export const DropdownDatePicker = ({
     </Div>
   );
 };
+
+export const DropdownDatePicker2 = ({
+  onComplete,
+}: {
+  onComplete?: (dateStr: string) => void;
+}) => {
+  const [dateState, dispatch] = useReducer(dateStateReducer, {
+    year: "",
+    month: "",
+    day: "",
+    days: "",
+  });
+
+  useEffect(() => {
+    dispatch({
+      type: "days",
+      payload: { year: dateState.year, month: dateState.month },
+    });
+  }, [dateState.year, dateState.month]);
+
+  useEffect(() => {
+    if (onComplete && dateState.year && dateState.month && dateState.day) {
+      onComplete(
+        `${dateState.year}-${dateState.month.length === 1 ? "0" + dateState.month : dateState.month
+        }-${dateState.day.length === 1 ? "0" + dateState.day : dateState.day}`
+      );
+    }
+  }, [dateState.year, dateState.month, dateState.day, onComplete]);
+
+  const infoData = useSelector(selectCounselingInfoData);
+  const placeAccountBirthdate = infoData?.accountInfo?.accountHolderBirthdate
+  const placeYear = placeAccountBirthdate?.substr(0, 4)
+  const placeMonth = placeAccountBirthdate?.substr(5, 2)
+  const placeDay = placeAccountBirthdate?.substr(8, 2)
+
+  const handleYearChange: DropdownOnChange = (year) => {
+    if (!year?.value) return;
+    dispatch({ type: "year", payload: year?.value });
+  };
+
+  const handleMonthChange: DropdownOnChange = (month) => {
+    if (!month?.value) return;
+    dispatch({ type: "month", payload: month?.value });
+  };
+
+  const handleDayChange: DropdownOnChange = (day) => {
+    if (!day?.value) return;
+    dispatch({ type: "day", payload: day?.value });
+  };
+
+  return (
+    <Div
+      css={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: rem(25),
+      }}
+    >
+      <PickerWrapper year>
+        <Dropdown
+          aria-label="년도 선택"
+          id="date-picker-yyyy"
+          placeholder={"YYYY"}
+          options={yearOptions}
+          onChange={handleYearChange}
+        />
+        년
+      </PickerWrapper>
+      <PickerWrapper>
+        <Dropdown
+          aria-label="월 선택"
+          id="date-picker-mm"
+          instanceId="date-picker-mm"
+          placeholder={"mm"}
+          options={monthOptions}
+          onChange={handleMonthChange}
+        />
+        월
+      </PickerWrapper>
+      <PickerWrapper>
+        <Dropdown
+          aria-label="일 선택"
+          id="date-picker-dd"
+          instanceId="date-picker-dd"
+          placeholder={"dd"}
+          options={getDayOptions(dateState.days)}
+          onChange={handleDayChange}
+        />
+        일
+      </PickerWrapper>
+    </Div>
+  );
+};
