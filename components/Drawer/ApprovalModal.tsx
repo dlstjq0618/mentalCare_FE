@@ -178,8 +178,6 @@ function ApprovalModal(props: IProps) {
         },
         [setValue]
     );
-    console.log("selectTimes", selectTimes);
-    console.log("storeData", storeData);
     return (
         <>
             <BaseDialog2 style={{ paddingBottom: `${rem(40)}` }} showDialog={props.open} close={handleClose} >
