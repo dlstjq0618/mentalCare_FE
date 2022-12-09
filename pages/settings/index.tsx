@@ -108,6 +108,9 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             })
             .then((res) => {
                 console.log("res", res)
+                if (res.isSuccess) {
+                    alert('저장되었습니다.')
+                }
             })
             .catch((e: any) => {
                 console.error(e);

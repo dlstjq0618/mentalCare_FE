@@ -510,7 +510,7 @@ function SettingInfoForm(props: IProps) {
                     </Label>
                     <Input
                         onChange={(e) => {
-                            setCallDayPrice(Number(e.target.value)), setValue('call_consultation_fee_day', e.target.value)
+                            setCallDayPrice(e.target.value), setValue('call_consultation_fee_day', e.target.value)
                         }}
                         value={callDayPrice}
                         defaultValue={infoData.callConsultationFeeDay}
