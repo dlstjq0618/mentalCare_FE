@@ -123,7 +123,12 @@ function CalendarHeader() {
             </Header>
             <Header schedule={true}>
                 <Div>
-                    <StyledSpan underLine size={30} color='#eb541e' count>12</StyledSpan><StyledSpan size={30} count color='black'>명</StyledSpan>&nbsp;<StyledSpan count size={20}>상담 대기중 입니다.</StyledSpan>
+                    <StyledSpan underLine size={30} color='#eb541e' count>12
+                    </StyledSpan><StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>&nbsp;<StyledSpan count size={20}>
+                        상담 대기중 입니다.
+                    </StyledSpan>
                 </Div>
                 <Div>
                     <TemporaryDrawer open={drawerOpen} name={"스케줄 등록"} />

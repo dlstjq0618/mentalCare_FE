@@ -7,6 +7,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 import {
     FileProfileInput,
+    IconButton,
     Input,
     Label,
     SettingLicenceField,
@@ -18,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCounselorName } from '~/store/doctorInfoForChangeSlice';
 import { selectCounselingInfoData, setCounselingProfileImage, selectCounselingProfileImage, setSettingSaveControlls } from '~/store/calendarDetailSlice';
 import { info } from 'console';
+import { RowAndColumnSpacing } from '../Grid/Grid';
 
 interface IProps {
 
@@ -174,8 +176,8 @@ function SettingInfoForm(props: IProps) {
     const infoData = useSelector(selectCounselingInfoData);
     const [dayPrice, setDayPrice] = useState(infoData.consultationFeeDay)
     const [nightPrice, setNightPrice] = useState(infoData.consultationFeeNight);
-    const [callDayPrice, setCallDayPrice] = useState(infoData.callConsultationFeeDay);
-    const [callNightPrice, setCallNightPrice] = useState(infoData.callConsultationFeeNight);
+    const [callDayPrice, setCallDayPrice] = useState("");
+    const [callNightPrice, setCallNightPrice] = useState("");
 
     const [isPassword, setIsPassword] = useState("")
     const [isPasswordConfirm, setIsPasswordConfirm] = useState("")
@@ -243,14 +245,13 @@ function SettingInfoForm(props: IProps) {
         dispatch({ type: "setDoctorLicenceFileName", payload: "" });
     };
 
-
-
     useEffect(() => {
         setDayPrice(infoData.consultationFeeDay);
         setNightPrice(infoData.consultationFeeNight);
         setCallNightPrice(infoData.callConsultationFeeNight);
         setCallDayPrice(infoData.callConsultationFeeDay);
-    }, [infoData.consultationFeeDay, infoData.callConsultationFeeNight, infoData.callConsultationFeeNight, infoData.callConsultationFeeDay])
+
+    }, [infoData])
 
     useEffect(() => {
         if (isPassword === isPasswordConfirm) {
@@ -287,7 +288,8 @@ function SettingInfoForm(props: IProps) {
                                 {"휴대폰번호"}
                             </Text>
                             <Text size={17} color={"#333"} margin={135}>
-                                {phoneNumber}<Text button>수정</Text>
+                                {phoneNumber}
+                                {/* <Text button>수정</Text> */}
                             </Text>
                         </MainDiv>
                     </div>
@@ -584,10 +586,9 @@ function SettingInfoForm(props: IProps) {
                     </Label>
                     <Input
                         onChange={(e) => {
-                            setNightPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
+                            setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
                         value={dayPrice}
-                        defaultValue={infoData.consultationFeeNight}
                         placeholder={"숫자만 입력해 주세요."}
                         autoComplete='off'
                         id="PmPrice"
@@ -636,6 +637,26 @@ function SettingInfoForm(props: IProps) {
                             marginTop: rem(29.5)
                         }}
                     />
+                </StyledDiv>
+                <StyledDiv>
+                    <Label
+                        htmlFor="PmPrice"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            marginTop: rem(33)
+                        }}
+                    >
+                        <div>
+                            {"상담과목"}
+                            <span style={{ color: "#eb541e" }}>
+                                *
+                            </span>
+                        </div>
+                    </Label>
+                    <div style={{ width: `${rem(470)}` }}>
+                        <RowAndColumnSpacing />
+                    </div>
                 </StyledDiv>
             </InfoGrid>
         </>

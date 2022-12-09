@@ -86,6 +86,14 @@ function OpeningTimeForm() {
         useFormContext();
     const infoData = useSelector(selectCounselingInfoData);
     const [users, setUsers] = useState<any>([]);
+    const [checked, setChecked] = useState(false);
+    const [checked1, setChecked1] = useState(false);
+    const [checked2, setChecked2] = useState(false);
+    const [checked3, setChecked3] = useState(false);
+    const [checked4, setChecked4] = useState(false);
+    const [checked5, setChecked5] = useState(false);
+    const [checked6, setChecked6] = useState(false);
+    const [checked7, setChecked7] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -118,7 +126,6 @@ function OpeningTimeForm() {
 
 
     const handleStartTimeSelect = (e: any) => {
-        console.log("e", e)
         setStartTime(e.target.value)
     }
     const handleEndTimeSelect = (e: any) => {
@@ -188,7 +195,7 @@ function OpeningTimeForm() {
         console.log("onRemove")
     };
 
-    const onCreate = (res: any, checked?: boolean) => {
+    const onCreate = (res: any) => {
         const user = {
             weekday: res,
             start_time: "07:00:00",
@@ -197,11 +204,49 @@ function OpeningTimeForm() {
         setUsers([...users, user]);
     }
 
+    const findData = (data: any) => {
+        return data.weekday === 0
+    }
+    const findData1 = (data: any) => {
+        return data.weekday === 1
+    }
+    const findData2 = (data: any) => {
+        return data.weekday === 2
+    }
+    const findData3 = (data: any) => {
+        return data.weekday === 3
+    }
+    const findData4 = (data: any) => {
+        return data.weekday === 4
+    }
+    const findData5 = (data: any) => {
+        return data.weekday === 5
+    }
+    const findData6 = (data: any) => {
+        return data.weekday === 6
+    }
+    const findData7 = (data: any) => {
+        return data.weekday === 7
+    }
+
     useEffect(() => {
-        console.log("user", users);
-        console.log("infoData", infoData);
+        setUsers([...users, infoData.openTimes])
         setValue('opening_times', users)
-    })
+        console.log("user", users);
+    }, [])
+
+    useEffect(() => {
+        infoData.openingTimes?.find(findData) !== undefined ? setCheck(true) : setChecked(false);
+        infoData.openingTimes?.find(findData1) !== undefined ? setCheck1(true) : setChecked1(false);
+        infoData.openingTimes?.find(findData2) !== undefined ? setCheck2(true) : setChecked2(false);
+        infoData.openingTimes?.find(findData3) !== undefined ? setCheck3(true) : setChecked3(false);
+        infoData.openingTimes?.find(findData4) !== undefined ? setCheck4(true) : setChecked4(false);
+        infoData.openingTimes?.find(findData5) !== undefined ? setCheck5(true) : setChecked5(false);
+        infoData.openingTimes?.find(findData6) !== undefined ? setCheck6(true) : setChecked6(false);
+        infoData.openingTimes?.find(findData7) !== undefined ? setCheck7(true) : setChecked7(false);
+    }, [infoData])
+
+
 
     return (
         <InfoGrid width={900}>

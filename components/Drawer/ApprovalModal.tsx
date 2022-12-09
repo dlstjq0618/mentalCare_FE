@@ -267,7 +267,7 @@ function ApprovalModal(props: IProps) {
                         color="black"
                         css={{ flex: 1, height: rem(50), width: rem(153), marginRight: rem(10) }}
                         onClick={() => {
-                            console.log("aaaa")
+                            close()
                         }}
                     >
                         취소
