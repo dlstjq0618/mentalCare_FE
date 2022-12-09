@@ -53,6 +53,8 @@ export const URLS = {
     SIGN_UP: "/api/user/v1/counselor",
     INFO: (id: number) => `/api/user/v1/counselor/${id}/info`,
     UPDATE: (id: number | undefined) => `/api/user/v1/counselor/${id}/info`,
+    CALCULATE: (id: number | undefined, year: number) =>
+      `/api/psychological/v1/calculate/${id}?diff=${year}`,
   },
   DIAGNOSIS: {
     GET_LIST: `/api/service/diagnosis`,

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Grid, List, Flex, Title, Year, ListCard } from "./styles";
 import { api } from "~/woozooapi";
 import styled, { css } from "styled-components";
+import { useSelector } from "react-redux";
+import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
 
 const Subtitle = styled.span`
   height: 17px;
@@ -43,9 +45,10 @@ const Next = () => (
 
 export const SettlementList = () => {
   const currentYear = new Date().getFullYear();
-  const [list, setList] = useState<any>();
+  const [list, setList] = useState<any>([]);
   const [year, setYear] = useState<number>(currentYear);
-
+  const [current, setCurrent] = useState(0);
+  const userid = useSelector(selectCounselorId);
   /*
     useEffect(() => {
     api.settlementAccount.getSettlementList(year).then((response) => {
@@ -57,15 +60,31 @@ export const SettlementList = () => {
   }, [year]);
    */
 
+  useEffect(() => {
+    if (userid) {
+      api.counselor.calculate(userid, current).then((res) => {
+        console.log("list", res.data)
+        setList(res.data)
+        console.log(":list", list);
+      })
+
+    }
+  }, [userid, current])
+
 
 
   const handlePrevious = () => {
+    setCurrent(current - 1);
     setYear(year - 1);
   };
   const handleNext = () => {
     setYear(year + 1);
+    setCurrent(current + 1);
   };
 
+  useEffect(() => {
+    console.log("current", current);
+  })
   return (
     <Flex
       css={{
@@ -103,23 +122,7 @@ export const SettlementList = () => {
           </Flex>
         </Year>
         <List>
-          {list &&
-            Object.keys(list)
-              .reverse()
-              ?.map((key, index) => (
-                <div key={key}>
-                  <ListCard>
-                    <span className="month">{key}월</span>
-                    <span className="amount">{String(Number(Number(list[key].replace(',', '').replace('원', '')) * 0.97).toLocaleString()).substring(list[key].indexOf('.'), list[key].length - 1).replace('.', '') + "원"}</span>
-                  </ListCard>
-                  {index !== Object.keys(list).length - 1 ? <Divider /> : null}
-                </div>
-              ))}
-          {/* <ListCard>
-            <span className="month">11월</span>
-            <span className="amount">5,000,000원</span>
-          </ListCard>
-          <Divider /> */}
+
         </List>
       </Grid>
     </Flex >

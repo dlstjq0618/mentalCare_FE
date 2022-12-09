@@ -44,6 +44,22 @@ export const counselor = {
         return data;
     },
 
+    calculate: async (id: number | undefined, year: number) => {
+        const sessions = await getSession();
+
+        const { data } = await axios.request<
+            DoctorInfoResponse,
+            AxiosResponse<DoctorInfoResponse>
+        >({
+            url: URLS.COUNSELOR.CALCULATE(id, year),
+            method: "GET",
+            headers: {
+                Authorization: `jwt ${sessions?.accessToken}`,
+            },
+        });
+        return data;
+    },
+
     update: async (id: number | undefined, payload: CounselorPayload) => {
         const sessions = await getSession();
         const { data } = await axios.request<
