@@ -62,10 +62,6 @@ export const BankAccountInfoForm = (props: IProps) => {
   //     setNightPrice(infoData.consultationFeeNight);
   // }, [infoData.consultationFeeDay, infoData.consultationFeeNight])
 
-  useEffect(() => {
-
-  }, [bankInfoData])
-
   return (
     <>
       {

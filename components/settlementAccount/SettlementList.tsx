@@ -63,9 +63,7 @@ export const SettlementList = () => {
   useEffect(() => {
     if (userid) {
       api.counselor.calculate(userid, current).then((res) => {
-        console.log("list", res.data)
         setList(res.data)
-        console.log(":list", list);
       })
 
     }

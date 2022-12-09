@@ -1,98 +1,155 @@
-import React, { useEffect, useState } from "react";
-import { rem } from "polished";
-import { styled } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
-import CheckboxLabels from "~/components/CheckBox/MuiCheckBox";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { useDispatch, useSelector } from "react-redux";
-import { setTutorialArrayState, selectTutorialWorkWeekState, setTutorialWorkWeekDay, setTutorialWorkWeekState, selectTutorialWorkWeekDay, selectTutorialArrayState } from "~/store/settingsSlice";
+import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { rem } from 'polished'
+import styled, { css } from 'styled-components';
+import { useFormContext } from "react-hook-form";
+import { useSelector } from 'react-redux';
+import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
 
-interface IDateProps {
-  date?: string[];
+interface IStyled {
+  button?: boolean;
 }
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#f7f7f7",
-  ...theme.typography.body2,
-  height: 54,
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  borderRadius: 60,
-  fontSize: 22,
-  padding: "12.3px 19.4px 17.2px 19.3px"
-}));
 
-export default function MuiGrid(props: IDateProps) {
-  const dispatch = useDispatch()
-  const selectWeekstate = useSelector(selectTutorialWorkWeekState);
-  const [selectDay, setSelectDay] = useState<any>([]);
-  // const sortData: number[] = selectDay.slice().sort((a: number, b: number) => a - b)
-  const [itemState, setItemState] = useState(false);
-  const [itemState1, setItemState1] = useState(false);
-  const [itemState2, setItemState2] = useState(false);
-  const [itemState3, setItemState3] = useState(false);
-  const [itemState4, setItemState4] = useState(false);
-  const [itemState5, setItemState5] = useState(false);
-  const [itemState6, setItemState6] = useState(false);
-  const index = [0, 1, 2, 3, 4, 5, 6]
-  const [weekState, setWeekState] = useState(false)
+const Item = styled.div<IStyled>`
+  border: 1px solid #eb541e;
+  text-align: center;
+  height: ${rem(35)};
+  padding: ${rem(4.5)};
+  border-radius: 35px;
+  ${(props) =>
+    props.button &&
+    css`
+        background-color: #eb541e;
+        color: #fff;
+    `}
+`;
 
+export function RowAndColumnSpacing() {
+  const { register, setValue, setError, trigger, getValues, formState, watch } =
+    useFormContext();
+  const infoData = useSelector(selectCounselingInfoData);
 
-  if (selectDay.length === 0) {
-    dispatch(setTutorialArrayState("null"))
-  } else {
-    dispatch(setTutorialArrayState("notnull"))
+  const [checked, setChecked] = useState(false);
+  const [checked1, setChecked1] = useState(false);
+  const [checked2, setChecked2] = useState(false);
+  const [checked3, setChecked3] = useState(false);
+  const [checked4, setChecked4] = useState(false);
+  const [checked5, setChecked5] = useState(false);
+  const [users, setUsers] = useState<any>([]);
+
+  const findData = (data: any) => {
+    return data.name === '대인관계'
+  }
+  const findData1 = (data: any) => {
+    return data.name === '가족/육아'
+  }
+  const findData2 = (data: any) => {
+    return data.name === '진로/직장'
+  }
+  const findData3 = (data: any) => {
+    return data.name === '트라우마'
+  }
+  const findData4 = (data: any) => {
+    return data.name === '고민상담'
+  }
+  const findData5 = (data: any) => {
+    return data.name === '연애/결혼'
+  }
+
+  const onCreate = (name: string) => {
+    const user = {
+      name: name
+    }
+    setUsers([...users, user]);
+  }
+
+  const onRemove = (name: string) => {
+    setUsers(users.filter((user: { name: string; }) => user.name !== name));
+    console.log("onRemove")
+  };
+
+  const handleCheckControlls = (name: number) => {
+    if (name === 1 && !checked) {
+      onCreate("대인관계")
+    } else if (name === 1 && checked) {
+      onRemove("대인관계")
+    }
+  }
+  const handleCheckControlls2 = (name: number) => {
+    if (name === 2 && !checked1) {
+      onCreate("가족/육아")
+    } else if (name === 2 && checked1) {
+      onRemove("가족/육아")
+    }
+  }
+  const handleCheckControlls3 = (name: number) => {
+    if (name === 3 && !checked2) {
+      onCreate("진로/직장")
+    } else if (name === 3 && checked2) {
+      onRemove("진로/직장")
+    }
+  }
+  const handleCheckControlls4 = (name: number) => {
+    if (name === 4 && !checked3) {
+      onCreate("트라우마")
+    } else if (name === 4 && checked3) {
+      onRemove("트라우마")
+    }
+  }
+  const handleCheckControlls5 = (name: number) => {
+    if (name === 5 && !checked4) {
+      onCreate("고민상담")
+    } else if (name === 5 && checked4) {
+      onRemove("고민상담")
+    }
+  }
+  const handleCheckControlls6 = (name: number) => {
+    if (name === 6 && !checked5) {
+      onCreate("연애/결혼")
+    } else if (name === 6 && checked5) {
+      onRemove("연애/결혼")
+    }
   }
 
   useEffect(() => {
-    dispatch(setTutorialWorkWeekDay(selectDay))
+    console.log('user,', users)
+    setValue('counseling_subject', users)
+  }, [users])
 
-    if (itemState5 || itemState6) {
-      dispatch(setTutorialWorkWeekState("weekEnd"));
-    } else {
-      dispatch(setTutorialWorkWeekState("weekDay"));
-    }
-  })
-
+  useEffect(() => {
+    infoData.counselingSubject?.find(findData) !== undefined ? setChecked(true) : setChecked(false);
+    infoData.counselingSubject?.find(findData1) !== undefined ? setChecked1(true) : setChecked1(false)
+    infoData.counselingSubject?.find(findData2) !== undefined ? setChecked2(true) : setChecked2(false)
+    infoData.counselingSubject?.find(findData3) !== undefined ? setChecked3(true) : setChecked3(false)
+    infoData.counselingSubject?.find(findData4) !== undefined ? setChecked4(true) : setChecked4(false)
+    infoData.counselingSubject?.find(findData5) !== undefined ? setChecked5(true) : setChecked5(false)
+  }, [infoData.counselingSubject])
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Grid
-        container
-        spacing={0}
-        style={{ marginTop: "2vh", justifyContent: "space-between" }}
-      >
-        <Grid item xs={1.5} onClick={() => { setItemState(!itemState), setSelectDay([...selectDay, index[0]]) }}>
-          <Item style={itemState ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>월</Item>
+    <Box sx={{ width: '100%', cursor: 'pointer', marginTop: "1.84375rem" }}>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={4}>
+          <Item button={checked} onClick={() => { setChecked(!checked), handleCheckControlls(1) }}>대인관계</Item>
         </Grid>
-        <Grid item xs={1.5} onClick={() => { setItemState1(!itemState1), setSelectDay([...selectDay, index[1]]) }}>
-          <Item style={itemState1 ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>화</Item>
+        <Grid item xs={4}>
+          <Item button={checked1} onClick={() => { setChecked1(!checked1), handleCheckControlls2(2) }}>가족/육아</Item>
         </Grid>
-        <Grid item xs={1.5} onClick={() => { setItemState2(!itemState2), setSelectDay([...selectDay, index[2]]) }}>
-          <Item style={itemState2 ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>수</Item>
+        <Grid item xs={4}>
+          <Item button={checked2} onClick={() => { setChecked2(!checked2), handleCheckControlls3(3) }}>진로/직장</Item>
         </Grid>
-        <Grid item xs={1.5} onClick={() => { setItemState3(!itemState3), setSelectDay([...selectDay, index[3]]) }}>
-          <Item style={itemState3 ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>목</Item>
+        <Grid item xs={4}>
+          <Item button={checked3} onClick={() => { setChecked3(!checked3), handleCheckControlls4(4) }}>트라우마</Item>
         </Grid>
-        <Grid item xs={1.5} onClick={() => { setItemState4(!itemState4), setSelectDay([...selectDay, index[4]]) }}>
-          <Item style={itemState4 ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>금</Item>
+        <Grid item xs={4}>
+          <Item button={checked4} onClick={() => { setChecked4(!checked4), handleCheckControlls5(5) }}>고민상담</Item>
         </Grid>
-        <Grid item xs={1.5} onClick={() => { setItemState5(!itemState5), setSelectDay([...selectDay, index[5]]) }}>
-          <Item style={itemState5 ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>토</Item>
-        </Grid>
-        <Grid item xs={1.5} onClick={() => { setItemState6(!itemState6), setSelectDay([...selectDay, index[6]]) }}>
-          <Item style={itemState6 ? { background: "#eb541e", color: "#fff", cursor: "pointer" } : { background: "#f7f7f7", cursor: "pointer" }}>일</Item>
+        <Grid item xs={4}>
+          <Item button={checked5} onClick={() => { setChecked5(!checked5), handleCheckControlls6(6) }}>연애/결혼</Item>
         </Grid>
       </Grid>
-      {selectWeekstate !== "" ? (
-        <>
-          <p style={{ fontSize: rem(22), padding: rem(19), margin: 0, paddingTop: rem(93) }}>
-            진료를 쉬는 점심 시간은 어떻게 되나요?
-          </p>
-          <CheckboxLabels day={selectWeekstate}></CheckboxLabels>
-        </>
-      ) : null}
     </Box>
   );
 }
