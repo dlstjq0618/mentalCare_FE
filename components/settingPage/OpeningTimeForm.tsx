@@ -84,9 +84,10 @@ const Select = styled.select<IStyled>`
 function OpeningTimeForm() {
     const { register, setValue, setError, trigger, getValues, formState, watch } =
         useFormContext();
-    const [users, setUsers] = useState<any>([]);
-    const dispatch = useDispatch();
     const infoData = useSelector(selectCounselingInfoData);
+    const [users, setUsers] = useState<any>([]);
+
+    const dispatch = useDispatch();
 
     const [startTime, setStartTime] = useState("")
     const [startTime2, setStartTime2] = useState("")
@@ -115,21 +116,6 @@ function OpeningTimeForm() {
     const [check6, setCheck6] = useState(false)
     const [check7, setCheck7] = useState(false)
 
-
-    const onRemove = (id: number) => {
-        setUsers(users.filter((user: { weekday: number; }) => user.weekday !== id));
-        console.log("onRemove")
-    }
-
-    const onCreate = (value: number) => {
-        const user = {
-            id: infoData.openingTimes[value] ? infoData.openingTimes[value]?.id : null,
-            weekday: infoData.openingTimes[value] ? infoData.openingTimes[value]?.weekday : value,
-            start_time: "07:00:00",
-            end_time: "23:00:00"
-        }
-        setUsers([...users, user]);
-    }
 
     const handleStartTimeSelect = (e: any) => {
         console.log("e", e)
@@ -197,17 +183,30 @@ function OpeningTimeForm() {
         }
     }
 
+    const onRemove = (id: number) => {
+        setUsers(users.filter((user: { weekday: number; }) => user.weekday !== id));
+        console.log("onRemove")
+    };
+
+    const onCreate = (res: any, checked?: boolean) => {
+        const user = {
+            weekday: res,
+            start_time: "07:00:00",
+            end_time: "23:00:00"
+        }
+        setUsers([...users, user]);
+    }
+
     useEffect(() => {
         console.log("user", users);
         console.log("infoData", infoData);
         setValue('opening_times', users)
     })
 
-
     return (
         <InfoGrid width={900}>
             <Div className='OpeningTime' margin={24}>
-                <Text size={18} bold='bold' color='#333'>
+                <Text size={18} bold='bold' color='#382b2b'>
                     운영시간
                 </Text>
             </Div>
@@ -215,7 +214,7 @@ function OpeningTimeForm() {
                 <Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls(0), setCheck(!check) }}>
-                            <IconCheckboxes check={infoData?.openingTimes?.map((res: any) => res.weekday === 0 ? true : false)} />
+                            <IconCheckboxes check={check} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"월요일"}
@@ -242,7 +241,7 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls1(1), setCheck1(!check1) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check1} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"화요일"}
@@ -269,7 +268,7 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls2(2), setCheck2(!check2) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check2} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"수요일"}
@@ -296,7 +295,7 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls3(3), setCheck3(!check3) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check3} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"목요일"}
@@ -323,7 +322,7 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls4(4), setCheck4(!check4) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check4} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"금요일"}
@@ -350,7 +349,7 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls5(5), setCheck5(!check5) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check5} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"토요일"}
@@ -377,7 +376,7 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls6(6), setCheck6(!check6) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check6} />
                         </div>
                         <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
                             {"일요일"}
@@ -404,10 +403,10 @@ function OpeningTimeForm() {
                     </Div>
                     <Div margin={10} flex>
                         <div onClick={() => { handleCheckControlls7(7), setCheck7(!check7) }}>
-                            <IconCheckboxes />
+                            <IconCheckboxes check={check7} />
                         </div>
-                        <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(35)}` }}>
-                            {"공휴일"}
+                        <div style={{ marginLeft: `${rem(5)}`, marginRight: `${rem(10)}` }}>
+                            {"법정공휴일"}
                         </div>
                         <div>
                             <div>

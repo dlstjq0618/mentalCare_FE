@@ -30,7 +30,7 @@ interface IStyled {
     width?: number;
     bottom?: number;
     button?: boolean;
-
+    spacing?: number;
 }
 
 const StyledDiv = styled.div`
@@ -102,6 +102,12 @@ const Text = styled.span<IStyled>`
         margin-left: ${rem(props.margin)};
     `}
     ${(props) =>
+        props.spacing &&
+        css`
+            letter-spacing: ${rem(props.spacing)};
+            opacity: 0.5;
+    `}
+    ${(props) =>
         props.button &&
         css`
         cursor: pointer;
@@ -168,6 +174,8 @@ function SettingInfoForm(props: IProps) {
     const infoData = useSelector(selectCounselingInfoData);
     const [dayPrice, setDayPrice] = useState(infoData.consultationFeeDay)
     const [nightPrice, setNightPrice] = useState(infoData.consultationFeeNight);
+    const [callDayPrice, setCallDayPrice] = useState(infoData.callConsultationFeeDay);
+    const [callNightPrice, setCallNightPrice] = useState(infoData.callConsultationFeeNight);
 
     const [isPassword, setIsPassword] = useState("")
     const [isPasswordConfirm, setIsPasswordConfirm] = useState("")
@@ -240,7 +248,9 @@ function SettingInfoForm(props: IProps) {
     useEffect(() => {
         setDayPrice(infoData.consultationFeeDay);
         setNightPrice(infoData.consultationFeeNight);
-    }, [infoData.consultationFeeDay, infoData.consultationFeeNight])
+        setCallNightPrice(infoData.callConsultationFeeNight);
+        setCallDayPrice(infoData.callConsultationFeeDay);
+    }, [infoData.consultationFeeDay, infoData.callConsultationFeeNight, infoData.callConsultationFeeNight, infoData.callConsultationFeeDay])
 
     useEffect(() => {
         if (isPassword === isPasswordConfirm) {
@@ -248,9 +258,8 @@ function SettingInfoForm(props: IProps) {
         } else {
             dispatch2(setSettingSaveControlls(false))
         }
-        console.log("password", isPassword);
-        console.log("password2", isPasswordConfirm);
     }, [isPassword, isPasswordConfirm])
+
 
     return (
         <>
@@ -347,7 +356,7 @@ function SettingInfoForm(props: IProps) {
                     required
                     label='상담사 자격증'
                     name="certificate_image"
-                    fileName={registerFormState.doctorLicenseFileName}
+                    fileName={infoData.certificateImage ? "등록된 정보 입니다." : registerFormState.doctorLicenseFileName}
                     handleUpload={handleDoctorLicenseUpload}
                     handleDelete={handleDoctorLicenseDelete}
                 />
@@ -372,8 +381,8 @@ function SettingInfoForm(props: IProps) {
                         defaultValue={infoData.career}
                         css={{
                             maxHeight: rem(150),
-                            minHeight: rem(80),
-                            height: rem(80),
+                            minHeight: rem(120),
+                            height: rem(120),
                             width: rem(480),
                             border: "1px solid $gray06",
                             borderRadius: rem(20),
@@ -402,8 +411,8 @@ function SettingInfoForm(props: IProps) {
                         defaultValue={infoData.qualificationLevel}
                         css={{
                             maxHeight: rem(150),
-                            minHeight: rem(80),
-                            height: rem(80),
+                            minHeight: rem(120),
+                            height: rem(120),
                             width: rem(480),
                             border: "1px solid $gray06",
                             borderRadius: rem(20),
@@ -432,8 +441,8 @@ function SettingInfoForm(props: IProps) {
                         defaultValue={infoData.education}
                         css={{
                             maxHeight: rem(150),
-                            minHeight: rem(80),
-                            height: rem(80),
+                            minHeight: rem(120),
+                            height: rem(120),
                             width: rem(480),
                             border: "1px solid $gray06",
                             borderRadius: rem(20),
@@ -462,8 +471,8 @@ function SettingInfoForm(props: IProps) {
                         defaultValue={infoData.otherHistory}
                         css={{
                             maxHeight: rem(150),
-                            minHeight: rem(80),
-                            height: rem(80),
+                            minHeight: rem(120),
+                            height: rem(120),
                             width: rem(480),
                             border: "1px solid $gray06",
                             borderRadius: rem(20),
@@ -489,22 +498,28 @@ function SettingInfoForm(props: IProps) {
                             marginTop: rem(33)
                         }}
                     >
-                        주간 상담비
-                        <span style={{ color: "#eb541e" }}>
-                            *
-                        </span>
+                        <div>
+                            {"전화 상담비 (주간)"}
+                            <span style={{ color: "#eb541e" }}>
+                                *
+                            </span>
+                        </div>
+                        <Text spacing={-1.47}>
+                            {infoData.callConsultationDayTime}
+                        </Text>
                     </Label>
                     <Input
                         onChange={(e) => {
-                            setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
+                            setCallDayPrice(Number(e.target.value)), setValue('call_consultation_fee_day', e.target.value)
                         }}
-                        defaultValue={dayPrice}
+                        value={callDayPrice}
+                        defaultValue={infoData.callConsultationFeeDay}
+                        placeholder={"숫자만 입력해 주세요."}
                         autoComplete='off'
-                        id="AmPrice"
+                        id="CallAmPrice"
                         type="number"
-                        placeholder="비밀번호를 입력해주세요."
                         css={{
-                            textAlign: "right",
+                            textAlign: "left",
                             paddingInline: rem(30),
                             width: rem(475),
                             marginTop: rem(29.5)
@@ -520,22 +535,102 @@ function SettingInfoForm(props: IProps) {
                             marginTop: rem(33)
                         }}
                     >
-                        야간 상담비
-                        <span style={{ color: "#eb541e" }}>
-                            *
-                        </span>
+                        <div>
+                            {"전화 상담비 (야간)"}
+                            <span style={{ color: "#eb541e" }}>
+                                *
+                            </span>
+                        </div>
+                        <Text spacing={-1.47}>
+                            {infoData.callConsultationNightTime}
+                        </Text>
+                    </Label>
+                    <Input
+                        onChange={(e) => {
+                            setCallNightPrice(e.target.value), setValue('call_consultation_fee_night', e.target.value)
+                        }}
+                        value={callNightPrice}
+                        defaultValue={infoData.callConsultationFeeNight}
+                        placeholder={"숫자만 입력해 주세요."}
+                        autoComplete='off'
+                        id="CallPmPrice"
+                        type="number"
+                        css={{
+                            textAlign: "left",
+                            paddingInline: rem(30),
+                            width: rem(475),
+                            marginTop: rem(29.5)
+                        }}
+                    />
+                </StyledDiv>
+                <StyledDiv>
+                    <Label
+                        htmlFor="PmPrice"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            marginTop: rem(33)
+                        }}
+                    >
+                        <div>
+                            {"채팅 상담비 (주간)"}
+                            <span style={{ color: "#eb541e" }}>
+                                *
+                            </span>
+                        </div>
+                        <Text spacing={-1.47}>
+                            {infoData.consultationNightTime}
+                        </Text>
                     </Label>
                     <Input
                         onChange={(e) => {
                             setNightPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
-                        defaultValue={nightPrice}
+                        value={dayPrice}
+                        defaultValue={infoData.consultationFeeNight}
+                        placeholder={"숫자만 입력해 주세요."}
                         autoComplete='off'
                         id="PmPrice"
                         type="number"
-                        placeholder="비밀번호를 한번 더 입력해주세요."
                         css={{
-                            textAlign: "right",
+                            textAlign: "left",
+                            paddingInline: rem(30),
+                            width: rem(475),
+                            marginTop: rem(29.5)
+                        }}
+                    />
+                </StyledDiv>
+                <StyledDiv>
+                    <Label
+                        htmlFor="PmPrice"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            marginTop: rem(33)
+                        }}
+                    >
+                        <div>
+                            {"채팅 상담비 (야간)"}
+                            <span style={{ color: "#eb541e" }}>
+                                *
+                            </span>
+                        </div>
+                        <Text spacing={-1.47}>
+                            {infoData.consultationNightTime}
+                        </Text>
+                    </Label>
+                    <Input
+                        onChange={(e) => {
+                            setNightPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
+                        }}
+                        value={nightPrice}
+                        defaultValue={infoData.consultationFeeNight}
+                        placeholder={"숫자만 입력해 주세요."}
+                        autoComplete='off'
+                        id="PmPrice"
+                        type="number"
+                        css={{
+                            textAlign: "left",
                             paddingInline: rem(30),
                             width: rem(475),
                             marginTop: rem(29.5)
