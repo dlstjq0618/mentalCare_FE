@@ -199,6 +199,8 @@ export interface CounselorPayload {
   other_history: string;
   consultation_fee_day: number;
   consultation_fee_night: number;
+  call_consultation_fee_day: number;
+  call_consultation_fee_night: number;
   opening_times?: any;
   account_info?: {
     bank_name: string;

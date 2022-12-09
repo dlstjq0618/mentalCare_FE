@@ -93,6 +93,8 @@ export const LoginFormSection = () => {
     router.push("/calendar");
   };
 
+  console.log("login_dev");
+
   return (
     <LoginFormSectionWrapper>
       <h1>로그인(개발서버)</h1>
