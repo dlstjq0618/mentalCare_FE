@@ -77,6 +77,7 @@ export const LoginFormSection = () => {
       uid: email,
       password,
     })
+    console.log("signInResult", signInResult);
     if (signInResult?.error) {
       setApiErrorMessage("로그인에 실패했습니다.");
       return;

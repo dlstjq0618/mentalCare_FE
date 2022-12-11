@@ -72,39 +72,16 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 other_history: data.other_history,
                 consultation_fee_day: data.consultation_fee_day,
                 consultation_fee_night: data.consultation_fee_night,
-                call_consultation_fee_day: Number(data.call_consultation_fee_day),
-                call_consultation_fee_night: Number(data.call_consultation_fee_night),
+                call_consultation_fee_day: data.call_consultation_fee_day === null ? fileUploadDate.callConsultationFeeDay : data.call_consultation_fee_day,
+                call_consultation_fee_night: data.call_consultation_fee_day === null ? fileUploadDate.callConsultationFeeNight : data.call_consultation_fee_night,
                 account_info: {
                     bank_name: data.bankName === "" ? fileUploadDate.accountInfo.bankName : data.bankName,
                     account_holder: data.accountHolder === "" ? fileUploadDate.accountInfo.accountHolder : data.accountHolder,
                     account_holder_birthdate: data.accountHolderBirthdate === "" ? fileUploadDate.accountInfo.accountHolderBirthdate : data.accountHolderBirthdate,
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
-                opening_times: data.opening_times,
-                // opening_times: [{
-                //     end_time: "07:00:00",
-                //     start_time: "23:00:00",
-                //     weekday: 2
-                // },
-                // {
-                //     end_time: "07:00:00",
-                //     start_time: "23:00:00",
-                //     weekday: 3
-                // },
-                // {
-                //     end_time: "07:00:00",
-                //     start_time: "23:00:00",
-                //     weekday: 6
-                // },
-                // ],
-                counseling_subject: [
-                    {
-                        "name": "대인관계"
-                    },
-                    {
-                        "name": "연애/결혼"
-                    }
-                ],
+                opening_times: data.opening_times.length === 0 ? fileUploadDate.openingTimes : data.opening_times,
+                counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject
             })
             .then((res) => {
                 console.log("res", res)
@@ -116,24 +93,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 console.error(e);
             });
     };
-    // const onError = (e: any) => { // v1 error message
-    //     console.error("e", e);
-    //     if (e.phone) {
-    //         return alert("휴대폰 번호를 확인해주세요.")
-    //     }
-    //     if (e.doctorLicense) {
-    //         return alert(e.doctorLicense.message)
-    //     }
-    //     if (e.profilePic) {
-    //         return alert(e.profilePic.message)
-    //     }
-    //     if (e.accountHolder) {
-    //         return alert(e.accountHolder.message)
-    //     }
-    //     if (e.hospitalRegister) {
-    //         return alert(e.hospitalRegister.message)
-    //     }
-    // };
 
     return (
         <>

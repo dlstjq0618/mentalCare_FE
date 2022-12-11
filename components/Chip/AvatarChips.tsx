@@ -11,7 +11,7 @@ interface IProps {
 export function TimeChip(props: IProps) {
     return (
         <Stack direction="row" style={{ padding: `5px 0 7px 14px` }} >
-            <Chip style={{ cursor: "pointer" }} icon={<AccessTimeIcon />} label={props.label} variant="outlined" />
+            <Chip style={{ cursor: "pointer" }} icon={<AccessTimeIcon fontSize='small' />} label={props.label} variant="outlined" />
         </Stack>
     );
 }
@@ -19,7 +19,7 @@ export function TimeChip(props: IProps) {
 export function CalendarChip(props: IProps) {
     return (
         <Stack direction="row" style={{ padding: `5px 0 7px 14px` }} >
-            <Chip style={{ cursor: "pointer" }} icon={<CalendarTodayIcon />} label={props.label} variant="outlined" />
+            <Chip style={{ cursor: "pointer" }} icon={<CalendarTodayIcon fontSize='small' />} label={props.label} variant="outlined" />
         </Stack>
     );
 }
