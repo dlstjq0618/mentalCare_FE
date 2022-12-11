@@ -10,7 +10,6 @@ import { selectCounselorOpeningTimes, setCounselorOpeningTimes } from '~/store/s
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
 import { api } from '~/woozooapi';
 import { selectCounselorId } from '~/store/doctorInfoForChangeSlice';
-import { DropdownHourSelect } from './openingTimes';
 
 interface IStyled {
     margin?: number;
