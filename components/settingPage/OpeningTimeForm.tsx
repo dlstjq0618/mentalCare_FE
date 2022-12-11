@@ -233,7 +233,7 @@ function OpeningTimeForm() {
     useEffect(() => {
         console.log("users", users);
         setValue('opening_times', users)
-    }, [users[0]?.start_time, users[0]?.end_time])
+    }, [users])
 
     useEffect(() => {
         infoData.openingTimes?.find(findData) !== undefined ? setCheck(true) : setChecked(false);
