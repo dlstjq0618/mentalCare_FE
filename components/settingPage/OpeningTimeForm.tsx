@@ -10,6 +10,7 @@ import { selectCounselorOpeningTimes, setCounselorOpeningTimes } from '~/store/s
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
 import { api } from '~/woozooapi';
 import { selectCounselorId } from '~/store/doctorInfoForChangeSlice';
+import { DropdownHourSelect } from './openingTimes';
 
 interface IStyled {
     margin?: number;
@@ -97,24 +98,6 @@ function OpeningTimeForm() {
 
     const dispatch = useDispatch();
 
-    const [startTime, setStartTime] = useState("")
-    const [startTime2, setStartTime2] = useState("")
-    const [startTime3, setStartTime3] = useState("")
-    const [startTime4, setStartTime4] = useState("")
-    const [startTime5, setStartTime5] = useState("")
-    const [startTime6, setStartTime6] = useState("")
-    const [startTime7, setStartTime7] = useState("")
-    const [startTime8, setStartTime8] = useState("")
-
-    const [endTime, setEndtime] = useState("")
-    const [endTime2, setEndtime2] = useState("")
-    const [endTime3, setEndtime3] = useState("")
-    const [endTime4, setEndtime4] = useState("")
-    const [endTime5, setEndtime5] = useState("")
-    const [endTime6, setEndtime6] = useState("")
-    const [endTime7, setEndtime7] = useState("")
-    const [endTime8, setEndtime8] = useState("")
-
     const [check, setCheck] = useState(false)
     const [check1, setCheck1] = useState(false)
     const [check2, setCheck2] = useState(false)
@@ -126,10 +109,15 @@ function OpeningTimeForm() {
 
 
     const handleStartTimeSelect = (e: any) => {
-        setStartTime(e.target.value)
+        if (users) {
+            users[0].start_time = e.target.value;
+        }
     }
     const handleEndTimeSelect = (e: any) => {
-        setEndtime(e.target.value)
+        if (users) {
+            users[0].end_time = e.target.value
+        }
+
     }
 
     const handleCheckControlls = (id: number) => {
@@ -229,11 +217,24 @@ function OpeningTimeForm() {
         return data.weekday === 7
     }
 
+    const handleMap = () => {
+        infoData.openingTimes?.map((res: any) => {
+            console.log("res", res)
+            const user = {
+                weekday: res.weekday,
+                start_time: "07:00:00",
+                end_time: "23:00:00"
+            }
+            setUsers(users.concat(user))
+        })
+
+        console.log("res", users)
+    }
+
     useEffect(() => {
-        setUsers([...users, infoData.openTimes])
+        console.log("users", users);
         setValue('opening_times', users)
-        console.log("user", users);
-    }, [])
+    }, [users[0]?.start_time, users[0]?.end_time])
 
     useEffect(() => {
         infoData.openingTimes?.find(findData) !== undefined ? setCheck(true) : setChecked(false);
@@ -245,6 +246,7 @@ function OpeningTimeForm() {
         infoData.openingTimes?.find(findData6) !== undefined ? setCheck6(true) : setChecked6(false);
         infoData.openingTimes?.find(findData7) !== undefined ? setCheck7(true) : setChecked7(false);
     }, [infoData])
+
 
 
 

@@ -11,7 +11,8 @@ import {
     Input,
     Label,
     SettingLicenceField,
-    TextArea
+    TextArea,
+    MoneyInput
 } from "~/components";
 import BadgeAvatars from "~/components/settingPage/AvatarBadge";
 import { api } from "~/woozooapi";
@@ -510,23 +511,19 @@ function SettingInfoForm(props: IProps) {
                             {infoData.callConsultationDayTime}
                         </Text>
                     </Label>
-                    <Input
+                    <MoneyInput
                         onChange={(e) => {
                             setCallDayPrice(e.target.value), setValue('call_consultation_fee_day', e.target.value)
                         }}
-                        value={callDayPrice}
-                        defaultValue={infoData.callConsultationFeeDay}
-                        placeholder={"숫자만 입력해 주세요."}
-                        autoComplete='off'
-                        id="CallAmPrice"
                         type="number"
+                        value={callDayPrice}
                         css={{
-                            textAlign: "left",
-                            paddingInline: rem(30),
-                            width: rem(475),
-                            marginTop: rem(29.5)
+                            input: { fontSize: rem(17) },
+                            span: { fontSize: rem(14) },
                         }}
+                        min={0}
                     />
+
                 </StyledDiv>
                 <StyledDiv>
                     <Label
@@ -547,22 +544,17 @@ function SettingInfoForm(props: IProps) {
                             {infoData.callConsultationNightTime}
                         </Text>
                     </Label>
-                    <Input
+                    <MoneyInput
                         onChange={(e) => {
                             setCallNightPrice(e.target.value), setValue('call_consultation_fee_night', e.target.value)
                         }}
-                        value={callNightPrice}
-                        defaultValue={infoData.callConsultationFeeNight}
-                        placeholder={"숫자만 입력해 주세요."}
-                        autoComplete='off'
-                        id="CallPmPrice"
                         type="number"
+                        value={callNightPrice}
                         css={{
-                            textAlign: "left",
-                            paddingInline: rem(30),
-                            width: rem(475),
-                            marginTop: rem(29.5)
+                            input: { fontSize: rem(17) },
+                            span: { fontSize: rem(14) },
                         }}
+                        min={0}
                     />
                 </StyledDiv>
                 <StyledDiv>
@@ -584,21 +576,17 @@ function SettingInfoForm(props: IProps) {
                             {infoData.consultationNightTime}
                         </Text>
                     </Label>
-                    <Input
+                    <MoneyInput
                         onChange={(e) => {
                             setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
-                        value={dayPrice}
-                        placeholder={"숫자만 입력해 주세요."}
-                        autoComplete='off'
-                        id="PmPrice"
                         type="number"
+                        value={dayPrice}
                         css={{
-                            textAlign: "left",
-                            paddingInline: rem(30),
-                            width: rem(475),
-                            marginTop: rem(29.5)
+                            input: { fontSize: rem(17) },
+                            span: { fontSize: rem(14) },
                         }}
+                        min={0}
                     />
                 </StyledDiv>
                 <StyledDiv>
@@ -620,22 +608,17 @@ function SettingInfoForm(props: IProps) {
                             {infoData.consultationNightTime}
                         </Text>
                     </Label>
-                    <Input
+                    <MoneyInput
                         onChange={(e) => {
-                            setNightPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
+                            setNightPrice(e.target.value), setValue('consultation_fee_night', e.target.value)
                         }}
                         value={nightPrice}
-                        defaultValue={infoData.consultationFeeNight}
-                        placeholder={"숫자만 입력해 주세요."}
-                        autoComplete='off'
-                        id="PmPrice"
                         type="number"
                         css={{
-                            textAlign: "left",
-                            paddingInline: rem(30),
-                            width: rem(475),
-                            marginTop: rem(29.5)
+                            input: { fontSize: rem(17) },
+                            span: { fontSize: rem(14) },
                         }}
+                        min={0}
                     />
                 </StyledDiv>
                 <StyledDiv>
