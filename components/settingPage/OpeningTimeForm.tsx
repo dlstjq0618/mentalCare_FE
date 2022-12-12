@@ -86,6 +86,8 @@ function OpeningTimeForm() {
         useFormContext();
     const infoData = useSelector(selectCounselingInfoData);
     const [users, setUsers] = useState<any>([]);
+    const [inputs, setInputs] = useState<any>([])
+    let defaultValue;
     const [checked, setChecked] = useState(false);
     const [checked1, setChecked1] = useState(false);
     const [checked2, setChecked2] = useState(false);
@@ -116,8 +118,11 @@ function OpeningTimeForm() {
         if (users) {
             users[0].end_time = e.target.value
         }
-
     }
+
+    useEffect(() => {
+        console.log("uers", users)
+    }, [users])
 
     const handleCheckControlls = (id: number) => {
         if (id === 0 && !check) {
@@ -215,25 +220,14 @@ function OpeningTimeForm() {
     const findData7 = (data: any) => {
         return data.weekday === 7
     }
-
-    const handleMap = () => {
-        infoData.openingTimes?.map((res: any) => {
-            console.log("res", res)
-            const user = {
-                weekday: res.weekday,
-                start_time: "07:00:00",
-                end_time: "23:00:00"
-            }
-            setUsers(users.concat(user))
-        })
-
-        console.log("res", users)
-    }
+    useEffect(() => {
+        setValue('opening_times', users)
+        console.log("inputs", users)
+    }, [users])
 
     useEffect(() => {
-        console.log("users", users);
-        setValue('opening_times', users)
-    }, [users])
+        setUsers(infoData.openingTimes)
+    }, [infoData])
 
     useEffect(() => {
         infoData.openingTimes?.find(findData) !== undefined ? setCheck(true) : setChecked(false);
@@ -269,7 +263,7 @@ function OpeningTimeForm() {
                             <div>
                                 <Select onChange={handleStartTimeSelect}>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
-                                        <option key={index} value={res.value}>
+                                        <option key={index} value={res.value} >
                                             {res.label}
                                         </option>
                                     ))}
