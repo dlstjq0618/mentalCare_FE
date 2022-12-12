@@ -98,7 +98,7 @@ export const LoginFormSection = () => {
 
   return (
     <LoginFormSectionWrapper>
-      <h1>로그인(개발서버)</h1>
+      <h1>로그인</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div
           css={{
