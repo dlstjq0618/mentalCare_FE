@@ -45,15 +45,65 @@ const Next = () => (
 
 export const SettlementList = () => {
   const currentYear = new Date().getFullYear();
-  const [list, setList] = useState<any>([]);
+  const [list, setList] = useState<any>();
   const [year, setYear] = useState<number>(currentYear);
   const [current, setCurrent] = useState(0);
   const userid = useSelector(selectCounselorId);
+  const month = [
+    {
+      name: "apr",
+      value: list?.apr,
+    },
+    {
+      name: "aug",
+      value: list?.aug,
+    },
+    {
+      name: "dec",
+      value: list?.dec,
+    },
+    {
+      name: "feb",
+      value: list?.feb,
+    },
+    {
+      name: "jan",
+      value: list?.jan,
+    },
+    {
+      name: "jul",
+      value: list?.jul,
+    },
+    {
+      name: "jun",
+      value: list?.jun,
+    },
+    {
+      name: "mar",
+      value: list?.mar,
+    },
+    {
+      name: "may",
+      value: list?.may,
+    },
+    {
+      name: "nov",
+      value: list?.nov,
+    },
+    {
+      name: "oct",
+      value: list?.oct,
+    },
+    {
+      name: "sep",
+      value: list?.sep,
+    },
+  ]
   /*
     useEffect(() => {
     api.settlementAccount.getSettlementList(year).then((response) => {
       setList(response[year]);
-      // Object.keys(list[year]).forEach((key)=> {
+      // Object.keys(list?[year]).forEach((key)=> {
       //   console.log(key)
       // })
     });
@@ -63,11 +113,13 @@ export const SettlementList = () => {
   useEffect(() => {
     if (userid) {
       api.counselor.calculate(userid, current).then((res) => {
+        console.log("list?", res.data)
         setList(res.data)
       })
-
     }
   }, [userid, current])
+
+  console.log("u")
 
 
 
@@ -81,6 +133,7 @@ export const SettlementList = () => {
   };
 
   useEffect(() => {
+
     console.log("current", current);
   })
   return (
@@ -120,8 +173,25 @@ export const SettlementList = () => {
           </Flex>
         </Year>
         <List>
-
+          {
+            month.map((res: any, index: number) => {
+              return <>
+                <ListCard key={index}>
+                  <span className="month">{index + 1}월</span>
+                  <span className="amount">{res.value?.toLocaleString()}원</span>
+                </ListCard>
+                {<Divider />}
+              </>
+            })
+          }
         </List>
+        {/* <List>
+          <ListCard>
+            <span className="month">11월</span>
+            <span className="amount">5,000,000원</span>
+          </ListCard>
+          <Divider />
+        </List> */}
       </Grid>
     </Flex >
   );

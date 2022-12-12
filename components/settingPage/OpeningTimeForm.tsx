@@ -86,6 +86,8 @@ function OpeningTimeForm() {
         useFormContext();
     const infoData = useSelector(selectCounselingInfoData);
     const [users, setUsers] = useState<any>([]);
+    const [inputs, setInputs] = useState<any>([])
+    let defaultValue;
     const [checked, setChecked] = useState(false);
     const [checked1, setChecked1] = useState(false);
     const [checked2, setChecked2] = useState(false);
@@ -96,24 +98,6 @@ function OpeningTimeForm() {
     const [checked7, setChecked7] = useState(false);
 
     const dispatch = useDispatch();
-
-    const [startTime, setStartTime] = useState("")
-    const [startTime2, setStartTime2] = useState("")
-    const [startTime3, setStartTime3] = useState("")
-    const [startTime4, setStartTime4] = useState("")
-    const [startTime5, setStartTime5] = useState("")
-    const [startTime6, setStartTime6] = useState("")
-    const [startTime7, setStartTime7] = useState("")
-    const [startTime8, setStartTime8] = useState("")
-
-    const [endTime, setEndtime] = useState("")
-    const [endTime2, setEndtime2] = useState("")
-    const [endTime3, setEndtime3] = useState("")
-    const [endTime4, setEndtime4] = useState("")
-    const [endTime5, setEndtime5] = useState("")
-    const [endTime6, setEndtime6] = useState("")
-    const [endTime7, setEndtime7] = useState("")
-    const [endTime8, setEndtime8] = useState("")
 
     const [check, setCheck] = useState(false)
     const [check1, setCheck1] = useState(false)
@@ -126,11 +110,19 @@ function OpeningTimeForm() {
 
 
     const handleStartTimeSelect = (e: any) => {
-        setStartTime(e.target.value)
+        if (users) {
+            users[0].start_time = e.target.value;
+        }
     }
     const handleEndTimeSelect = (e: any) => {
-        setEndtime(e.target.value)
+        if (users) {
+            users[0].end_time = e.target.value
+        }
     }
+
+    useEffect(() => {
+        console.log("uers", users)
+    }, [users])
 
     const handleCheckControlls = (id: number) => {
         if (id === 0 && !check) {
@@ -228,12 +220,14 @@ function OpeningTimeForm() {
     const findData7 = (data: any) => {
         return data.weekday === 7
     }
+    useEffect(() => {
+        setValue('opening_times', users)
+        console.log("inputs", users)
+    }, [users])
 
     useEffect(() => {
-        setUsers([...users, infoData.openTimes])
-        setValue('opening_times', users)
-        console.log("user", users);
-    }, [])
+        setUsers(infoData.openingTimes)
+    }, [infoData])
 
     useEffect(() => {
         infoData.openingTimes?.find(findData) !== undefined ? setCheck(true) : setChecked(false);
@@ -245,6 +239,7 @@ function OpeningTimeForm() {
         infoData.openingTimes?.find(findData6) !== undefined ? setCheck6(true) : setChecked6(false);
         infoData.openingTimes?.find(findData7) !== undefined ? setCheck7(true) : setChecked7(false);
     }, [infoData])
+
 
 
 
@@ -268,7 +263,7 @@ function OpeningTimeForm() {
                             <div>
                                 <Select onChange={handleStartTimeSelect}>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
-                                        <option key={index} value={res.value}>
+                                        <option key={index} value={res.value} >
                                             {res.label}
                                         </option>
                                     ))}

@@ -81,22 +81,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
                 opening_times: data.opening_times.length === 0 ? fileUploadDate.openingTimes : data.opening_times,
-                // opening_times: [{
-                //     end_time: "07:00:00",
-                //     start_time: "23:00:00",
-                //     weekday: 2
-                // },
-                // {
-                //     end_time: "07:00:00",
-                //     start_time: "23:00:00",
-                //     weekday: 3
-                // },
-                // {
-                //     end_time: "07:00:00",
-                //     start_time: "23:00:00",
-                //     weekday: 6
-                // },
-                // ],
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject
             })
             .then((res) => {
@@ -109,24 +93,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 console.error(e);
             });
     };
-    // const onError = (e: any) => { // v1 error message
-    //     console.error("e", e);
-    //     if (e.phone) {
-    //         return alert("휴대폰 번호를 확인해주세요.")
-    //     }
-    //     if (e.doctorLicense) {
-    //         return alert(e.doctorLicense.message)
-    //     }
-    //     if (e.profilePic) {
-    //         return alert(e.profilePic.message)
-    //     }
-    //     if (e.accountHolder) {
-    //         return alert(e.accountHolder.message)
-    //     }
-    //     if (e.hospitalRegister) {
-    //         return alert(e.hospitalRegister.message)
-    //     }
-    // };
 
     return (
         <>
