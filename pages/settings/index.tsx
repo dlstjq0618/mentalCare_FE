@@ -81,16 +81,30 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
                 opening_times: data.opening_times.length === 0 ? fileUploadDate.openingTimes : data.opening_times,
+                // opening_times: [{
+                //     weekday: 0,
+                //     start_time: '08:00:00',
+                //     end_time: "22:00:00"
+                // }],
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject
             })
             .then((res) => {
                 console.log("res", res)
                 if (res.isSuccess) {
-                    alert('저장되었습니다.')
+                    return alert('저장되었습니다.')
                 }
             })
-            .catch((e: any) => {
-                console.error(e);
+            .catch((error: {
+                response: {
+                    data: {
+                        [x: string]: any;
+                        detail: string; password: string;
+                    };
+                };
+            }) => {
+                if (error.response.data.image) {
+                    return alert("프로필 사진을 등록해 주세요.")
+                }
             });
     };
 
