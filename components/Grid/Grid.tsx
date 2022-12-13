@@ -116,13 +116,15 @@ export function RowAndColumnSpacing() {
   }
 
   useEffect(() => {
-    console.log("user", users)
     setValue('counseling_subject', users)
   }, [users])
 
   useEffect(() => {
-    setValue('opening_times', users)
+    setValue('counseling_subject', users)
   })
+  useEffect(() => {
+    setUsers(infoData.counselingSubject)
+  }, [infoData])
 
   useEffect(() => {
     infoData.counselingSubject?.find(findData) !== undefined ? setChecked(true) : setChecked(false);

@@ -209,7 +209,6 @@ function OpeningTimeForm() {
 
     useEffect(() => {
         setValue('opening_times', users)
-        console.log("users", users);
     })
 
     useEffect(() => {
