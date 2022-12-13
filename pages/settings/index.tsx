@@ -105,6 +105,9 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 if (error.response.data.image) {
                     return alert("프로필 사진을 등록해 주세요.")
                 }
+                if (error.response.data.password) {
+                    return alert("비밀번호는 8자리 이상 입력해 주세요.")
+                }
             });
     };
 
