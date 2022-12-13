@@ -121,6 +121,10 @@ export function RowAndColumnSpacing() {
   }, [users])
 
   useEffect(() => {
+    setValue('opening_times', users)
+  })
+
+  useEffect(() => {
     infoData.counselingSubject?.find(findData) !== undefined ? setChecked(true) : setChecked(false);
     infoData.counselingSubject?.find(findData1) !== undefined ? setChecked1(true) : setChecked1(false)
     infoData.counselingSubject?.find(findData2) !== undefined ? setChecked2(true) : setChecked2(false)
