@@ -59,11 +59,11 @@ export function RowAndColumnSpacing() {
     return data.name === '연애/결혼'
   }
 
-  const onCreate = (value: any) => {
-    console.log("name", value);
+  const onCreate = (value: string) => {
     const user = {
-      name: value
+      name: value,
     }
+
     setUsers([...users, user]);
   }
 
@@ -117,13 +117,15 @@ export function RowAndColumnSpacing() {
 
   useEffect(() => {
     setValue('counseling_subject', users)
+    console.log("users,", users);
   }, [users])
 
   useEffect(() => {
-    setValue('counseling_subject', users)
-  })
-  useEffect(() => {
-    setUsers(infoData.counselingSubject)
+    if (infoData.counselingSubject !== null) {
+      setUsers(infoData.counselingSubject)
+    } else {
+      setUsers([])
+    }
   }, [infoData])
 
   useEffect(() => {
