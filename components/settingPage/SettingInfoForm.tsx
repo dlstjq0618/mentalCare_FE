@@ -483,14 +483,6 @@ function SettingInfoForm(props: IProps) {
                         }}
                     />
                 </StyledDiv>
-                {/* <SettingLicenceField
-                    required
-                    label='경력'
-                    name="career"
-                    fileName={registerFormState.careerLicenseFileName}
-                    handleUpload={handleCareerLicenseUpload}
-                    handleDelete={handleCareerLicenseDelete}
-                /> */}
 
                 <StyledDiv>
                     <Label
@@ -516,7 +508,7 @@ function SettingInfoForm(props: IProps) {
                             setCallDayPrice(e.target.value), setValue('call_consultation_fee_day', e.target.value)
                         }}
                         type="number"
-                        value={callDayPrice}
+                        placeholder={callDayPrice}
                         css={{
                             input: { fontSize: rem(17) },
                             span: { fontSize: rem(14) },
@@ -549,7 +541,7 @@ function SettingInfoForm(props: IProps) {
                             setCallNightPrice(e.target.value), setValue('call_consultation_fee_night', e.target.value)
                         }}
                         type="number"
-                        value={callNightPrice}
+                        placeholder={callNightPrice}
                         css={{
                             input: { fontSize: rem(17) },
                             span: { fontSize: rem(14) },
@@ -581,7 +573,7 @@ function SettingInfoForm(props: IProps) {
                             setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
                         type="number"
-                        value={dayPrice}
+                        placeholder={dayPrice}
                         css={{
                             input: { fontSize: rem(17) },
                             span: { fontSize: rem(14) },
@@ -612,7 +604,7 @@ function SettingInfoForm(props: IProps) {
                         onChange={(e) => {
                             setNightPrice(e.target.value), setValue('consultation_fee_night', e.target.value)
                         }}
-                        value={nightPrice}
+                        placeholder={nightPrice}
                         type="number"
                         css={{
                             input: { fontSize: rem(17) },

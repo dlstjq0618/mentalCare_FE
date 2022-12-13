@@ -107,12 +107,9 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   }
   useEffect(() => {
     const userId = window?.localStorage?.getItem("userId");
-    const sessionId = window.localStorage.getItem("session");
+    const sessionId = window?.localStorage?.getItem("session");
     const id = Number(userId);
     dispatch(setCounselorId(id));
-
-    console.log("userId", userId);
-    console.log("sessionId", sessionId);
 
     api.counselor.info(id).then((res) => {
       dispatch(setCounselorName(res.username)),

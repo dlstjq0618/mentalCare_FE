@@ -59,9 +59,10 @@ export function RowAndColumnSpacing() {
     return data.name === '연애/결혼'
   }
 
-  const onCreate = (name: string) => {
+  const onCreate = (value: any) => {
+    console.log("name", value);
     const user = {
-      name: name
+      name: value
     }
     setUsers([...users, user]);
   }
@@ -115,9 +116,9 @@ export function RowAndColumnSpacing() {
   }
 
   useEffect(() => {
+    console.log("user", users)
     setValue('counseling_subject', users)
   }, [users])
-  console.log('user,', users)
 
   useEffect(() => {
     infoData.counselingSubject?.find(findData) !== undefined ? setChecked(true) : setChecked(false);
@@ -128,10 +129,6 @@ export function RowAndColumnSpacing() {
     infoData.counselingSubject?.find(findData5) !== undefined ? setChecked5(true) : setChecked5(false)
   }, [infoData.counselingSubject])
 
-  useEffect(() => {
-    setUsers(infoData.counselingSubject);
-    console.log("qweweq", users)
-  }, [infoData])
 
   return (
     <Box sx={{ width: '100%', cursor: 'pointer', marginTop: "1.84375rem" }}>

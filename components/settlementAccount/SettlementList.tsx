@@ -113,13 +113,11 @@ export const SettlementList = () => {
   useEffect(() => {
     if (userid) {
       api.counselor.calculate(userid, current).then((res) => {
-        console.log("list?", res.data)
         setList(res.data)
       })
     }
   }, [userid, current])
 
-  console.log("u")
 
 
 
@@ -132,10 +130,6 @@ export const SettlementList = () => {
     setCurrent(current + 1);
   };
 
-  useEffect(() => {
-
-    console.log("current", current);
-  })
   return (
     <Flex
       css={{

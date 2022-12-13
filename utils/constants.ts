@@ -188,6 +188,7 @@ export const DAY_OPTIONS = [
 ];
 
 export const ALL_TIME_OPTIONS = [
+  {label: "none", value: "none"},
   { label: "8:00", value: "08:00:00" },
   { label: "8:30", value: "08:30:00" },
   { label: "9:00", value: "09:00:00" },
