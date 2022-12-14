@@ -18,6 +18,7 @@ type DiagnosisDetailStoreState = {
   info: any;
   imageUrl: any;
   password: boolean;
+  socket: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -33,6 +34,7 @@ const initialState: DiagnosisDetailStoreState = {
   info: {},
   imageUrl: "",
   password: false,
+  socket: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -125,6 +127,12 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.password = action.payload;
     },
+    setSocketControlls(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["socket"]>
+    ) {
+      state.socket = action.payload;
+    },
   },
 });
 
@@ -140,6 +148,7 @@ export const {
   setCounselingInfoData,
   setCounselingProfileImage,
   setSettingSaveControlls,
+  setSocketControlls,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -166,4 +175,6 @@ export const selectCounselingProfileImage = (state: RootState) =>
   state.calendarDetail.imageUrl;
 export const selectSettingSaveControlls = (state: RootState) =>
   state.calendarDetail.password;
+export const selectSocketControlls = (state: RootState) =>
+  state.calendarDetail.socket;
 export default calendarDetailSilce.reducer;

@@ -19,6 +19,7 @@ import { firebaseApp, RECAPTCHA_ENTERPRISE_SITE_KEY } from "~/utils/firebase";
 import { ReactNotifications } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import ContextWrapper from '../context/ContextWrapper'
+import { io } from "socket.io-client";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -57,6 +58,33 @@ export default function App({
         console.log("code", error.code);
       });
   }, []);
+
+
+  useEffect(() => {
+    const userId = '888';
+    // const socket = io("http://bo.local.api.woozoo.clinic", {
+
+    const socket = io("https://bo.dev.api.woozoo.clinic", {
+      // transports: ["websocket"],
+      transports: ["polling"],
+      extraHeaders: {
+        "identity": "counselor",
+        "x-auth-token": btoa(userId + "_doraemon01"),
+      }
+    });
+    // log socket connection
+    socket.on("connect", () => {
+      console.log("SOCKET CONNECTED!", socket.id);
+    });
+    socket.emit("counsel_noti", '여기는 우주상담사 웹에서 보내고 있다!');
+    socket.on("counsel_noti", (res: any) => {
+      console.log('받은 내용!', res);
+    });
+    // socket disconnect on component unmount if exists
+    socket.on("disconnect", () => {
+      console.log("SOCKET DIE!", socket.id);
+    });
+  }, [])
 
   return (
     <>

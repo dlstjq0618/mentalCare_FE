@@ -10,6 +10,7 @@ import { selectCounselorOpeningTimes, setCounselorOpeningTimes } from '~/store/s
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
 import { api } from '~/woozooapi';
 import { selectCounselorId } from '~/store/doctorInfoForChangeSlice';
+import { io } from 'socket.io-client'
 
 interface IStyled {
     margin?: number;
