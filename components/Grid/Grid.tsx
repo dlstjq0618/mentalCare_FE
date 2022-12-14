@@ -117,7 +117,6 @@ export function RowAndColumnSpacing() {
 
   useEffect(() => {
     setValue('counseling_subject', users)
-    console.log("users,", users);
   }, [users])
 
   useEffect(() => {
