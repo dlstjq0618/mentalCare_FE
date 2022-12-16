@@ -35,6 +35,8 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     const fileUploadDate = useSelector(selectCounselingInfoData)
     const passwordSave = useSelector(selectSettingSaveControlls);
 
+    console.log("children", children);
+
     useSession({
         required: true,
         onUnauthenticated() {
@@ -54,16 +56,18 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         }
     }, [open])
 
-    console.log("aaaa", fileUploadDate)
     const onSubmit = (data: any) => { // vi signUp Api request
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
         }
-        console.log("data", data);
+        const isMobile = data.mobile?.replace('010', '');
+        console.log("ismobile", isMobile)
+        const customMobile = "0810" + isMobile
+
         api.counselor
             .update(userId, {
                 password: data.password,
-                mobile: data.mobile,
+                mobile: customMobile,
                 image: data.image === "" ? fileUploadDate.image : data.image,
                 certificate_image: data.certificate_image === "" ? fileUploadDate.certificateImage : data.certificate_image,
                 career: data.career,

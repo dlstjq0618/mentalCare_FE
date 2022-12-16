@@ -115,13 +115,12 @@ const Text = styled.span<IStyled>`
         css`
         cursor: pointer;
         flex-grow: 0;
-        width: 42px;
-        height: 25px;
+        height: 28px;
         flex-direction: row;
         text-align: center;
         padding: 1px 10px;
         align-items: flex-start;
-        margin: 8px 3px 1px 14px;
+        margin: 0px 3px 1px 14px;
         gap: 10px;
         border-radius: 4px;
         border: solid 1px rgba(0, 0, 0, 0.3);
@@ -181,10 +180,10 @@ function SettingInfoForm(props: IProps) {
     const [callNightPrice, setCallNightPrice] = useState("");
 
     const [isPassword, setIsPassword] = useState("")
-    const [isPasswordConfirm, setIsPasswordConfirm] = useState("")
+    const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
+    const [phoneNumberChange, setPhoneNumberChange] = useState(false);
 
     const phoneNumber = infoData.mobile?.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '0$2-$3-$4');
-
 
     const handleProfilePicUpload = async (file: File) => {
         const result = validateImageFile(file);
@@ -251,7 +250,6 @@ function SettingInfoForm(props: IProps) {
         setNightPrice(infoData.consultationFeeNight);
         setCallNightPrice(infoData.callConsultationFeeNight);
         setCallDayPrice(infoData.callConsultationFeeDay);
-
     }, [infoData])
 
     useEffect(() => {
@@ -261,6 +259,15 @@ function SettingInfoForm(props: IProps) {
             dispatch2(setSettingSaveControlls(false))
         }
     }, [isPassword, isPasswordConfirm])
+
+    const onlyNumberText = (data: string) => {
+        setTextValue(data)
+        if (data) {
+            const replaceData = data.replace(/[^0-9]/g, "")
+            setValue('mobile', replaceData)
+            return setTextValue(replaceData)
+        }
+    };
 
 
     return (
@@ -284,13 +291,31 @@ function SettingInfoForm(props: IProps) {
                                 {infoData.uid}
                             </Text>
                         </MainDiv>
-                        <MainDiv margin={40} className="phone">
-                            <Text size={17} color={"#999"}>
+                        <MainDiv margin={40} className="phone" style={{ justifyContent: 'space-between' }}>
+                            <Text size={17} color={"#999"} style={{ minWidth: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} margin={135}>
-                                {phoneNumber}
-                                {/* <Text button>수정</Text> */}
+                            <Text size={17} color={"#333"} style={{ width: 225 }}>
+                                {
+                                    !phoneNumberChange ? <>
+                                        {phoneNumber}
+                                        <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text>
+                                    </> :
+                                        <div style={{ display: 'flex' }}>
+                                            <Input
+                                                value={textValue}
+                                                maxLength={11}
+                                                onChange={(e) => {
+                                                    onlyNumberText(e.target.value)
+                                                }}
+                                                type='text'
+                                                css={{
+                                                    height: rem(30),
+                                                    width: rem(150)
+                                                }} />
+                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text>
+                                        </div>
+                                }
                             </Text>
                         </MainDiv>
                     </div>
@@ -508,7 +533,7 @@ function SettingInfoForm(props: IProps) {
                             setCallDayPrice(e.target.value), setValue('call_consultation_fee_day', e.target.value)
                         }}
                         type="number"
-                        placeholder={callDayPrice}
+                        placeholder={callDayPrice?.toLocaleString()}
                         css={{
                             input: { fontSize: rem(17) },
                             span: { fontSize: rem(14) },
@@ -541,7 +566,7 @@ function SettingInfoForm(props: IProps) {
                             setCallNightPrice(e.target.value), setValue('call_consultation_fee_night', e.target.value)
                         }}
                         type="number"
-                        placeholder={callNightPrice}
+                        placeholder={callNightPrice?.toLocaleString()}
                         css={{
                             input: { fontSize: rem(17) },
                             span: { fontSize: rem(14) },
@@ -573,7 +598,7 @@ function SettingInfoForm(props: IProps) {
                             setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
                         }}
                         type="number"
-                        placeholder={dayPrice}
+                        placeholder={dayPrice?.toLocaleString()}
                         css={{
                             input: { fontSize: rem(17) },
                             span: { fontSize: rem(14) },
@@ -604,7 +629,7 @@ function SettingInfoForm(props: IProps) {
                         onChange={(e) => {
                             setNightPrice(e.target.value), setValue('consultation_fee_night', e.target.value)
                         }}
-                        placeholder={nightPrice}
+                        placeholder={nightPrice?.toLocaleString()}
                         type="number"
                         css={{
                             input: { fontSize: rem(17) },

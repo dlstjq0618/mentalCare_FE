@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components';
 import { useFormContext } from "react-hook-form";
 import { useSelector } from 'react-redux';
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface IStyled {
   button?: boolean;
@@ -14,7 +15,7 @@ interface IStyled {
 
 
 const Item = styled.div<IStyled>`
-  border: 1px solid #eb541e;
+  border: 1px solid lightgray;
   text-align: center;
   height: ${rem(35)};
   padding: ${rem(4.5)};
@@ -22,8 +23,8 @@ const Item = styled.div<IStyled>`
   ${(props) =>
     props.button &&
     css`
-        background-color: #eb541e;
-        color: #fff;
+        color: #eb541e;
+        border: 1px solid #eb541e;
     `}
 `;
 

@@ -29,7 +29,7 @@ import { selectDiagnosisCallStatus, selectDiagnosisNotificationNumber, setDiagno
 import {
   isMobile
 } from "react-device-detect";
-import { selectCalendarUserList, setCounselingInfoData, setSessionId } from "~/store/calendarDetailSlice";
+import { selectCalendarUserList, setCounselingInfoData, setSessionId, setSocketControlls } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 
 const { Sider } = Layout;
@@ -108,6 +108,9 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   useEffect(() => {
     const userId = window?.localStorage?.getItem("userId");
     const sessionId = window?.localStorage?.getItem("session");
+    const working = window?.localStorage?.getItem("status");
+
+    dispatch(setSocketControlls(working));
     const id = Number(userId);
     dispatch(setCounselorId(id));
 
@@ -145,7 +148,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   //       icon: "/doctor@3x.png",
   //     })
   //     notify.onclick = (e) => {
-  //       router.push("/diagnosis")
+  //       router.push("/calendaer")
   //     }
   //   }
   // }, 30000);

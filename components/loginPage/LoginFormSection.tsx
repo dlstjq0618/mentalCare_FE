@@ -94,7 +94,6 @@ export const LoginFormSection = () => {
     router.push("/calendar");
   };
 
-  console.log("login_dev");
 
   return (
     <LoginFormSectionWrapper>

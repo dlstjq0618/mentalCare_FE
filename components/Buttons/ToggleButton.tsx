@@ -5,7 +5,7 @@ import { styled } from "~/stitches.config";
 import { api, doctor } from "~/woozooapi";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToggleState, setToggleState } from "~/store/settingsSlice";
-import { P } from "../Elements";
+import { selectCounselingInfoData, selectSocketControlls, setSocketControlls } from "~/store/calendarDetailSlice";
 
 interface Toggle {
   checkedContent?: string;
@@ -45,25 +45,29 @@ const Toggle = styled(Switch, {
 
 export const ToggleButton = ({ activeState }: Toggle) => {
   const dispatch = useDispatch()
-  const puvlicState = useSelector(selectToggleState);
-  const [activate, setActivate] = useState<boolean | undefined>(puvlicState);
+  const status = useSelector(selectSocketControlls);
+  const boolStatus = Boolean(status)
+  const [activate, setActivate] = useState<boolean>(boolStatus);
   const [doctorId, setDoctorId] = useState<number>(0)
+  const infoData = useSelector(selectCounselingInfoData);
+
+  const handleToggleState = (data: any) => {
+    api.counselor.status({
+      is_working: data
+    }).then((res: any) => { dispatch(setSocketControlls(res.isWorking)) })
+  }
 
   useEffect(() => {
-    // api.doctor.info().then((res) => { dispatch(setToggleState(res.hospitalUser.isPublic)), setActivate(res.hospitalUser.isPublic), setDoctorId(res.hospitalUser.id) })
-  }, [])
+    if (infoData.id) {
+      api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking) });
+    }
+  }, [infoData.id])
 
-
-  // const handleToggleState = (data: any) => {
-  //   api.doctor.activate(doctorId, {
-  //     isActive: data
-  //   }).then(() => api.doctor.info().then((res) => { dispatch(setToggleState(res.hospitalUser.isPublic)) }))
-  // }
 
   return (
     <>
       <Toggle
-        // onClick={() => { setActivate(!activate), handleToggleState(!activate) }}
+        onClick={() => { handleToggleState(!activate), setActivate(!activate) }}
         checkedChildren={"진료가능"}
         unCheckedChildren={"진료불가"}
         checked={activate}

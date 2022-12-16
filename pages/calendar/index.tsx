@@ -11,7 +11,11 @@ import LayoutComponent from "~/components/Layout";
 
 // api는 page component 안에서 호출 및 스토어 저장
 
-function ScheduleIndex() {
+interface Iprops {
+    chat?: any
+}
+
+function ScheduleIndex(props: Iprops) {
     { /** 테스트용 데이터 리스트*/ }
     const testData = [{
         id: "Sean",
@@ -115,7 +119,6 @@ function ScheduleIndex() {
     useEffect(() => {
         dispatch(setCalendarUserList(testData));
     }, [testData]);
-
     return (
         <LayoutComponent>
             <MainTitle>대기실</MainTitle>

@@ -408,7 +408,7 @@ export const UPDATE_OPEN_TIMES_ALL = [
     value: "19:00",
   },
   {
-    label: "오후 7:30",
+    label: "오후 07:30",
     value: "19:30",
   },
   {

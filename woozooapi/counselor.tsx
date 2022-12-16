@@ -6,7 +6,8 @@ import {
     DoctorInfoResponse,
     DoctorSignUpResponse,
     Counselor,
-    CounselorPayload
+    CounselorPayload,
+    TogglePayload
 } from "~/interfaces";
 
 export const counselor = {
@@ -69,6 +70,22 @@ export const counselor = {
             url: URLS.COUNSELOR.UPDATE(id),
             method: "PATCH",
             data: payload,
+            headers: {
+                Authorization: `jwt ${sessions?.accessToken}`,
+            },
+        });
+
+        return data;
+    },
+    status: async (paylod: TogglePayload) => {
+        const sessions = await getSession();
+        const { data } = await axios.request<
+            DoctorInfoResponse,
+            AxiosResponse<DoctorInfoResponse>
+        >({
+            url: URLS.COUNSELOR.STATUS,
+            method: "PATCH",
+            data: paylod,
             headers: {
                 Authorization: `jwt ${sessions?.accessToken}`,
             },
