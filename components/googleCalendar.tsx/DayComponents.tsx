@@ -11,6 +11,7 @@ import { ConstructionOutlined } from '@mui/icons-material';
 import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ChatDetail from '~/pages/calendar/[id]';
 
 
 // 스텝바 진행상황 체크 ex) 상담중, 상담완료, 상담실패 등등 
@@ -370,8 +371,9 @@ function DayComponents(props: IProps) {
                         <RoundedButton
                             onClick={() => {
                                 start(), userType === "채팅" ?
-                                    // window.open("https://dev.mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
-                                    window.open(`http://localhost:3000/calendar/${userId.id}`, "", options)
+                                    window.open("https://dev.mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
+                                    // window.open(`http://localhost:3000/calendar/${userId.id}`, "", options)
+                                    // <ChatDetail />
                                     :
                                     console.log("전화상담")
                             }}
