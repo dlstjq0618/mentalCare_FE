@@ -165,56 +165,56 @@ function ChatDetail() {
      
      */
 
-    useEffect(() => {
-        let chatId;
-        api.counselor.info(NumUserId).then((res: any) => {
-            chatId = res.id
-        }).then(() => { })
+    // useEffect(() => {
+    //     let chatId;
+    //     api.counselor.info(NumUserId).then((res: any) => {
+    //         chatId = res.id
+    //     }).then(() => { })
 
-        const userId = window?.localStorage?.getItem("userId");
-        // 로그인 비로그인 체크 해야함
-        const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
-        const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
-        console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64DecodedText)
-        // const socket = io("http://bo.local.api.woozoo.clinic", {
-        const socket = io("https://bo.dev.api.woozoo.clinic", {
-            // transports: ["websocket"],
-            transports: ["polling"],
-            extraHeaders: {
-                "identity": "counselor",
-                "x-auth-token": base64EncodedText,
-            }
-        });
-        // log socket connection
-        socket.on("connect", () => {
-            console.log("SOCKET CONNECTED!", socket.id);
-        });
-        socket.emit("counsel_noti", '여기는 우주상담사 웹에서 보내고 있다!');
+    //     const userId = window?.localStorage?.getItem("userId");
+    //     // 로그인 비로그인 체크 해야함
+    //     const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
+    //     const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
+    //     console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64DecodedText)
+    //     // const socket = io("http://bo.local.api.woozoo.clinic", {
+    //     const socket = io("https://bo.dev.api.woozoo.clinic", {
+    //         // transports: ["websocket"],
+    //         transports: ["polling"],
+    //         extraHeaders: {
+    //             "identity": "counselor",
+    //             "x-auth-token": base64EncodedText,
+    //         }
+    //     });
+    //     // log socket connection
+    //     socket.on("connect", () => {
+    //         console.log("SOCKET CONNECTED!", socket.id);
+    //     });
+    //     socket.emit("counsel_noti", '여기는 우주상담사 웹에서 보내고 있다!');
 
-        socket.on("counsel_noti", (res: any) => {
-            console.log("chatBrowser", res)
-            // console.log('받은 내용!', res + `${userNumber}`);
+    //     socket.on("counsel_noti", (res: any) => {
+    //         console.log("chatBrowser", res)
+    //         // console.log('받은 내용!', res + `${userNumber}`);
 
-            switch (res.method) {
-                case 'new-1': res.data.a; // 들어온값을 어딘가 보여주면됨
-            }
-            // 먼가 왓는데 그게 상담을 받는거야
-            // 상담사에게 상담예약을 하라고 서버가 알려준거야.
-        });
-        // 이곳은 상담요청이 들어 왓을때 데이터가 들어오는 곳입니다.
-        socket.on('advice/request', (res: any) => {
-            console.log("advice", res)
-        })
-        socket.on('ping', (res: any) => {
-            console.log("ping", res)
-        })
+    //         switch (res.method) {
+    //             case 'new-1': res.data.a; // 들어온값을 어딘가 보여주면됨
+    //         }
+    //         // 먼가 왓는데 그게 상담을 받는거야
+    //         // 상담사에게 상담예약을 하라고 서버가 알려준거야.
+    //     });
+    //     // 이곳은 상담요청이 들어 왓을때 데이터가 들어오는 곳입니다.
+    //     socket.on('advice/request', (res: any) => {
+    //         console.log("advice", res)
+    //     })
+    //     socket.on('ping', (res: any) => {
+    //         console.log("ping", res)
+    //     })
 
-        // socket disconnect on component unmount if exists
-        socket.on("disconnect", () => {
-            console.log("SOCKET DIE!", socket.id);
-        });
-        // socket.disconnect(); // 로그아웃시 작동해야함
-    }, []);
+    //     // socket disconnect on component unmount if exists
+    //     socket.on("disconnect", () => {
+    //         console.log("SOCKET DIE!", socket.id);
+    //     });
+    //     // socket.disconnect(); // 로그아웃시 작동해야함
+    // }, []);
 
     return (
         <>
