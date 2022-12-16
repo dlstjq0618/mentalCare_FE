@@ -9,8 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCounselorOpeningTimes, setCounselorOpeningTimes } from '~/store/settingsSlice';
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
 import { api } from '~/woozooapi';
-import { selectCounselorId } from '~/store/doctorInfoForChangeSlice';
-import { io } from 'socket.io-client'
 
 interface IStyled {
     margin?: number;
@@ -262,11 +260,7 @@ function OpeningTimeForm() {
 
     useEffect(() => {
         setValue('opening_times', users)
-    })
-
-    useEffect(() => {
-        setUsers(infoData.openingTimes)
-    }, [infoData])
+    }, [users])
 
     useEffect(() => {
         infoData.openingTimes?.find(findData) !== undefined ? setCheck(true) : setCheck(false);
@@ -285,6 +279,7 @@ function OpeningTimeForm() {
         infoData.openingTimes?.find(isSaturday) !== undefined ? setSat(infoData.openingTimes.find(isSaturday)) : ""
         infoData.openingTimes?.find(isSunday) !== undefined ? setSun(infoData.openingTimes.find(isSunday)) : ""
         infoData.openingTimes?.find(isHoliday) !== undefined ? setHol(infoData.openingTimes.find(isHoliday)) : ""
+        setUsers(infoData.openingTimes)
     }, [infoData])
 
 
@@ -307,8 +302,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 0)} disabled={!check}>
-                                    <option hidden selected>{mon.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 0)} defaultValue={mon.startTime ?? "none"} disabled={!check}>
+                                    <option value={mon.startTime ?? "none"} hidden>{mon.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value}>
                                             {res.label}
@@ -316,8 +311,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 0)} disabled={!check}>
-                                    <option hidden selected>{mon.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 0)} defaultValue={mon.endTime ?? "none"} disabled={!check}>
+                                    <option value={mon.endTime ?? "none"} hidden>{mon.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value}>
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -336,8 +331,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 1)} disabled={!check1}>
-                                    <option hidden selected>{tue.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 1)} defaultValue={tue.startTime ?? "none"} disabled={!check1}>
+                                    <option value={tue.startTime ?? "none"} hidden >{tue.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value}>
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -345,8 +340,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 1)} disabled={!check1}>
-                                    <option hidden selected>{tue.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 1)} defaultValue={tue.endTime ?? "none"} disabled={!check1}>
+                                    <option value={tue.endTime ?? "none"} hidden>{tue.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value}>
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -365,8 +360,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 2)} disabled={!check2}>
-                                    <option hidden selected>{wed.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 2)} defaultValue={wed.startTime ?? "none"} disabled={!check2}>
+                                    <option value={wed.startTime ?? "none"} hidden >{wed.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -374,8 +369,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 2)} disabled={!check2}>
-                                    <option hidden selected>{wed.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 2)} defaultValue={wed.endTime ?? "none"} disabled={!check2}>
+                                    <option value={wed.endTime ?? "none"} hidden >{wed.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value}>
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -394,8 +389,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 3)} disabled={!check3}>
-                                    <option hidden selected>{thu.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 3)} defaultValue={thu.startTime ?? "none"} disabled={!check3}>
+                                    <option value={thu.startTime ?? "none"} hidden >{thu.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -403,8 +398,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 3)} disabled={!check3}>
-                                    <option hidden selected>{thu.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 3)} defaultValue={thu.endTime ?? "none"} disabled={!check3}>
+                                    <option value={thu.endTime ?? "none"} hidden >{thu.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -423,8 +418,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 4)} disabled={!check4}>
-                                    <option hidden selected>{fri.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 4)} defaultValue={fri.startTime ?? "none"} disabled={!check4}>
+                                    <option value={fri.startTime ?? "none"} hidden >{fri.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value}>
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -432,8 +427,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 4)} disabled={!check4}>
-                                    <option hidden selected>{fri.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 4)} defaultValue={fri.endTime ?? "none"} disabled={!check4}>
+                                    <option value={fri.endTime ?? "none"} hidden >{fri.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -452,8 +447,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 5)} disabled={!check5}>
-                                    <option hidden selected>{sat.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 5)} defaultValue={sat.startTime ?? "none"} disabled={!check5}>
+                                    <option value={sat.startTime ?? "none"} hidden>{sat.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -461,8 +456,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 5)} disabled={!check5}>
-                                    <option hidden selected>{sat.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 5)} defaultValue={sat.endTime ?? "none"} disabled={!check5}>
+                                    <option value={sat.endTime ?? "none"} hidden>{sat.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -481,8 +476,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 6)} disabled={!check6}>
-                                    <option hidden selected>{sun.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 6)} defaultValue={sun.startTime ?? "none"} disabled={!check6}>
+                                    <option value={sun.startTime ?? "none"} hidden >{sun.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -490,8 +485,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 6)} disabled={!check6}>
-                                    <option hidden selected>{sun.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 6)} defaultValue={sun.endTime ?? "none"} disabled={!check6}>
+                                    <option value={sun.endTime ?? "none"} hidden >{sun.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -510,8 +505,8 @@ function OpeningTimeForm() {
                         </div>
                         <div>
                             <div>
-                                <Select onChange={(e) => handleStartTimeSelect(e, 7)} disabled={!check7}>
-                                    <option hidden selected>{hol.startTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleStartTimeSelect(e, 7)} defaultValue={hol.startTime ?? "none"} disabled={!check7}>
+                                    <option value={hol.startTime ?? "none"} hidden >{hol.startTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}
@@ -519,8 +514,8 @@ function OpeningTimeForm() {
                                     ))}
                                 </Select>
                                 ~
-                                <Select onChange={(e) => handleEndTimeSelect(e, 7)} disabled={!check7}>
-                                    <option hidden selected>{hol.endTime?.substr(0, 5) ?? "시간선택"}</option>
+                                <Select onChange={(e) => handleEndTimeSelect(e, 7)} defaultValue={hol.endTime ?? "none"} disabled={!check7}>
+                                    <option value={hol.endTime ?? "none"} hidden >{hol.endTime?.substr(0, 5) ?? "시간선택"}</option>
                                     {ALL_TIME_OPTIONS.map((res: any, index: number) => (
                                         <option key={index} value={res.value} >
                                             {res.label === "none" ? "시간 선택" : res.label}

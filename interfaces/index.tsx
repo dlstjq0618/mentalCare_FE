@@ -121,6 +121,7 @@ export interface GenerateTokenRequestPayload {
 }
 
 export interface GenerateTokenResponse {
+  isWorking?: boolean;
   token?: string;
   counselorUserId?: number;
   userSessionId?: number;
@@ -209,6 +210,9 @@ export interface CounselorPayload {
     account_number: string;
   };
   counseling_subject: any;
+}
+export interface TogglePayload {
+  is_working: boolean;
 }
 
 export interface DoctorSignUpRequestPayload2 {

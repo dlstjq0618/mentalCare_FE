@@ -18,7 +18,8 @@ type DiagnosisDetailStoreState = {
   info: any;
   imageUrl: any;
   password: boolean;
-  socket: boolean;
+  socket: string | null;
+  chat: any
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -34,7 +35,8 @@ const initialState: DiagnosisDetailStoreState = {
   info: {},
   imageUrl: "",
   password: false,
-  socket: false,
+  socket: "",
+  chat:""
 };
 
 export const calendarDetailSilce = createSlice({
@@ -133,6 +135,12 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.socket = action.payload;
     },
+    setSocketChattingData(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["chat"]>
+    ) {
+      state.chat = action.payload;
+    },
   },
 });
 
@@ -149,6 +157,7 @@ export const {
   setCounselingProfileImage,
   setSettingSaveControlls,
   setSocketControlls,
+  setSocketChattingData,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -177,4 +186,6 @@ export const selectSettingSaveControlls = (state: RootState) =>
   state.calendarDetail.password;
 export const selectSocketControlls = (state: RootState) =>
   state.calendarDetail.socket;
+  export const selectSocketChattingData = (state: RootState) =>
+  state.calendarDetail.chat;
 export default calendarDetailSilce.reducer;

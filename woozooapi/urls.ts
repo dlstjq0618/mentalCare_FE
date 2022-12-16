@@ -55,6 +55,7 @@ export const URLS = {
     UPDATE: (id: number | undefined) => `/api/user/v1/counselor/${id}/info`,
     CALCULATE: (id: number | undefined, year: number) =>
       `/api/psychological/v1/calculate/${id}?diff=${year}`,
+    STATUS: "/api/user/v1/counselor/activate",
   },
   DIAGNOSIS: {
     GET_LIST: `/api/service/diagnosis`,

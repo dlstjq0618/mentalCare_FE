@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, selectCalendarMonthState, selectCalendarUserList, selectSessionId, setCalendarModalState, setCounselingState, selectCounselingState, selectCounselingDate } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, selectCounselingInfoData, selectCalendarMonthState, selectCalendarUserList, selectSessionId, setCalendarModalState, setCounselingState, selectCounselingState, selectCounselingDate } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -235,6 +235,7 @@ function DayComponents(props: IProps) {
     const [cancelModal, setCancelModal] = useState(false);
     const [cancelValue, setCancelValue] = useState("고객 부재로 인한 취소");
     const state = useSelector(selectCounselingState);
+    const userId = useSelector(selectCounselingInfoData);
 
 
 
@@ -369,8 +370,8 @@ function DayComponents(props: IProps) {
                         <RoundedButton
                             onClick={() => {
                                 start(), userType === "채팅" ?
-                                    window.open("https://dev.mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
-                                    // window.open("http://localhost:3000/calendar/ChattingPage", "", options)
+                                    // window.open("https://dev.mentalcare.rocketdoctor.co.kr/calendar/ChattingPage", "", options)
+                                    window.open(`http://localhost:3000/calendar/${userId.id}`, "", options)
                                     :
                                     console.log("전화상담")
                             }}

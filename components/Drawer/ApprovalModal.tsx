@@ -14,6 +14,7 @@ import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
 import { useSelector } from 'react-redux';
 import { selectCounselingDate } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
+import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
 
 interface IProps {
     open: boolean;
@@ -114,8 +115,8 @@ const Input = styled.div`
 `;
 
 const Select = styled.select<IStyled>`
-font-weight: bold;
-        display: flex;
+    font-weight: bold;
+    display: flex;
     cursor: pointer;
     height: ${rem(50)};
     flex-grow: 0;
@@ -178,6 +179,12 @@ function ApprovalModal(props: IProps) {
         },
         [setValue]
     );
+
+    useEffect(() => {
+        if (storeData) {
+            console.log("storeData", format(storeData, "PPP", { locale: ko }));
+        }
+    })
     return (
         <>
             <BaseDialog2 style={{ paddingBottom: `${rem(40)}` }} showDialog={props.open} close={handleClose} >
@@ -217,11 +224,11 @@ function ApprovalModal(props: IProps) {
 
                 <Input style={{ marginTop: `${rem(21)}` }} onClick={dateOpen}>
                     <CalendarTodayIcon />
-                    <Text style={{ marginLeft: `${rem(10)}` }}>날짜 선택</Text>
+                    <Text style={{ marginLeft: `${rem(10)}` }}>{storeData ? format(storeData, "PPP", { locale: ko }) : "날짜선택"}</Text>
                 </Input>
 
                 <Select style={{ marginBottom: `${rem(40)}` }} onChange={handleSelectTime}>
-                    <option value={"none"}>날짜선택</option>
+                    <option hidden value={"none"}>시간 선택</option>
                     {
                         UPDATE_OPEN_TIMES_ALL.map((time: { label: string, value: string }, index: number) => {
                             return <option key={index} value={time.value}>{time.label}</option>
