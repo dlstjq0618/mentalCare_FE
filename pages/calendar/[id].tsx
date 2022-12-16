@@ -156,8 +156,6 @@ const Text = styled.div<IStyled>`
 
 function ChatDetail() {
     const [state, setState] = useState("");
-    const userId = window?.localStorage?.getItem("userId");
-    const NumUserId = Number(userId)
 
     /**
      1. 상담이 완료됐을 때 끊어주는 이벤트 emit
