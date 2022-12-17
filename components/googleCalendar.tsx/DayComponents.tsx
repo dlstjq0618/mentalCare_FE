@@ -371,12 +371,11 @@ function DayComponents(props: IProps) {
                     !startButton ?
                         <RoundedButton
                             onClick={() => {
-                                start(), userType === "채팅" ?
-                                    // window.open(`https://dev.mentalcare.rocketdoctor.co.kr/calendar/${userId.id}`, "", options)
-                                    // window.open(`http://localhost:3000/calendar/${userId.id}`, "", options)
-                                    ""
-                                    :
-                                    console.log("전화상담")
+                                close2(),
+                                    start(), userType === "채팅" ?
+                                        dispatch(setCounselingState("start"))
+                                        :
+                                        console.log("전화상담")
                             }}
                             color="orange"
                             css={{
