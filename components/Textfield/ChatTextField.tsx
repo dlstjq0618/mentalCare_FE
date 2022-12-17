@@ -5,6 +5,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { rem } from 'polished'
 
 interface IProps {
     state?: string;
@@ -25,18 +26,16 @@ export default function InputAdornments(props: IProps) {
             alert("메세지 입력")
         }
     }
-
-    console.log("props", props.state);
-
     return (
         <Box sx={{
-            display: 'flex', flexWrap: 'wrap', background: "white", borderRadius: 20
+            display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
         }}>
             <FormControl sx={{
                 m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
                 '& fieldset': { top: 0 },
             }} variant="outlined">
                 <OutlinedInput
+                    style={{ height: 40 }}
                     disabled={props.state === "finish" ? true : false}
                     placeholder={`${state === "finish" ? "상담이 완료 되었습니다." : ""}`}
                     id="outlined-adornment-password"
