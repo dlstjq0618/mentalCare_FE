@@ -183,6 +183,8 @@ function SettingInfoForm(props: IProps) {
     const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
     const [phoneNumberChange, setPhoneNumberChange] = useState(false);
 
+    const [isPhoneNumber, setIsPhoneNumber] = useState('');
+
     const phoneNumber = infoData.mobile?.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '0$2-$3-$4');
 
     const handleProfilePicUpload = async (file: File) => {
@@ -269,6 +271,10 @@ function SettingInfoForm(props: IProps) {
         }
     };
 
+    useEffect(() => {
+        setIsPhoneNumber(infoData.mobile)
+    }, [infoData])
+
 
     return (
         <>
@@ -295,16 +301,16 @@ function SettingInfoForm(props: IProps) {
                             <Text size={17} color={"#999"} style={{ minWidth: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} style={{ width: 225 }}>
+                            <Text size={17} color={"#333"} style={{ width: `${rem(235)}` }}>
                                 {
                                     !phoneNumberChange ? <>
                                         {phoneNumber}
-                                        <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text>
+                                        {/* <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text> */}
                                     </> :
                                         <div style={{ display: 'flex' }}>
                                             <Input
                                                 value={textValue}
-                                                maxLength={11}
+                                                maxLength={12}
                                                 onChange={(e) => {
                                                     onlyNumberText(e.target.value)
                                                 }}
@@ -313,7 +319,7 @@ function SettingInfoForm(props: IProps) {
                                                     height: rem(30),
                                                     width: rem(150)
                                                 }} />
-                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text>
+                                            {/* <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text> */}
                                         </div>
                                 }
                             </Text>

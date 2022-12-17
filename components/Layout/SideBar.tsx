@@ -31,6 +31,7 @@ import {
 } from "react-device-detect";
 import { selectCalendarUserList, setCounselingInfoData, setSessionId, setSocketControlls } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
+import BoxSx from "../ChatBox";
 
 const { Sider } = Layout;
 
@@ -192,49 +193,53 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   // }, [dispatch, shouldNotificate, waitingListInfo]);
 
   return (
-    <StyledSider width={rem(120)}>
-      <Div
-        css={{
-          width: "100%",
-          height: rem(687),
-          padding: `0 ${rem(17)} ${rem(24)}`,
-          backgroundColor: "$black01",
-          borderRadius: "20px",
-        }}
-      >
-        <Link href="/" passHref>
-          <Div className="logo" css={{ cursor: "pointer", fontSize: rem(40) }}>
-            <RocketDoctorLogo />
-          </Div>
-        </Link>
-        <div className="text">
-          <span>
-            <span className="doctor-name">
-              {userName}
+    <>
+      <StyledSider width={rem(120)}>
+        <Div
+          css={{
+            width: "100%",
+            height: rem(687),
+            padding: `0 ${rem(17)} ${rem(24)}`,
+            backgroundColor: "$black01",
+            borderRadius: "20px",
+          }}
+        >
+          <Link href="/" passHref>
+            <Div className="logo" css={{ cursor: "pointer", fontSize: rem(40) }}>
+              <RocketDoctorLogo />
+            </Div>
+          </Link>
+          <div className="text">
+            <span>
+              <span className="doctor-name">
+                {userName}
+              </span>
+              <span>님, </span>
             </span>
-            <span>님, </span>
-          </span>
-          <span>환영합니다!</span>
-        </div>
-        <ToggleButton activeState={true} />
-        <div className="group-btn">
-          <SideBarButtons
-            href="/calendar"
-            visiting={path === "/calendar" ? true : false}
-          >
-            <span>{userList.length}</span>
-            <div>대기실</div>
-          </SideBarButtons>
-          <SideBarButtons
-            href="/settings"
-            visiting={path === "/settings" ? true : false}
-          >
-            <SettingIcon />
-            <div>설정</div>
-          </SideBarButtons>
-        </div>
-      </Div>
-    </StyledSider>
+            <span>환영합니다!</span>
+          </div>
+          <ToggleButton activeState={true} />
+          <div className="group-btn">
+            <SideBarButtons
+              href="/calendar"
+              visiting={path === "/calendar" ? true : false}
+            >
+              <span>{userList.length}</span>
+              <div>대기실</div>
+            </SideBarButtons>
+            <SideBarButtons
+              href="/settings"
+              visiting={path === "/settings" ? true : false}
+            >
+              <SettingIcon />
+              <div>설정</div>
+            </SideBarButtons>
+          </div>
+        </Div>
+      </StyledSider>
+      <BoxSx />
+    </>
+
   );
 };
 

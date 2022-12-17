@@ -61,13 +61,12 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             return alert("비밀번호가 일치하지 않습니다.")
         }
         const isMobile = data.mobile?.replace('010', '');
-        console.log("ismobile", isMobile)
         const customMobile = "0810" + isMobile
 
         api.counselor
             .update(userId, {
                 password: data.password,
-                mobile: customMobile,
+                mobile: data.mobile,
                 image: data.image === "" ? fileUploadDate.image : data.image,
                 certificate_image: data.certificate_image === "" ? fileUploadDate.certificateImage : data.certificate_image,
                 career: data.career,
@@ -111,6 +110,12 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 }
                 if (error.response.data.password) {
                     return alert("비밀번호는 8자리 이상 입력해 주세요.")
+                }
+                if (error.response.data.counseling_subject) {
+                    return alert('상담과목을 선택해 주세요.')
+                }
+                if (data.opening_times.length === 0) {
+                    return alert('상담시간을 선택해 주세요.')
                 }
             });
     };
