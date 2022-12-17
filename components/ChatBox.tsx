@@ -12,7 +12,8 @@ import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ConnectingAirportsOutlined, ConstructionOutlined } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingInfoData, selectSocketConnected, setSocketConnected } from '~/store/calendarDetailSlice';
+import { selectCounselingInfoData, selectSocketConnected, setSocketConnected, selectCounselingState } from '~/store/calendarDetailSlice';
+import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 
 interface IStyled {
     size?: any;
@@ -20,7 +21,7 @@ interface IStyled {
     center?: boolean;
     bg?: string;
     height?: string | number;
-    type?: "time" | "footer" | "main" | "button" | "chat" | "left" | "right" | "finish";
+    type?: "time" | "footer" | "main" | "button" | "chat" | "left" | "right" | "finish" | "title";
 }
 
 const chatData = [{
@@ -99,6 +100,7 @@ ${(props) =>
         props.bg &&
         css`
         background-color: ${props.bg};
+        max-height: ${rem(75)};
     `}
     ${(props) =>
         props.type === "main" &&
@@ -141,6 +143,14 @@ ${(props) =>
 
 const Text = styled.div<IStyled>`
     ${(props) =>
+        props.type === "title" &&
+        css`
+        max-height: ${rem(50)};
+        margin-top: ${rem(17)};
+        margin-left:${rem(19)}; 
+    `}
+
+    ${(props) =>
         props.size &&
         css`
         font-size: ${rem(props.size)};
@@ -160,7 +170,7 @@ const Text = styled.div<IStyled>`
     ${(props) =>
         props.height &&
         css`
-        height: ${rem(props.height)};
+        max-height: ${rem(props.height)};
     `}
 
     ${(props) =>
@@ -204,12 +214,15 @@ export default function BoxSx() {
 */
     const dispatch = useDispatch()
     const [socketId, setSocketId] = useState("");
-    const [type, setType] = useState("finish");
-    const [state, setState] = useState({ message: '', method: '', request: '', roomId: '', time: 0, userId: '' });
+    const [type, setType] = useState("");
+    const [state, setState] = useState({ message: '' });
     const [chatList, setChatList] = useState<any>([]);
     const infoData = useSelector(selectCounselingInfoData);
     const userId = String(infoData?.id);
     const connected = useSelector(selectSocketConnected);
+    const counselingStatus = useSelector(selectCounselingState)
+
+    console.log("counselingStatus", counselingStatus);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -224,9 +237,24 @@ export default function BoxSx() {
         console.log("chatList", chatList)
     })
 
-    // const handleOnChange = (e:any) => {
-    //     setState({message: e.target.value})
-    // }
+    const handleOnChange = (e: any) => {
+        setState({ message: e.target.value })
+    }
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
+    const handleEnter = (e: any) => {
+        if (e.key === "Enter") {
+            const { message } = state;
+            const newMessage = {
+                ...state
+            };
+            setChatList([...chatList, newMessage]);
+            socket.emit('counsel_noti', message)
+        }
+    }
 
 
     // useEffect(() => {
@@ -271,120 +299,124 @@ export default function BoxSx() {
 
     return (
         <>
-            <div>
-                <MuiBox
-                    sx={{
-                        boxShadow: `3px 2px 5px black;`,
-                        width: 350,
-                        maxHeight: rem(700),
-                        position: 'absolute',
-                        bottom: rem(20),
-                        right: 30,
-                        backgroundColor: 'lightgray',
-                    }}
-                >
-                    <Div type='main'>
-                        <Div bg='#fff'>
-                            <Text center size={17} bold="600" color='#000' height={44}>
-                                우주 상담소
-                            </Text>
-                        </Div>
-                        <Text style={{ overflow: 'auto' }}>
-                            <Div type='time' >
-                                <Text size={13} color='#b53e14' >상담시간이 49분 남았습니다.</Text>
-                                <Text size={12} type='button' color='#e8440a'>
-                                    상담 경과 44:15 { /** 상담시간 체크*/}
+            {
+                counselingStatus === 'start' ?
+                    <div>
+                        <MuiBox
+                            sx={{
+                                boxShadow: `3px 2px 5px black;`,
+                                width: 350,
+                                maxHeight: rem(700),
+                                position: 'absolute',
+                                bottom: rem(20),
+                                right: 30,
+                                backgroundColor: 'lightgray',
+                            }}
+                        >
+                            <Div type='main'>
+                                <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                    <Text size={17} bold="600" color='#000' type='title'>
+                                        우주 상담소
+                                    </Text>
+                                    <TimeSleectBox />
+                                </Div>
+                                <Text style={{ overflow: 'auto' }}>
+                                    <Div type='time' >
+                                        <Text size={13} color='#b53e14' >상담시간이 49분 남았습니다.</Text>
+                                        <Text size={12} type='button' color='#e8440a'>
+                                            상담 경과 44:15 { /** 상담시간 체크*/}
+                                        </Text>
+                                    </Div>
+                                    <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(500) }}>
+                                        {
+                                            chatData.map((res: any, index: number) => (
+                                                <>
+                                                    <div style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                        <Text bold='bold' style={{ marginBottom: 7, marginTop: `${index > 0 ? rem(30) : 0}` }}>
+                                                            {res.id ?? res.id}
+                                                        </Text>
+                                                        {
+                                                            res.id ?
+                                                                <Div style={{ display: "flex" }}>
+                                                                    <Div bg='#ffffe7' height={62} type="right">
+                                                                        {res.discription}
+                                                                    </Div>
+                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                        {res.time}
+                                                                    </Div>
+                                                                </Div>
+                                                                :
+                                                                <Div type='chat'>
+                                                                    <div />
+                                                                    <Div style={{ display: "flex" }}>
+                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                            {res.time}
+                                                                        </Div>
+                                                                        <Div type='left' bg='white' height={62}>
+                                                                            {res.discription}
+                                                                        </Div>
+                                                                    </Div>
+                                                                </Div>
+                                                        }
+                                                    </div>
+                                                </>
+
+                                            ))
+                                        }
+                                        { /** 대화가 끝났을때 이벤트 체크 후 종료 안내*/}
+                                        {
+                                            type === "finish" ?
+                                                <>
+                                                    <Text type='finish'>
+                                                        ----상담이 완료 되었습니다.----
+                                                        <Div>{"PM 22:10"}</Div>
+                                                    </Text>
+                                                </>
+                                                : ""
+                                        }
+                                    </Div>
+                                </Text>
+                                <Text height={40}>
+                                    <Box sx={{
+                                        display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
+                                    }}>
+                                        <FormControl sx={{
+                                            m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
+                                            '& fieldset': { top: 0 },
+                                        }} variant="outlined">
+                                            <OutlinedInput
+                                                style={{ height: 40 }}
+                                                disabled={type === "finish" ? true : false}
+                                                placeholder={`${type === "finish" ? "상담이 완료 되었습니다." : ""}`}
+                                                id="outlined-adornment-password"
+                                                value={state.message}
+                                                label={"none"}
+                                                size={"small"}
+                                                onChange={handleOnChange}
+                                                autoComplete={"off"}
+                                                onKeyPress={handleEnter}
+                                                endAdornment={
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            style={{
+                                                                background: `${type === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                marginRight: "-11.2px", width: "35px", height: "35px"
+                                                            }}
+                                                            onMouseDown={handleMouseDownPassword}
+                                                            edge="end"
+                                                        >
+                                                            <ArrowUpwardIcon />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                }
+                                            />
+                                        </FormControl>
+                                    </Box>
                                 </Text>
                             </Div>
-                            <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(500) }}>
-                                {
-                                    chatData.map((res: any, index: number) => (
-                                        <>
-                                            <div style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                <Text bold='bold' style={{ marginBottom: 7, marginTop: `${index > 0 ? rem(30) : 0}` }}>
-                                                    {res.id ?? res.id}
-                                                </Text>
-                                                {
-                                                    res.id ?
-                                                        <Div style={{ display: "flex" }}>
-                                                            <Div bg='#ffffe7' height={62} type="right">
-                                                                {res.discription}
-                                                            </Div>
-                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                {res.time}
-                                                            </Div>
-                                                        </Div>
-                                                        :
-                                                        <Div type='chat'>
-                                                            <div />
-                                                            <Div style={{ display: "flex" }}>
-                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                    {res.time}
-                                                                </Div>
-                                                                <Div type='left' bg='white' height={62}>
-                                                                    {res.discription}
-                                                                </Div>
-                                                            </Div>
-                                                        </Div>
-                                                }
-                                            </div>
-                                        </>
-
-                                    ))
-                                }
-                                { /** 대화가 끝났을때 이벤트 체크 후 종료 안내*/}
-                                {
-                                    type === "finish" ?
-                                        <>
-                                            <Text type='finish'>
-                                                ----상담이 완료 되었습니다.----
-                                                <Div>{"PM 22:10"}</Div>
-                                            </Text>
-                                        </>
-                                        : ""
-                                }
-                            </Div>
-                        </Text>
-                        {/* <Text height={40}>
-                            <Box sx={{
-                                display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
-                            }}>
-                                <FormControl sx={{
-                                    m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
-                                    '& fieldset': { top: 0 },
-                                }} variant="outlined">
-                                    <OutlinedInput
-                                        style={{ height: 40 }}
-                                        disabled={type === "finish" ? true : false}
-                                        placeholder={`${type === "finish" ? "상담이 완료 되었습니다." : ""}`}
-                                        id="outlined-adornment-password"
-                                        value={state.message}
-                                        label={"none"}
-                                        size={"small"}
-                                        onChange={(e) => handleOnChange(e)}
-                                        autoComplete={"off"}
-                                        onKeyPress={handleEnter}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    style={{
-                                                        background: `${state === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
-                                                        marginRight: "-11.2px", width: "35px", height: "35px"
-                                                    }}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                >
-                                                    <ArrowUpwardIcon />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                            </Box>
-                        </Text> */}
-                    </Div>
-                </MuiBox>
-            </div>
+                        </MuiBox>
+                    </div> : ""
+            }
         </>
     );
 }
