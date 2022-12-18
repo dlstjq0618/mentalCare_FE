@@ -194,8 +194,8 @@ const userId = window?.localStorage?.getItem("userId");
 const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
 const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
 console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64DecodedText)
-// const socket = io("http://bo.local.api.woozoo.clinic", {
-const socket = io("https://bo.dev.api.woozoo.clinic", {
+const socket = io("http://bo.local.api.woozoo.clinic", {
+// const socket = io("https://bo.dev.api.woozoo.clinic", {
     // transports: ["websocket"],
     transports: ["polling"],
     extraHeaders: {
@@ -220,8 +220,8 @@ export default function BoxSx() {
     const infoData = useSelector(selectCounselingInfoData);
     const userId = String(infoData?.id);
     const connected = useSelector(selectSocketConnected);
-    const counselingStatus = useSelector(selectCounselingState)
-
+    const counselingStatus = useSelector(selectCounselingState);
+    
     console.log("counselingStatus", counselingStatus);
 
     useEffect(() => {
@@ -229,6 +229,18 @@ export default function BoxSx() {
             console.log("SOCKET CONNECTED!", socket.id);
         });
         socket.on("counsel_noti", (res: any) => {
+            const method = res.method;
+            console.log("🚀 ~ file: ChatBox.tsx:233 ~ socket.on ~ method", method)
+            switch (method) {
+                case "chat": ; break;
+                case "payment/user/ok": ; // 사용자 결제 완료시 
+                    console.log('사용자 결제 정보 받음', res.datas);
+                    // setUserPaymentList([...userPaymentList, res.datas]); // 
+                    setUserPaymentList([res.datas]); // 임시로 덥어쓴다
+                    setUserPaymentRequestStatus(true);
+                    break;
+                case "user/request/list": ; 
+            }
             setChatList([...chatList, res])
         })
     }, [state.message])
@@ -236,6 +248,28 @@ export default function BoxSx() {
     useEffect(() => {
         console.log("chatList", chatList)
     })
+    const [roomId, setRoomId] = useState(0);
+    const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
+    const [userPaymentList, setUserPaymentList] = useState<any>([]);
+    useEffect(() => {
+        console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
+        if (userPaymentList.length > 0) { 
+            if (confirm(`테스트용 채팅을 "${userPaymentList[0].user_name}" 님과 시작 하시겠습니까? roomJoin`)) { 
+                // roomJoin
+                const req = {
+                    roomId: userPaymentList[0].room_id,
+                    user_type: 6,
+                    message: "안녕하세요 상담을 시작하겠습니다."
+                };
+                console.log(req);
+                socket.emit('chat', {
+                    "method": "join",
+                    "datas": req
+                });
+            }
+            
+        }
+    },[userPaymentRequestStatus]);
 
     const handleOnChange = (e: any) => {
         setState({ message: e.target.value })
