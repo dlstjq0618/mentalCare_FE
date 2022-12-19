@@ -125,7 +125,7 @@ export default function TemporaryDrawer(props: IProps) {
 
     const list = (anchor: Anchor) => (
         <Box
-            style={{ background: "#f7f7f7", height: "100%", padding: `${rem(30)}` }}
+            style={{ background: "#f7f7f7", padding: `${rem(30)}` }}
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : `${rem(430)}` }}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
@@ -151,7 +151,7 @@ export default function TemporaryDrawer(props: IProps) {
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
                             </div>
                             <div style={{ display: "grid" }}>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>요청 시간 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.date}</Text></Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>요청 시간 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.crated}</Text></Text>
                                 <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>상담 방식 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.method_str}</Text></Text>
                             </div>
                         </BoxItem>

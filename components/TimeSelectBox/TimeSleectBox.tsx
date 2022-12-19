@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { rem } from 'polished';
 import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
-import { useDispatch } from 'react-redux';
-import { setCounselingState } from '~/store/calendarDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCounselingState, setCounselingState } from '~/store/calendarDetailSlice';
 
 interface Iprops {
 
@@ -18,6 +18,8 @@ interface IStyled {
     width?: number;
     bottom?: number;
     check?: boolean;
+    type?: string;
+
 }
 
 const Arricle = styled.article<IStyled>`
@@ -28,11 +30,16 @@ const Button = styled.div<IStyled>`
 align-items: center;
 display: flex;
 color: #fff;
-width: ${rem(103)};
+width: ${rem(105)};
 justify-content: space-around;
 height: 36px;
 padding: 10px 9px 9px 16px;
 background-color: #eb541e;
+${(props) =>
+        props.type === 'finish' &&
+        css`
+        background-color: #999;
+    `}
 margin: 12px 17px;
   flex-grow: 0;
   border-radius: 6px;
@@ -90,11 +97,26 @@ function TimeSleectBox(props: Iprops) {
     const [check, setCheck] = useState(false);
     const [type, setType] = useState("상담중");
     const dispatch = useDispatch();
+    const status = useSelector(selectCounselingState);
+
+    // useEffect(() => { // 상담 버튼 초기값 
+    //     if (status) {
+    //         if (status === 'start') {
+    //             setType("상담중");
+    //         } else if (status === 'pause') {
+    //             setType('일시정지')
+    //         } else {
+    //             setType('상담완료')
+    //         }
+    //     } else {
+    //         setType("상담중");
+    //     }
+    // })
 
     return (
         <>
             <Arricle>
-                <Button onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
+                <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
                 {
                     check &&
                     <Ul>

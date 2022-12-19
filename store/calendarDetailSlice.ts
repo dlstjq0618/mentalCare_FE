@@ -23,6 +23,10 @@ type DiagnosisDetailStoreState = {
   connect: any;
   socketInfo: any;
   time: string;
+  confirm: string;
+  final: any;
+  timestemp: string;
+  start: string;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -43,6 +47,10 @@ const initialState: DiagnosisDetailStoreState = {
   connect: "",
   socketInfo: {},
   time: "",
+  confirm: "",
+  final: {},
+  timestemp: "",
+  start: "",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -172,6 +180,34 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.time = action.payload;
     },
+    setCounselingTimeStemp(
+      // 스케줄 등록 시간 선택
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["timestemp"]>
+    ) {
+      state.timestemp = action.payload;
+    },
+    setCounselingFinalStep(
+      // 상담사 최종 예약확인
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["confirm"]>
+    ) {
+      state.confirm = action.payload;
+    },
+    setCounselingFinalStepData(
+      // 최종 설정한 날짜 및 시간 예약 데이터
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["final"]>
+    ) {
+      state.final = action.payload;
+    },
+    setCounselingStart(
+      // 최종 설정한 날짜 및 시간 예약 데이터
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["start"]>
+    ) {
+      state.start = action.payload;
+    },
   },
 });
 
@@ -192,6 +228,10 @@ export const {
   setSocketConnected,
   setSocketData,
   setCounselingTimes,
+  setCounselingFinalStep,
+  setCounselingFinalStepData,
+  setCounselingTimeStemp,
+  setCounselingStart,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -228,4 +268,12 @@ export const selectSocketData = (state: RootState) =>
   state.calendarDetail.socketInfo;
 export const selectCounselingTimes = (state: RootState) =>
   state.calendarDetail.time;
+export const selectCounselingFinalStep = (state: RootState) =>
+  state.calendarDetail.confirm;
+export const selectCounselingFinalStepData = (state: RootState) =>
+  state.calendarDetail.final;
+export const selectCounselingTimeStemp = (state: RootState) =>
+  state.calendarDetail.timestemp;
+export const selectCounselingStart = (state: RootState) =>
+  state.calendarDetail.start;
 export default calendarDetailSilce.reducer;

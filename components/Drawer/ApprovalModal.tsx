@@ -11,8 +11,8 @@ import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
-import { useSelector } from 'react-redux';
-import { selectCounselingDate, selectCounselingTimes } from '~/store/calendarDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCounselingFinalStepData, selectCounselingDate, selectCounselingTimes, setCounselingFinalStep, setCounselingFinalStepData } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
 import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
@@ -129,6 +129,7 @@ const Select = styled.select<IStyled>`
 `;
 
 function ApprovalModal(props: IProps) {
+    const dispatch = useDispatch();
     const [show, setShow] = useState(false)
     const [show2, setShow2] = useState<boolean>(props.open);
     const [userName, setUserName] = useState("");
@@ -136,7 +137,8 @@ function ApprovalModal(props: IProps) {
     const [selectTimes, setSelectTimes] = useState("");
     const [datePicker, setDatePicker] = useState(false);
     const storeData = useSelector(selectCounselingDate);
-    const selectTime = useSelector(selectCounselingTimes)
+    const selectTime = useSelector(selectCounselingTimes);
+    const finalStepData = useSelector(selectCounselingFinalStepData);
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러
@@ -181,6 +183,11 @@ function ApprovalModal(props: IProps) {
         },
         [setValue]
     );
+    const handleFinalStep = () => {
+        dispatch(setCounselingFinalStep('yes'));
+        dispatch(setCounselingFinalStepData(props.userInfo))
+    }
+
 
     return (
         <>
@@ -207,7 +214,7 @@ function ApprovalModal(props: IProps) {
                         상담 요청 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {props.userInfo?.date}
+                        {props.userInfo?.crated}
                     </Text>
                 </Div>
                 <Div>
@@ -223,32 +230,26 @@ function ApprovalModal(props: IProps) {
                     <CalendarTodayIcon />
                     <Text style={{ marginLeft: `${rem(10)}` }}>{storeData ? format(storeData, "PPP", { locale: ko }) : "날짜선택"}</Text>
                 </Input>
-                {/* 
-                <Select style={{ marginBottom: `${rem(40)}` }} onChange={handleSelectTime}>
-                    <option hidden value={"none"} >시간 선택</option>
-                    {
-                        UPDATE_OPEN_TIMES_ALL.map((time: { label: string, value: string }, index: number) => {
-                            return <option key={index} value={time.value}>{time.label}</option>
-                        })
-                    }
-                </Select> */}
                 <ReservationSelect />
-                <RoundedButton
-                    disabled={storeData !== "" && selectTime !== "" ? false : true}
-                    onClick={open}
-                    color={storeData !== "" && selectTime !== "" ? "orange" : "gray"}
-                    css={{
-                        fontSize: rem(15),
-                        margin: `0 ${rem(24)} 0 0`,
-                        height: rem(50),
-                        width: rem(375),
-                        position: 'absolute',
-                        bottom: rem(40),
-                        zIndex: 1
-                    }}
-                >
-                    상담 승인
-                </RoundedButton>
+                <div>
+                    <RoundedButton
+                        disabled={storeData !== "" && selectTime !== "" ? false : true}
+                        onClick={open}
+                        color={storeData !== "" && selectTime !== "" ? "orange" : "gray"}
+                        css={{
+                            fontSize: rem(15),
+                            margin: `0 ${rem(24)} 0 0`,
+                            height: rem(50),
+                            width: "86%",
+                            position: 'absolute',
+                            bottom: rem(40),
+                            zIndex: 1
+                        }}
+                    >
+                        상담 승인
+                    </RoundedButton>
+
+                </div>
             </BaseDialog2>
             {
                 datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
@@ -284,7 +285,7 @@ function ApprovalModal(props: IProps) {
                     <RoundedButton
                         color="orange"
                         css={{ flex: 1, height: rem(50), width: rem(153) }}
-                        onClick={() => { close(), handleClose() }} // 예약확인 api 후 return get api
+                        onClick={() => { close(), handleClose(), handleFinalStep() }} // 예약확인 api 후 return get api
                     >
                         확인
                     </RoundedButton>

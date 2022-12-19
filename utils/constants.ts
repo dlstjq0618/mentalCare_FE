@@ -305,143 +305,143 @@ export const DIAGNOSIS_STEPS = ["접수", "상담 승인", "상담중", "상담 
 export const UPDATE_OPEN_TIMES_ALL = [
   {
     label: "오전 06:00",
-    value: "06:00",
+    value: "06:00:00",
   },
   {
     label: "오전 06:30",
-    value: "06:30",
+    value: "06:30:00",
   },
   {
     label: "오전 07:00",
-    value: "07:00",
+    value: "07:00:00",
   },
   {
     label: "오전 07:30",
-    value: "07:30",
+    value: "07:30:00",
   },
   {
     label: "오전 08:30",
-    value: "08:30",
+    value: "08:30:00",
   },
   {
     label: "오전 09:00",
-    value: "09:00",
+    value: "09:00:00",
   },
   {
     label: "오전 09:30",
-    value: "09:30",
+    value: "09:30:00",
   },
   {
     label: "오전 10:00",
-    value: "10:00",
+    value: "10:00:00",
   },
   {
     label: "오전 10:30",
-    value: "10:30",
+    value: "10:30:00",
   },
   {
     label: "오전 11:00",
-    value: "11:00",
+    value: "11:00:00",
   },
   {
     label: "오전 11:30",
-    value: "11:30",
+    value: "11:30:00",
   },
   {
     label: "오후 12:00",
-    value: "12:00",
+    value: "12:00:00",
   },
   {
     label: "오후 12:30",
-    value: "12:30",
+    value: "12:30:00",
   },
   {
     label: "오후 01:00",
-    value: "13:00",
+    value: "13:00:00",
   },
   {
     label: "오후 01:30",
-    value: "13:30",
+    value: "13:30:00",
   },
   {
     label: "오후 02:00",
-    value: "14:00",
+    value: "14:00:00",
   },
   {
     label: "오후 02:30",
-    value: "14:30",
+    value: "14:30:00",
   },
   {
     label: "오후 03:00",
-    value: "15:00",
+    value: "15:00:00",
   },
   {
     label: "오후 03:30",
-    value: "15:30",
+    value: "15:30:00",
   },
   {
     label: "오후 04:00",
-    value: "16:00",
+    value: "16:00:00",
   },
   {
     label: "오후 04:30",
-    value: "16:30",
+    value: "16:30:00",
   },
   {
     label: "오후 05:00",
-    value: "17:00",
+    value: "17:00:00",
   },
   {
     label: "오후 05:30",
-    value: "17:30",
+    value: "17:30:00",
   },
   {
     label: "오후 06:00",
-    value: "18:00",
+    value: "18:00:00",
   },
   {
     label: "오후 06:30",
-    value: "18:30",
+    value: "18:30:00",
   },
   {
     label: "오후 07:00",
-    value: "19:00",
+    value: "19:00:00",
   },
   {
     label: "오후 07:30",
-    value: "19:30",
+    value: "19:30:00",
   },
   {
     label: "오후 08:00",
-    value: "20:00",
+    value: "20:00:00",
   },
   {
     label: "오후 08:30",
-    value: "20:30",
+    value: "20:30:00",
   },
   {
     label: "오후 09:00",
-    value: "21:00",
+    value: "21:00:00",
   },
   {
     label: "오후 09:30",
-    value: "21:30",
+    value: "21:30:00",
   },
   {
     label: "오후 10:00",
-    value: "22:00",
+    value: "22:00:00",
   },
   {
     label: "오후 10:30",
-    value: "22:30",
+    value: "22:30:00",
   },
   {
     label: "오후 11:00",
-    value: "23:00",
+    value: "23:00:00",
   },
   {
     label: "오후 11:30",
-    value: "23:30",
+    value: "23:30:00",
   },
 ];
 

@@ -6,7 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCounselingTimes, selectCounselingTimes } from '~/store/calendarDetailSlice';
+import { setCounselingTimes, selectCounselingTimes, setCounselingTimeStemp, selectCounselingTimeStemp } from '~/store/calendarDetailSlice';
 
 interface Iprops {
 
@@ -74,7 +74,8 @@ function ReservationSelect(props: Iprops) {
     const [check, setCheck] = useState(false);
     const [select, setSelect] = useState("시간 선택");
     const dispatch = useDispatch();
-    const selectTime = useSelector(selectCounselingTimes)
+    const selectTime = useSelector(selectCounselingTimeStemp);
+
 
     return (
         <>
@@ -87,7 +88,10 @@ function ReservationSelect(props: Iprops) {
                     <Ul style={{ zIndex: 10 }}>
                         {
                             UPDATE_OPEN_TIMES_ALL.map((res: { label: string, value: string }, index: number) => {
-                                return <Li check onClick={() => { setSelect(res.label), setCheck(false), dispatch(setCounselingTimes(res.label)) }}
+                                return <Li check onClick={() => {
+                                    setSelect(res.label), setCheck(false), dispatch(setCounselingTimes(res.label)),
+                                        dispatch(setCounselingTimeStemp(res.value))
+                                }}
                                     key={index} value={res.value}>{res.label}</Li>
                             })
                         }

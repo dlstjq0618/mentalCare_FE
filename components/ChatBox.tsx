@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ConnectingAirportsOutlined, ConstructionOutlined } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingInfoData, selectSocketConnected, setSocketConnected, selectCounselingState, setSocketData } from '~/store/calendarDetailSlice';
+import { setCounselingState, selectCounselingTimeStemp, selectCounselingDate, selectCounselingInfoData, selectSocketConnected, selectCounselingFinalStep, selectCounselingState, setSocketData, setCounselingFinalStep, selectCounselingFinalStepData, selectCounselingStart, selectSocketData } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 
 interface IStyled {
@@ -34,42 +34,6 @@ const chatData = [{
     discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
     time: "PM 10:25"
 },
-{
-    id: "기분좋아231",
-    discription: "아무말대잔치로 육행시 해보겠습니다.ㅋㅋ.",
-    time: "PM 10:27"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
-    time: "PM 10:25"
-},
-{
-    id: "",
-    discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
-    time: "PM 10:25"
-},
-{
-    id: "",
-    discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
-    time: "PM 10:25"
-},
-{
-    id: "",
-    discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
-    time: "PM 10:25"
-},
-{
-    id: "기분좋아231",
-    discription: "아무말대잔치로 육행시 해보겠습니다.ㅋㅋ.",
-    time: "PM 10:27"
-},
-
 ]
 const Div = styled.div<IStyled>`
 ${(props) =>
@@ -221,6 +185,13 @@ export default function BoxSx() {
     const userId = String(infoData?.id);
     const connected = useSelector(selectSocketConnected);
     const counselingStatus = useSelector(selectCounselingState);
+    const finalStep = useSelector(selectCounselingFinalStep); // 최종 예약 확인
+    const finalStepData = useSelector(selectCounselingFinalStepData);
+    const storeData = useSelector(selectCounselingDate);
+    const selectTime = useSelector(selectCounselingTimeStemp);
+    const reservationTime = (new Date(storeData).getTime() / 1000);
+    const roomJoin = useSelector(selectCounselingStart);
+
 
     const [waitCount, setWaitCount] = useState(0); // 상담대기중 count
     const [waitList, setWaitList] = useState<any>([]); // 상담대기중 list
@@ -238,7 +209,6 @@ export default function BoxSx() {
         });
 
         // dashboard 내용 받기
-
         socket.on('dashboard', (res: any) => {
             const { method, datas } = res;
             console.log("🚀 ~ file: ChatBox.tsx:234 ~ socket.on dashboard ~ method", method, datas)
@@ -268,22 +238,60 @@ export default function BoxSx() {
             }
             setChatList([...chatList, res])
         })
+        socket.on("chat", (res: any) => {
+            console.log("chat", res);
+        })
     }, [state.message])
-
-    useEffect(() => {
-        console.log("chatList", chatList)
-    }, [chatList])
 
     const [roomId, setRoomId] = useState(0);
     const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
     const [userPaymentList, setUserPaymentList] = useState<any>([]);
     useEffect(() => {
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
-        if (userPaymentList.length > 0) {
-            if (confirm(`테스트용 채팅을 "${userPaymentList[0].user_name}" 님과 시작 하시겠습니까? roomJoin`)) {
+        // if (userPaymentList.length > 0) {
+
+
+        // }
+    }, [userPaymentRequestStatus]);
+
+    // useEffect(() => { //상담시작 
+    //     if (confirm(`테스트용 채팅을 "${userPaymentList[0]}" 님과 시작 하시겠습니까? roomJoin`)) {
+    //         // roomJoin
+    //         const req = {
+    //             roomId: 193,
+    //             user_type: 6,
+    //             message: "안녕하세요 상담을 시작하겠습니다."
+    //         };
+    //         console.log(req);
+    //         socket.emit('chat', {
+    //             "method": "join",
+    //             "datas": req
+    //         });
+    //     }
+    // }, [])
+
+    const handleOnChange = (e: any) => {
+        setState({ message: e.target.value })
+    }
+
+    async function hadnleEmit() { // emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
+        const data1 = {
+            method: "room/reservation_date",
+            datas: {
+                roomId: finalStepData.room_id,
+                reservation_date: reservationTime
+            }
+        }
+        socket.emit('counsel_submit', data1);
+        console.log("emit 실행");
+        await dispatch(setCounselingFinalStep(""))
+    }
+    async function handleRoomJoin() {
+        if (counselingStatus === 'start') {
+            if (confirm(`테스트용 채팅을 "${finalStepData.user_name}" 님과 시작 하시겠습니까? roomJoin`)) {
                 // roomJoin
                 const req = {
-                    roomId: userPaymentList[0].room_id,
+                    roomId: finalStepData.room_id,
                     user_type: 6,
                     message: "안녕하세요 상담을 시작하겠습니다."
                 };
@@ -293,28 +301,52 @@ export default function BoxSx() {
                     "datas": req
                 });
             }
-
+            await dispatch(setCounselingState('pause'))
         }
-    }, [userPaymentRequestStatus]);
-
-    const handleOnChange = (e: any) => {
-        setState({ message: e.target.value })
     }
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-    };
 
+    };
+    const intRoom_id = Number(finalStepData.room_id)
     const handleEnter = (e: any) => {
+        console.log('e', e.target.value)
         if (e.key === "Enter") {
-            const { message } = state;
-            const newMessage = {
-                ...state
+            // const { message } = state;
+            // const newMessage = {
+            //     ...state
+            // };
+            // setChatList([...chatList, newMessage]);
+            const chat = {
+                roomId: intRoom_id,
+                user_type: 6,
+                message: e.target.value
             };
-            setChatList([...chatList, newMessage]);
-            socket.emit('counsel_noti', message)
+
+            socket.emit('chat', {
+                method: "chat",
+                datas: chat
+            });
+            console.log("enter");
         }
     }
+
+    useEffect(() => {
+        if (counselingStatus === 'start') {
+            handleRoomJoin()
+        } else {
+            console.log("제발...")
+        }
+    }, [counselingStatus])
+
+    useEffect(() => {
+        if (finalStep === 'yes') {
+            hadnleEmit()
+        }
+    }, [finalStep])
+
+    console.log("finalStepData", finalStepData);
 
     return (
         <>
@@ -323,9 +355,11 @@ export default function BoxSx() {
                     <div>
                         <MuiBox
                             sx={{
+                                zIndex: 10,
                                 boxShadow: `3px 2px 5px black;`,
                                 width: 350,
                                 maxHeight: rem(700),
+                                Height: rem(700),
                                 position: 'absolute',
                                 bottom: rem(20),
                                 right: 30,
@@ -339,7 +373,7 @@ export default function BoxSx() {
                                     </Text>
                                     <TimeSleectBox />
                                 </Div>
-                                <Text style={{ overflow: 'auto' }}>
+                                <Text style={{ overflow: 'auto', minHeight: 500 }}>
                                     <Div type='time' >
                                         <Text size={13} color='#b53e14' >상담시간이 49분 남았습니다.</Text>
                                         <Text size={12} type='button' color='#e8440a'>
@@ -405,8 +439,8 @@ export default function BoxSx() {
                                         }} variant="outlined">
                                             <OutlinedInput
                                                 style={{ height: 40 }}
-                                                disabled={type === "finish" ? true : false}
-                                                placeholder={`${type === "finish" ? "상담이 완료 되었습니다." : ""}`}
+                                                disabled={counselingStatus === "finish" ? true : false}
+                                                placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
                                                 id="outlined-adornment-password"
                                                 value={state.message}
                                                 label={"none"}
@@ -418,7 +452,7 @@ export default function BoxSx() {
                                                     <InputAdornment position="end">
                                                         <IconButton
                                                             style={{
-                                                                background: `${type === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
                                                                 marginRight: "-11.2px", width: "35px", height: "35px"
                                                             }}
                                                             onMouseDown={handleMouseDownPassword}

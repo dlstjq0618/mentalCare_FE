@@ -121,7 +121,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         <>
             <PageTitle>설정</PageTitle>
             <FormProvider {...methods}>
-                <RegisterForm onSubmit={methods.handleSubmit(onSubmit)}>
+                <RegisterForm onSubmit={methods.handleSubmit(onSubmit)} style={{ position: 'sticky', zIndex: 1 }}>
                     <SettingInfoForm />
                     <BankAccountInfoForm title={true} />
                     <OpeningTimeForm />
