@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ConnectingAirportsOutlined, ConstructionOutlined } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingInfoData, selectSocketConnected, setSocketConnected, selectCounselingState } from '~/store/calendarDetailSlice';
+import { selectCounselingInfoData, selectSocketConnected, setSocketConnected, selectCounselingState, setSocketData } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 
 interface IStyled {
@@ -224,8 +224,12 @@ export default function BoxSx() {
 
     const [waitCount, setWaitCount] = useState(0); // 상담대기중 count
     const [waitList, setWaitList] = useState<any>([]); // 상담대기중 list
-    
-    console.log("counselingStatus", counselingStatus);
+
+
+    // useEffect(() => {
+    //     dispatch(setSocketData(waitCount));
+    //     console.log("waitCount", waitCount);
+    // }, [waitCount])
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -234,13 +238,15 @@ export default function BoxSx() {
         });
 
         // dashboard 내용 받기
-        socket.on('dashboard', (res: any) => { 
+
+        socket.on('dashboard', (res: any) => {
             const { method, datas } = res;
             console.log("🚀 ~ file: ChatBox.tsx:234 ~ socket.on dashboard ~ method", method, datas)
             switch (method) {
                 case "init": ;
                     const waitingIofo = datas.waitingList;
                     console.log('dashboard 데이터를 받았습니다.', waitingIofo);
+                    dispatch(setSocketData(waitingIofo))
                     setWaitCount(waitingIofo.count);
                     setWaitList(waitingIofo.list);
                     if (!waitingIofo.status) alert(`대쉬보드데이터를 받는중 error가 발생 하엿습니다. (${waitingIofo.message})`); return;
@@ -266,7 +272,8 @@ export default function BoxSx() {
 
     useEffect(() => {
         console.log("chatList", chatList)
-    })
+    }, [chatList])
+
     const [roomId, setRoomId] = useState(0);
     const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
     const [userPaymentList, setUserPaymentList] = useState<any>([]);
@@ -309,51 +316,10 @@ export default function BoxSx() {
         }
     }
 
-
-    // useEffect(() => {
-    //     // const userId = window?.localStorage?.getItem("userId");
-    //     // 로그인 비로그인 체크 해야함
-    //     const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
-    //     const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
-    //     console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64DecodedText)
-    //     // const socket = io("http://bo.local.api.woozoo.clinic", {
-    //     const socket = io("https://bo.dev.api.woozoo.clinic", {
-    //         // transports: ["websocket"],
-    //         transports: ["polling"],
-    //         extraHeaders: {
-    //             "identity": "counselor",
-    //             "x-auth-token": base64EncodedText,
-    //         }
-    //     });
-    //     // log socket connection
-    //     socket.on("connect", () => {
-    //         console.log("SOCKET CONNECTED!", socket.id);
-    //     });
-
-    //     socket.emit("counsel_noti", '여기는 우주상담사 웹에서 보내고 있다!');
-    //     socket.on("counsel_noti", (res: any) => {
-    //         console.log("받은 내용!", res);
-    //     });
-    //     // 이곳은 상담요청이 들어 왓을때 데이터가 들어오는 곳입니다.
-    //     socket.on('advice/request', (res: any) => {
-    //         console.log("advice", res)
-    //     })
-    //     socket.on('ping', (res: any) => {
-    //         console.log("ping", res)
-    //     })
-
-    //     // socket disconnect on component unmount if exists
-    //     socket.on("disconnect", () => {
-    //         console.log("SOCKET DIE!", socket.id);
-    //     });
-    //     // socket.disconnect(); // 로그아웃시 작동해야함
-    // }, [userId]);
-
-
     return (
         <>
             {
-                counselingStatus === 'start' ?
+                counselingStatus !== '' ?
                     <div>
                         <MuiBox
                             sx={{
@@ -418,7 +384,7 @@ export default function BoxSx() {
                                         }
                                         { /** 대화가 끝났을때 이벤트 체크 후 종료 안내*/}
                                         {
-                                            type === "finish" ?
+                                            counselingStatus === "finish" ?
                                                 <>
                                                     <Text type='finish'>
                                                         ----상담이 완료 되었습니다.----

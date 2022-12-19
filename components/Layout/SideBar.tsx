@@ -29,7 +29,7 @@ import { selectDiagnosisCallStatus, selectDiagnosisNotificationNumber, setDiagno
 import {
   isMobile
 } from "react-device-detect";
-import { selectCalendarUserList, setCounselingInfoData, setSessionId, setSocketControlls } from "~/store/calendarDetailSlice";
+import { selectCalendarUserList, selectSocketData, setCounselingInfoData, setSessionId, setSocketControlls } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 import BoxSx from "../ChatBox";
 
@@ -82,6 +82,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const [focus, setFocus] = useState<boolean>(true);
   const notifyNum: any = useSelector(selectDiagnosisNotificationNumber); // 스토어에 들어가있는 값
   const notifyState: any = useSelector(selectDiagnosisCallStatus);
+  const socketInfo = useSelector(selectSocketData);
   const path = router.pathname;
   const userList = useSelector(selectCalendarUserList);
   const sessionId = typeof window !== 'undefined' ? JSON.parse(localStorage?.getItem('session') as any) : "";
@@ -90,6 +91,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);
+
 
   const handleToast = () => {
     Store.addNotification({
@@ -106,6 +108,10 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
       }
     });
   }
+
+  useEffect(() => {
+    console.log("SOCKET_INFO", socketInfo);
+  }, [socketInfo])
   useEffect(() => {
     const userId = window?.localStorage?.getItem("userId");
     const sessionId = window?.localStorage?.getItem("session");
@@ -192,6 +198,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   //   }
   // }, [dispatch, shouldNotificate, waitingListInfo]);
 
+
   return (
     <>
       <StyledSider width={rem(120)}>
@@ -224,7 +231,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               href="/calendar"
               visiting={path === "/calendar" ? true : false}
             >
-              <span>{userList.length}</span>
+              <span>{socketInfo?.count}</span>
               <div>대기실</div>
             </SideBarButtons>
             <SideBarButtons

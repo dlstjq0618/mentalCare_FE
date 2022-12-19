@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { rem } from 'polished';
 import styled, { css } from 'styled-components';
+import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
-import { useDispatch } from 'react-redux';
-import { setCounselingState } from '~/store/calendarDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCounselingTimes, selectCounselingTimes } from '~/store/calendarDetailSlice';
 
 interface Iprops {
 
@@ -25,15 +27,11 @@ const Arricle = styled.article<IStyled>`
 `;
 
 const Button = styled.div<IStyled>`
-align-items: center;
-display: flex;
-color: #fff;
-width: ${rem(103)};
-justify-content: space-around;
-height: 36px;
-padding: 10px 9px 9px 16px;
-background-color: #eb541e;
-margin: 12px 17px;
+    justify-content: space-between;
+    display: flex;
+height: ${rem(50)};
+padding: 13px 14px 14.4px 22px;
+margin: 11px 2px 0px 2px;
   flex-grow: 0;
   border-radius: 6px;
   border: solid 1px #d3d3d3;
@@ -44,13 +42,14 @@ margin: 12px 17px;
 
 const Ul = styled.ul`
 background-color: #fff;
-    max-height: ${rem(250)};
+    max-height: ${rem(300)};
     font-weight: bold;
     overflow: auto;
     border-radius: 6px;
-    margin: -10px 0 0 17px;
+    margin: 2px 0 0 0;
     padding: 0;
     border: 1px solid #d3d3d3;
+    position: relative;
     cursor: pointer;
     
 `
@@ -71,36 +70,25 @@ const Li = styled.li<IStyled>`
     }
 `
 
-const selectType = [
-    {
-        label: '상담중',
-        value: 'start'
-    },
-    {
-        label: '일시정지',
-        value: 'pause'
-    },
-    {
-        label: '상담완료',
-        value: 'finish'
-    },
-]
-
-function TimeSleectBox(props: Iprops) {
+function ReservationSelect(props: Iprops) {
     const [check, setCheck] = useState(false);
-    const [type, setType] = useState("상담중");
+    const [select, setSelect] = useState("시간 선택");
     const dispatch = useDispatch();
+    const selectTime = useSelector(selectCounselingTimes)
 
     return (
         <>
-            <Arricle>
-                <Button onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
+            <Arricle >
+                <Button onClick={() => setCheck(!check)}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}><AccessTimeIcon style={{ marginRight: '0.625rem' }} />{select}</div> <KeyboardArrowDownIcon />
+                </Button>
                 {
                     check &&
-                    <Ul>
+                    <Ul style={{ zIndex: 10 }}>
                         {
-                            selectType.map((res: { label: string, value: string }, index: number) => {
-                                return <Li check onClick={() => { setType(res.label), setCheck(false), dispatch(setCounselingState(res.value)) }} key={index} value={res.value}>{res.label}{type === res.label ? <CheckIcon style={{ color: '#eb541e' }} /> : <CheckIcon style={{ color: "#fff" }} />}</Li>
+                            UPDATE_OPEN_TIMES_ALL.map((res: { label: string, value: string }, index: number) => {
+                                return <Li check onClick={() => { setSelect(res.label), setCheck(false), dispatch(setCounselingTimes(res.label)) }}
+                                    key={index} value={res.value}>{res.label}</Li>
                             })
                         }
                     </Ul>
@@ -110,4 +98,4 @@ function TimeSleectBox(props: Iprops) {
     );
 }
 
-export default TimeSleectBox;
+export default ReservationSelect;

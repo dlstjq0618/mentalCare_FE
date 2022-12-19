@@ -21,6 +21,8 @@ type DiagnosisDetailStoreState = {
   socket: string | null;
   chat: any;
   connect: any;
+  socketInfo: any;
+  time: string;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -39,6 +41,8 @@ const initialState: DiagnosisDetailStoreState = {
   socket: "",
   chat: "",
   connect: "",
+  socketInfo: {},
+  time: "",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -101,19 +105,21 @@ export const calendarDetailSilce = createSlice({
       state.session = action.payload;
     },
     setCounselingState(
-      // 상담완료 및 상태 체크
+      // 상담완료 및 상태 체크 ex)start, pause, finish
       state,
       action: PayloadAction<DiagnosisDetailStoreState["counseling"]>
     ) {
       state.counseling = action.payload;
     },
     setCounselingDate(
+      // 날짜 선택 정보
       state,
       action: PayloadAction<DiagnosisDetailStoreState["date"]>
     ) {
       state.date = action.payload;
     },
     setCounselingInfoData(
+      // 상담사 기본정보
       state,
       action: PayloadAction<DiagnosisDetailStoreState["info"]>
     ) {
@@ -126,6 +132,7 @@ export const calendarDetailSilce = createSlice({
       state.imageUrl = action.payload;
     },
     setSettingSaveControlls(
+      // 비밀번호 확인
       state,
       action: PayloadAction<DiagnosisDetailStoreState["password"]>
     ) {
@@ -138,16 +145,32 @@ export const calendarDetailSilce = createSlice({
       state.socket = action.payload;
     },
     setSocketChattingData(
+      // 채팅데이터  사용X
       state,
       action: PayloadAction<DiagnosisDetailStoreState["chat"]>
     ) {
       state.chat = action.payload;
     },
     setSocketConnected(
+      //소캣 연결 확인 사용X
       state,
       action: PayloadAction<DiagnosisDetailStoreState["connect"]>
     ) {
       state.connect = action.payload;
+    },
+    setSocketData(
+      // 소캣리스트 데이터
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["socketInfo"]>
+    ) {
+      state.socketInfo = action.payload;
+    },
+    setCounselingTimes(
+      // 스케줄 등록 시간 선택
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["time"]>
+    ) {
+      state.time = action.payload;
     },
   },
 });
@@ -167,6 +190,8 @@ export const {
   setSocketControlls,
   setSocketChattingData,
   setSocketConnected,
+  setSocketData,
+  setCounselingTimes,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -199,4 +224,8 @@ export const selectSocketChattingData = (state: RootState) =>
   state.calendarDetail.chat;
 export const selectSocketConnected = (state: RootState) =>
   state.calendarDetail.connect;
+export const selectSocketData = (state: RootState) =>
+  state.calendarDetail.socketInfo;
+export const selectCounselingTimes = (state: RootState) =>
+  state.calendarDetail.time;
 export default calendarDetailSilce.reducer;

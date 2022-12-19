@@ -6,6 +6,8 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSocketData, setCounselingDate, setCounselingTimes } from '~/store/calendarDetailSlice';
 
 const testData = [{
     name: "기분좋아2031",
@@ -89,14 +91,22 @@ cursor: pointer;
 `;
 
 export default function TemporaryDrawer(props: IProps) {
+    const socketInfo = useSelector(selectSocketData);
     const [modalOpen, setModalOpen] = useState(false);
+    const [selectUserData, setSelectUserData] = useState<any>();
     const close = () => setModalOpen(false);
+    const dispatch = useDispatch()
     const [state, setState] = React.useState({
         top: false,
         left: false,
         bottom: false,
         right: false,
     });
+
+    const handleDispatch = () => {
+        dispatch(setCounselingDate(""))
+        dispatch(setCounselingTimes(""))
+    }
 
 
     const toggleDrawer =
@@ -129,20 +139,20 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>2</div>건</Title>
+                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{socketInfo?.count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
             {
-                testData.map((list, index: number) => {
+                socketInfo?.result?.map((list: any, index: number) => {
                     return (
-                        <BoxItem key={index} onClick={() => setModalOpen(true)}>
+                        <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <Text bold size={18}>{list.name}</Text>
+                                <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
                             </div>
                             <div style={{ display: "grid" }}>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>요청 시간 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.time}</Text></Text>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>상담 방식 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.type}</Text></Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>요청 시간 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.date}</Text></Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>상담 방식 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.method_str}</Text></Text>
                             </div>
                         </BoxItem>
                     )
@@ -171,7 +181,7 @@ export default function TemporaryDrawer(props: IProps) {
             >
                 {list("right")}
             </Drawer>
-            <ApprovalModal open={modalOpen} close={close} />
+            <ApprovalModal open={modalOpen} close={close} userInfo={selectUserData} />
         </>
     );
 }

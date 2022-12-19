@@ -70,7 +70,6 @@ export function RowAndColumnSpacing() {
 
   const onRemove = (name: string) => {
     setUsers(users.filter((user: { name: string; }) => user.name !== name));
-    console.log("onRemove")
   };
 
   const handleCheckControlls = (name: number) => {

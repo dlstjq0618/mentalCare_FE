@@ -35,8 +35,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     const fileUploadDate = useSelector(selectCounselingInfoData)
     const passwordSave = useSelector(selectSettingSaveControlls);
 
-    console.log("children", children);
-
     useSession({
         required: true,
         onUnauthenticated() {
@@ -92,7 +90,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject
             })
             .then((res) => {
-                console.log("res", res)
                 if (res.isSuccess) {
                     return alert('저장되었습니다.')
                 }

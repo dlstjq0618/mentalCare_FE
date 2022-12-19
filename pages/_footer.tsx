@@ -5,9 +5,6 @@ interface Iprops {
 }
 
 function _footer(props: Iprops) {
-    useEffect(() => {
-        console.log("props.chat", props.chat)
-    })
     return (
         <>
 

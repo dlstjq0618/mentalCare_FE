@@ -12,11 +12,13 @@ import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
 import { useSelector } from 'react-redux';
-import { selectCounselingDate } from '~/store/calendarDetailSlice';
+import { selectCounselingDate, selectCounselingTimes } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
+import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
 
 interface IProps {
+    userInfo: any;
     open: boolean;
     close: () => void;
 }
@@ -134,10 +136,10 @@ function ApprovalModal(props: IProps) {
     const [selectTimes, setSelectTimes] = useState("");
     const [datePicker, setDatePicker] = useState(false);
     const storeData = useSelector(selectCounselingDate);
+    const selectTime = useSelector(selectCounselingTimes)
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러
-        console.log("e", e)
         setSelectTimes(e.target.value)
     }
 
@@ -180,17 +182,12 @@ function ApprovalModal(props: IProps) {
         [setValue]
     );
 
-    useEffect(() => {
-        if (storeData) {
-            console.log("storeData", format(storeData, "PPP", { locale: ko }));
-        }
-    })
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}` }} showDialog={props.open} close={handleClose} >
+            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={props.open} close={handleClose} >
                 <Div button>
                     <Text size={20} bold="bold">
-                        {"기분좋아 2031"} 님
+                        {props.userInfo?.user_name} 님
                     </Text>
                     <Text button>
                         테스트 결과보기
@@ -202,7 +199,7 @@ function ApprovalModal(props: IProps) {
                         상담 방식
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        전화
+                        {props.userInfo?.method_str === "전화상담(주간50분)" ? "전화" : "채팅"}
                     </Text>
                 </Div>
                 <Div>
@@ -210,7 +207,7 @@ function ApprovalModal(props: IProps) {
                         상담 요청 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {"2022.10.12 12:30:45"}
+                        {props.userInfo?.date}
                     </Text>
                 </Div>
                 <Div>
@@ -226,23 +223,28 @@ function ApprovalModal(props: IProps) {
                     <CalendarTodayIcon />
                     <Text style={{ marginLeft: `${rem(10)}` }}>{storeData ? format(storeData, "PPP", { locale: ko }) : "날짜선택"}</Text>
                 </Input>
-
+                {/* 
                 <Select style={{ marginBottom: `${rem(40)}` }} onChange={handleSelectTime}>
-                    <option hidden value={"none"}>시간 선택</option>
+                    <option hidden value={"none"} >시간 선택</option>
                     {
                         UPDATE_OPEN_TIMES_ALL.map((time: { label: string, value: string }, index: number) => {
                             return <option key={index} value={time.value}>{time.label}</option>
                         })
                     }
-                </Select>
+                </Select> */}
+                <ReservationSelect />
                 <RoundedButton
+                    disabled={storeData !== "" && selectTime !== "" ? false : true}
                     onClick={open}
-                    color="orange"
+                    color={storeData !== "" && selectTime !== "" ? "orange" : "gray"}
                     css={{
                         fontSize: rem(15),
                         margin: `0 ${rem(24)} 0 0`,
                         height: rem(50),
-                        width: "100%",
+                        width: rem(375),
+                        position: 'absolute',
+                        bottom: rem(40),
+                        zIndex: 1
                     }}
                 >
                     상담 승인
@@ -255,7 +257,7 @@ function ApprovalModal(props: IProps) {
                 height: `${rem(387)}`, textAlign: 'center', marginTop: " 14vh"
             }}>
                 <Text size={17} bold='normal' center>
-                    <Text>기분좋아293</Text>님에게
+                    <Text>{props.userInfo?.user_name}</Text>님에게
                     <div>상담 예정 알림이 발송됩니다.</div>
                 </Text>
                 <Text bg>
@@ -263,7 +265,7 @@ function ApprovalModal(props: IProps) {
                         상담 예정 시간
                     </Text>
                     <Info>
-                        {storeData ? format(storeData, "PPP", { locale: ko }) + " " + selectTimes : ""}
+                        {storeData ? format(storeData, "PPP", { locale: ko }) + " " + selectTime : ""}
                     </Info>
                 </Text>
                 <Text size={17} color={"#333"} bold={"normal"}>
