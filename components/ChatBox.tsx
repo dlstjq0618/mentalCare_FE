@@ -221,13 +221,32 @@ export default function BoxSx() {
     const userId = String(infoData?.id);
     const connected = useSelector(selectSocketConnected);
     const counselingStatus = useSelector(selectCounselingState);
+
+    const [waitCount, setWaitCount] = useState(0); // 상담대기중 count
+    const [waitList, setWaitList] = useState<any>([]); // 상담대기중 list
     
     console.log("counselingStatus", counselingStatus);
 
     useEffect(() => {
         socket.on("connect", () => {
             console.log("SOCKET CONNECTED!", socket.id);
+            // connection id 바꼇으면 감지하여 룸입장 다시해야함
         });
+
+        // dashboard 내용 받기
+        socket.on('dashboard', (res: any) => { 
+            const { method, datas } = res;
+            console.log("🚀 ~ file: ChatBox.tsx:234 ~ socket.on dashboard ~ method", method, datas)
+            switch (method) {
+                case "init": ;
+                    const waitingIofo = datas.waitingList;
+                    console.log('dashboard 데이터를 받았습니다.', waitingIofo);
+                    setWaitCount(waitingIofo.count);
+                    setWaitList(waitingIofo.list);
+                    if (!waitingIofo.status) alert(`대쉬보드데이터를 받는중 error가 발생 하엿습니다. (${waitingIofo.message})`); return;
+                    break; //
+            }
+        })
         socket.on("counsel_noti", (res: any) => {
             const method = res.method;
             console.log("🚀 ~ file: ChatBox.tsx:233 ~ socket.on ~ method", method)
