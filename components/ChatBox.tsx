@@ -254,12 +254,15 @@ export default function BoxSx() {
             const { method, datas } = res;
             console.log("🚀 ~ file: ChatBox.tsx:234 ~ socket.on dashboard ~ method", method, datas)
             const waitingIofo = datas.waitingList;
-            dispatch(setSocketData(waitingIofo))
+            const waitingInfoList = datas.waitingList
+            console.log("datas", datas)
+            console.log("method", method)
             switch (method) {
                 case "init": ;
                     const waitingIofo = datas.waitingList;
                     console.log('dashboard 데이터를 받았습니다.', waitingIofo);
-                    dispatch(setSocketData(waitingIofo))
+                    // dispatch(setSocketData(waitingIofo))
+                    dispatch(setSocketData(waitingInfoList))
                     dispatch(setTotalCount(waitingIofo.count))
                     setWaitCount(waitingIofo.count);
                     setWaitList(waitingIofo.list);
@@ -433,7 +436,7 @@ export default function BoxSx() {
                                             상담 경과 44:15 { /** 상담시간 체크*/}
                                         </Text>
                                     </Div>
-                                    <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(500) }}>
+                                    <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
                                             test.length > 0 && test.map((res: any, index: number) => (
                                                 <>
@@ -456,7 +459,7 @@ export default function BoxSx() {
                                                                     <div />
                                                                     <Div style={{ display: "flex" }}>
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                            {res?.time}
+                                                                            <div>{res?.time}</div>
                                                                         </Div>
                                                                         <Div type='left' bg='white' height={62} >
                                                                             {res?.message}
