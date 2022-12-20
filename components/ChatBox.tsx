@@ -263,7 +263,7 @@ export default function BoxSx() {
                 case "room/chat/list":
                     const chatList = res.datas?.list;
                     setFinishChat(chatList);
-                    dispatch(setHistoryChat(chatList));
+                    dispatch(setHistoryChat(res.datas));
                     dispatch(setFinishChatList(chatList));
             }
         })
@@ -312,6 +312,7 @@ export default function BoxSx() {
 
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => {
+            console.log("res", res);
             setChatList([...chatList, res])
             dispatch(setLoggedUser(res))
         })
@@ -535,69 +536,68 @@ export default function BoxSx() {
                                                     </div>
                                                 ))
                                                 :
-                                                select_user.status === 2 ?
-                                                    // historyList?.map((res: any, index: number) => (
-                                                    //     <>
-                                                    //         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                    //             {console.log("bbbb", res)}
-                                                    //             {
-                                                    //                 res?.type === 'receve' ?
-                                                    //                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                    //                         <Div bg='#ffffe7' type="right">
-                                                    //                             {res?.message}
-                                                    //                         </Div>
-                                                    //                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                    //                             {format(res?.time, 'a hh:mm')}
-                                                    //                         </Div>
-                                                    //                     </Div>
-                                                    //                     :
-                                                    //                     <Div type='chat'>
-                                                    //                         <div />
-                                                    //                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                    //                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                    //                                 {format(res?.time, 'a hh:mm')}
-                                                    //                             </Div>
-                                                    //                             <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                    //                                 {res?.message}
-                                                    //                             </Div>
-                                                    //                         </Div>
-                                                    //                     </Div>
-                                                    //             }
-                                                    //         </div>
-                                                    //     </>
-                                                    // ))
-                                                    console.log("historyList::", historyList)
-                                                    :
-                                                    test?.map((res: any, index: number) => (
-                                                        <>
-                                                            <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                {console.log("bbbb", res)}
-                                                                {
-                                                                    res?.datas?.type ?
+                                                // select_user.status === 2 ?
+                                                //     historyList[0]?.map((res: any, index: number) => (
+                                                //         <>
+                                                //             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                //                 {console.log("bbbb", res)}
+                                                //                 {
+                                                //                     res?.type === 'receve' ?
+                                                //                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                //                             <Div bg='#ffffe7' type="right">
+                                                //                                 {res?.message}
+                                                //                             </Div>
+                                                //                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                //                                 {format(res?.time, 'a hh:mm')}
+                                                //                             </Div>
+                                                //                         </Div>
+                                                //                         :
+                                                //                         <Div type='chat'>
+                                                //                             <div />
+                                                //                             <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                //                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                //                                     {format(res?.time, 'a hh:mm')}
+                                                //                                 </Div>
+                                                //                                 <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                //                                     {res?.message}
+                                                //                                 </Div>
+                                                //                             </Div>
+                                                //                         </Div>
+                                                //                 }
+                                                //             </div>
+                                                //         </>
+                                                //     ))
+                                                //     :
+                                                test?.map((res: any, index: number) => (
+                                                    <>
+                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                            {console.log("bbbb", res)}
+                                                            {
+                                                                res?.datas?.type ?
+                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                        <Div bg='#ffffe7' type="right">
+                                                                            {res.datas?.message}
+                                                                        </Div>
+                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                            {format(res.datas?.time, 'a hh:mm')}
+                                                                        </Div>
+                                                                    </Div>
+                                                                    :
+                                                                    <Div type='chat'>
+                                                                        <div />
                                                                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                            <Div bg='#ffffe7' type="right">
-                                                                                {res.datas?.message}
+                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                {res?.time}
                                                                             </Div>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                {format(res.datas?.time, 'a hh:mm')}
-                                                                            </Div>
-                                                                        </Div>
-                                                                        :
-                                                                        <Div type='chat'>
-                                                                            <div />
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {res?.time}
-                                                                                </Div>
-                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                    {res?.message}
-                                                                                </Div>
+                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                {res?.message}
                                                                             </Div>
                                                                         </Div>
-                                                                }
-                                                            </div>
-                                                        </>
-                                                    ))
+                                                                    </Div>
+                                                            }
+                                                        </div>
+                                                    </>
+                                                ))
                                         }
                                         {
                                             counselingStatus === "finish" ?
