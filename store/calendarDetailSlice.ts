@@ -29,7 +29,16 @@ type DiagnosisDetailStoreState = {
   count: any;
   start: string;
   list: any;
-  chatstatus: string;
+  list2: any;
+  chatstatus: any;
+  reservationList: any;
+  waitlist: any;
+  consultingList: any;
+  completeList: any;
+  cancelList: any;
+  select: any;
+  room: any;
+  finish_chat: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -56,7 +65,16 @@ const initialState: DiagnosisDetailStoreState = {
   count: 0,
   start: "",
   list: [],
+  list2: [],
   chatstatus: "",
+  reservationList: {},
+  waitlist: {},
+  consultingList: {},
+  completeList: {},
+  cancelList: {},
+  select: {},
+  room: "",
+  finish_chat: {},
 };
 
 export const calendarDetailSilce = createSlice({
@@ -227,13 +245,75 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.list = [...state.list, action.payload]; //상태의 불변을 지키기 위해 spread 연산자로 객체를 복사하고 isLogged의 상태만 바꿔준다.
     },
+    setHistoryChat(
+      // 진행중인 컨설팅
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["list2"]>
+    ) {
+      state.list2 = [...state.list2, action.payload]; //상태의 불변을 지키기 위해 spread 연산자로 객체를 복사하고 isLogged의 상태만 바꿔준다.
+    },
+    setDashBoardReservationList(
+      // 대시보드 예약리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["reservationList"]>
+    ) {
+      state.reservationList = action.payload;
+    },
+    setDashBoardWatingList(
+      // 대시보드 대기리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["waitlist"]>
+    ) {
+      state.waitlist = action.payload;
+    },
+    setDashBoardConsultingList(
+      // 대시보드 상담중리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["consultingList"]>
+    ) {
+      state.consultingList = action.payload;
+    },
+    setDashBoardCompleteList(
+      //대시보드 완료된 리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["completeList"]>
+    ) {
+      state.completeList = action.payload;
+    },
+    setDashBoardCancelList(
+      // 대시보드 취소된 리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["cancelList"]>
+    ) {
+      state.cancelList = action.payload;
+    },
+    setDashBoardSelectUser(
+      // 대시보드에서 선택한 User의 대에터  ex 상담시간 방번호 등등
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["select"]>
+    ) {
+      state.select = action.payload;
+    },
+    setDashBoardRoomJoin(
+      // 대시보드에서 선택한 User의 대에터  ex 상담시간 방번호 등등
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["room"]>
+    ) {
+      state.room = action.payload;
+    },
+    setFinishChatList(
+      // 지난 진료 리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["finish_chat"]>
+    ) {
+      state.finish_chat = action.payload;
+    },
   },
 });
 
 export const {
   setDiagnosisCallStatus,
   setDiagnosisDetailStatus,
-  setCalendarUserList,
   setCalendarModalState,
   setCalendarMonthState,
   setSessionId,
@@ -253,6 +333,15 @@ export const {
   setCounselingStart,
   setTotalCount,
   setLoggedUser,
+  setDashBoardReservationList,
+  setDashBoardWatingList,
+  setDashBoardConsultingList,
+  setDashBoardCompleteList,
+  setDashBoardCancelList,
+  setDashBoardSelectUser,
+  setDashBoardRoomJoin,
+  setFinishChatList,
+  setHistoryChat,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -300,4 +389,24 @@ export const selectCounselingStart = (state: RootState) =>
 export const selectTotalCount = (state: RootState) =>
   state.calendarDetail.count;
 export const selectLoggedUser = (state: RootState) => state.calendarDetail.list;
+export const selectHistoryList = (state: RootState) =>
+  state.calendarDetail.list2;
+
+export const selectReservationList = (state: RootState) =>
+  state.calendarDetail.reservationList;
+export const selectWaitlist = (state: RootState) =>
+  state.calendarDetail.waitlist;
+export const selectConsultingList = (state: RootState) =>
+  state.calendarDetail.consultingList;
+export const selectCompleteList = (state: RootState) =>
+  state.calendarDetail.completeList;
+export const selectCancelList = (state: RootState) =>
+  state.calendarDetail.cancelList;
+export const selectDashBoardSelectUser = (state: RootState) =>
+  state.calendarDetail.select;
+export const selectDashBoardRoomJoin = (state: RootState) =>
+  state.calendarDetail.room;
+export const selectFinishChatList = (state: RootState) =>
+  state.calendarDetail.finish_chat;
+
 export default calendarDetailSilce.reducer;

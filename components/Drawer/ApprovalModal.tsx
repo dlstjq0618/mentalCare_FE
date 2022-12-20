@@ -12,7 +12,7 @@ import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCalendarUserList, selectCounselingFinalStepData, selectCounselingDate, selectCounselingTimes, setCounselingFinalStep, setCounselingFinalStepData } from '~/store/calendarDetailSlice';
+import { selectCounselingFinalStepData, selectCounselingDate, selectCounselingTimes, setCounselingFinalStep, setCounselingFinalStepData } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
 import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
@@ -187,6 +187,9 @@ function ApprovalModal(props: IProps) {
         dispatch(setCounselingFinalStep('yes'));
         dispatch(setCounselingFinalStepData(props.userInfo))
     }
+    useEffect(() => {
+        console.log("props", props.userInfo);
+    })
 
 
     return (

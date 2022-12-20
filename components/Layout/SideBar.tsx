@@ -29,7 +29,18 @@ import { selectDiagnosisCallStatus, selectDiagnosisNotificationNumber, setDiagno
 import {
   isMobile
 } from "react-device-detect";
-import { selectCalendarUserList, selectSocketData, setCounselingInfoData, setSessionId, setSocketControlls } from "~/store/calendarDetailSlice";
+import {
+  selectCalendarUserList,
+  selectCancelList,
+  selectCompleteList,
+  selectConsultingList,
+  selectReservationList,
+  selectSocketData,
+  selectWaitlist,
+  setCounselingInfoData,
+  setSessionId,
+  setSocketControlls
+} from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 import BoxSx from "../ChatBox";
 
@@ -88,6 +99,19 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const sessionId = typeof window !== 'undefined' ? JSON.parse(localStorage?.getItem('session') as any) : "";
   const userName = useSelector(selectCounselorName);
 
+  const consultingList = useSelector(selectConsultingList); // 상담중
+  const reservationList = useSelector(selectReservationList); // 예약 확정 O
+
+  const watingRoom_count = consultingList.count + reservationList.count;
+
+  useEffect(() => {
+    console.log("watingRoom_count", watingRoom_count);
+    // console.log("1111", reservationList)
+    // console.log("2222", waitlist)
+    // console.log("3333", consultingList)
+    // console.log("4444", completeList)
+    // console.log("5555", cancelList)
+  }, [reservationList])
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);
@@ -231,7 +255,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               href="/calendar"
               visiting={path === "/calendar" ? true : false}
             >
-              <span>{userList?.length}</span>
+              <span>{watingRoom_count}</span>
               <div>대기실</div>
             </SideBarButtons>
             <SideBarButtons
