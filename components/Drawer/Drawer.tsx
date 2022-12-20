@@ -9,22 +9,6 @@ import ApprovalModal from './ApprovalModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSocketData, setCounselingDate, setCounselingTimes } from '~/store/calendarDetailSlice';
 
-const testData = [{
-    name: "기분좋아2031",
-    time: "2022.10.12 12:30:45",
-    type: "채팅(50분)"
-},
-{
-    name: "기분좋아2031",
-    time: "2022.10.12 12:30:45",
-    type: "채팅(50분)"
-},
-{
-    name: "기분좋아2031",
-    time: "2022.10.12 12:30:45",
-    type: "채팅(50분)"
-}]
-
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 interface IProps {
@@ -125,7 +109,7 @@ export default function TemporaryDrawer(props: IProps) {
 
     const list = (anchor: Anchor) => (
         <Box
-            style={{ background: "#f7f7f7", padding: `${rem(30)}` }}
+            style={{ background: "#f7f7f7", padding: `${rem(30)}`, height: 'auto', minHeight: '100%' }}
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : `${rem(430)}` }}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
@@ -175,6 +159,7 @@ export default function TemporaryDrawer(props: IProps) {
                 {props.name}
             </RoundedButton>
             <Drawer
+                sx={{ bg: "#f7f7f7" }}
                 anchor={"right"}
                 open={state["right"]}
                 onClose={toggleDrawer("right", false)}

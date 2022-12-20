@@ -3,16 +3,13 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, selectCounselingInfoData, selectCalendarMonthState, selectCalendarUserList, selectSessionId, setCalendarModalState, setCounselingState, selectCounselingState, selectCounselingDate } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, selectCalendarUserList, selectSessionId, setCalendarModalState, setCounselingState, selectCounselingState, selectCounselingDate } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
 import { ConstructionOutlined } from '@mui/icons-material';
 import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import ChatDetail from '~/pages/calendar/[id]';
-import BoxSx from '../ChatBox';
+import { format } from "date-fns";
 
 
 // 스텝바 진행상황 체크 ex) 상담중, 상담완료, 상담실패 등등 
@@ -238,6 +235,8 @@ function DayComponents(props: IProps) {
     const [cancelValue, setCancelValue] = useState("고객 부재로 인한 취소");
     const state = useSelector(selectCounselingState);
     const userId = useSelector(selectCounselingInfoData);
+    const storeData = useSelector(selectCounselingDate);
+    const counselingStatus = useSelector(selectCounselingState);
 
 
 
@@ -248,6 +247,10 @@ function DayComponents(props: IProps) {
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
 
+    const handleDispatch = () => {
+        dispatch(setCounselingState("start"));
+        dispatch(setCounselingStart("start"));
+    }
     useEffect(() => {
         // console.log("userList", userList);
     }, [userList])
@@ -293,7 +296,7 @@ function DayComponents(props: IProps) {
                 <span>
                     {userList && userList.map((res: any, index: number) => {
                         return res.date === props.days.format('YYYY-MM-DD') ?
-                            <StyledDiv key={index} onClick={() => { open2(), setUserType(res.type), setUserName(res.id), setUserDate(res.date) }}><StyledRadius></StyledRadius>{res.id.length > 9 ? res.id.substr(0, 11) + "..." : res.id}</StyledDiv> : ""
+                            <StyledDiv key={index} onClick={() => { counselingStatus === 'pause' ? console.log("none") : open2(), setUserType(res.type), setUserName(res.id), setUserDate(res.date) }}><StyledRadius></StyledRadius>{res.id.length > 9 ? res.id.substr(0, 11) + "..." : res.id}</StyledDiv> : ""
                     })}
                 </span>
             </Div>
@@ -357,7 +360,28 @@ function DayComponents(props: IProps) {
                         </Text>
                     </div>
                 </Text>
-                {
+                <Text color='#eb541e' size={13} bold='normal' center style={{ marginTop: `${rem(40)}` }}>
+                    상담시작 버튼을 누르면 채팅이 시작되며, 상담 시간이 카운트 됩니다.
+                </Text>
+                <RoundedButton
+                    onClick={() => {
+                        close2(), userType === "채팅" ?
+                            handleDispatch()
+                            :
+                            console.log("전화상담")
+                    }}
+                    color="orange"
+                    css={{
+                        fontSize: rem(15),
+                        margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
+                        height: rem(50),
+                        width: "100%",
+                    }}
+                >
+                    상담 시작
+                </RoundedButton>
+
+                {/* {
                     !startButton ?
                         <Text color='#eb541e' size={13} bold='normal' center style={{ marginTop: `${rem(40)}` }}>
                             상담시작 버튼을 누르면 채팅이 시작되며, 상담 시간이 카운트 됩니다.
@@ -365,15 +389,15 @@ function DayComponents(props: IProps) {
                         <Text color='#eb541e' size={13} bold='normal' center style={{ marginTop: `${rem(40)}`, marginBottom: `${rem(14)}` }}>
                             상담 경과<Text left>44:30</Text>
                         </Text>
-                }
+                } */}
                 { /** 채팅상담일 때 새로운 창 생성*/}
-                {
+                {/* {
                     !startButton ?
                         <RoundedButton
                             onClick={() => {
                                 close2(),
                                     start(), userType === "채팅" ?
-                                        dispatch(setCounselingState("start"))
+                                        handleDispatch()
                                         :
                                         console.log("전화상담")
                             }}
@@ -435,7 +459,7 @@ function DayComponents(props: IProps) {
                                 상담완료
                             </RoundedButton>
                         </Div>
-                }
+                } */}
                 <div style={{ textAlign: 'center', marginBottom: `${rem(40)}` }}>
                     <Text size={13} bold="normal" color='#666' center
                         style={{ width: `${rem(51)}`, borderBottom: `1px solid #666`, cursor: "pointer" }}
@@ -447,6 +471,7 @@ function DayComponents(props: IProps) {
             </BaseDialog2>
             <BaseDialog2 showDialog={cancelModal} close={cancelClose} aria-label="취소 팝업"
                 style={{
+                    marginTop: '18vh',
                     width: `${rem(376)}`,
                     height: `${rem(422)}`,
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,

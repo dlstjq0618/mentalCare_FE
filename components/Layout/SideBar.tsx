@@ -231,7 +231,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               href="/calendar"
               visiting={path === "/calendar" ? true : false}
             >
-              <span>{socketInfo?.count}</span>
+              <span>{userList?.length}</span>
               <div>대기실</div>
             </SideBarButtons>
             <SideBarButtons

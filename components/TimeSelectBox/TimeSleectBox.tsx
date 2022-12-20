@@ -99,7 +99,7 @@ function TimeSleectBox(props: Iprops) {
     const dispatch = useDispatch();
     const status = useSelector(selectCounselingState);
 
-    // useEffect(() => { // 상담 버튼 초기값 
+    // useEffect(() => { // 상담 버튼 초기값
     //     if (status) {
     //         if (status === 'start') {
     //             setType("상담중");

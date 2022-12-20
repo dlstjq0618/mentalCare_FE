@@ -26,6 +26,7 @@ type DiagnosisDetailStoreState = {
   confirm: string;
   final: any;
   timestemp: string;
+  count: any;
   start: string;
 };
 
@@ -50,6 +51,7 @@ const initialState: DiagnosisDetailStoreState = {
   confirm: "",
   final: {},
   timestemp: "",
+  count: 0,
   start: "",
 };
 
@@ -208,6 +210,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.start = action.payload;
     },
+    setTotalCount(
+      // 임시로 토탈 카운트 +1 하기위함
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["count"]>
+    ) {
+      state.count = action.payload;
+    },
   },
 });
 
@@ -232,6 +241,7 @@ export const {
   setCounselingFinalStepData,
   setCounselingTimeStemp,
   setCounselingStart,
+  setTotalCount,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -276,4 +286,6 @@ export const selectCounselingTimeStemp = (state: RootState) =>
   state.calendarDetail.timestemp;
 export const selectCounselingStart = (state: RootState) =>
   state.calendarDetail.start;
+export const selectTotalCount = (state: RootState) =>
+  state.calendarDetail.count;
 export default calendarDetailSilce.reducer;

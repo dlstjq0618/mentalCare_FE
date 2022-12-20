@@ -12,7 +12,7 @@ import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingFinalStepData, selectCounselingDate, selectCounselingTimes, setCounselingFinalStep, setCounselingFinalStepData } from '~/store/calendarDetailSlice';
+import { setCalendarUserList, selectCounselingFinalStepData, selectCounselingDate, selectCounselingTimes, setCounselingFinalStep, setCounselingFinalStepData } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
 import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
@@ -285,7 +285,7 @@ function ApprovalModal(props: IProps) {
                     <RoundedButton
                         color="orange"
                         css={{ flex: 1, height: rem(50), width: rem(153) }}
-                        onClick={() => { close(), handleClose(), handleFinalStep() }} // 예약확인 api 후 return get api
+                        onClick={() => { close(), handleClose(), handleFinalStep() }}
                     >
                         확인
                     </RoundedButton>
