@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin } from '~/store/calendarDetailSlice';
+import { selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, } from '~/store/calendarDetailSlice';
 
 interface Iprops {
 
@@ -99,7 +99,7 @@ function TimeSleectBox(props: Iprops) {
     const dispatch = useDispatch();
     const status = useSelector(selectCounselingState);
     const select_user = useSelector(selectDashBoardSelectUser);
-
+    const counselingStatus = useSelector(selectCounselingState);
 
 
 
@@ -107,7 +107,7 @@ function TimeSleectBox(props: Iprops) {
         <>
             <Arricle>
                 {
-                    select_user.status === 3 ?
+                    counselingStatus === 'finish' ?
                         <Button onClick={() => dispatch(setDashBoardRoomJoin(""))} type={"finish"}>{"상담완료"} <KeyboardArrowDownIcon /></Button>
                         :
                         <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>

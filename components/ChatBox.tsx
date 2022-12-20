@@ -246,7 +246,6 @@ export default function BoxSx() {
         });
     }, [])
 
-
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
@@ -444,8 +443,10 @@ export default function BoxSx() {
 
     const use_last_chat = useSelector(selectFinishChatList);
 
+    console.log("counselingStatus", counselingStatus);
+
     useEffect(() => {
-        if (room_join === 'complate') {
+        if (room_join === 'complate' || room_join === 'consulting') {
             handleFinishChatList()
         }
     }, [room_join])
@@ -465,11 +466,15 @@ export default function BoxSx() {
         }
     }, [finalStep])
 
+    useEffect(() => {
+
+    }, [])
+
     const test = useSelector(selectLoggedUser);
     return (
         <>
             {
-                counselingStatus !== 'finish' && counselingStatus !== "" || room_join === "complate" || room_join === "consulting" ?
+                counselingStatus !== 'finish' && counselingStatus !== "" || room_join === "complate" ?
                     <div>
                         <MuiBox
                             sx={{
@@ -531,36 +536,37 @@ export default function BoxSx() {
                                                 ))
                                                 :
                                                 select_user.status === 2 ?
-                                                    historyList?.map((res: any, index: number) => (
-                                                        <>
-                                                            <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                {console.log("bbbb", res)}
-                                                                {
-                                                                    res?.datas?.type ?
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                            <Div bg='#ffffe7' type="right">
-                                                                                {res?.message}
-                                                                            </Div>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                {format(res?.time, 'a hh:mm')}
-                                                                            </Div>
-                                                                        </Div>
-                                                                        :
-                                                                        <Div type='chat'>
-                                                                            <div />
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {format(res?.time, 'a hh:mm')}
-                                                                                </Div>
-                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                    {res?.message}
-                                                                                </Div>
-                                                                            </Div>
-                                                                        </Div>
-                                                                }
-                                                            </div>
-                                                        </>
-                                                    ))
+                                                    // historyList?.map((res: any, index: number) => (
+                                                    //     <>
+                                                    //         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                    //             {console.log("bbbb", res)}
+                                                    //             {
+                                                    //                 res?.type === 'receve' ?
+                                                    //                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                    //                         <Div bg='#ffffe7' type="right">
+                                                    //                             {res?.message}
+                                                    //                         </Div>
+                                                    //                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                    //                             {format(res?.time, 'a hh:mm')}
+                                                    //                         </Div>
+                                                    //                     </Div>
+                                                    //                     :
+                                                    //                     <Div type='chat'>
+                                                    //                         <div />
+                                                    //                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                    //                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                    //                                 {format(res?.time, 'a hh:mm')}
+                                                    //                             </Div>
+                                                    //                             <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                    //                                 {res?.message}
+                                                    //                             </Div>
+                                                    //                         </Div>
+                                                    //                     </Div>
+                                                    //             }
+                                                    //         </div>
+                                                    //     </>
+                                                    // ))
+                                                    console.log("historyList::", historyList)
                                                     :
                                                     test?.map((res: any, index: number) => (
                                                         <>
@@ -594,7 +600,7 @@ export default function BoxSx() {
                                                     ))
                                         }
                                         {
-                                            select_user.status === 3 ?
+                                            counselingStatus === "finish" ?
                                                 <>
                                                     <Text type='finish'>
                                                         ----상담이 완료 되었습니다.----
@@ -614,8 +620,8 @@ export default function BoxSx() {
                                         }} variant="outlined">
                                             <OutlinedInput
                                                 style={{ height: 40 }}
-                                                disabled={select_user.status === 3 ? true : false}
-                                                placeholder={`${select_user.status === 3 ? "상담이 완료 되었습니다." : ""}`}
+                                                disabled={counselingStatus === "finish" ? true : false}
+                                                placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
                                                 id="outlined-adornment-password"
                                                 value={state.message}
                                                 label={"none"}
@@ -628,7 +634,7 @@ export default function BoxSx() {
                                                     <InputAdornment position="end">
                                                         <IconButton
                                                             style={{
-                                                                background: `${select_user.status === 3 ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
                                                                 marginRight: "-11.2px", width: "35px", height: "35px"
                                                             }}
                                                             onMouseDown={handleMouseDownPassword}

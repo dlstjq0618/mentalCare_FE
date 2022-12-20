@@ -350,7 +350,7 @@ function DayComponents(props: IProps) {
                         consultingList && consultingList.result?.map((res: any, index: number) => {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    counselingStatus === 'pause' ? console.log("doning...") : dispatch(setDashBoardSelectUser(res))
+                                    counselingStatus === 'pause' ? console.log("doning...") : dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusGreen />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
