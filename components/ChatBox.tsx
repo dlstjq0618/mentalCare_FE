@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import MuiBox from '@mui/material/Box';
 import { rem } from 'polished';
 import styled, { css } from 'styled-components';
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     setCounselingState,
     selectCounselingTimeStemp,
+    selectWaitlist,
     selectCounselingDate,
     selectCounselingInfoData,
     selectSocketConnected,
@@ -39,8 +40,13 @@ import {
     selectDashBoardRoomJoin,
     setFinishChatList,
     selectFinishChatList,
+    setChatBoxOpenState,
+    selectChatBoxOpenState,
     setHistoryChat,
+    selectConsultingList,
+    selectReservationList,
     selectHistoryList,
+    selectCompleteList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -224,6 +230,8 @@ export default function BoxSx() {
     const watingList = useSelector(selectSocketData);
     const [lastChatlist, setLastChatList] = useState<any>([])
     const select_user = useSelector(selectDashBoardSelectUser);
+    const user_dashborad = useSelector(selectChatBoxOpenState)
+    const [user_name, setUser_name] = useState('');
 
     const [roomId, setRoomId] = useState(0);
     const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
@@ -235,8 +243,9 @@ export default function BoxSx() {
     const nowTime = Date.now();
 
     const getTime = format(nowTime, 'a hh:mm');
-    const useSocketData = useSelector(selectSocketData);
     const [finishChat, setFinishChat] = useState<any>([]);
+    const messageEndRef = useRef<any>(null);
+
 
 
     useEffect(() => {
@@ -246,19 +255,30 @@ export default function BoxSx() {
         });
     }, [])
 
+    // useEffect(() => {
+    //     dispatch(setChatBoxOpenState(true));
+    //     return () => {
+    //         dispatch(setChatBoxOpenState(false))
+    //     }
+    // }, [])
+
+
+
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
-            console.log("🚀 ~ file: ChatBox.tsx:233 ~ socket.on ~ method", method)
+            console.log("counsel_noti", method)
             const waitingIofo = datas.waitingList;
             switch (method) {
                 case "chat": ; break;
                 case "payment/user/ok": ; // 사용자 결제 완료시 
                     console.log('사용자 결제 정보 받음', res.datas);
                     // setUserPaymentList([...userPaymentList, res.datas]); // payment
-                    // dispatch(setSocketData(waitingIofo))
+                    dispatch(setSocketData(waitingIofo));
+                    setUser_name(res.datas.user_name);
                     setUserPaymentList([res.datas]); // 임시로 덥어쓴다
                     setUserPaymentRequestStatus(true);
+
                     break;
                 case "room/chat/list":
                     const chatList = res.datas?.list;
@@ -267,6 +287,9 @@ export default function BoxSx() {
                     dispatch(setFinishChatList(chatList));
             }
         })
+    }, [user_name])
+
+    useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
         socket.on('dashboard', (res: any) => {
             const { method, datas } = res;
@@ -277,7 +300,6 @@ export default function BoxSx() {
                 case "init": ;
                     const waitingIofo = datas.waitingList;
                     console.log('dashboard 데이터를 받았습니다.', waitingIofo);
-                    // dispatch(setSocketData(waitingIofo))
                     dispatch(setSocketData(waitingInfoList))
                     dispatch(setTotalCount(waitingIofo.count))
                     setWaitCount(waitingIofo.count);
@@ -307,7 +329,8 @@ export default function BoxSx() {
                 dispatch(setDashBoardCancelList(result3))
             }
         })
-    }, [userPaymentList])
+    }, [user_dashborad, user_name])
+
     const historyList = useSelector(selectHistoryList);
 
     useEffect(() => { // 상대방 채팅데이터
@@ -323,8 +346,6 @@ export default function BoxSx() {
     }, [userPaymentRequestStatus]);
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
-    console.log("finalSetData", finalSetData);
-
     async function hadnleEmit() { // emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         const data1 = {
             method: "room/reservation_date",
@@ -355,6 +376,11 @@ export default function BoxSx() {
     //     }
     // }
 
+    const consultingList = useSelector(selectConsultingList); // 상담중
+    const reservationList = useSelector(selectReservationList); // 예약 확정 O
+    const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
+    const completeList = useSelector(selectCompleteList); // 상담완료 O
+
     async function handleRoomJoin() {
         if (counselingStatus === 'start') {
             if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
@@ -369,6 +395,12 @@ export default function BoxSx() {
                     "method": "join",
                     "datas": req
                 });
+                const resser = reservationList?.result?.filter((res: any) => res.user_name !== select_user.user_name);
+                // const consult = consultingList?.result?.filter((res: any) => res.user_name !== select_user.user_name);
+                // const comple = completeList?.result?.filter((res: any) => res.user_name !== select_user.user_name);
+                // await dispatch(setDashBoardReservationList(resser))
+                // await dispatch(setDashBoardConsultingList(consult))
+                dispatch(setChatBoxOpenState(true))
                 await dispatch(setCounselingState('pause'))
             } else {
                 return dispatch(setCounselingState('finish'))
@@ -377,7 +409,7 @@ export default function BoxSx() {
     }
     const intRoom_id = Number(select_user.room_id)
 
-    async function handleFinishChatList() { // 지난 채팅 리스트 
+    async function handleFinishChatList() { // 지난 채팅 리스트
         const data1 = {
             method: "room/chat/list",
             datas: {
@@ -386,10 +418,6 @@ export default function BoxSx() {
             }
         }
         socket.emit('counsel_submit', data1)
-    }
-
-    const handleConsultingList = (e: any) => { // 지난데이터를 현재데이터 삽입
-        historyList
     }
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -467,11 +495,10 @@ export default function BoxSx() {
         }
     }, [finalStep])
 
-    useEffect(() => {
-
-    }, [])
-
     const test = useSelector(selectLoggedUser);
+    useEffect(() => {
+        messageEndRef?.current?.scrollIntoView();
+    }, [test])
     return (
         <>
             {
@@ -500,10 +527,10 @@ export default function BoxSx() {
                                 </Div>
                                 <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                     <Div type='time' >
-                                        <Text size={13} color='#b53e14' >상담시간이 49분 남았습니다.</Text>
-                                        <Text size={12} type='button' color='#e8440a'>
-                                            상담 경과 44:15 { /** 상담시간 체크*/}
-                                        </Text>
+                                        <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user.reservation_date.substr(0, 11)}`}</Text>
+                                        {/* <Text size={12} type='button' color='#e8440a'>
+                                            상담 경과 44:15 
+                                        </Text> */}
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
@@ -571,7 +598,6 @@ export default function BoxSx() {
                                                 test?.map((res: any, index: number) => (
                                                     <>
                                                         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                            {console.log("bbbb", res)}
                                                             {
                                                                 res?.datas?.type ?
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
@@ -596,6 +622,7 @@ export default function BoxSx() {
                                                                     </Div>
                                                             }
                                                         </div>
+                                                        <div ref={messageEndRef} />
                                                     </>
                                                 ))
                                         }

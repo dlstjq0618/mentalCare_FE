@@ -39,6 +39,7 @@ type DiagnosisDetailStoreState = {
   select: any;
   room: any;
   finish_chat: any;
+  open: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -75,6 +76,7 @@ const initialState: DiagnosisDetailStoreState = {
   select: {},
   room: "",
   finish_chat: {},
+  open: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -308,6 +310,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.finish_chat = action.payload;
     },
+    setChatBoxOpenState(
+      // 채팅박스 열려있는지 체크
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["open"]>
+    ) {
+      state.open = action.payload;
+    },
   },
 });
 
@@ -342,6 +351,7 @@ export const {
   setDashBoardRoomJoin,
   setFinishChatList,
   setHistoryChat,
+  setChatBoxOpenState,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -408,5 +418,7 @@ export const selectDashBoardRoomJoin = (state: RootState) =>
   state.calendarDetail.room;
 export const selectFinishChatList = (state: RootState) =>
   state.calendarDetail.finish_chat;
+export const selectChatBoxOpenState = (state: RootState) =>
+  state.calendarDetail.open;
 
 export default calendarDetailSilce.reducer;

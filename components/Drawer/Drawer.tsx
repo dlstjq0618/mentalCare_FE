@@ -7,7 +7,7 @@ import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCounselingDate, setCounselingTimes } from '~/store/calendarDetailSlice';
+import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -80,6 +80,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [selectUserData, setSelectUserData] = useState<any>();
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
+    const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const [state, setState] = React.useState({
         top: false,
         left: false,
@@ -123,11 +124,11 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{socketInfo?.count}</div>건</Title>
+                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{waitlist?.count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
             {
-                socketInfo?.result?.map((list: any, index: number) => {
+                waitlist?.result?.map((list: any, index: number) => {
                     return (
                         <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>

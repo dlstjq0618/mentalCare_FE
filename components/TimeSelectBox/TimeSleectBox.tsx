@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, } from '~/store/calendarDetailSlice';
+import { selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface Iprops {
 
@@ -101,6 +101,13 @@ function TimeSleectBox(props: Iprops) {
     const select_user = useSelector(selectDashBoardSelectUser);
     const counselingStatus = useSelector(selectCounselingState);
 
+    const handleOpenStatus = (data: any) => {
+        if (data === 'finish') {
+            dispatch(setChatBoxOpenState(false));
+        }
+    }
+
+
 
 
     return (
@@ -108,7 +115,7 @@ function TimeSleectBox(props: Iprops) {
             <Arricle>
                 {
                     counselingStatus === 'finish' ?
-                        <Button onClick={() => dispatch(setDashBoardRoomJoin(""))} type={"finish"}>{"상담완료"} <KeyboardArrowDownIcon /></Button>
+                        <Button onClick={() => { dispatch(setDashBoardRoomJoin("")) }} type={"finish"}>{"상담완료"} <KeyboardArrowDownIcon /></Button>
                         :
                         <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
                 }
@@ -117,7 +124,7 @@ function TimeSleectBox(props: Iprops) {
                     <Ul>
                         {
                             selectType.map((res: { label: string, value: string }, index: number) => {
-                                return <Li check onClick={() => { setType(res.label), setCheck(false), dispatch(setCounselingState(res.value)) }} key={index} value={res.value}>{res.label}{type === res.label ? <CheckIcon style={{ color: '#eb541e' }} /> : <CheckIcon style={{ color: "#fff" }} />}</Li>
+                                return <Li check onClick={() => { setType(res.label), setCheck(false), handleOpenStatus(res.value), dispatch(setCounselingState(res.value)) }} key={index} value={res.value}>{res.label}{type === res.label ? <CheckIcon style={{ color: '#eb541e' }} /> : <CheckIcon style={{ color: "#fff" }} />}</Li>
                             })
                         }
                     </Ul>

@@ -199,9 +199,9 @@ function ApprovalModal(props: IProps) {
                     <Text size={20} bold="bold">
                         {props.userInfo?.user_name} 님
                     </Text>
-                    <Text button>
+                    {/* <Text button>
                         테스트 결과보기
-                    </Text>
+                    </Text> */}
                 </Div>
                 <Line />
                 <Div>

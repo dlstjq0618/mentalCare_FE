@@ -17,7 +17,9 @@ import {
     selectReservationList,
     selectSocketData,
     selectWaitlist,
-    setDashBoardSelectUser
+    setDashBoardSelectUser,
+    selectChatBoxOpenState,
+    selectCounselingTimes
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 
@@ -278,6 +280,11 @@ function DayComponents(props: IProps) {
     const completeList = useSelector(selectCompleteList); // 상담완료 O
     const cancelList = useSelector(selectCancelList); // 상담 취소
 
+    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
+    const select_data = useSelector(selectDashBoardSelectUser);
+    const selectTime = useSelector(selectCounselingTimes);
+
+
 
 
     const cancelOpen = () => setCancelModal(true);
@@ -331,26 +338,25 @@ function DayComponents(props: IProps) {
                         </StyledSeeMonth>
                 }
                 <span>
-                    {reservationList && reservationList.result?.map((res: any, index: number) => {
+                    {reservationList && reservationList.result?.map((res: any, index: number) => { // 컨설팅리스트 중인 건이 있으면 삭제
                         return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                             <StyledDiv key={index} onClick={() => {
-                                counselingStatus === 'pause' ? console.log("doning...")
+                                useOpen === true ? console.log("doning...")
                                     :
                                     open2(), res.method_str === "채팅상담(주간50분)" || res.method_str === "채팅상담(야간50분)" ? setUserType("채팅") : setUserType("전화"),
                                     setUserName(res.user_name),
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res))
                             }}>
-                                <StyledRadius>
-                                </StyledRadius>
+                                <StyledRadius />
                                 {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
                             </StyledDiv> : ""
                     })}
                     {
-                        consultingList && consultingList.result?.map((res: any, index: number) => {
+                        consultingList && consultingList.result?.map((res: any, index: number) => { // 상담완료 건이 있으면 삭제
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    counselingStatus === 'pause' ? console.log("doning...") : dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen === true ? console.log("doning...") : dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusGreen />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -362,7 +368,7 @@ function DayComponents(props: IProps) {
                         completeList && completeList.result?.map((res: any, index: number) => {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    counselingStatus === 'pause' ? console.log("doning...") : dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen === true ? console.log("doning...") : dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -378,20 +384,21 @@ function DayComponents(props: IProps) {
                     <Text size={20}>
                         {userName}{" 님"}
                     </Text>
-                    <Text size={13} button>
+                    {/* <Text size={13} button>
                         테스트 결과보기
-                    </Text>
+                    </Text> */}
                 </Div>
                 <Line />
                 <Div step style={{ marginTop: 0 }}>
-                    <Text bold='normal' size={18} color={"#666"}>
-                        일정 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{userDate}</span>
+                    <Text bold='normal' size={18} color={"#666"} style={{ display: 'flex' }}>
+                        <div>일정</div>
+                        <div style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date?.substr(0, 10)}</div>
                     </Text>
                     <CalendarChip label='일정변경' />
                 </Div>
                 <Div step style={{ marginTop: 0 }}>
                     <Text bold='normal' size={18} color={"#666"}>
-                        시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{"오후 12:30"}</span>
+                        시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{selectTime}</span>
                     </Text>
                     <TimeChip label='시간변경' />
                 </Div>
@@ -457,7 +464,7 @@ function DayComponents(props: IProps) {
                         style={{ width: `${rem(51)}`, borderBottom: `1px solid #666`, cursor: "pointer" }}
                         onClick={cancelOpen}
                     >
-                        상담취소
+                        {/* 상담취소 */}
                     </Text>
                 </div>
             </BaseDialog2>
