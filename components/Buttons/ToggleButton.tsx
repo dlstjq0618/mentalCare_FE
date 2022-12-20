@@ -61,7 +61,7 @@ export const ToggleButton = ({ activeState }: Toggle) => {
     if (infoData.id) {
       api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking) });
     }
-  }, [infoData.id])
+  }, [infoData?.id])
 
 
   return (

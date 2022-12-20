@@ -99,20 +99,6 @@ function TimeSleectBox(props: Iprops) {
     const dispatch = useDispatch();
     const status = useSelector(selectCounselingState);
 
-    // useEffect(() => { // 상담 버튼 초기값
-    //     if (status) {
-    //         if (status === 'start') {
-    //             setType("상담중");
-    //         } else if (status === 'pause') {
-    //             setType('일시정지')
-    //         } else {
-    //             setType('상담완료')
-    //         }
-    //     } else {
-    //         setType("상담중");
-    //     }
-    // })
-
     return (
         <>
             <Arricle>

@@ -28,6 +28,8 @@ type DiagnosisDetailStoreState = {
   timestemp: string;
   count: any;
   start: string;
+  list: any;
+  chatstatus: string;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -49,10 +51,12 @@ const initialState: DiagnosisDetailStoreState = {
   socketInfo: {},
   time: "",
   confirm: "",
-  final: {},
+  final: "",
   timestemp: "",
   count: 0,
   start: "",
+  list: [],
+  chatstatus: "",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -217,6 +221,12 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.count = action.payload;
     },
+    setLoggedUser(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["list"]>
+    ) {
+      state.list = [...state.list, action.payload]; //상태의 불변을 지키기 위해 spread 연산자로 객체를 복사하고 isLogged의 상태만 바꿔준다.
+    },
   },
 });
 
@@ -242,6 +252,7 @@ export const {
   setCounselingTimeStemp,
   setCounselingStart,
   setTotalCount,
+  setLoggedUser,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -288,4 +299,5 @@ export const selectCounselingStart = (state: RootState) =>
   state.calendarDetail.start;
 export const selectTotalCount = (state: RootState) =>
   state.calendarDetail.count;
+export const selectLoggedUser = (state: RootState) => state.calendarDetail.list;
 export default calendarDetailSilce.reducer;

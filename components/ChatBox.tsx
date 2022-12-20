@@ -12,7 +12,22 @@ import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { ConnectingAirportsOutlined, ConstructionOutlined } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCounselingState, selectCounselingTimeStemp, selectCounselingDate, selectCounselingInfoData, selectSocketConnected, selectCounselingFinalStep, selectCounselingState, setSocketData, setCounselingFinalStep, selectCounselingFinalStepData, selectCounselingStart, selectSocketData, setCounselingStart, setTotalCount } from '~/store/calendarDetailSlice';
+import {
+    setCounselingState,
+    selectCounselingTimeStemp,
+    selectCounselingDate,
+    selectCounselingInfoData,
+    selectSocketConnected,
+    selectCounselingFinalStep,
+    selectCounselingState,
+    setSocketData,
+    setCounselingFinalStep,
+    selectCounselingFinalStepData,
+    selectCounselingStart, selectSocketData,
+    setCounselingStart, setTotalCount,
+    selectLoggedUser,
+    setLoggedUser,
+} from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
 
@@ -258,15 +273,22 @@ export default function BoxSx() {
         socket.on("chat", (res: any) => {
             console.log("res", res);
             setChatList([...chatList, res])
+            dispatch(setLoggedUser(res))
         })
-    }, [chatList.length])
+    }, [])
 
+    // useEffect(() => { // 상대방 챗팅데이터 확인
+    //     socket.on("chat", (res: any) => {
+    //         console.log("res", res);
+    //         dispatch(setCounselingChatList(res.message))
+    //     })
+    // }, [])
 
-    useEffect(() => {
+    // const list = useSelector(selectCounselingChatList);
+    // console.log("list", list)
+    useEffect(() => { // 새로운 정보 들어왔는지 확인
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
     }, [userPaymentRequestStatus]);
-
-    console.log("watingList", watingList)
 
     async function hadnleEmit() { // emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         const data1 = {
@@ -282,7 +304,7 @@ export default function BoxSx() {
     }
     async function handleRoomJoin() {
         if (counselingStatus === 'start') {
-            if (confirm(`테스트용 채팅을 "${finalStepData.user_name}" 님과 시작 하시겠습니까? roomJoin`)) {
+            if (confirm(`테스트용 채팅을 "${finalStepData.user_name}" 님과 시작 하시겠습니까?`)) {
                 // roomJoin
                 const req = {
                     roomId: finalStepData.room_id,
@@ -301,28 +323,28 @@ export default function BoxSx() {
         }
     }
     const intRoom_id = Number(finalStepData.room_id)
-    const handleList = () => {
-        const data1 = {
-            method: "room/chat/list",
-            datas: {
-                roomId: intRoom_id,
-                user_type: 6
-            }
-        }
-        socket.emit('counsel_submit', data1)
-    }
+
+    // const handleList = () => { // 지난 채팅 리스트 
+    //     const data1 = {
+    //         method: "room/chat/list",
+    //         datas: {
+    //             roomId: intRoom_id,
+    //             user_type: 6
+    //         }
+    //     }
+    //     socket.emit('counsel_submit', data1)
+    // }
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
 
 
-    const handleEnter = (e: any) => {
+    const handleEnter = (e: any) => { // 엔터 쳤을때 이벤트 발생 
         setState({ message: e.target.value });
         console.log('e', e.target.value)
         if (e.key === "Enter") {
             const chat = {
-                type: 'send',
                 roomId: intRoom_id,
                 user_type: 6,
                 message: e.target.value,
@@ -332,14 +354,26 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-            setChatList([...chatList, chat])
+            dispatch(setLoggedUser(chat))
             setState({ message: '' })
         }
+    }
+
+    const handleOnFinalSelect = () => { // finish
+        socket.emit('counsel_submit', {
+            method: 'room/complete',
+            datas: {
+                roomId: intRoom_id,
+                user_type: 6
+            }
+        })
     }
 
     useEffect(() => {
         if (counselingStatus === 'start') {
             handleRoomJoin()
+        } else if (counselingStatus === 'finish') {
+            handleOnFinalSelect()
         }
     }, [counselingStatus])
 
@@ -352,6 +386,16 @@ export default function BoxSx() {
     useEffect(() => {
         console.log("counselingStatus", counselingStatus)
     })
+
+    const test = useSelector(selectLoggedUser);
+    const handleTest = (e: any) => {
+        if (e.key === "Enter") {
+            const inputData = {
+                value: e.target.value
+            }
+            dispatch(setLoggedUser(inputData))
+        }
+    }
 
 
     return (
@@ -391,7 +435,7 @@ export default function BoxSx() {
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(500) }}>
                                         {
-                                            chatList.length > 0 && chatList.map((res: any, index: number) => (
+                                            test.length > 0 && test.map((res: any, index: number) => (
                                                 <>
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         <Text bold='bold' style={{ marginBottom: 7, marginTop: `${index > 0 ? rem(30) : 0}` }}>
@@ -414,7 +458,7 @@ export default function BoxSx() {
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
                                                                             {res?.time}
                                                                         </Div>
-                                                                        <Div type='left' bg='white' height={62}>
+                                                                        <Div type='left' bg='white' height={62} >
                                                                             {res?.message}
                                                                         </Div>
                                                                     </Div>
@@ -455,6 +499,7 @@ export default function BoxSx() {
                                                 size={"small"}
                                                 autoComplete={"off"}
                                                 onKeyPress={handleEnter}
+                                                // onKeyPress={handleTest}
                                                 onChange={(e) => setState({ message: e.target.value })}
                                                 endAdornment={
                                                     <InputAdornment position="end">
