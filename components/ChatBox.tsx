@@ -377,9 +377,9 @@ export default function BoxSx() {
                                     <Text size={17} bold="600" color='#000' type='title'>
                                         우주 상담소
                                     </Text>
-                                    <button onClick={() => { handleList() }}>
+                                    {/* <button onClick={() => { handleList() }}>
                                         지난 list
-                                    </button>
+                                    </button> */}
                                     <TimeSleectBox />
                                 </Div>
                                 <Text style={{ overflow: 'auto', minHeight: 700 }}>
