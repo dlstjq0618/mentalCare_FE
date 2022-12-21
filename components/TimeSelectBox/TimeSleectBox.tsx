@@ -107,6 +107,7 @@ function TimeSleectBox(props: Iprops) {
     const handleOpenStatus = (data: any) => {
         if (data === 'finish') {
             dispatch(setSelectBoxControlls('완료'))
+            dispatch(setChatBoxOpenState('완료'))
         }
     }
 
@@ -117,9 +118,8 @@ function TimeSleectBox(props: Iprops) {
 
     async function handleClose() {
         dispatch(setChatBoxOpenState('null'))
+        dispatch(setSelectBoxControlls('완료'))
     }
-
-
 
     return (
         <>

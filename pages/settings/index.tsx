@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useEffect, useState, useReducer, Reducer } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     MainTitle,
 } from "~/components/settlementAccount";
@@ -24,7 +24,7 @@ import SettingInfoForm from "~/components/settingPage/SettingInfoForm";
 import OpeningTimeForm from "~/components/settingPage/OpeningTimeForm";
 import { api } from "~/woozooapi";
 import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
-import { selectCounselingInfoData, selectSettingSaveControlls } from "~/store/calendarDetailSlice";
+import { selectCounselingInfoData, selectSettingSaveControlls, setChatBoxOpenState } from "~/store/calendarDetailSlice";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -34,6 +34,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     const userId = useSelector(selectCounselorId);
     const fileUploadDate = useSelector(selectCounselingInfoData)
     const passwordSave = useSelector(selectSettingSaveControlls);
+    const dispatch = useDispatch();
 
     useSession({
         required: true,
@@ -53,6 +54,10 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             }
         }
     }, [open])
+
+    useEffect(() => {
+        dispatch(setChatBoxOpenState("null"))
+    }, [])
 
     const onSubmit = (data: any) => { // vi signUp Api request
         if (!passwordSave) {

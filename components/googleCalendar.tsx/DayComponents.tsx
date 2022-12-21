@@ -379,7 +379,7 @@ function DayComponents(props: IProps) {
                         completeList && completeList.result?.map((res: any, index: number) => { // 완료됨
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
+                                    useOpen !== "null" ? console.log("done...") :
                                         dispatch(setChatBoxOpenState('완료')), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
