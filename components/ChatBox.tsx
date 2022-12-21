@@ -429,19 +429,21 @@ export default function BoxSx() {
         if (select_user.status === 3) {
             console.log("상담완료");
         } else {
-            event.preventDefault();
-            const chat = {
-                roomId: intRoom_id,
-                user_type: 6,
-                message: state.message,
-                time: getTime
-            };
-            socket.emit('chat', {
-                method: "chat",
-                datas: chat
-            });
-            dispatch(setLoggedUser(chat))
-            setState({ message: '' })
+            if (state.message !== '') {
+                event.preventDefault();
+                const chat = {
+                    roomId: intRoom_id,
+                    user_type: 6,
+                    message: state.message,
+                    time: getTime
+                };
+                socket.emit('chat', {
+                    method: "chat",
+                    datas: chat
+                });
+                dispatch(setLoggedUser(chat))
+                setState({ message: '' })
+            }
         }
     };
 
@@ -449,7 +451,7 @@ export default function BoxSx() {
     const handleEnter = (e: any) => { // 엔터 쳤을때 이벤트 발생 
         setState({ message: e.target.value });
         console.log('e', e.target.value)
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && state.message !== "") {
             const chat = {
                 roomId: intRoom_id,
                 user_type: 6,
