@@ -48,6 +48,8 @@ import {
     selectHistoryList,
     selectCompleteList,
     selectCounselingTimeStempNumber,
+    selectWatingListBefore,
+    selectSelectBoxControlls,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -226,6 +228,7 @@ export default function BoxSx() {
     const finalStepData = useSelector(selectCounselingFinalStepData);
     const storeData = useSelector(selectCounselingDate);
     const selectTime = useSelector(selectCounselingTimeStemp);
+    const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터 
 
     const reservationTime = (new Date(storeData).getTime() / 1000);
     const selectNum = useSelector(selectCounselingTimeStempNumber);
@@ -235,24 +238,32 @@ export default function BoxSx() {
     const watingList = useSelector(selectSocketData);
     const [lastChatlist, setLastChatList] = useState<any>([])
     const select_user = useSelector(selectDashBoardSelectUser);
+
     const user_dashborad = useSelector(selectChatBoxOpenState)
     const [user_name, setUser_name] = useState('');
 
     const [roomId, setRoomId] = useState(0);
     const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
     const [userPaymentList, setUserPaymentList] = useState<any>([]);
+    const [open, setOpen] = useState(false);
 
     const [waitCount, setWaitCount] = useState(0); // 상담대기중 count
     const [waitList, setWaitList] = useState<any>([]); // 상담대기중 list
 
-    const nowTime = Date.now();
+    const consultingList = useSelector(selectConsultingList); // 상담중
+    const reservationList = useSelector(selectReservationList); // 예약 확정 O
+    const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
+    const completeList = useSelector(selectCompleteList); // 상담완료 O
+    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
+    const selectBoxControllState = useSelector(selectSelectBoxControlls);
 
+    const nowTime = Date.now();
     const getTime = format(nowTime, 'a hh:mm');
-    console.log("")
     const [finishChat, setFinishChat] = useState<any>([]);
     const messageEndRef = useRef<any>(null);
 
 
+    console.log("before_wating", before_wating);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -336,8 +347,6 @@ export default function BoxSx() {
         })
     }, [user_dashborad, user_name])
 
-    const historyList = useSelector(selectHistoryList);
-
 
 
     useEffect(() => { // 상대방 채팅데이터
@@ -352,7 +361,7 @@ export default function BoxSx() {
     }, [userPaymentRequestStatus]);
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
-    async function hadnleEmit() { // emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
+    async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         const data1 = {
             method: "room/reservation_date",
             datas: {
@@ -382,37 +391,40 @@ export default function BoxSx() {
     //     }
     // }
 
-    const consultingList = useSelector(selectConsultingList); // 상담중
-    const reservationList = useSelector(selectReservationList); // 예약 확정 O
-    const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
-    const completeList = useSelector(selectCompleteList); // 상담완료 O
-    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
-
-    async function handleRoomJoin() {
-        if (counselingStatus === 'start') {
-            if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
-                // roomJoin
-                const req = {
-                    roomId: select_user.room_id,
-                    user_type: 6,
-                    message: "안녕하세요 상담을 시작하겠습니다."
-                };
-                console.log(req);
-                socket.emit('chat', {
-                    "method": "join",
-                    "datas": req
-                });
-
-                dispatch(setChatBoxOpenState(true))
-                await dispatch(setCounselingState('pause'))
-            } else {
-                return dispatch(setCounselingState('finish'))
-            }
+    async function handleRoomJoin() { // 처음 시작할때 
+        if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
+            // roomJoin
+            dispatch(setChatBoxOpenState('시작'))
+            const req = {
+                roomId: select_user.room_id,
+                user_type: 6,
+                message: "안녕하세요 상담을 시작하겠습니다."
+            };
+            console.log(req);
+            socket.emit('chat', {
+                "method": "join",
+                "datas": req
+            });
+        }
+    }
+    async function handleFirstRoomJoin() { // 일정 협의 할 채팅방 
+        if (confirm(`테스트용 일정 협의 채팅을 "${before_wating.user_name}" 님과 시작 하시겠습니까?`)) {
+            // roomJoin
+            const req = {
+                roomId: before_wating.room_id,
+                user_type: 6,
+                message: "안녕하세요 상담을 시작하겠습니다."
+            };
+            console.log(req);
+            socket.emit('chat', {
+                "method": "join",
+                "datas": req
+            });
         }
     }
     const intRoom_id = Number(select_user.room_id)
 
-    async function handleFinishChatList() { // 지난 채팅 리스트
+    async function handleFinishChatList() { // 지난 채팅 리스트 불러오는 함수
         const data1 = {
             method: "room/chat/list",
             datas: {
@@ -423,7 +435,26 @@ export default function BoxSx() {
         socket.emit('counsel_submit', data1)
     }
 
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOnComplete = () => { // 상담완료, 채팅창의 선택박스에서 상담완료 설정 
+        socket.emit('counsel_submit', {
+            method: 'room/complete',
+            datas: {
+                roomId: intRoom_id,
+                user_type: 6
+            }
+        })
+    }
+    const handleFirstOnComplete = () => { // 일정 협의 채팅방 종료 
+        socket.emit('counsel_submit', {
+            method: 'room/complete',
+            datas: {
+                roomId: before_wating.room_id,
+                user_type: 6
+            }
+        })
+    }
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 채팅방에서 마우스 클릭
         if (select_user.status === 3) {
             console.log("상담완료");
         } else {
@@ -446,7 +477,7 @@ export default function BoxSx() {
     };
 
 
-    const handleEnter = (e: any) => { // 엔터 쳤을때 이벤트 발생 
+    const handleEnter = (e: any) => { // 채팅방 엔터 눌렀을때 전송
         setState({ message: e.target.value });
         if (e.key === "Enter" && state.message !== "") {
             const chat = {
@@ -464,50 +495,80 @@ export default function BoxSx() {
             setState({ message: '' })
         }
     }
-
-    const handleOnFinalSelect = () => { // finish
-        socket.emit('counsel_submit', {
-            method: 'room/complete',
-            datas: {
-                roomId: intRoom_id,
-                user_type: 6
-            }
-        })
+    const handleFirstEnter = (e: any) => { // 일정 협의 채팅방 메세지 보내는 엔터
+        setState({ message: e.target.value });
+        if (e.key === "Enter" && state.message !== "") {
+            const chat = {
+                roomId: before_wating.room_id,
+                user_type: 6,
+                message: e.target.value,
+                time: getTime
+            };
+            socket.emit('chat', {
+                method: "chat",
+                datas: chat
+            });
+            dispatch(setLoggedUser(chat));
+            console.log("message", state.message);
+            setState({ message: '' })
+        }
     }
+
 
     const use_last_chat = useSelector(selectFinishChatList);
 
-    console.log("counselingStatus", counselingStatus);
-
-    useEffect(() => {
-        if (room_join === 'complate' || room_join === 'consulting') {
+    useEffect(() => { // 캘린더 컨트롤 
+        if (useOpen === '완료') {
             handleFinishChatList()
         }
-    }, [room_join])
+    }, [useOpen])
 
     useEffect(() => {
-        if (counselingStatus === 'start') {
+        if (useOpen === '시작') {
             handleRoomJoin()
-        } else if (counselingStatus === 'finish') {
-            handleOnFinalSelect()
         }
-    }, [counselingStatus])
+    }, [useOpen])
 
-
-    useEffect(() => {
+    useEffect(() => { // 상담승인 할때 이벤트 발생
         if (finalStep === 'yes') {
             hadnleEmit()
         }
     }, [finalStep])
 
+    useEffect(() => { // 상담전 협의 챗 발생 
+        if (useOpen === "협의") {
+            handleFirstRoomJoin()
+        }
+    }, [useOpen])
+
+    useEffect(() => {
+        if (selectBoxControllState === '완료') {
+            handleFirstOnComplete()
+        }
+    }, [selectBoxControllState])
+
+    useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
+
+    }, [])
+
+    //룸조인
+
+    // useEffect(() => {
+    //     if (finalStep === 'yes') {
+    //         hadnleEmit()
+    //     }
+    // }, [finalStep])
+
     const test = useSelector(selectLoggedUser);
+
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
     }, [test])
+
     return (
         <>
             {
-                counselingStatus !== 'finish' && counselingStatus !== "" || room_join === "complate" ?
+                useOpen === '완료' ?
                     <div>
                         <MuiBox
                             sx={{
@@ -532,105 +593,40 @@ export default function BoxSx() {
                                 </Div>
                                 <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                     <Div type='time' >
-                                        <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user.reservation_date.substr(0, 11)}`}</Text>
+                                        <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
                                         {/* <Text size={12} type='button' color='#e8440a'>
                                             상담 경과 44:15 
                                         </Text> */}
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
-                                            select_user.status === 3 ?
-                                                finishChat?.map((res: any, index: number) => (
-                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                        {
-                                                            res?.type === 'receve' ?
-                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                    <Div bg='#ffffe7' type="right">
-                                                                        {res?.message}
-                                                                    </Div>
-                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                            finishChat?.map((res: any, index: number) => (
+                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                    {
+                                                        res?.type === 'receve' ?
+                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                <Div bg='#ffffe7' type="right">
+                                                                    {res?.message}
+                                                                </Div>
+                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                    {format(res?.time, 'a hh:mm')}
+                                                                </Div>
+                                                            </Div>
+                                                            :
+                                                            <Div type='chat'>
+                                                                <div />
+                                                                <Div style={{ display: "flex" }}>
+                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
                                                                         {format(res?.time, 'a hh:mm')}
                                                                     </Div>
-                                                                </Div>
-                                                                :
-                                                                <Div type='chat'>
-                                                                    <div />
-                                                                    <Div style={{ display: "flex" }}>
-                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                            {format(res?.time, 'a hh:mm')}
-                                                                        </Div>
-                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                            {res?.message}
-                                                                        </Div>
+                                                                    <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                        {res?.message}
                                                                     </Div>
                                                                 </Div>
-                                                        }
-                                                    </div>
-                                                ))
-                                                :
-                                                // select_user.status === 2 ?
-                                                //     historyList[0]?.map((res: any, index: number) => (
-                                                //         <>
-                                                //             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                //                 {console.log("bbbb", res)}
-                                                //                 {
-                                                //                     res?.type === 'receve' ?
-                                                //                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                //                             <Div bg='#ffffe7' type="right">
-                                                //                                 {res?.message}
-                                                //                             </Div>
-                                                //                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                //                                 {format(res?.time, 'a hh:mm')}
-                                                //                             </Div>
-                                                //                         </Div>
-                                                //                         :
-                                                //                         <Div type='chat'>
-                                                //                             <div />
-                                                //                             <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                //                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                //                                     {format(res?.time, 'a hh:mm')}
-                                                //                                 </Div>
-                                                //                                 <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                //                                     {res?.message}
-                                                //                                 </Div>
-                                                //                             </Div>
-                                                //                         </Div>
-                                                //                 }
-                                                //             </div>
-                                                //         </>
-                                                //     ))
-                                                //     :
-                                                test?.map((res: any, index: number) => (
-                                                    <>
-                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                            {
-                                                                res?.datas?.type ?
-                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                        <Div bg='#ffffe7' type="right">
-                                                                            {res.datas?.message}
-                                                                        </Div>
-                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                            {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                            {res.datas?.timestr}
-                                                                        </Div>
-                                                                    </Div>
-                                                                    :
-                                                                    <Div type='chat'>
-                                                                        <div />
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                {res?.time}
-                                                                            </Div>
-                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                {res?.message}
-                                                                            </Div>
-                                                                        </Div>
-                                                                    </Div>
-                                                            }
-                                                        </div>
-                                                        <div ref={messageEndRef} />
-                                                    </>
-                                                ))
+                                                            </Div>
+                                                    }
+                                                </div>
+                                            ))
                                         }
                                         {
                                             counselingStatus === "finish" ?
@@ -683,7 +679,240 @@ export default function BoxSx() {
                                 </Text>
                             </Div>
                         </MuiBox>
-                    </div> : ""
+                    </div> : useOpen === '시작' ?
+                        <div>
+                            <MuiBox
+                                sx={{
+                                    zIndex: 10,
+                                    boxShadow: `3px 2px 5px black;`,
+                                    width: 500,
+                                    maxWidth: 500,
+                                    maxHeight: rem(1000),
+                                    Height: rem(1000),
+                                    position: 'absolute',
+                                    bottom: rem(20),
+                                    right: 30,
+                                    backgroundColor: 'lightgray',
+                                }}
+                            >
+                                <Div type='main'>
+                                    <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                        <Text size={17} bold="600" color='#000' type='title'>
+                                            우주 상담소
+                                        </Text>
+                                        <TimeSleectBox />
+                                    </Div>
+                                    <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                        <Div type='time' >
+                                            <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                            {/* <Text size={12} type='button' color='#e8440a'>
+                                        상담 경과 44:15 
+                                    </Text> */}
+                                        </Div>
+                                        <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
+                                            {
+                                                test?.map((res: any, index: number) => (
+                                                    <>
+                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                            {
+                                                                res?.datas?.type ?
+                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
+                                                                        <Div bg='#ffffe7' type="right">
+                                                                            {res.datas?.message}
+                                                                        </Div>
+                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                            {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                            {res.datas?.timestr}
+                                                                        </Div>
+                                                                    </Div>
+                                                                    :
+                                                                    <Div type='chat'>
+                                                                        <div />
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                {res?.time}
+                                                                            </Div>
+                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                {res?.message}
+                                                                            </Div>
+                                                                        </Div>
+                                                                    </Div>
+                                                            }
+                                                        </div>
+                                                        <div ref={messageEndRef} />
+                                                    </>
+                                                ))
+
+                                            }
+                                            {
+                                                counselingStatus === "finish" ?
+                                                    <>
+                                                        <Text type='finish'>
+                                                            ----상담이 완료 되었습니다.----
+                                                        </Text>
+                                                    </>
+                                                    : ""
+                                            }
+                                        </Div>
+                                    </Text>
+                                    <Text height={40}>
+                                        <Box sx={{
+                                            display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
+                                        }}>
+                                            <FormControl sx={{
+                                                m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
+                                                '& fieldset': { top: 0 },
+                                            }} variant="outlined">
+                                                <OutlinedInput
+                                                    style={{ height: 40 }}
+                                                    disabled={counselingStatus === "finish" ? true : false}
+                                                    placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
+                                                    id="outlined-adornment-password"
+                                                    value={state.message}
+                                                    label={"none"}
+                                                    size={"small"}
+                                                    autoComplete={"off"}
+                                                    onKeyPress={handleEnter}
+                                                    // onKeyPress={handleTest}
+                                                    onChange={(e) => setState({ message: e.target.value })}
+                                                    endAdornment={
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                style={{
+                                                                    background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                    marginRight: "-11.2px", width: "35px", height: "35px"
+                                                                }}
+                                                                onMouseDown={handleMouseDownPassword}
+                                                                edge="end"
+                                                            >
+                                                                <ArrowUpwardIcon />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    }
+                                                />
+                                            </FormControl>
+                                        </Box>
+                                    </Text>
+                                </Div>
+                            </MuiBox>
+                        </div>
+                        : useOpen === '협의' ?
+                            <div>
+                                <MuiBox
+                                    sx={{
+                                        zIndex: 10,
+                                        boxShadow: `3px 2px 5px black;`,
+                                        width: 500,
+                                        maxWidth: 500,
+                                        maxHeight: rem(1000),
+                                        Height: rem(1000),
+                                        position: 'absolute',
+                                        bottom: rem(20),
+                                        right: 30,
+                                        backgroundColor: 'lightgray',
+                                    }}
+                                >
+                                    <Div type='main'>
+                                        <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                            <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
+                                                우주 상담소<div style={{ color: '#b53e14' }}>({before_wating.user_name})</div>
+                                            </Text>
+                                            <TimeSleectBox first />
+                                        </Div>
+                                        <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                            <Div type='time' >
+                                                <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                                {/* <Text size={12} type='button' color='#e8440a'>
+                                        상담 경과 44:15 
+                                    </Text> */}
+                                            </Div>
+                                            <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
+                                                {
+                                                    test?.map((res: any, index: number) => (
+                                                        <>
+                                                            <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                {
+                                                                    res?.datas?.type ?
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
+                                                                            <Div bg='#ffffe7' type="right">
+                                                                                {res.datas?.message}
+                                                                            </Div>
+                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                {res.datas?.timestr}
+                                                                            </Div>
+                                                                        </Div>
+                                                                        :
+                                                                        <Div type='chat'>
+                                                                            <div />
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                    {res?.time}
+                                                                                </Div>
+                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                    {res?.message}
+                                                                                </Div>
+                                                                            </Div>
+                                                                        </Div>
+                                                                }
+                                                            </div>
+                                                            <div ref={messageEndRef} />
+                                                        </>
+                                                    ))
+
+                                                }
+                                                {
+                                                    counselingStatus === "finish" ?
+                                                        <>
+                                                            <Text type='finish'>
+                                                                ----상담이 완료 되었습니다.----
+                                                            </Text>
+                                                        </>
+                                                        : ""
+                                                }
+                                            </Div>
+                                        </Text>
+                                        <Text height={40}>
+                                            <Box sx={{
+                                                display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
+                                            }}>
+                                                <FormControl sx={{
+                                                    m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
+                                                    '& fieldset': { top: 0 },
+                                                }} variant="outlined">
+                                                    <OutlinedInput
+                                                        style={{ height: 40 }}
+                                                        disabled={counselingStatus === "finish" ? true : false}
+                                                        placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
+                                                        id="outlined-adornment-password"
+                                                        value={state.message}
+                                                        label={"none"}
+                                                        size={"small"}
+                                                        autoComplete={"off"}
+                                                        onKeyPress={handleFirstEnter}
+                                                        onChange={(e) => setState({ message: e.target.value })}
+                                                        endAdornment={
+                                                            <InputAdornment position="end">
+                                                                <IconButton
+                                                                    style={{
+                                                                        background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                        marginRight: "-11.2px", width: "35px", height: "35px"
+                                                                    }}
+                                                                    onMouseDown={handleMouseDownPassword}
+                                                                    edge="end"
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        }
+                                                    />
+                                                </FormControl>
+                                            </Box>
+                                        </Text>
+                                    </Div>
+                                </MuiBox>
+                            </div>
+                            : ""
             }
         </>
     );

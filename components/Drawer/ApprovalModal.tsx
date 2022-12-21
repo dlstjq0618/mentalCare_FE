@@ -12,7 +12,16 @@ import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingFinalStepData, selectCounselingDate, selectCounselingTimes, setCounselingFinalStep, setCounselingFinalStepData } from '~/store/calendarDetailSlice';
+import {
+    selectCounselingFinalStepData,
+    selectCounselingDate,
+    selectCounselingTimes,
+    setCounselingFinalStep,
+    setCounselingFinalStepData,
+    setScheduleSelectModla,
+    selectScheduleSelectModla,
+    selectWatingListBefore
+} from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
 import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
@@ -139,11 +148,15 @@ function ApprovalModal(props: IProps) {
     const storeData = useSelector(selectCounselingDate);
     const selectTime = useSelector(selectCounselingTimes);
     const finalStepData = useSelector(selectCounselingFinalStepData);
+    const modalState = useSelector(selectScheduleSelectModla)
+    const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터 
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러
         setSelectTimes(e.target.value)
     }
+
+    console.log("modalState", modalState);
 
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
@@ -185,15 +198,16 @@ function ApprovalModal(props: IProps) {
     );
     const handleFinalStep = () => {
         dispatch(setCounselingFinalStep('yes'));
-        dispatch(setCounselingFinalStepData(props.userInfo))
+        dispatch(setCounselingFinalStepData(before_wating));
+        dispatch(setScheduleSelectModla(false));
     }
 
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={props.open} close={handleClose} >
+            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={handleClose} >
                 <Div button>
                     <Text size={20} bold="bold">
-                        {props.userInfo?.user_name} 님
+                        {before_wating?.user_name} 님
                     </Text>
                     {/* <Text button>
                         테스트 결과보기
@@ -205,7 +219,7 @@ function ApprovalModal(props: IProps) {
                         상담 방식
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {props.userInfo?.method_str === "전화상담(주간50분)" ? "전화" : "채팅"}
+                        {before_wating?.method_str === "전화상담(주간50분)" ? "전화" : "채팅"}
                     </Text>
                 </Div>
                 <Div>
@@ -213,7 +227,7 @@ function ApprovalModal(props: IProps) {
                         상담 요청 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {props.userInfo?.crated}
+                        {before_wating?.crated}
                     </Text>
                 </Div>
                 <Div>
@@ -257,7 +271,7 @@ function ApprovalModal(props: IProps) {
                 height: `${rem(387)}`, textAlign: 'center', marginTop: " 14vh"
             }}>
                 <Text size={17} bold='normal' center>
-                    <Text>{props.userInfo?.user_name}</Text>님에게
+                    <Text>{before_wating?.user_name}</Text>님에게
                     <div>상담 예정 알림이 발송됩니다.</div>
                 </Text>
                 <Text bg>

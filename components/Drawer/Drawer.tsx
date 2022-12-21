@@ -7,7 +7,7 @@ import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist } from '~/store/calendarDetailSlice';
+import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -93,6 +93,11 @@ export default function TemporaryDrawer(props: IProps) {
         dispatch(setCounselingTimes(""))
     }
 
+    const handleBeforeChat = () => { // 예약전 협의 채팅하기 위해 dispatch 로 전달 하기위한 함수
+
+
+    }
+    console.log("waitlist", waitlist);
 
     const toggleDrawer =
         (anchor: Anchor, open: boolean) =>
@@ -130,7 +135,8 @@ export default function TemporaryDrawer(props: IProps) {
             {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
-                        <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setChatBoxOpenState("협의")), dispatch(setWatingListBefore(list)) }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />

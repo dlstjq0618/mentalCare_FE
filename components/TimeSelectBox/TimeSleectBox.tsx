@@ -4,10 +4,10 @@ import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState } from '~/store/calendarDetailSlice';
+import { setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls } from '~/store/calendarDetailSlice';
 
 interface Iprops {
-
+    first?: boolean;
 }
 
 interface IStyled {
@@ -39,6 +39,8 @@ ${(props) =>
         props.type === 'finish' &&
         css`
         background-color: #999;
+        justify-content: start;
+        width: 60px;
     `}
 margin: 12px 17px;
   flex-grow: 0;
@@ -93,6 +95,7 @@ const selectType = [
     },
 ]
 
+
 function TimeSleectBox(props: Iprops) {
     const [check, setCheck] = useState(false);
     const [type, setType] = useState("상담중");
@@ -103,8 +106,13 @@ function TimeSleectBox(props: Iprops) {
 
     const handleOpenStatus = (data: any) => {
         if (data === 'finish') {
-            dispatch(setChatBoxOpenState(false));
+            dispatch(setSelectBoxControlls('완료'))
         }
+    }
+
+    async function handleOpenStatus2() {
+        dispatch(setSelectBoxControlls('완료'))
+        await dispatch(setSelectBoxControlls("null"))
     }
 
 
@@ -114,10 +122,12 @@ function TimeSleectBox(props: Iprops) {
         <>
             <Arricle>
                 {
-                    counselingStatus === 'finish' ?
-                        <Button onClick={() => { dispatch(setDashBoardRoomJoin("")) }} type={"finish"}>{"상담완료"} <KeyboardArrowDownIcon /></Button>
+                    props.first ? <Button onClick={() => { dispatch(setChatBoxOpenState("null")), handleOpenStatus2(), dispatch(setScheduleSelectModla(true)) }}>{"협의완료"}</Button>
                         :
-                        <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
+                        counselingStatus === 'finish' ?
+                            <Button onClick={() => { dispatch(setChatBoxOpenState("완료")) }} type={"finish"}>{"닫기"}</Button>
+                            :
+                            <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
                 }
                 {
                     check &&

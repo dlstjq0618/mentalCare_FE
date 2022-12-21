@@ -39,8 +39,11 @@ type DiagnosisDetailStoreState = {
   select: any;
   room: any;
   finish_chat: any;
-  open: boolean;
+  open: "시작" | "진행" | "완료" | "닫기" | "null" | "협의";
   select_timenum: number;
+  select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
+  before_wating: any;
+  schedule_select: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -77,8 +80,11 @@ const initialState: DiagnosisDetailStoreState = {
   select: {},
   room: "",
   finish_chat: {},
-  open: false,
+  open: "null",
   select_timenum: 0,
+  select_controll: "null",
+  before_wating: [],
+  schedule_select: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -326,6 +332,27 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.select_timenum = action.payload;
     },
+    setSelectBoxControlls(
+      //선택박스 체크
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["select_controll"]>
+    ) {
+      state.select_controll = action.payload;
+    },
+    setWatingListBefore(
+      // 상담전 협의 채팅
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["before_wating"]>
+    ) {
+      state.before_wating = action.payload;
+    },
+    setScheduleSelectModla(
+      // 상담전 협의 채팅
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["schedule_select"]>
+    ) {
+      state.schedule_select = action.payload;
+    },
   },
 });
 
@@ -362,6 +389,9 @@ export const {
   setHistoryChat,
   setChatBoxOpenState,
   setCounselingTimeStempNumber,
+  setSelectBoxControlls,
+  setWatingListBefore,
+  setScheduleSelectModla,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -432,5 +462,11 @@ export const selectFinishChatList = (state: RootState) =>
   state.calendarDetail.finish_chat;
 export const selectChatBoxOpenState = (state: RootState) =>
   state.calendarDetail.open;
+export const selectSelectBoxControlls = (state: RootState) =>
+  state.calendarDetail.select_controll;
+export const selectWatingListBefore = (state: RootState) =>
+  state.calendarDetail.before_wating;
+export const selectScheduleSelectModla = (state: RootState) =>
+  state.calendarDetail.schedule_select;
 
 export default calendarDetailSilce.reducer;
