@@ -301,27 +301,11 @@ function SettingInfoForm(props: IProps) {
                             <Text size={17} color={"#999"} style={{ minWidth: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} style={{ width: `${rem(235)}` }}>
-                                {
-                                    !phoneNumberChange ? <>
-                                        {phoneNumber}
-                                        {/* <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text> */}
-                                    </> :
-                                        <div style={{ display: 'flex' }}>
-                                            <Input
-                                                value={textValue}
-                                                maxLength={12}
-                                                onChange={(e) => {
-                                                    onlyNumberText(e.target.value)
-                                                }}
-                                                type='text'
-                                                css={{
-                                                    height: rem(30),
-                                                    width: rem(150)
-                                                }} />
-                                            {/* <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text> */}
-                                        </div>
-                                }
+                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}` }}>
+                                <div style={{ textAlign: `left` }}>
+                                    {phoneNumber}
+                                    {/* <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text> */}
+                                </div>
                             </Text>
                         </MainDiv>
                     </div>

@@ -7,7 +7,7 @@ import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData,
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
-import { ConstructionOutlined } from '@mui/icons-material';
+import { ConstructionOutlined, ContentPasteSearchOutlined } from '@mui/icons-material';
 import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
 import {
     selectCalendarUserList,
@@ -286,8 +286,6 @@ function DayComponents(props: IProps) {
     const [render, setRender] = useState<boolean>()
 
 
-
-
     const cancelOpen = () => setCancelModal(true);
     const cancelClose = () => setCancelModal(false);
     const handlePause = () => setPause(!pause);
@@ -403,7 +401,7 @@ function DayComponents(props: IProps) {
                 </Div>
                 <Div step style={{ marginTop: 0 }}>
                     <Text bold='normal' size={18} color={"#666"}>
-                        시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{selectTime}</span>
+                        시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date}</span>
                     </Text>
                     <TimeChip label='시간변경' />
                 </Div>
