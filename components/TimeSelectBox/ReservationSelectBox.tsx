@@ -6,7 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCounselingTimes, selectCounselingTimes, setCounselingTimeStemp, selectCounselingTimeStemp } from '~/store/calendarDetailSlice';
+import { setCounselingTimes, selectCounselingTimes, setCounselingTimeStemp, selectCounselingTimeStemp, setCounselingTimeStempNumber } from '~/store/calendarDetailSlice';
 
 interface Iprops {
 
@@ -75,6 +75,13 @@ function ReservationSelect(props: Iprops) {
     const [select, setSelect] = useState("시간 선택");
     const dispatch = useDispatch();
     const selectTime = useSelector(selectCounselingTimeStemp);
+    const hour = Number(selectTime.substring(0, 2)) * 3600;
+    const min = Number(select.substring(6, 8)) * 60;
+    const selectTimeNumber = hour + min;
+
+    useEffect(() => {
+        dispatch(setCounselingTimeStempNumber(selectTimeNumber))
+    }, [selectTimeNumber])
 
 
     return (

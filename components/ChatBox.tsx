@@ -47,6 +47,7 @@ import {
     selectReservationList,
     selectHistoryList,
     selectCompleteList,
+    selectCounselingTimeStempNumber,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -225,7 +226,11 @@ export default function BoxSx() {
     const finalStepData = useSelector(selectCounselingFinalStepData);
     const storeData = useSelector(selectCounselingDate);
     const selectTime = useSelector(selectCounselingTimeStemp);
+
     const reservationTime = (new Date(storeData).getTime() / 1000);
+    const selectNum = useSelector(selectCounselingTimeStempNumber);
+    const totalTime = reservationTime + selectNum
+
     const roomJoin = useSelector(selectCounselingStart);
     const watingList = useSelector(selectSocketData);
     const [lastChatlist, setLastChatList] = useState<any>([])
@@ -243,6 +248,7 @@ export default function BoxSx() {
     const nowTime = Date.now();
 
     const getTime = format(nowTime, 'a hh:mm');
+    console.log("")
     const [finishChat, setFinishChat] = useState<any>([]);
     const messageEndRef = useRef<any>(null);
 
@@ -261,7 +267,6 @@ export default function BoxSx() {
     //         dispatch(setChatBoxOpenState(false))
     //     }
     // }, [])
-
 
 
     useEffect(() => {
@@ -351,7 +356,7 @@ export default function BoxSx() {
             method: "room/reservation_date",
             datas: {
                 roomId: finalSetData.room_id,
-                reservation_date: reservationTime
+                reservation_date: totalTime
             }
         }
         socket.emit('counsel_submit', data1);
@@ -605,7 +610,8 @@ export default function BoxSx() {
                                                                             {res.datas?.message}
                                                                         </Div>
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                            {format(res.datas?.time, 'a hh:mm')}
+                                                                            {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                            {res.datas?.timestr}
                                                                         </Div>
                                                                     </Div>
                                                                     :

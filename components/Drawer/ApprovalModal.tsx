@@ -187,10 +187,6 @@ function ApprovalModal(props: IProps) {
         dispatch(setCounselingFinalStep('yes'));
         dispatch(setCounselingFinalStepData(props.userInfo))
     }
-    useEffect(() => {
-        console.log("props", props.userInfo);
-    })
-
 
     return (
         <>

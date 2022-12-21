@@ -40,6 +40,7 @@ type DiagnosisDetailStoreState = {
   room: any;
   finish_chat: any;
   open: boolean;
+  select_timenum: number;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -77,6 +78,7 @@ const initialState: DiagnosisDetailStoreState = {
   room: "",
   finish_chat: {},
   open: false,
+  select_timenum: 0,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -317,6 +319,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.open = action.payload;
     },
+    setCounselingTimeStempNumber(
+      // 채팅박스 열려있는지 체크
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["select_timenum"]>
+    ) {
+      state.select_timenum = action.payload;
+    },
   },
 });
 
@@ -352,6 +361,7 @@ export const {
   setFinishChatList,
   setHistoryChat,
   setChatBoxOpenState,
+  setCounselingTimeStempNumber,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -394,6 +404,9 @@ export const selectCounselingFinalStepData = (state: RootState) =>
   state.calendarDetail.final;
 export const selectCounselingTimeStemp = (state: RootState) =>
   state.calendarDetail.timestemp;
+export const selectCounselingTimeStempNumber = (state: RootState) =>
+  state.calendarDetail.select_timenum;
+
 export const selectCounselingStart = (state: RootState) =>
   state.calendarDetail.start;
 export const selectTotalCount = (state: RootState) =>
@@ -401,7 +414,6 @@ export const selectTotalCount = (state: RootState) =>
 export const selectLoggedUser = (state: RootState) => state.calendarDetail.list;
 export const selectHistoryList = (state: RootState) =>
   state.calendarDetail.list2;
-
 export const selectReservationList = (state: RootState) =>
   state.calendarDetail.reservationList;
 export const selectWaitlist = (state: RootState) =>

@@ -283,6 +283,7 @@ function DayComponents(props: IProps) {
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
     const select_data = useSelector(selectDashBoardSelectUser);
     const selectTime = useSelector(selectCounselingTimes);
+    const [render, setRender] = useState<boolean>()
 
 
 
@@ -317,6 +318,10 @@ function DayComponents(props: IProps) {
             return setDay_ko("토")
         }
     }, [])
+
+    useEffect(() => {
+        setRender(useOpen)
+    }, [useOpen])
 
     return (
         <>
@@ -368,7 +373,7 @@ function DayComponents(props: IProps) {
                         completeList && completeList.result?.map((res: any, index: number) => {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    useOpen === true ? console.log("doning...") : dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen === true ? console.log("doning...") : dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -427,7 +432,7 @@ function DayComponents(props: IProps) {
                             상담 요청 시간
                         </Text>
                         <Text bold='normal'>
-                            {"2022.10.12 12:30:45"}
+                            {select_data.crated}
                         </Text>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
