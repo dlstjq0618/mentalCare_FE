@@ -286,6 +286,9 @@ export default function BoxSx() {
             console.log("counsel_noti", method)
             const waitingIofo = datas.waitingList;
             switch (method) {
+                case "room/call/join":
+                    console.log("전화상담 데이터", res);
+
                 case "chat": ; break;
                 case "payment/user/ok": ; // 사용자 결제 완료시 
                     console.log('사용자 결제 정보 받음', res.datas);
@@ -294,7 +297,6 @@ export default function BoxSx() {
                     setUser_name(res.datas.user_name);
                     setUserPaymentList([res.datas]); // 임시로 덥어쓴다
                     setUserPaymentRequestStatus(true);
-
                     break;
                 case "room/chat/list":
                     const chatList = res.datas?.list;
@@ -444,6 +446,17 @@ export default function BoxSx() {
             }
         })
     }
+
+    const handleCallCounselorting = () => {
+        console.log("intRoom_id", intRoom_id);
+        socket.emit('counsel_submit', {
+            method: 'room/complete',
+            datas: {
+                roomId: intRoom_id,
+            }
+        })
+    }
+
     const handleFirstOnComplete = () => { // 일정 협의 채팅방 종료 
         socket.emit('counsel_submit', {
             method: 'room/complete',
@@ -495,6 +508,7 @@ export default function BoxSx() {
             setState({ message: '' })
         }
     }
+
     const handleFirstEnter = (e: any) => { // 일정 협의 채팅방 메세지 보내는 엔터
         setState({ message: e.target.value });
         if (e.key === "Enter" && state.message !== "") {
@@ -524,10 +538,17 @@ export default function BoxSx() {
     }, [useOpen])
 
     useEffect(() => {
-        if (useOpen === '시작') {
+        if (useOpen === '시작') { // 채팅상담 시작
             handleRoomJoin()
         }
     }, [useOpen])
+
+    useEffect(() => {
+        if (useOpen === '전화') { //전화 상담 시작할때 
+            handleCallCounselorting()
+        }
+    }, [useOpen])
+
 
     useEffect(() => { // 상담승인 할때 이벤트 발생
         if (finalStep === 'yes') {
@@ -564,6 +585,8 @@ export default function BoxSx() {
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
     }, [test])
+
+    console.log("selectBoxControllState", selectBoxControllState);
 
     return (
         <>
@@ -679,7 +702,9 @@ export default function BoxSx() {
                                 </Text>
                             </Div>
                         </MuiBox>
-                    </div> : useOpen === '시작' ?
+                    </div>
+                    :
+                    useOpen === '시작' ?
                         <div>
                             <MuiBox
                                 sx={{

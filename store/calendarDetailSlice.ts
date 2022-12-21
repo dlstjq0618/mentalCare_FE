@@ -39,7 +39,7 @@ type DiagnosisDetailStoreState = {
   select: any;
   room: any;
   finish_chat: any;
-  open: "시작" | "진행" | "완료" | "닫기" | "null" | "협의";
+  open: "시작" | "진행" | "완료" | "닫기" | "null" | "협의" | "시작전" | "전화";
   select_timenum: number;
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
   before_wating: any;

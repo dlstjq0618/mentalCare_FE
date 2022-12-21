@@ -284,17 +284,23 @@ function DayComponents(props: IProps) {
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
     const select_data = useSelector(selectDashBoardSelectUser);
     const selectTime = useSelector(selectCounselingTimes);
-    const [render, setRender] = useState<boolean>()
+    const [render, setRender] = useState<boolean>(false)
+
+
 
 
     const cancelOpen = () => setCancelModal(true);
     const cancelClose = () => setCancelModal(false);
     const handlePause = () => setPause(!pause);
     const start = () => setStartButton(true);
-    const close2 = () => setShow2(false);
+    const close2 = () => {
+        setShow2(false);
+        dispatch(setChatBoxOpenState("null"));
+    };
     const open2 = () => setShow2(true);
 
     const handleDispatch = () => {
+        close2()
         dispatch(setCounselingState("start"));
         dispatch(setCounselingStart("start"));
         dispatch(setChatBoxOpenState('시작'));
@@ -345,10 +351,12 @@ function DayComponents(props: IProps) {
                     {reservationList && reservationList.result?.map((res: any, index: number) => { // 예약중
                         return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                             <StyledDiv key={index} onClick={() => {
-                                open2(), res.method_str === "채팅상담(주간50분)" || res.method_str === "채팅상담(야간50분)" ? setUserType("채팅") : setUserType("전화"),
+                                useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
+                                    open2(), res.method_str === "채팅상담(주간50분)" || res.method_str === "채팅상담(야간50분)" ? setUserType("채팅") : setUserType("전화"),
                                     setUserName(res.user_name),
                                     setUserDate(res.reservation_date),
-                                    dispatch(setDashBoardSelectUser(res))
+                                    dispatch(setDashBoardSelectUser(res)),
+                                    res.method_str?.substr(0, 2) === "전화" ? dispatch(setChatBoxOpenState("전화")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <StyledRadius />
                                 {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -358,7 +366,8 @@ function DayComponents(props: IProps) {
                         consultingList && consultingList.result?.map((res: any, index: number) => { //채팅중
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    dispatch(setChatBoxOpenState('진행')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
+                                        dispatch(setChatBoxOpenState('진행')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusGreen />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -370,7 +379,8 @@ function DayComponents(props: IProps) {
                         completeList && completeList.result?.map((res: any, index: number) => { // 완료됨
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    dispatch(setChatBoxOpenState('완료')), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
+                                        dispatch(setChatBoxOpenState('완료')), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -442,14 +452,28 @@ function DayComponents(props: IProps) {
                     </div>
                 </Text>
                 <Text color='#eb541e' size={13} bold='normal' center style={{ marginTop: `${rem(40)}` }}>
-                    상담시작 버튼을 누르면 채팅이 시작되며, 상담 시간이 카운트 됩니다.
+                    {
+                        userType === "채팅" ?
+                            <span>
+                                상담시작 버튼을 누르면 채팅이 시작되며, 상담 시간이 카운트 됩니다.
+                            </span>
+                            :
+                            <div>
+                                <div>
+                                    상담시작 버튼을 누르면 상담이 시작되며,
+                                </div>
+                                <span>
+                                    상담이 종료되면 상담완료 버튼을 눌러주세요
+                                </span>
+                            </div>
+                    }
                 </Text>
                 <RoundedButton
                     onClick={() => {
-                        close2(), userType === "채팅" ?
+                        userType === "채팅" ?
                             handleDispatch()
                             :
-                            console.log("전화상담")
+                            setRender(true)
                     }}
                     color="orange"
                     css={{
@@ -459,7 +483,7 @@ function DayComponents(props: IProps) {
                         width: "100%",
                     }}
                 >
-                    상담 시작
+                    상담시작
                 </RoundedButton>
                 <div style={{ textAlign: 'center', marginBottom: `${rem(40)}` }}>
                     <Text size={13} bold="normal" color='#666' center

@@ -85,10 +85,10 @@ const selectType = [
         label: '상담중',
         value: 'start'
     },
-    {
-        label: '일시정지',
-        value: 'pause'
-    },
+    // {
+    //     label: '일시정지',
+    //     value: 'pause'
+    // },
     {
         label: '상담완료',
         value: 'finish'
@@ -115,6 +115,9 @@ function TimeSleectBox(props: Iprops) {
         await dispatch(setSelectBoxControlls("null"))
     }
 
+    async function handleClose() {
+        dispatch(setChatBoxOpenState('null'))
+    }
 
 
 
@@ -125,7 +128,7 @@ function TimeSleectBox(props: Iprops) {
                     props.first ? <Button onClick={() => { dispatch(setChatBoxOpenState("null")), handleOpenStatus2(), dispatch(setScheduleSelectModla(true)) }}>{"협의완료"}</Button>
                         :
                         counselingStatus === 'finish' ?
-                            <Button onClick={() => { dispatch(setChatBoxOpenState("완료")) }} type={"finish"}>{"닫기"}</Button>
+                            <Button onClick={handleClose} type={"finish"}>{"닫기"}</Button>
                             :
                             <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
                 }
