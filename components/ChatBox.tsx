@@ -338,9 +338,10 @@ export default function BoxSx() {
 
     const historyList = useSelector(selectHistoryList);
 
+
+
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => {
-            console.log("res", res);
             setChatList([...chatList, res])
             dispatch(setLoggedUser(res))
         })
@@ -385,6 +386,7 @@ export default function BoxSx() {
     const reservationList = useSelector(selectReservationList); // 예약 확정 O
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const completeList = useSelector(selectCompleteList); // 상담완료 O
+    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
 
     async function handleRoomJoin() {
         if (counselingStatus === 'start') {
@@ -446,7 +448,6 @@ export default function BoxSx() {
 
     const handleEnter = (e: any) => { // 엔터 쳤을때 이벤트 발생 
         setState({ message: e.target.value });
-        console.log('e', e.target.value)
         if (e.key === "Enter" && state.message !== "") {
             const chat = {
                 roomId: intRoom_id,
@@ -458,7 +459,8 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-            dispatch(setLoggedUser(chat))
+            dispatch(setLoggedUser(chat));
+            console.log("message", state.message);
             setState({ message: '' })
         }
     }
@@ -603,7 +605,7 @@ export default function BoxSx() {
                                                         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                             {
                                                                 res?.datas?.type ?
-                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                         <Div bg='#ffffe7' type="right">
                                                                             {res.datas?.message}
                                                                         </Div>

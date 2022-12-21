@@ -112,6 +112,7 @@ function CalendarHeader() {
         dispatch(setCalendarMonthState(dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")))
     }, [dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")])
 
+
     return (
         <>
             <Header>
