@@ -400,11 +400,7 @@ export default function BoxSx() {
                     "method": "join",
                     "datas": req
                 });
-                const resser = reservationList?.result?.filter((res: any) => res.user_name !== select_user.user_name);
-                // const consult = consultingList?.result?.filter((res: any) => res.user_name !== select_user.user_name);
-                // const comple = completeList?.result?.filter((res: any) => res.user_name !== select_user.user_name);
-                // await dispatch(setDashBoardReservationList(resser))
-                // await dispatch(setDashBoardConsultingList(consult))
+
                 dispatch(setChatBoxOpenState(true))
                 await dispatch(setCounselingState('pause'))
             } else {
