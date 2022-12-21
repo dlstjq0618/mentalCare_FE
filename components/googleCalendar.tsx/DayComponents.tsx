@@ -346,7 +346,7 @@ function DayComponents(props: IProps) {
                             <StyledDiv key={index} onClick={() => {
                                 useOpen === true ? console.log("doning...")
                                     :
-                                    dispatch(setChatBoxOpenState(false)),
+                                    dispatch(setChatBoxOpenState(true)),
                                     open2(), res.method_str === "채팅상담(주간50분)" || res.method_str === "채팅상담(야간50분)" ? setUserType("채팅") : setUserType("전화"),
                                     setUserName(res.user_name),
                                     setUserDate(res.reservation_date),
@@ -360,7 +360,7 @@ function DayComponents(props: IProps) {
                         consultingList && consultingList.result?.map((res: any, index: number) => { // 상담완료 건이 있으면 삭제
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    useOpen === true ? console.log("doning...") : dispatch(setChatBoxOpenState(false)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen === true ? console.log("doning...") : dispatch(setChatBoxOpenState(true)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusGreen />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -372,7 +372,7 @@ function DayComponents(props: IProps) {
                         completeList && completeList.result?.map((res: any, index: number) => {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    useOpen === true ? console.log("doning...") : dispatch(setChatBoxOpenState(false)), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen === true ? console.log("doning...") : dispatch(setChatBoxOpenState(true)), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
