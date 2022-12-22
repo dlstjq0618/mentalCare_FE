@@ -426,9 +426,6 @@ export default function BoxSx() {
             setFinishChat([{
                 message: '일정 협의'
             }]);
-            // dispatch(removeList())
-
-            const removeValue = test.filter((res: any) => { res.roomId !== "" })
             // roomJoin
             const req = {
                 roomId: before_wating.room_id,
@@ -440,7 +437,6 @@ export default function BoxSx() {
                 "method": "join",
                 "datas": req
             });
-            setFinishChat([...removeValue, test])
         } else {
             dispatch(setChatBoxOpenState('닫기'))
         }
@@ -568,6 +564,12 @@ export default function BoxSx() {
 
     const use_last_chat = useSelector(selectFinishChatList);
 
+    useEffect(() => {
+        if (counselingStatus === 'finish') {
+            handleFinishChatList()
+        }
+    }, [counselingStatus])
+
     useEffect(() => { // 캘린더 컨트롤 
         if (useOpen === '완료') {
             handleOnComplete()
@@ -601,7 +603,6 @@ export default function BoxSx() {
     useEffect(() => { // 상담전 협의 챗 발생 
         if (useOpen === "협의") {
             handleFirstRoomJoin()
-
         }
     }, [useOpen])
 
@@ -617,7 +618,6 @@ export default function BoxSx() {
     // }, [finalStep])
 
     const test = useSelector(selectLoggedUser);
-    console.log("finishChat", finishChat);
 
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
@@ -661,7 +661,7 @@ export default function BoxSx() {
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
-                                            test?.map((res: any, index: number) => (
+                                            isMessage?.map((res: any, index: number) => (
                                                 <>
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         {
