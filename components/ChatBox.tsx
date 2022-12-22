@@ -498,24 +498,20 @@ export default function BoxSx() {
     }
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 채팅방에서 마우스 클릭
-        if (select_user.status === 3) {
-            console.log("상담완료");
-        } else {
-            if (state.message !== '') {
-                event.preventDefault();
-                const chat = {
-                    roomId: intRoom_id,
-                    user_type: 6,
-                    message: state.message,
-                    time: getTime
-                };
-                socket.emit('chat', {
-                    method: "chat",
-                    datas: chat
-                });
-                dispatch(setLoggedUser(chat))
-                setState({ message: '' })
-            }
+        if (state.message !== '') {
+            event.preventDefault();
+            const chat = {
+                roomId: intRoom_id,
+                user_type: 6,
+                message: state.message,
+                time: getTime
+            };
+            socket.emit('chat', {
+                method: "chat",
+                datas: chat
+            });
+            dispatch(setLoggedUser(chat))
+            setState({ message: '' })
         }
     };
 
@@ -667,8 +663,8 @@ export default function BoxSx() {
                                                                         {res?.message}
                                                                     </Div>
                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                        {format(new Date(res?.time * 1000), 'a hh:mm')}
-                                                                        {/* {res?.time} */}
+                                                                        {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
+                                                                        {res?.time}
                                                                     </Div>
                                                                 </Div>
                                                                 :
@@ -676,8 +672,8 @@ export default function BoxSx() {
                                                                     <div />
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                            {format(new Date(res?.time), 'a hh:mm')}
-                                                                            {/* {res?.time} */}
+                                                                            {/* {format(new Date(res?.time), 'a hh:mm')} */}
+                                                                            {res?.time}
                                                                         </Div>
                                                                         <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                             {res?.message}
