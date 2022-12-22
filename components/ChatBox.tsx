@@ -623,6 +623,8 @@ export default function BoxSx() {
         messageEndRef?.current?.scrollIntoView();
     }, [test])
 
+    console.log("test", test);
+
 
     return (
         <>
@@ -663,10 +665,10 @@ export default function BoxSx() {
                                                 <>
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         {
-                                                            res?.type === 'receve' ?
+                                                            res?.datas ?
                                                                 <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                     <Div bg='#ffffe7' type="right">
-                                                                        {res?.message}
+                                                                        {res?.datas?.message}
                                                                     </Div>
                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                         {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
