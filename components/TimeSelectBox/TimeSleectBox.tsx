@@ -108,6 +108,7 @@ function TimeSleectBox(props: Iprops) {
         if (data === 'finish') {
             dispatch(setSelectBoxControlls('완료'))
             dispatch(setChatBoxOpenState('완료'))
+            dispatch(setCounselingState("null"))
         }
     }
 
@@ -117,6 +118,7 @@ function TimeSleectBox(props: Iprops) {
     }
 
     async function handleClose() {
+        dispatch(setCounselingState("null"))
         dispatch(setChatBoxOpenState('null'))
         dispatch(setSelectBoxControlls('완료'))
     }

@@ -5,16 +5,18 @@ import {
     MainTitle,
 } from "~/components/settlementAccount";
 import LayoutComponent from "~/components/Layout";
+import BoxSx from "~/components/ChatBox";
 
 // api는 page component 안에서 호출 및 스토어 저장
 
 interface Iprops {
     chat?: any
 }
-
+console.log("schedule")
 function ScheduleIndex(props: Iprops) {
     return (
         <LayoutComponent>
+            <BoxSx />
             <MainTitle>대기실</MainTitle>
             <CalendarIndex />
         </LayoutComponent>

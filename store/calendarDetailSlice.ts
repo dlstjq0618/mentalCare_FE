@@ -249,7 +249,11 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.count = action.payload;
     },
+    setReset(state) {
+      Object.assign(state.list, initialState);
+    },
     setLoggedUser(
+      // 채팅창
       state,
       action: PayloadAction<DiagnosisDetailStoreState["list"]>
     ) {

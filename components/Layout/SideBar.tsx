@@ -223,6 +223,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   // }, [dispatch, shouldNotificate, waitingListInfo]);
 
 
+
   return (
     <>
       <StyledSider width={rem(120)}>
@@ -268,7 +269,6 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
           </div>
         </Div>
       </StyledSider>
-      <BoxSx />
     </>
 
   );

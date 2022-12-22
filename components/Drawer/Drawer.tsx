@@ -136,7 +136,7 @@ export default function TemporaryDrawer(props: IProps) {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setChatBoxOpenState("협의")), dispatch(setWatingListBefore(list)) }}>
+                        <BoxItem key={index} onClick={() => { console.log("bbbbaaaa"), dispatch(setChatBoxOpenState("협의")), dispatch(setWatingListBefore(list)) }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />

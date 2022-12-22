@@ -325,9 +325,6 @@ function DayComponents(props: IProps) {
         }
     }, [])
 
-    console.log("useOpen", useOpen);
-
-
     return (
         <>
             <Div primary={props.days.format('ddd')} idx={props.rowIdx}>
@@ -366,7 +363,7 @@ function DayComponents(props: IProps) {
                         consultingList && consultingList.result?.map((res: any, index: number) => { //채팅중
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
+                                    useOpen !== "null" && res.status !== 2 ? console.log("done...") :
                                         dispatch(setChatBoxOpenState('진행')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusGreen />
@@ -380,7 +377,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
                                     useOpen !== "null" ? console.log("done...") :
-                                        dispatch(setChatBoxOpenState('완료')), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                        dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}

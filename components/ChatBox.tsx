@@ -254,12 +254,15 @@ export default function BoxSx() {
     const reservationList = useSelector(selectReservationList); // 예약 확정 O
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const completeList = useSelector(selectCompleteList); // 상담완료 O
-    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
+    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 닫기
     const selectBoxControllState = useSelector(selectSelectBoxControlls);
 
     const nowTime = Date.now();
-    const getTime = format(nowTime, 'a hh:mm');
+    console.log('nowTime', nowTime)
+    const getTime = nowTime;
     const [finishChat, setFinishChat] = useState<any>([]);
+    const [isMessage, setIsMessage] = useState<any>([])
+    const [isToTalMessage, setIsToTalMessage] = useState<any>([])
     const messageEndRef = useRef<any>(null);
 
 
@@ -279,6 +282,7 @@ export default function BoxSx() {
     //     }
     // }, [])
 
+    const history = useSelector(selectLoggedUser)
 
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
@@ -299,13 +303,19 @@ export default function BoxSx() {
                     setUserPaymentRequestStatus(true);
                     break;
                 case "room/chat/list":
-                    const chatList = res.datas?.list;
-                    setFinishChat(chatList);
-                    dispatch(setHistoryChat(res.datas));
+                    console.log("historyRes", res)
+                    const chatList = res.datas?.list
+                    const historyList = res.datas?.list[0]
+                    setFinishChat(chatList); // 이전대화 목록이 들어간다.
+                    console.log("finishChat", finishChat);
+                    dispatch(setHistoryChat(historyList));
                     dispatch(setFinishChatList(chatList));
+                    setIsMessage([...chatList, ...history]);
+                // setIsMessage([...isMessage, ...chatList]);
             }
         })
-    }, [user_name])
+    }, [select_user.user_name, before_wating.user_name])
+    console.log("isMessage", isMessage);
 
     useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
@@ -349,13 +359,12 @@ export default function BoxSx() {
         })
     }, [user_dashborad, user_name])
 
-
+    // 정리 : 새로고침후 처음 다시 드로워에 있는 데이터를 클릭했을 때, 드로워 데이터를 가지고 이전 대화리스트 불러온 후 추가로 입력하는 정보를 뿌려줘라.
 
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => {
-            console.log("hcat", res)
-            setChatList([...chatList, res])
             dispatch(setLoggedUser(res))
+            setFinishChat([...finishChat, ...test])
         })
     }, [])
 
@@ -414,6 +423,9 @@ export default function BoxSx() {
     }
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방 
         if (confirm(`테스트용 일정협의 채팅을 "${before_wating.user_name}" 님과 시작 하시겠습니까?`)) {
+            setFinishChat([{
+                message: '일정 협의'
+            }]);
             // roomJoin
             const req = {
                 roomId: before_wating.room_id,
@@ -428,11 +440,23 @@ export default function BoxSx() {
         } else {
             dispatch(setChatBoxOpenState('닫기'))
         }
+
     }
     const intRoom_id = Number(select_user.room_id)
 
-    async function handleFinishChatList() { // 지난 채팅 리스트 불러오는 함수
-        console.log("intRoom_id", intRoom_id)
+    async function handleFirstChatList2() { // 일정 협의 에서 새로고침 후 다시 들어왔을 때 정보를 불러옴
+        const data1 = {
+            method: "room/chat/list",
+            datas: {
+                roomId: before_wating.room_id,
+                user_type: 6
+            }
+        }
+        socket.emit('counsel_submit', data1);
+        await handleFirstRoomJoin()
+    }
+
+    async function handleFinishChatList() { // 지난 채팅 리스트 불러옴
         const data1 = {
             method: "room/chat/list",
             datas: {
@@ -496,20 +520,23 @@ export default function BoxSx() {
     };
 
 
-    const handleEnter = (e: any) => { // 채팅방 엔터 눌렀을때 전송
-        setState({ message: e.target.value });
-        if (e.key === "Enter" && state.message !== "") {
+    const handleEnter = (e: any) => { // 유입된 유저와 대화했던 데이터 저장 채팅방 엔터 눌렀을때 전송
+        setState({ message: e.target.value }); // 이거는 인풋박스 온체인지
+        if (e.key === "Enter" && state.message !== "") { // 엔터를 했을때 쳇 데이터 안에 룸 번호와 메세지와 시간을 보낸다.
             const chat = {
                 roomId: intRoom_id,
                 user_type: 6,
                 message: e.target.value,
-                time: getTime
+                time: getTime,
+                type: "send"
             };
-            socket.emit('chat', {
+            socket.emit('chat', { // 서버로 전송
                 method: "chat",
                 datas: chat
             });
-            dispatch(setLoggedUser(chat));
+
+            dispatch(setLoggedUser(chat)); // 엔터를 칠때마다 내가친 데이터가 안으로 들어간다. 그럼? 새로고침해도 최근친 데이터는 남아있나?
+            setIsMessage([...isMessage, chat]);
             console.log("message", state.message);
             setState({ message: '' })
         }
@@ -522,13 +549,15 @@ export default function BoxSx() {
                 roomId: before_wating.room_id,
                 user_type: 6,
                 message: e.target.value,
-                time: getTime
+                time: getTime,
+                type: "send"
             };
             socket.emit('chat', {
                 method: "chat",
                 datas: chat
             });
             dispatch(setLoggedUser(chat));
+            setIsMessage([...isMessage, chat]);
             console.log("message", state.message);
             setState({ message: '' })
         }
@@ -542,7 +571,7 @@ export default function BoxSx() {
             handleOnComplete()
         }
     }, [useOpen])
-    useEffect(() => {  // 진행인 화면
+    useEffect(() => {  // 진행중인 화면, 즉 기록이 있는 채팅 
         if (useOpen === '진행') {
             handleFinishChatList()
         }
@@ -570,11 +599,11 @@ export default function BoxSx() {
     useEffect(() => { // 상담전 협의 챗 발생 
         if (useOpen === "협의") {
             handleFirstRoomJoin()
+
         }
     }, [useOpen])
 
     useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
-
     }, [])
 
     //룸조인
@@ -586,20 +615,17 @@ export default function BoxSx() {
     // }, [finalStep])
 
     const test = useSelector(selectLoggedUser);
-    console.log("test", test)
+    console.log("finishChat", finishChat);
 
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
     }, [test])
 
 
-
-    console.log("selectBoxControllState", selectBoxControllState);
-
     return (
         <>
             {
-                useOpen === '완료' ?
+                counselingStatus === 'finish' ?
                     <div>
                         <MuiBox
                             sx={{
@@ -618,20 +644,20 @@ export default function BoxSx() {
                             <Div type='main'>
                                 <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                     <Text size={17} bold="600" color='#000' type='title'>
-                                        우주 상담소
+                                        우주 상담소(완료)
                                     </Text>
                                     <TimeSleectBox />
                                 </Div>
                                 <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                     <Div type='time' >
-                                        <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                        <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
                                         {/* <Text size={12} type='button' color='#e8440a'>
                                             상담 경과 44:15 
                                         </Text> */}
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
-                                            finishChat?.map((res: any, index: number) => (
+                                            test?.map((res: any, index: number) => (
                                                 <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                     {
                                                         res?.type === 'receve' ?
@@ -640,7 +666,7 @@ export default function BoxSx() {
                                                                     {res?.message}
                                                                 </Div>
                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                    {format(res?.time, 'a hh:mm')}
+                                                                    {format(new Date(res?.time), 'a hh:mm')}
                                                                 </Div>
                                                             </Div>
                                                             :
@@ -648,7 +674,9 @@ export default function BoxSx() {
                                                                 <div />
                                                                 <Div style={{ display: "flex" }}>
                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                        {format(res?.time, 'a hh:mm')}
+                                                                        {/* {format(res?.time, 'a hh:mm')} */}
+                                                                        {res?.time}
+                                                                        {/* {format(new Date(res?.time), 'a hh:mm')} */}
                                                                     </Div>
                                                                     <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                         {res?.message}
@@ -660,7 +688,7 @@ export default function BoxSx() {
                                             ))
                                         }
                                         {
-                                            counselingStatus === "finish" ?
+                                            useOpen === "완료" ?
                                                 <>
                                                     <Text type='finish'>
                                                         ----상담이 완료 되었습니다.----
@@ -680,8 +708,8 @@ export default function BoxSx() {
                                         }} variant="outlined">
                                             <OutlinedInput
                                                 style={{ height: 40 }}
-                                                disabled={counselingStatus === "finish" ? true : false}
-                                                placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
+                                                disabled={useOpen === "완료" ? true : false}
+                                                placeholder={`${useOpen === "완료" ? "상담이 완료 되었습니다." : ""}`}
                                                 id="outlined-adornment-password"
                                                 value={state.message}
                                                 label={"none"}
@@ -694,7 +722,7 @@ export default function BoxSx() {
                                                     <InputAdornment position="end">
                                                         <IconButton
                                                             style={{
-                                                                background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                background: `${useOpen === "완료" ? "#c4c4c4" : "#e8440a"}`, color: "white",
                                                                 marginRight: "-11.2px", width: "35px", height: "35px"
                                                             }}
                                                             onMouseDown={handleMouseDownPassword}
@@ -731,14 +759,16 @@ export default function BoxSx() {
                                 <Div type='main'>
                                     <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                         <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                            우주 상담소<div style={{ color: '#b53e14' }}>({select_user?.user_name})</div>{"시작"}
+                                            우주 상담소<div style={{ color: '#b53e14' }}>({select_user?.user_name})</div>(시작)
                                         </Text>
-                                        <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>X</button>
-                                        <TimeSleectBox />
+                                        <div style={{ display: 'flex' }}>
+                                            <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button>
+                                            <TimeSleectBox />
+                                        </div>
                                     </Div>
                                     <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                         <Div type='time' >
-                                            <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                            <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
                                             {/* <Text size={12} type='button' color='#e8440a'>
                                         상담 경과 44:15 
                                     </Text> */}
@@ -748,8 +778,9 @@ export default function BoxSx() {
                                                 test?.map((res: any, index: number) => (
                                                     <>
                                                         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                            <span></span>
                                                             {
-                                                                res?.datas?.type ?
+                                                                res?.datas ?
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                         <Div bg='#ffffe7' type="right">
                                                                             {res.datas?.message}
@@ -773,19 +804,9 @@ export default function BoxSx() {
                                                                     </Div>
                                                             }
                                                         </div>
-                                                        <div ref={messageEndRef} />
                                                     </>
                                                 ))
 
-                                            }
-                                            {
-                                                counselingStatus === "finish" ?
-                                                    <>
-                                                        <Text type='finish'>
-                                                            ----상담이 완료 되었습니다.----
-                                                        </Text>
-                                                    </>
-                                                    : ""
                                             }
                                         </Div>
                                     </Text>
@@ -799,8 +820,6 @@ export default function BoxSx() {
                                             }} variant="outlined">
                                                 <OutlinedInput
                                                     style={{ height: 40 }}
-                                                    disabled={counselingStatus === "finish" ? true : false}
-                                                    placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
                                                     id="outlined-adornment-password"
                                                     value={state.message}
                                                     label={"none"}
@@ -813,7 +832,8 @@ export default function BoxSx() {
                                                         <InputAdornment position="end">
                                                             <IconButton
                                                                 style={{
-                                                                    background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                    background: "#e8440a",
+                                                                    color: "white",
                                                                     marginRight: "-11.2px", width: "35px", height: "35px"
                                                                 }}
                                                                 onMouseDown={handleMouseDownPassword}
@@ -849,7 +869,7 @@ export default function BoxSx() {
                                     <Div type='main'>
                                         <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                             <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
-                                                우주 상담소<div style={{ color: '#b53e14' }}>({before_wating.user_name})</div>
+                                                우주 상담소<div style={{ color: '#b53e14' }}>({before_wating.user_name})</div>(협의)
                                             </Text>
                                             <TimeSleectBox first />
                                         </Div>
@@ -865,8 +885,9 @@ export default function BoxSx() {
                                                     test?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                <span></span>
                                                                 {
-                                                                    res?.datas?.type ?
+                                                                    res?.datas?.type === 'receve' ?
                                                                         <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
                                                                                 {res.datas?.message}
@@ -890,19 +911,10 @@ export default function BoxSx() {
                                                                         </Div>
                                                                 }
                                                             </div>
-                                                            <div ref={messageEndRef} />
+                                                            {/* <div ref= {messageEndRef} /> */}
                                                         </>
                                                     ))
 
-                                                }
-                                                {
-                                                    counselingStatus === "finish" ?
-                                                        <>
-                                                            <Text type='finish'>
-                                                                ----상담이 완료 되었습니다.----
-                                                            </Text>
-                                                        </>
-                                                        : ""
                                                 }
                                             </Div>
                                         </Text>
@@ -916,8 +928,6 @@ export default function BoxSx() {
                                                 }} variant="outlined">
                                                     <OutlinedInput
                                                         style={{ height: 40 }}
-                                                        disabled={counselingStatus === "finish" ? true : false}
-                                                        placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
                                                         id="outlined-adornment-password"
                                                         value={state.message}
                                                         label={"none"}
@@ -929,7 +939,8 @@ export default function BoxSx() {
                                                             <InputAdornment position="end">
                                                                 <IconButton
                                                                     style={{
-                                                                        background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                        background: "#e8440a",
+                                                                        color: "white",
                                                                         marginRight: "-11.2px", width: "35px", height: "35px"
                                                                     }}
                                                                     onMouseDown={handleMouseDownPassword}
@@ -966,30 +977,32 @@ export default function BoxSx() {
                                         <Div type='main'>
                                             <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                                 <Text size={17} bold="600" color='#000' type='title'>
-                                                    우주 상담소(상담진행중)
+                                                    우주 상담소(진행)
                                                 </Text>
-                                                <TimeSleectBox />
-                                                <button onClick={() => dispatch(setChatBoxOpenState('null'))}>X</button>
+                                                <div style={{ display: 'flex' }}>
+                                                    <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button>
+                                                    <TimeSleectBox />
+                                                </div>
                                             </Div>
                                             <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                                 <Div type='time' >
-                                                    <Text size={13} color='#b53e14' >{"상담예약 시간" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                                    <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
 
                                                 </Div>
                                                 <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                     {
-                                                        test?.map((res: any, index: number) => (
+                                                        isMessage?.map((res: any, index: number) => (
                                                             <>
                                                                 <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                     {
-                                                                        res?.datas?.type ?
+                                                                        res?.type === 'receve' ?
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                                 <Div bg='#ffffe7' type="right">
-                                                                                    {res.datas?.message}
+                                                                                    {res?.message}
                                                                                 </Div>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                    {res.datas?.timestr}
+                                                                                    {format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                                    {/* {res?.time} */}
                                                                                 </Div>
                                                                             </Div>
                                                                             :
@@ -997,7 +1010,8 @@ export default function BoxSx() {
                                                                                 <div />
                                                                                 <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                        {res?.time}
+                                                                                        {format(new Date(res?.time), 'a hh:mm')}
+                                                                                        {/* {res?.time} */}
                                                                                     </Div>
                                                                                     <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                         {res?.message}
@@ -1006,19 +1020,10 @@ export default function BoxSx() {
                                                                             </Div>
                                                                     }
                                                                 </div>
-                                                                <div ref={messageEndRef} />
+                                                                {/* <div ref={messageEndRef} /> */}
                                                             </>
                                                         ))
 
-                                                    }
-                                                    {
-                                                        counselingStatus === "finish" ?
-                                                            <>
-                                                                <Text type='finish'>
-                                                                    ----상담이 완료 되었습니다.----
-                                                                </Text>
-                                                            </>
-                                                            : ""
                                                     }
                                                 </Div>
                                             </Text>
@@ -1032,8 +1037,6 @@ export default function BoxSx() {
                                                     }} variant="outlined">
                                                         <OutlinedInput
                                                             style={{ height: 40 }}
-                                                            disabled={counselingStatus === "finish" ? true : false}
-                                                            placeholder={`${counselingStatus === "finish" ? "상담이 완료 되었습니다." : ""}`}
                                                             id="outlined-adornment-password"
                                                             value={state.message}
                                                             label={"none"}
@@ -1046,7 +1049,8 @@ export default function BoxSx() {
                                                                 <InputAdornment position="end">
                                                                     <IconButton
                                                                         style={{
-                                                                            background: `${counselingStatus === "finish" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                            background: "#e8440a",
+                                                                            color: "white",
                                                                             marginRight: "-11.2px", width: "35px", height: "35px"
                                                                         }}
                                                                         onMouseDown={handleMouseDownPassword}
