@@ -51,6 +51,7 @@ import {
     selectWatingListBefore,
     selectSelectBoxControlls,
     removeList,
+    clear,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -440,7 +441,6 @@ export default function BoxSx() {
         } else {
             dispatch(setChatBoxOpenState('닫기'))
         }
-
     }
     const intRoom_id = Number(select_user.room_id)
 
@@ -602,6 +602,7 @@ export default function BoxSx() {
 
     useEffect(() => { // 상담전 협의 챗 발생 
         if (useOpen === "협의") {
+            dispatch(clear())
             handleFirstRoomJoin()
         }
     }, [useOpen])
@@ -665,10 +666,10 @@ export default function BoxSx() {
                                                 <>
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         {
-                                                            res?.datas ?
+                                                            res?.type === 'receve' ?
                                                                 <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                     <Div bg='#ffffe7' type="right">
-                                                                        {res?.datas?.message}
+                                                                        {res?.message}
                                                                     </Div>
                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                         {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
@@ -892,7 +893,7 @@ export default function BoxSx() {
                                             </Div>
                                             <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                 {
-                                                    test?.map((res: any, index: number) => (
+                                                    isMessage?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                 <span></span>

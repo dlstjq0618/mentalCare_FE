@@ -100,6 +100,9 @@ export const calendarDetailSilce = createSlice({
       const id = action.payload;
       state.list = state.list.filter((item: any) => item.id !== id);
     },
+    clear: (state) => {
+      state.list = initialState;
+    },
     setDiagnosisCallStatus(
       state,
       action: PayloadAction<DiagnosisDetailStoreState["diagnosisCallStatus"]>
@@ -406,6 +409,7 @@ export const {
   setWatingListBefore,
   setScheduleSelectModla,
   removeList,
+  clear,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
