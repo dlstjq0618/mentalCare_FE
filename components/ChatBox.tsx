@@ -664,7 +664,8 @@ export default function BoxSx() {
                                                                     </Div>
                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                         {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
-                                                                        {res?.time}
+                                                                        {/* {res?.time} */}
+                                                                        {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                     </Div>
                                                                 </Div>
                                                                 :
@@ -673,7 +674,7 @@ export default function BoxSx() {
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
                                                                             {/* {format(new Date(res?.time), 'a hh:mm')} */}
-                                                                            {res?.time}
+                                                                            {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                         </Div>
                                                                         <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                             {res?.message}
@@ -795,7 +796,7 @@ export default function BoxSx() {
                                                                         <div />
                                                                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                {res?.time}
+                                                                                {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                             </Div>
                                                                             <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                 {res?.message}
@@ -902,7 +903,8 @@ export default function BoxSx() {
                                                                             <div />
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {res?.time}
+                                                                                    {/* {res?.time} */}
+                                                                                    {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                                 </Div>
                                                                                 <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                     {res?.message}
@@ -1001,7 +1003,7 @@ export default function BoxSx() {
                                                                                     {res?.message}
                                                                                 </Div>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                                    {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                                     {/* {res?.time} */}
                                                                                 </Div>
                                                                             </Div>
