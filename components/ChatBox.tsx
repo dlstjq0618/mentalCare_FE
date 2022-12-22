@@ -762,7 +762,7 @@ export default function BoxSx() {
                                             우주 상담소<div style={{ color: '#b53e14' }}>({select_user?.user_name})</div>(시작)
                                         </Text>
                                         <div style={{ display: 'flex' }}>
-                                            <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button>
+                                            {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
                                             <TimeSleectBox />
                                         </div>
                                     </Div>
@@ -980,7 +980,7 @@ export default function BoxSx() {
                                                     우주 상담소(진행)
                                                 </Text>
                                                 <div style={{ display: 'flex' }}>
-                                                    <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button>
+                                                    {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
                                                     <TimeSleectBox />
                                                 </div>
                                             </Div>
