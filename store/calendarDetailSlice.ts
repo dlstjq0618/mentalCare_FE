@@ -44,9 +44,11 @@ type DiagnosisDetailStoreState = {
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
   before_wating: any;
   schedule_select: boolean;
+  returned: [];
 };
 
 const initialState: DiagnosisDetailStoreState = {
+  returned: [],
   diagnosisCallStatus: "idle",
   diagnosisDetailStatus: "waiting",
   currentStep: 0,
@@ -91,6 +93,13 @@ export const calendarDetailSilce = createSlice({
   name: "calendarList",
   initialState,
   reducers: {
+    removeList: (
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["list"]>
+    ) => {
+      const id = action.payload;
+      state.list = state.list.filter((item: any) => item.id !== id);
+    },
     setDiagnosisCallStatus(
       state,
       action: PayloadAction<DiagnosisDetailStoreState["diagnosisCallStatus"]>
@@ -396,6 +405,7 @@ export const {
   setSelectBoxControlls,
   setWatingListBefore,
   setScheduleSelectModla,
+  removeList,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>

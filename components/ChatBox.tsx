@@ -50,6 +50,7 @@ import {
     selectCounselingTimeStempNumber,
     selectWatingListBefore,
     selectSelectBoxControlls,
+    removeList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -363,8 +364,7 @@ export default function BoxSx() {
 
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => {
-            dispatch(setLoggedUser(res))
-            setFinishChat([...finishChat, ...test])
+            dispatch(setLoggedUser(res));
         })
     }, [])
 
@@ -426,6 +426,9 @@ export default function BoxSx() {
             setFinishChat([{
                 message: '일정 협의'
             }]);
+            // dispatch(removeList())
+
+            const removeValue = test.filter((res: any) => { res.roomId !== "" })
             // roomJoin
             const req = {
                 roomId: before_wating.room_id,
@@ -437,6 +440,7 @@ export default function BoxSx() {
                 "method": "join",
                 "datas": req
             });
+            setFinishChat([...removeValue, test])
         } else {
             dispatch(setChatBoxOpenState('닫기'))
         }
@@ -475,6 +479,7 @@ export default function BoxSx() {
                 user_type: 6
             }
         })
+        handleFinishChatList()
     }
 
     const handleCallCounselorting = () => {
@@ -553,6 +558,7 @@ export default function BoxSx() {
                 datas: chat
             });
             dispatch(setLoggedUser(chat));
+            setFinishChat([...finishChat, chat])
             setIsMessage([...isMessage, chat]);
             console.log("message", state.message);
             setState({ message: '' })
@@ -653,7 +659,7 @@ export default function BoxSx() {
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
-                                            isMessage?.map((res: any, index: number) => (
+                                            test?.map((res: any, index: number) => (
                                                 <>
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         {
@@ -805,6 +811,7 @@ export default function BoxSx() {
                                                                     </Div>
                                                             }
                                                         </div>
+                                                        <div ref={messageEndRef} />
                                                     </>
                                                 ))
 
@@ -913,7 +920,7 @@ export default function BoxSx() {
                                                                         </Div>
                                                                 }
                                                             </div>
-                                                            {/* <div ref= {messageEndRef} /> */}
+                                                            <div ref={messageEndRef} />
                                                         </>
                                                     ))
 
