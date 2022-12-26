@@ -1021,41 +1021,72 @@ export default function BoxSx() {
                                             <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                                 <Div type='time' >
                                                     <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
-
                                                 </Div>
                                                 <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                     {
                                                         isMessage?.map((res: any, index: number) => (
-                                                            <>
-                                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                    {
-                                                                        res?.type === 'receve' ?
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                                <Div bg='#ffffe7' type="right">
-                                                                                    {res?.message}
-                                                                                </Div>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
-                                                                                    {/* {res?.time} */}
-                                                                                </Div>
-                                                                            </Div>
-                                                                            :
-                                                                            <Div type='chat'>
-                                                                                <div />
-                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                        {format(new Date(res?.time), 'a hh:mm')}
+                                                            res?.datas ?
+                                                                <>
+                                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                        {
+                                                                            res?.type === 'receve' ?
+                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
+                                                                                    <Div bg='#ffffe7' type="right">
+                                                                                        {res?.datas.message}
+                                                                                    </Div>
+                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                        {res?.datas.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                                         {/* {res?.time} */}
                                                                                     </Div>
-                                                                                    <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                        {res?.message}
+                                                                                </Div>
+                                                                                :
+                                                                                <Div type='chat'>
+                                                                                    <div />
+                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                            {format(new Date(res?.datas.time), 'a hh:mm')}
+                                                                                            {/* {res?.time} */}
+                                                                                        </Div>
+                                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                            {res?.datas.message}
+                                                                                        </Div>
                                                                                     </Div>
                                                                                 </Div>
-                                                                            </Div>
-                                                                    }
-                                                                </div>
-                                                                {/* <div ref={messageEndRef} /> */}
-                                                            </>
+                                                                        }
+                                                                    </div>
+                                                                    {/* <div ref={messageEndRef} /> */}
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                        {
+                                                                            res?.type === 'receve' ?
+                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
+                                                                                    <Div bg='#ffffe7' type="right">
+                                                                                        {res?.message}
+                                                                                    </Div>
+                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                        {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                                        {/* {res?.time} */}
+                                                                                    </Div>
+                                                                                </Div>
+                                                                                :
+                                                                                <Div type='chat'>
+                                                                                    <div />
+                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                            {format(new Date(res?.time), 'a hh:mm')}
+                                                                                            {/* {res?.time} */}
+                                                                                        </Div>
+                                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                            {res?.message}
+                                                                                        </Div>
+                                                                                    </Div>
+                                                                                </Div>
+                                                                        }
+                                                                    </div>
+                                                                    {/* <div ref={messageEndRef} /> */}
+                                                                </>
                                                         ))
 
                                                     }
