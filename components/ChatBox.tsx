@@ -520,6 +520,29 @@ export default function BoxSx() {
         }
     };
 
+    const handleMouseFirstDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 채팅방에서 마우스 클릭
+        if (state.message !== '') {
+            event.preventDefault();
+            const chat = {
+                datas: {
+                    message: state.message,
+                    time: getTime,
+                    type: "send"
+                },
+                roomId: before_wating.room_id,
+                user_type: 6,
+                message: state.message,
+                time: getTime
+            };
+            socket.emit('chat', {
+                method: "chat",
+                datas: chat
+            });
+            dispatch(setLoggedUser(chat))
+            setState({ message: '' })
+        }
+    };
+
 
     const handleEnter = (e: any) => { // 유입된 유저와 대화했던 데이터 저장 채팅방 엔터 눌렀을때 전송
         setState({ message: e.target.value }); // 이거는 인풋박스 온체인지
@@ -977,7 +1000,7 @@ export default function BoxSx() {
                                                                         color: "white",
                                                                         marginRight: "-11.2px", width: "35px", height: "35px"
                                                                     }}
-                                                                    onMouseDown={handleMouseDownPassword}
+                                                                    onMouseDown={handleMouseFirstDownPassword}
                                                                     edge="end"
                                                                 >
                                                                     <ArrowUpwardIcon />
