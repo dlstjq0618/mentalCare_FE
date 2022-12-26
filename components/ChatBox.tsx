@@ -305,11 +305,9 @@ export default function BoxSx() {
                     setUserPaymentRequestStatus(true);
                     break;
                 case "room/chat/list":
-                    console.log("historyRes", res)
                     const chatList = res.datas?.list
                     const historyList = res.datas?.list[0]
                     setFinishChat(chatList); // 이전대화 목록이 들어간다.
-                    console.log("finishChat", finishChat);
                     dispatch(setHistoryChat(historyList));
                     dispatch(setFinishChatList(chatList));
                     setIsMessage([...chatList, ...history]);
@@ -424,6 +422,7 @@ export default function BoxSx() {
     }
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방 
         if (confirm(`테스트용 일정협의 채팅을 "${before_wating.user_name}" 님과 시작 하시겠습니까?`)) {
+            dispatch(clear())
             setFinishChat([{
                 message: '일정 협의'
             }]);
@@ -502,6 +501,11 @@ export default function BoxSx() {
         if (state.message !== '') {
             event.preventDefault();
             const chat = {
+                datas: {
+                    message: state.message,
+                    time: getTime,
+                    type: "send"
+                },
                 roomId: intRoom_id,
                 user_type: 6,
                 message: state.message,
@@ -521,6 +525,11 @@ export default function BoxSx() {
         setState({ message: e.target.value }); // 이거는 인풋박스 온체인지
         if (e.key === "Enter" && state.message !== "") { // 엔터를 했을때 쳇 데이터 안에 룸 번호와 메세지와 시간을 보낸다.
             const chat = {
+                datas: {
+                    message: e.target.value,
+                    time: getTime,
+                    type: "send"
+                },
                 roomId: intRoom_id,
                 user_type: 6,
                 message: e.target.value,
@@ -542,7 +551,13 @@ export default function BoxSx() {
     const handleFirstEnter = (e: any) => { // 일정 협의 채팅방 메세지 보내는 엔터
         setState({ message: e.target.value });
         if (e.key === "Enter" && state.message !== "") {
+
             const chat = {
+                datas: {
+                    message: e.target.value,
+                    time: getTime,
+                    type: "send"
+                },
                 roomId: before_wating.room_id,
                 user_type: 6,
                 message: e.target.value,
@@ -602,7 +617,6 @@ export default function BoxSx() {
 
     useEffect(() => { // 상담전 협의 챗 발생 
         if (useOpen === "협의") {
-            dispatch(clear())
             handleFirstRoomJoin()
         }
     }, [useOpen])
@@ -667,16 +681,19 @@ export default function BoxSx() {
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         {
                                                             res?.type === 'receve' ?
-                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                    <Div bg='#ffffe7' type="right">
-                                                                        {res?.message}
+                                                                <>
+                                                                    <span>{select_user?.user_name}</span>
+                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                        <Div bg='#ffffe7' type="right">
+                                                                            {res?.message}
+                                                                        </Div>
+                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                            {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
+                                                                            {/* {res?.time} */}
+                                                                            {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                        </Div>
                                                                     </Div>
-                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                        {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
-                                                                        {/* {res?.time} */}
-                                                                        {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
-                                                                    </Div>
-                                                                </Div>
+                                                                </>
                                                                 :
                                                                 <Div type='chat'>
                                                                     <div />
@@ -725,7 +742,7 @@ export default function BoxSx() {
                                                 label={"none"}
                                                 size={"small"}
                                                 autoComplete={"off"}
-                                                onKeyPress={handleEnter}
+                                                // onKeyPress={handleEnter}
                                                 // onKeyPress={handleTest}
                                                 onChange={(e) => setState({ message: e.target.value })}
                                                 endAdornment={
@@ -785,21 +802,23 @@ export default function BoxSx() {
                                         </Div>
                                         <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                             {
-                                                test?.map((res: any, index: number) => (
+                                                test && test?.map((res: any, index: number) => (
                                                     <>
                                                         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                            <span></span>
                                                             {
-                                                                res?.datas ?
-                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                        <Div bg='#ffffe7' type="right">
-                                                                            {res.datas?.message}
+                                                                res?.datas?.type === 'receve' ?
+                                                                    <>
+                                                                        <span>{select_user?.user_name}</span>
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                            <Div bg='#ffffe7' type="right">
+                                                                                {res.datas?.message}
+                                                                            </Div>
+                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                {res.datas?.timestr}
+                                                                            </Div>
                                                                         </Div>
-                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                            {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                            {res.datas?.timestr}
-                                                                        </Div>
-                                                                    </Div>
+                                                                    </>
                                                                     :
                                                                     <Div type='chat'>
                                                                         <div />
@@ -893,21 +912,24 @@ export default function BoxSx() {
                                             </Div>
                                             <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                 {
-                                                    isMessage?.map((res: any, index: number) => (
+                                                    test && test?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                 <span></span>
                                                                 {
                                                                     res?.datas?.type === 'receve' ?
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                            <Div bg='#ffffe7' type="right">
-                                                                                {res.datas?.message}
+                                                                        <>
+                                                                            <span>{before_wating.user_name}</span>
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                                <Div bg='#ffffe7' type="right">
+                                                                                    {res.datas?.message}
+                                                                                </Div>
+                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                    {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                    {res.datas?.timestr}
+                                                                                </Div>
                                                                             </Div>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                {res.datas?.timestr}
-                                                                            </Div>
-                                                                        </Div>
+                                                                        </>
                                                                         :
                                                                         <Div type='chat'>
                                                                             <div />

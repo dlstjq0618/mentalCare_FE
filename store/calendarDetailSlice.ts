@@ -98,10 +98,10 @@ export const calendarDetailSilce = createSlice({
       action: PayloadAction<DiagnosisDetailStoreState["list"]>
     ) => {
       const id = action.payload;
-      state.list = state.list.filter((item: any) => item.id !== id);
+      state.list = state.list?.filter((item: any) => item.id !== id);
     },
     clear: (state) => {
-      state.list = initialState;
+      state.list = initialState.list;
     },
     setDiagnosisCallStatus(
       state,

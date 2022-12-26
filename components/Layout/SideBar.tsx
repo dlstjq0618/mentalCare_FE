@@ -221,7 +221,17 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   //     audioRef.current.play();
   //   }
   // }, [dispatch, shouldNotificate, waitingListInfo]);
+  const [count, setCount] = useState(0)
 
+  useEffect(() => {
+    setTimeout(() => {
+      setCount(count + 1);
+    }, 2000)
+  }, [])
+
+  useEffect(() => {
+    console.log("count", count)
+  }, [])
 
 
   return (
