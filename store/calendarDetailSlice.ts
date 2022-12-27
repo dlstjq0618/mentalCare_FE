@@ -45,6 +45,7 @@ type DiagnosisDetailStoreState = {
   before_wating: any;
   schedule_select: boolean;
   returned: [];
+  user_chat: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -87,6 +88,7 @@ const initialState: DiagnosisDetailStoreState = {
   select_controll: "null",
   before_wating: [],
   schedule_select: false,
+  user_chat: {},
 };
 
 export const calendarDetailSilce = createSlice({
@@ -261,9 +263,6 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.count = action.payload;
     },
-    setReset(state) {
-      Object.assign(state.list, initialState);
-    },
     setLoggedUser(
       // 채팅창
       state,
@@ -276,7 +275,7 @@ export const calendarDetailSilce = createSlice({
       state,
       action: PayloadAction<DiagnosisDetailStoreState["list2"]>
     ) {
-      state.list2 = [...state.list2, action.payload]; //상태의 불변을 지키기 위해 spread 연산자로 객체를 복사하고 isLogged의 상태만 바꿔준다.
+      state.list2 = [...state.list2, action.payload];
     },
     setDashBoardReservationList(
       // 대시보드 예약리스트
@@ -369,6 +368,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.schedule_select = action.payload;
     },
+    setUserChatRefresh(
+      // 유저 챗
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["user_chat"]>
+    ) {
+      state.user_chat = action.payload;
+    },
   },
 });
 
@@ -410,6 +416,7 @@ export const {
   setScheduleSelectModla,
   removeList,
   clear,
+  setUserChatRefresh,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -486,5 +493,7 @@ export const selectWatingListBefore = (state: RootState) =>
   state.calendarDetail.before_wating;
 export const selectScheduleSelectModla = (state: RootState) =>
   state.calendarDetail.schedule_select;
+export const selectUserChatRefresh = (state: RootState) =>
+  state.calendarDetail.user_chat;
 
 export default calendarDetailSilce.reducer;

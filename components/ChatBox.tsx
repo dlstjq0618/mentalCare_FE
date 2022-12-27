@@ -10,7 +10,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { ConnectingAirportsOutlined, ConstructionOutlined } from '@mui/icons-material';
+import { ConnectingAirportsOutlined, ConstructionOutlined, ResetTvRounded } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     setCounselingState,
@@ -52,6 +52,8 @@ import {
     selectSelectBoxControlls,
     removeList,
     clear,
+    setUserChatRefresh,
+    selectUserChatRefresh,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -264,7 +266,6 @@ export default function BoxSx() {
     const getTime = nowTime;
     const [finishChat, setFinishChat] = useState<any>([]);
     const [isMessage, setIsMessage] = useState<any>([])
-    const [isToTalMessage, setIsToTalMessage] = useState<any>([])
     const messageEndRef = useRef<any>(null);
 
 
@@ -315,7 +316,10 @@ export default function BoxSx() {
             }
         })
     }, [select_user.user_name, before_wating.user_name])
-    console.log("isMessage", isMessage);
+
+    const test = useSelector(selectLoggedUser);
+
+
 
     useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
@@ -359,17 +363,27 @@ export default function BoxSx() {
         })
     }, [user_dashborad, user_name])
 
+
+
     // 정리 : 새로고침후 처음 다시 드로워에 있는 데이터를 클릭했을 때, 드로워 데이터를 가지고 이전 대화리스트 불러온 후 추가로 입력하는 정보를 뿌려줘라.
 
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => {
-            dispatch(setLoggedUser(res));
+            dispatch(setLoggedUser(res?.datas));
+            dispatch(setUserChatRefresh(res?.datas));
         })
     }, [])
+
+
 
     useEffect(() => { // 새로운 정보 들어왔는지 확인
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
     }, [userPaymentRequestStatus]);
+
+    const userChat_Refresh = useSelector(selectUserChatRefresh);
+    useEffect(() => {
+        setIsMessage([...isMessage, userChat_Refresh]);
+    }, [userChat_Refresh])
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
@@ -386,21 +400,6 @@ export default function BoxSx() {
     }
 
     const room_join = useSelector(selectDashBoardRoomJoin)
-
-    // async function handleComplateRoom() {
-    //     if (room_join === 'complate') {
-    //         const req = {
-    //             roomId: select_user.room_id,
-    //             user_type: 6,
-    //             message: "안녕하세요 상담을 시작하겠습니다."
-    //         };
-    //         console.log(req);
-    //         socket.emit('chat', {
-    //             "method": "join",
-    //             "datas": req
-    //         });
-    //     }
-    // }
 
     async function handleRoomJoin() { // 처음 시작할때 
         if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
@@ -441,6 +440,25 @@ export default function BoxSx() {
             dispatch(setChatBoxOpenState('닫기'))
         }
     }
+
+    async function handleWaitingRoomJoin() { // 진행중
+        if (confirm("상담중인 대화방 참여")) {
+            await dispatch(clear())
+            await handleFinishChatList()
+            // roomJoin
+            const req = {
+                roomId: select_user.room_id,
+                user_type: 6,
+                message: "안녕하세요 상담을 시작하겠습니다."
+            };
+            console.log(req);
+            socket.emit('chat', {
+                "method": "join",
+                "datas": req
+            });
+        }
+    }
+
     const intRoom_id = Number(select_user.room_id)
 
     async function handleFirstChatList2() { // 일정 협의 에서 새로고침 후 다시 들어왔을 때 정보를 불러옴
@@ -463,7 +481,7 @@ export default function BoxSx() {
                 user_type: 6
             }
         }
-        socket.emit('counsel_submit', data1)
+        socket.emit('counsel_submit', data1);
     }
 
     const handleOnComplete = () => { // 상담완료, 채팅창의 선택박스에서 상담완료 설정 
@@ -516,6 +534,7 @@ export default function BoxSx() {
                 datas: chat
             });
             dispatch(setLoggedUser(chat))
+            setIsMessage([...isMessage, chat])
             setState({ message: '' })
         }
     };
@@ -540,6 +559,7 @@ export default function BoxSx() {
             });
             dispatch(setLoggedUser(chat))
             setState({ message: '' })
+            setIsMessage([...isMessage, chat])
         }
     };
 
@@ -565,8 +585,7 @@ export default function BoxSx() {
             });
 
             dispatch(setLoggedUser(chat)); // 엔터를 칠때마다 내가친 데이터가 안으로 들어간다. 그럼? 새로고침해도 최근친 데이터는 남아있나?
-            setIsMessage([...isMessage, chat]);
-            console.log("message", state.message);
+            setIsMessage([...isMessage, chat])
             setState({ message: '' })
         }
     }
@@ -594,7 +613,6 @@ export default function BoxSx() {
             dispatch(setLoggedUser(chat));
             setFinishChat([...finishChat, chat])
             setIsMessage([...isMessage, chat]);
-            console.log("message", state.message);
             setState({ message: '' })
         }
     }
@@ -615,7 +633,7 @@ export default function BoxSx() {
     }, [useOpen])
     useEffect(() => {  // 진행중인 화면, 즉 기록이 있는 채팅 
         if (useOpen === '진행') {
-            handleFinishChatList()
+            handleWaitingRoomJoin()
         }
     }, [useOpen])
 
@@ -644,25 +662,20 @@ export default function BoxSx() {
         }
     }, [useOpen])
 
-    useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
-    }, [])
+    // useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
+    // }, [])
 
-    //룸조인
-
-    // useEffect(() => {
-    //     if (finalStep === 'yes') {
-    //         hadnleEmit()
-    //     }
-    // }, [finalStep])
-
-    const test = useSelector(selectLoggedUser);
 
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
-    }, [test])
+    }, [test, isMessage])
 
-    console.log("test", test);
 
+    const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
+        return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
+    });
+
+    console.log(arrUnique);
 
     return (
         <>
@@ -711,18 +724,16 @@ export default function BoxSx() {
                                                                             {res?.message}
                                                                         </Div>
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                            {/* {format(new Date(res?.time * 1000), 'a hh:mm')} */}
-                                                                            {/* {res?.time} */}
-                                                                            {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                            {format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                         </Div>
                                                                     </Div>
+
                                                                 </>
                                                                 :
                                                                 <Div type='chat'>
                                                                     <div />
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                            {/* {format(new Date(res?.time), 'a hh:mm')} */}
                                                                             {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                         </Div>
                                                                         <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
@@ -738,13 +749,9 @@ export default function BoxSx() {
 
                                         }
                                         {
-                                            useOpen === "완료" ?
-                                                <>
-                                                    <Text type='finish'>
-                                                        ----상담이 완료 되었습니다.----
-                                                    </Text>
-                                                </>
-                                                : ""
+                                            <Text type='finish'>
+                                                ----상담이 완료 되었습니다.----
+                                            </Text>
                                         }
                                     </Div>
                                 </Text>
@@ -758,8 +765,8 @@ export default function BoxSx() {
                                         }} variant="outlined">
                                             <OutlinedInput
                                                 style={{ height: 40 }}
-                                                disabled={useOpen === "완료" ? true : false}
-                                                placeholder={`${useOpen === "완료" ? "상담이 완료 되었습니다." : ""}`}
+                                                disabled={true}
+                                                placeholder={"상담이 완료 되었습니다."}
                                                 id="outlined-adornment-password"
                                                 value={state.message}
                                                 label={"none"}
@@ -772,7 +779,7 @@ export default function BoxSx() {
                                                     <InputAdornment position="end">
                                                         <IconButton
                                                             style={{
-                                                                background: `${useOpen === "완료" ? "#c4c4c4" : "#e8440a"}`, color: "white",
+                                                                background: "#c4c4c4", color: "white",
                                                                 marginRight: "-11.2px", width: "35px", height: "35px"
                                                             }}
                                                             onMouseDown={handleMouseDownPassword}
@@ -829,16 +836,16 @@ export default function BoxSx() {
                                                     <>
                                                         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                             {
-                                                                res?.datas?.type === 'receve' ?
+                                                                res?.type === 'receve' ?
                                                                     <>
                                                                         <span>{select_user?.user_name}</span>
                                                                         <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
-                                                                                {res.datas?.message}
+                                                                                {res?.message}
                                                                             </Div>
                                                                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                                 {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                {res.datas?.timestr}
+                                                                                {res?.timestr}
                                                                             </Div>
                                                                         </Div>
                                                                     </>
@@ -1048,71 +1055,40 @@ export default function BoxSx() {
                                                 <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                     {
                                                         isMessage?.map((res: any, index: number) => (
-                                                            res?.datas ?
+                                                            res?.type === 'receve' ?
                                                                 <>
                                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                        {
-                                                                            res?.type === 'receve' ?
-                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                                    <Div bg='#ffffe7' type="right">
-                                                                                        {res?.datas.message}
-                                                                                    </Div>
-                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                        {res?.datas.time && format(new Date(res?.time * 1000), 'a hh:mm')}
-                                                                                        {/* {res?.time} */}
-                                                                                    </Div>
-                                                                                </Div>
-                                                                                :
-                                                                                <Div type='chat'>
-                                                                                    <div />
-                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                            {format(new Date(res?.datas.time), 'a hh:mm')}
-                                                                                            {/* {res?.time} */}
-                                                                                        </Div>
-                                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                            {res?.datas.message}
-                                                                                        </Div>
-                                                                                    </Div>
-                                                                                </Div>
-                                                                        }
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
+                                                                            <Div bg='#ffffe7' type="right">
+                                                                                {res?.message}
+                                                                            </Div>
+                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                            </Div>
+                                                                        </Div>
                                                                     </div>
-                                                                    {/* <div ref={messageEndRef} /> */}
                                                                 </>
                                                                 :
-                                                                <>
+                                                                res?.type === 'send' ?
                                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                        {
-                                                                            res?.type === 'receve' ?
-                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
-                                                                                    <Div bg='#ffffe7' type="right">
-                                                                                        {res?.message}
-                                                                                    </Div>
-                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                        {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
-                                                                                        {/* {res?.time} */}
-                                                                                    </Div>
+                                                                        <Div type='chat'>
+                                                                            <div />
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                    {format(new Date(res?.time), 'a hh:mm')}
                                                                                 </Div>
-                                                                                :
-                                                                                <Div type='chat'>
-                                                                                    <div />
-                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                            {format(new Date(res?.time), 'a hh:mm')}
-                                                                                            {/* {res?.time} */}
-                                                                                        </Div>
-                                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                            {res?.message}
-                                                                                        </Div>
-                                                                                    </Div>
+                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                    {res?.message}
                                                                                 </Div>
-                                                                        }
+                                                                            </Div>
+                                                                        </Div>
                                                                     </div>
-                                                                    {/* <div ref={messageEndRef} /> */}
-                                                                </>
-                                                        ))
+                                                                    :
+                                                                    ""
 
+                                                        ))
                                                     }
+                                                    < div ref={messageEndRef} />
                                                 </Div>
                                             </Text>
                                             <Text height={40}>
