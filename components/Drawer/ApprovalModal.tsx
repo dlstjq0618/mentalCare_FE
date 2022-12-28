@@ -158,6 +158,9 @@ function ApprovalModal(props: IProps) {
 
     console.log("modalState", modalState);
 
+    const modalClose = () => dispatch(setScheduleSelectModla(false))
+
+
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
@@ -204,7 +207,7 @@ function ApprovalModal(props: IProps) {
 
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={handleClose} >
+            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
                         {before_wating?.user_name} 님
