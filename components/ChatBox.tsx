@@ -700,7 +700,6 @@ export default function BoxSx() {
 
     console.log("isMessage_chat", isMessage)
     console.log("arrisMessage", filterMessage);
-    console.log('roomid', select_user.room_id)
     console.log('test', test);
     console.log("counselingStatus", counselingStatus);
     // console.log("select_user22", select_user);
