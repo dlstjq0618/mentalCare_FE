@@ -268,6 +268,8 @@ export default function BoxSx() {
     const [isMessage, setIsMessage] = useState<any>([])
     const messageEndRef = useRef<any>(null);
 
+    const [userName, setUserName] = useState("")
+
 
     console.log("before_wating", before_wating);
 
@@ -687,6 +689,10 @@ export default function BoxSx() {
         return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
     });
 
+    useEffect(() => {
+        setUserName(select_user?.user_name)
+    }, [counselingStatus])
+
 
 
 
@@ -696,6 +702,7 @@ export default function BoxSx() {
     console.log("arrisMessage", filterMessage);
     console.log('roomid', select_user.room_id)
     console.log('test', test);
+    console.log("counselingStatus", counselingStatus);
     // console.log("select_user22", select_user);
     // console.log("select_room_id", select_room_id) // map 에서 룸 ID 체크해서 채팅방 노출, 룸ID 와 select_roomId 가 같으면 표출
 
@@ -740,7 +747,7 @@ export default function BoxSx() {
                                                         {
                                                             res?.type === 'receve' ?
                                                                 <>
-                                                                    <span>{select_user?.user_name}</span>
+                                                                    <span>{userName}</span>
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                         <Div bg='#ffffe7' type="right">
                                                                             {res?.message}
