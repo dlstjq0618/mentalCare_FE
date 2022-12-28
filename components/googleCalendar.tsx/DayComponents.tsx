@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -285,6 +285,12 @@ function DayComponents(props: IProps) {
     const select_data = useSelector(selectDashBoardSelectUser);
     const selectTime = useSelector(selectCounselingTimes);
     const [render, setRender] = useState<boolean>(false)
+    const userPhoneNumber = useSelector(selectUserCallNumber);
+
+
+    useEffect(() => {
+        console.log("userphone", userPhoneNumber.VirtualNumber);
+    }, [userPhoneNumber])
 
 
 
@@ -420,7 +426,7 @@ function DayComponents(props: IProps) {
                                 </Text>
                             </Div>
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
-                                {"010-1234-5678"}
+                                {userPhoneNumber?.VirtualNumber}
                             </Text>
                         </>
                         :
@@ -465,29 +471,41 @@ function DayComponents(props: IProps) {
                             </div>
                     }
                 </Text>
-                <RoundedButton
-                    onClick={() => {
-                        userType === "채팅" ?
-                            handleDispatch()
-                            :
-                            setRender(true)
-                    }}
-                    color="orange"
-                    css={{
-                        fontSize: rem(15),
-                        margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
-                        height: rem(50),
-                        width: "100%",
-                    }}
-                >
-                    상담시작
-                </RoundedButton>
+                {
+                    select_data?.method_str?.substr(0, 2) === "전화" ?
+                        <RoundedButton
+                            onClick={() => { console.log("전화 콜센터") }}
+                            color="orange"
+                            css={{
+                                fontSize: rem(15),
+                                margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
+                                height: rem(50),
+                                width: "100%",
+                            }}
+                        >
+                            상담시작(전화)
+                        </RoundedButton>
+                        :
+                        <RoundedButton
+                            onClick={() => { handleDispatch(), console.log("채팅") }}
+                            color="orange"
+                            css={{
+                                fontSize: rem(15),
+                                margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
+                                height: rem(50),
+                                width: "100%",
+                            }}
+                        >
+                            상담시작
+                        </RoundedButton>
+                }
+
                 <div style={{ textAlign: 'center', marginBottom: `${rem(40)}` }}>
                     <Text size={13} bold="normal" color='#666' center
                         style={{ width: `${rem(51)}`, borderBottom: `1px solid #666`, cursor: "pointer" }}
                         onClick={cancelOpen}
                     >
-                        {/* 상담취소 */}
+                        상담취소
                     </Text>
                 </div>
             </BaseDialog2>

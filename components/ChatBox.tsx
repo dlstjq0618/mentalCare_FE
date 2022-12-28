@@ -54,6 +54,7 @@ import {
     clear,
     setUserChatRefresh,
     selectUserChatRefresh,
+    setUserCallNumber,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -250,6 +251,7 @@ export default function BoxSx() {
     const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
     const [userPaymentList, setUserPaymentList] = useState<any>([]);
     const [open, setOpen] = useState(false);
+    const [filterMessage, setFilterMessage] = useState<any>([]);
 
     const [waitCount, setWaitCount] = useState(0); // 상담대기중 count
     const [waitList, setWaitList] = useState<any>([]); // 상담대기중 list
@@ -259,10 +261,8 @@ export default function BoxSx() {
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const completeList = useSelector(selectCompleteList); // 상담완료 O
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 닫기
-    const selectBoxControllState = useSelector(selectSelectBoxControlls);
 
     const nowTime = Date.now();
-    console.log('nowTime', nowTime)
     const getTime = nowTime;
     const [finishChat, setFinishChat] = useState<any>([]);
     const [isMessage, setIsMessage] = useState<any>([])
@@ -285,7 +285,15 @@ export default function BoxSx() {
     //     }
     // }, [])
 
-    const history = useSelector(selectLoggedUser)
+    const test = useSelector(selectLoggedUser);
+    const filterData = test.filter((res: any) => {
+        return res?.roomId === select_user.room_id
+    })
+
+    useEffect(() => {
+        console.log("filterData", filterData)
+    })
+
 
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
@@ -293,9 +301,9 @@ export default function BoxSx() {
             console.log("counsel_noti", method)
             const waitingIofo = datas.waitingList;
             switch (method) {
-                case "room/call/join":
+                case "room/call/join/":
+                    dispatch(setUserCallNumber(res.datas))
                     console.log("전화상담 데이터", res);
-
                 case "chat": ; break;
                 case "payment/user/ok": ; // 사용자 결제 완료시 
                     console.log('사용자 결제 정보 받음', res.datas);
@@ -311,15 +319,14 @@ export default function BoxSx() {
                     setFinishChat(chatList); // 이전대화 목록이 들어간다.
                     dispatch(setHistoryChat(historyList));
                     dispatch(setFinishChatList(chatList));
-                    setIsMessage([...chatList, ...history]);
+                    // const arrisMessage = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
+                    //     arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
+                    // });
+                    setIsMessage([...chatList, ...test]);
                 // setIsMessage([...isMessage, ...chatList]);
             }
         })
     }, [select_user.user_name, before_wating.user_name])
-
-    const test = useSelector(selectLoggedUser);
-
-
 
     useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
@@ -498,7 +505,7 @@ export default function BoxSx() {
     const handleCallCounselorting = () => {
         console.log("intRoom_id", intRoom_id);
         socket.emit('counsel_submit', {
-            method: 'room/complete',
+            method: 'room/call/join',
             datas: {
                 roomId: intRoom_id,
             }
@@ -507,10 +514,9 @@ export default function BoxSx() {
 
     const handleFirstOnComplete = () => { // 일정 협의 채팅방 종료 
         socket.emit('counsel_submit', {
-            method: 'room/complete',
+            method: 'room/call/join',
             datas: {
                 roomId: before_wating.room_id,
-                user_type: 6
             }
         })
     }
@@ -593,7 +599,6 @@ export default function BoxSx() {
     const handleFirstEnter = (e: any) => { // 일정 협의 채팅방 메세지 보내는 엔터
         setState({ message: e.target.value });
         if (e.key === "Enter" && state.message !== "") {
-
             const chat = {
                 datas: {
                     message: e.target.value,
@@ -643,11 +648,11 @@ export default function BoxSx() {
         }
     }, [useOpen])
 
-    useEffect(() => {
-        if (useOpen === '전화') { //전화 상담 시작할때 
-            handleCallCounselorting()
-        }
-    }, [useOpen])
+    // useEffect(() => {
+    //     if (useOpen === '전화') { //전화 상담 시작할때 
+    //         handleCallCounselorting()
+    //     }
+    // }, [useOpen])
 
 
     useEffect(() => { // 상담승인 할때 이벤트 발생
@@ -662,20 +667,37 @@ export default function BoxSx() {
         }
     }, [useOpen])
 
+    useEffect(() => {
+        if (select_user.method_str?.substr(0, 2) === "전화") { //전화 상담 시작할때 
+            handleCallCounselorting()
+        }
+    }, [select_user.method_str])
+
+
     // useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
     // }, [])
 
 
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
-    }, [test, isMessage])
+    }, [test, isMessage, filterMessage])
 
 
     const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
         return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
     });
 
-    console.log(arrUnique);
+
+
+
+    const select_room_id = Number(select_user.room_id)
+
+    console.log("isMessage_chat", isMessage)
+    console.log("arrisMessage", filterMessage);
+    console.log('roomid', select_user.room_id)
+    console.log('test', test);
+    // console.log("select_user22", select_user);
+    // console.log("select_room_id", select_room_id) // map 에서 룸 ID 체크해서 채팅방 노출, 룸ID 와 select_roomId 가 같으면 표출
 
     return (
         <>
@@ -730,23 +752,24 @@ export default function BoxSx() {
 
                                                                 </>
                                                                 :
-                                                                <Div type='chat'>
-                                                                    <div />
-                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                            {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
-                                                                        </Div>
-                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                            {res?.message}
+                                                                res?.type === 'send' ?
+                                                                    <Div type='chat'>
+                                                                        <div />
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                            </Div>
+                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                {res?.message}
+                                                                            </Div>
                                                                         </Div>
                                                                     </Div>
-                                                                </Div>
+                                                                    : ""
                                                         }
                                                     </div>
                                                     {/* <div ref={messageEndRef} /> */}
                                                 </>
                                             ))
-
                                         }
                                         {
                                             <Text type='finish'>
@@ -850,17 +873,18 @@ export default function BoxSx() {
                                                                         </Div>
                                                                     </>
                                                                     :
-                                                                    <Div type='chat'>
-                                                                        <div />
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                {res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                    res?.type === 'send' ?
+                                                                        <Div type='chat'>
+                                                                            <div />
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                    {res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                                </Div>
+                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                    {res?.message}
+                                                                                </Div>
                                                                             </Div>
-                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                {res?.message}
-                                                                            </Div>
-                                                                        </Div>
-                                                                    </Div>
+                                                                        </Div> : ""
                                                             }
                                                         </div>
                                                         <div ref={messageEndRef} />
@@ -947,32 +971,43 @@ export default function BoxSx() {
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                 <span></span>
                                                                 {
-                                                                    res?.datas?.type === 'receve' ?
+                                                                    res?.type === 'receve' ?
                                                                         <>
                                                                             <span>{before_wating.user_name}</span>
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                                 <Div bg='#ffffe7' type="right">
-                                                                                    {res.datas?.message}
+                                                                                    {res?.message}
                                                                                 </Div>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                                     {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                    {res.datas?.timestr}
+                                                                                    {res?.timestr}
                                                                                 </Div>
                                                                             </Div>
                                                                         </>
                                                                         :
-                                                                        <Div type='chat'>
-                                                                            <div />
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {/* {res?.time} */}
-                                                                                    {res?.time && format(new Date(res?.time), 'a hh:mm')}
-                                                                                </Div>
-                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                    {res?.message}
+                                                                        res?.type === 'send' ?
+                                                                            <Div type='chat'>
+                                                                                <div />
+                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                        {/* {res?.time} */}
+                                                                                        {res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                                    </Div>
+                                                                                    <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                        {res?.message}
+                                                                                    </Div>
                                                                                 </Div>
                                                                             </Div>
-                                                                        </Div>
+                                                                            :
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                                <Div bg='#ffffe7' type="right">
+                                                                                    {`${before_wating.user_name} 님이 입장하셨습니다.`}
+                                                                                </Div>
+                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                    {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                    {res?.timestr}
+                                                                                </Div>
+                                                                            </Div>
                                                                 }
                                                             </div>
                                                             <div ref={messageEndRef} />
@@ -1057,6 +1092,7 @@ export default function BoxSx() {
                                                         isMessage?.map((res: any, index: number) => (
                                                             res?.type === 'receve' ?
                                                                 <>
+                                                                    <span>{select_user?.user_name}</span>
                                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                         <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
@@ -1084,7 +1120,8 @@ export default function BoxSx() {
                                                                         </Div>
                                                                     </div>
                                                                     :
-                                                                    ""
+                                                                    console.log("다른것")
+
 
                                                         ))
                                                     }

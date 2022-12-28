@@ -46,6 +46,8 @@ type DiagnosisDetailStoreState = {
   schedule_select: boolean;
   returned: [];
   user_chat: any;
+  user_call: boolean;
+  user_call_number: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -89,6 +91,8 @@ const initialState: DiagnosisDetailStoreState = {
   before_wating: [],
   schedule_select: false,
   user_chat: {},
+  user_call: false,
+  user_call_number: "",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -375,6 +379,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.user_chat = action.payload;
     },
+    setUserCallNumber(
+      // 유저 챗
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["user_call_number"]>
+    ) {
+      state.user_call_number = action.payload;
+    },
   },
 });
 
@@ -417,6 +428,7 @@ export const {
   removeList,
   clear,
   setUserChatRefresh,
+  setUserCallNumber,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -495,5 +507,7 @@ export const selectScheduleSelectModla = (state: RootState) =>
   state.calendarDetail.schedule_select;
 export const selectUserChatRefresh = (state: RootState) =>
   state.calendarDetail.user_chat;
+export const selectUserCallNumber = (state: RootState) =>
+  state.calendarDetail.user_call_number;
 
 export default calendarDetailSilce.reducer;

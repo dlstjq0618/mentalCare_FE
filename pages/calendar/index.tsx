@@ -12,8 +12,13 @@ import BoxSx from "~/components/ChatBox";
 interface Iprops {
     chat?: any
 }
-console.log("schedule")
+
 function ScheduleIndex(props: Iprops) {
+
+    useEffect(() => {
+
+    }, []);
+
     return (
         <LayoutComponent>
             <BoxSx />

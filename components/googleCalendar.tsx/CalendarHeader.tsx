@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import styled, { css } from 'styled-components';
 import TemporaryDrawer from '../Drawer/Drawer';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
+import { selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface IStyled {
     schedule?: boolean;
@@ -107,10 +107,10 @@ function CalendarHeader() {
     const handleReset = () => {
         setMonthIndex(dayjs().month())
     }
-
     useEffect(() => {
         dispatch(setCalendarMonthState(dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")))
     }, [dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")])
+
 
 
     return (
