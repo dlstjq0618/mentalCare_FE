@@ -49,6 +49,7 @@ type DiagnosisDetailStoreState = {
   user_call: boolean;
   user_call_number: any;
   cancel: boolean;
+  alert: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -95,6 +96,7 @@ const initialState: DiagnosisDetailStoreState = {
   user_call: false,
   user_call_number: "",
   cancel: false,
+  alert: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -396,11 +398,18 @@ export const calendarDetailSilce = createSlice({
       state.user_call = action.payload;
     },
     setCancelStatus(
-      // 유저 챗
+      // 취소 컨트롤
       state,
       action: PayloadAction<DiagnosisDetailStoreState["cancel"]>
     ) {
       state.cancel = action.payload;
+    },
+    setAlertControlls(
+      // 채팅방 입장 alert 컨트롤
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["alert"]>
+    ) {
+      state.alert = action.payload;
     },
   },
 });
@@ -447,6 +456,7 @@ export const {
   setUserCallNumber,
   setCancelStatus,
   setUserCallStatus,
+  setAlertControlls,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -491,7 +501,6 @@ export const selectCounselingTimeStemp = (state: RootState) =>
   state.calendarDetail.timestemp;
 export const selectCounselingTimeStempNumber = (state: RootState) =>
   state.calendarDetail.select_timenum;
-
 export const selectCounselingStart = (state: RootState) =>
   state.calendarDetail.start;
 export const selectTotalCount = (state: RootState) =>
@@ -531,5 +540,7 @@ export const selectCancelStatus = (state: RootState) =>
   state.calendarDetail.cancel;
 export const selectUserCall = (state: RootState) =>
   state.calendarDetail.user_call;
+export const selectAlertControlls = (state: RootState) =>
+  state.calendarDetail.alert;
 
 export default calendarDetailSilce.reducer;

@@ -380,6 +380,36 @@ function SettingInfoForm(props: IProps) {
                 />
                 <StyledDiv style={{ marginTop: '20px' }}>
                     <Label
+                        htmlFor="education"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            paddingTop: "0.5rem",
+                        }}
+                    >
+                        자기소개
+                        <span style={{ color: "#eb541e" }}>
+                            *
+                        </span>
+                    </Label>
+                    <TextArea
+                        onChange={(e) => {
+                            setValue("education", e.target.value)
+                        }}
+                        defaultValue={""}
+                        css={{
+                            maxHeight: rem(150),
+                            minHeight: rem(120),
+                            height: rem(120),
+                            width: rem(480),
+                            border: "1px solid $gray06",
+                            borderRadius: rem(20),
+                            padding: `${rem(16)} ${rem(30)} ${rem(20)}`,
+                        }}
+                    />
+                </StyledDiv>
+                <StyledDiv style={{ marginTop: '20px' }}>
+                    <Label
                         htmlFor="cereer"
                         css={{
                             marginBottom: rem(10),

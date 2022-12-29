@@ -58,6 +58,7 @@ import {
     selectCancelStatus,
     setCancelStatus,
     selectUserCall,
+    selectAlertControlls,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -310,7 +311,8 @@ export default function BoxSx() {
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
             console.log("counsel_noti", method)
-            const waitingIofo = datas.waitingList;
+            console.log("counsel_noti_ res", res)
+            const waitingIofo = datas?.waitingList;
             switch (method) {
                 case "room/call/join/":
                     console.log("전화상담 데이터", res);
@@ -438,26 +440,45 @@ export default function BoxSx() {
             await dispatch(setChatBoxOpenState('null'))
         }
     }
-    async function handleFirstRoomJoin() { // 일정 협의 할 채팅방 
-        if (confirm(`테스트용 일정협의 채팅을 "${before_wating.user_name}" 님과 시작 하시겠습니까?`)) {
-            dispatch(clear())
-            setFinishChat([{
-                message: '일정 협의'
-            }]);
-            // roomJoin
-            const req = {
-                roomId: before_wating.room_id,
-                user_type: 6,
-                message: "안녕하세요 상담을 시작하겠습니다."
-            };
-            console.log(req);
-            socket.emit('chat', {
-                "method": "join",
-                "datas": req
-            });
-        } else {
-            dispatch(setChatBoxOpenState('닫기'))
-        }
+    const alert_status = useSelector(selectAlertControlls);
+
+    async function handleFirstRoomJoin() { // 일정 협의 할 채팅방
+        console.log("협의방 오픈!!");
+        dispatch(clear())
+        setFinishChat([{
+            message: '일정 협의'
+        }]);
+        // roomJoin
+        const req = {
+            roomId: before_wating.room_id,
+            user_type: 6,
+            message: "안녕하세요 상담을 시작하겠습니다."
+        };
+        console.log(req);
+        socket.emit('chat', {
+            "method": "join",
+            "datas": req
+        });
+
+        // if (confirm(`테스트용 일정협의 채팅을 "${before_wating.user_name}" 님과 시작 하시겠습니까?`)) {
+        //     dispatch(clear())
+        //     setFinishChat([{
+        //         message: '일정 협의'
+        //     }]);
+        //     // roomJoin
+        //     const req = {
+        //         roomId: before_wating.room_id,
+        //         user_type: 6,
+        //         message: "안녕하세요 상담을 시작하겠습니다."
+        //     };
+        //     console.log(req);
+        //     socket.emit('chat', {
+        //         "method": "join",
+        //         "datas": req
+        //     });
+        // } else {
+        //     dispatch(setChatBoxOpenState('닫기'));
+        // }
     }
 
     async function handleWaitingRoomJoin() { // 진행중

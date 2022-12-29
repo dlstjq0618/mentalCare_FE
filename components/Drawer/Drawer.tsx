@@ -6,8 +6,9 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
+import AlertPopUp from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore } from '~/store/calendarDetailSlice';
+import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -88,6 +89,11 @@ export default function TemporaryDrawer(props: IProps) {
         right: false,
     });
 
+    const [show, setShow] = useState(false);
+
+    const open = () => setShow(true);
+    const show_close = () => setShow(false)
+
     const handleDispatch = () => {
         dispatch(setCounselingDate(""))
         dispatch(setCounselingTimes(""))
@@ -136,7 +142,7 @@ export default function TemporaryDrawer(props: IProps) {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { console.log("bbbbaaaa"), dispatch(setChatBoxOpenState("협의")), dispatch(setWatingListBefore(list)) }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setWatingListBefore(list)), dispatch(setAlertControlls(true)) }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
@@ -174,6 +180,7 @@ export default function TemporaryDrawer(props: IProps) {
                 {list("right")}
             </Drawer>
             <ApprovalModal open={modalOpen} close={close} userInfo={selectUserData} />
+            <AlertPopUp />
         </>
     );
 }

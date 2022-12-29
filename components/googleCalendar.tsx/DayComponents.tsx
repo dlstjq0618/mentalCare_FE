@@ -284,7 +284,7 @@ function DayComponents(props: IProps) {
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
     const select_data = useSelector(selectDashBoardSelectUser);
     const selectTime = useSelector(selectCounselingTimes);
-    const [callStatus, setCallStatus] = useState<boolean>()
+    const [callStatus, setCallStatus] = useState<boolean>(false)
     const userPhoneNumber = useSelector(selectUserCallNumber);
 
 
@@ -393,6 +393,16 @@ function DayComponents(props: IProps) {
                                 : ""
                         })
                     }
+                    {
+                        cancelList && cancelList.result?.map((res: any, index: number) => { // 취소됨
+                            return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
+                                <StyledDiv key={index} onClick={() => { console.log("취소된 상담 건입니다.") }}>
+                                    <StyledRadiusGray />
+                                    {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
+                                </StyledDiv>
+                                : ""
+                        })
+                    }
                 </span>
             </Div>
             <BaseDialog2 showDialog={show2} close={close2} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
@@ -428,7 +438,7 @@ function DayComponents(props: IProps) {
                                 </Text>
                             </Div>
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
-                                {userPhoneNumber?.VirtualNumber}
+                                {userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
                             </Text>
                         </>
                         :
@@ -474,9 +484,9 @@ function DayComponents(props: IProps) {
                     }
                 </Text>
                 {
-                    select_data?.method_str?.substr(0, 2) === "전화" ?
+                    select_data?.method_str?.substr(0, 2) === "전화" && callStatus === false ?
                         <RoundedButton
-                            onClick={() => { console.log("전화 콜센터") }}
+                            onClick={() => { console.log("전화 콜센터"), setCallStatus(true) }}
                             color="orange"
                             css={{
                                 fontSize: rem(15),
@@ -487,19 +497,32 @@ function DayComponents(props: IProps) {
                         >
                             상담시작(전화)
                         </RoundedButton>
-                        :
-                        <RoundedButton
-                            onClick={() => { handleDispatch(), console.log("채팅") }}
-                            color="orange"
-                            css={{
-                                fontSize: rem(15),
-                                margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
-                                height: rem(50),
-                                width: "100%",
-                            }}
-                        >
-                            상담시작
-                        </RoundedButton>
+                        : select_data?.method_str?.substr(0, 2) === "채팅" ?
+                            <RoundedButton
+                                onClick={() => { handleDispatch(), console.log("채팅") }}
+                                color="orange"
+                                css={{
+                                    fontSize: rem(15),
+                                    margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
+                                    height: rem(50),
+                                    width: "100%",
+                                }}
+                            >
+                                상담시작
+                            </RoundedButton>
+                            :
+                            <RoundedButton
+                                onClick={() => { console.log("상담완료") }}
+                                color="orange"
+                                css={{
+                                    fontSize: rem(15),
+                                    margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
+                                    height: rem(50),
+                                    width: "100%",
+                                }}
+                            >
+                                상담완료
+                            </RoundedButton>
                 }
 
                 <div style={{ textAlign: 'center', marginBottom: `${rem(40)}` }}>
