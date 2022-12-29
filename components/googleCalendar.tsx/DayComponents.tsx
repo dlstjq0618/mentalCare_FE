@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -284,17 +284,19 @@ function DayComponents(props: IProps) {
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
     const select_data = useSelector(selectDashBoardSelectUser);
     const selectTime = useSelector(selectCounselingTimes);
-    const [render, setRender] = useState<boolean>(false)
+    const [callStatus, setCallStatus] = useState<boolean>()
     const userPhoneNumber = useSelector(selectUserCallNumber);
+
+
 
 
     useEffect(() => {
         console.log("userphone", userPhoneNumber.VirtualNumber);
-    }, [userPhoneNumber])
+    })
 
 
 
-
+    const handleCancel = () => dispatch(setCancelStatus(true))
     const cancelOpen = () => setCancelModal(true);
     const cancelClose = () => setCancelModal(false);
     const handlePause = () => setPause(!pause);
@@ -524,7 +526,7 @@ function DayComponents(props: IProps) {
                 </Text>
                 <Input onChange={(e) => setCancelValue(e.target.value)} value={cancelValue} />
                 <RoundedButton
-                    onClick={() => { cancelClose(), close2() }}
+                    onClick={() => { cancelClose(), close2(), handleCancel() }}
                     color="orange"
                     css={{
                         fontSize: rem(15),

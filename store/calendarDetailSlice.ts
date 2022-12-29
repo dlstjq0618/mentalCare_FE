@@ -48,6 +48,7 @@ type DiagnosisDetailStoreState = {
   user_chat: any;
   user_call: boolean;
   user_call_number: any;
+  cancel: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -93,6 +94,7 @@ const initialState: DiagnosisDetailStoreState = {
   user_chat: {},
   user_call: false,
   user_call_number: "",
+  cancel: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -386,6 +388,20 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.user_call_number = action.payload;
     },
+    setUserCallStatus(
+      // 유저 챗
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["user_call"]>
+    ) {
+      state.user_call = action.payload;
+    },
+    setCancelStatus(
+      // 유저 챗
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["cancel"]>
+    ) {
+      state.cancel = action.payload;
+    },
   },
 });
 
@@ -429,6 +445,8 @@ export const {
   clear,
   setUserChatRefresh,
   setUserCallNumber,
+  setCancelStatus,
+  setUserCallStatus,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -509,5 +527,9 @@ export const selectUserChatRefresh = (state: RootState) =>
   state.calendarDetail.user_chat;
 export const selectUserCallNumber = (state: RootState) =>
   state.calendarDetail.user_call_number;
+export const selectCancelStatus = (state: RootState) =>
+  state.calendarDetail.cancel;
+export const selectUserCall = (state: RootState) =>
+  state.calendarDetail.user_call;
 
 export default calendarDetailSilce.reducer;

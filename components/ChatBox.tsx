@@ -55,9 +55,13 @@ import {
     setUserChatRefresh,
     selectUserChatRefresh,
     setUserCallNumber,
+    selectCancelStatus,
+    setCancelStatus,
+    selectUserCall,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
+import { async } from '@firebase/util';
 
 interface IStyled {
     size?: any;
@@ -262,11 +266,15 @@ export default function BoxSx() {
     const completeList = useSelector(selectCompleteList); // 상담완료 O
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 닫기
 
+    const cancel_status = useSelector(selectCancelStatus);
+
     const nowTime = Date.now();
     const getTime = nowTime;
     const [finishChat, setFinishChat] = useState<any>([]);
     const [isMessage, setIsMessage] = useState<any>([])
     const messageEndRef = useRef<any>(null);
+
+    const status = useSelector(selectUserCall)
 
     const [userName, setUserName] = useState("")
 
@@ -298,14 +306,16 @@ export default function BoxSx() {
 
 
     useEffect(() => {
+        console.log("asdasdasdasdasdasdsa")
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
             console.log("counsel_noti", method)
             const waitingIofo = datas.waitingList;
             switch (method) {
                 case "room/call/join/":
-                    dispatch(setUserCallNumber(res.datas))
                     console.log("전화상담 데이터", res);
+                    dispatch(setUserCallNumber(res.datas))
+                    break;
                 case "chat": ; break;
                 case "payment/user/ok": ; // 사용자 결제 완료시 
                     console.log('사용자 결제 정보 받음', res.datas);
@@ -328,7 +338,7 @@ export default function BoxSx() {
                 // setIsMessage([...isMessage, ...chatList]);
             }
         })
-    }, [select_user.user_name, before_wating.user_name])
+    }, [select_user, before_wating.user_name, user_name])
 
     useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
@@ -505,7 +515,7 @@ export default function BoxSx() {
     }
 
     const handleCallCounselorting = () => {
-        console.log("intRoom_id", intRoom_id);
+        console.log("전화 핸들러 실행");
         socket.emit('counsel_submit', {
             method: 'room/call/join',
             datas: {
@@ -624,6 +634,16 @@ export default function BoxSx() {
         }
     }
 
+    async function handleCancel() {
+        socket.emit('counsel_submit', {
+            method: 'room/cancel',
+            datas: {
+                roomId: select_user.room_id,
+            }
+        })
+        await dispatch(setCancelStatus(false))
+    }
+
 
     const use_last_chat = useSelector(selectFinishChatList);
 
@@ -673,7 +693,7 @@ export default function BoxSx() {
         if (select_user.method_str?.substr(0, 2) === "전화") { //전화 상담 시작할때 
             handleCallCounselorting()
         }
-    }, [select_user.method_str])
+    }, [select_user])
 
 
     // useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
@@ -693,6 +713,22 @@ export default function BoxSx() {
         setUserName(select_user?.user_name)
     }, [counselingStatus])
 
+    useEffect(() => {
+        if (cancel_status) {
+            handleCancel();
+            console.log("xxxxx")
+        }
+    }, [cancel_status])
+
+    useEffect(() => {
+        console.log("cancel_status", cancel_status);
+    })
+
+    useEffect(() => {
+        console.log("select_user22", select_user);
+    }, [select_user])
+
+
 
 
 
@@ -702,7 +738,6 @@ export default function BoxSx() {
     console.log("arrisMessage", filterMessage);
     console.log('test', test);
     console.log("counselingStatus", counselingStatus);
-    // console.log("select_user22", select_user);
     // console.log("select_room_id", select_room_id) // map 에서 룸 ID 체크해서 채팅방 노출, 룸ID 와 select_roomId 가 같으면 표출
 
     return (

@@ -39,6 +39,9 @@ export function RowAndColumnSpacing() {
   const [checked3, setChecked3] = useState(false);
   const [checked4, setChecked4] = useState(false);
   const [checked5, setChecked5] = useState(false);
+  const [checked6, setChecked6] = useState(false);
+  const [checked7, setChecked7] = useState(false);
+  const [checked8, setChecked8] = useState(false);
   const [users, setUsers] = useState<any>([]);
 
   const findData = (data: any) => {
@@ -58,6 +61,15 @@ export function RowAndColumnSpacing() {
   }
   const findData5 = (data: any) => {
     return data.name === '연애/결혼'
+  }
+  const findData6 = (data: any) => {
+    return data.name === '청소년'
+  }
+  const findData7 = (data: any) => {
+    return data.name === '불안/우울'
+  }
+  const findData8 = (data: any) => {
+    return data.name === '자존감'
   }
 
   const onCreate = (value: string) => {
@@ -114,6 +126,27 @@ export function RowAndColumnSpacing() {
       onRemove("연애/결혼")
     }
   }
+  const handleCheckControlls7 = (name: number) => {
+    if (name === 7 && !checked5) {
+      onCreate("청소년")
+    } else if (name === 7 && checked5) {
+      onRemove("청소년")
+    }
+  }
+  const handleCheckControlls8 = (name: number) => {
+    if (name === 8 && !checked5) {
+      onCreate("불안/우울")
+    } else if (name === 8 && checked5) {
+      onRemove("불안/우울")
+    }
+  }
+  const handleCheckControlls9 = (name: number) => {
+    if (name === 9 && !checked5) {
+      onCreate("자존감")
+    } else if (name === 9 && checked5) {
+      onRemove("자존감")
+    }
+  }
 
   useEffect(() => {
     setValue('counseling_subject', users)
@@ -134,6 +167,9 @@ export function RowAndColumnSpacing() {
     infoData.counselingSubject?.find(findData3) !== undefined ? setChecked3(true) : setChecked3(false)
     infoData.counselingSubject?.find(findData4) !== undefined ? setChecked4(true) : setChecked4(false)
     infoData.counselingSubject?.find(findData5) !== undefined ? setChecked5(true) : setChecked5(false)
+    infoData.counselingSubject?.find(findData6) !== undefined ? setChecked6(true) : setChecked6(false)
+    infoData.counselingSubject?.find(findData7) !== undefined ? setChecked7(true) : setChecked7(false)
+    infoData.counselingSubject?.find(findData8) !== undefined ? setChecked8(true) : setChecked8(false)
   }, [infoData.counselingSubject])
 
 
@@ -157,6 +193,15 @@ export function RowAndColumnSpacing() {
         </Grid>
         <Grid item xs={4}>
           <Item button={checked5} onClick={() => { setChecked5(!checked5), handleCheckControlls6(6) }}>연애/결혼</Item>
+        </Grid>
+        <Grid item xs={4}>
+          <Item button={checked6} onClick={() => { setChecked6(!checked6), handleCheckControlls7(7) }}>청소년</Item>
+        </Grid>
+        <Grid item xs={4}>
+          <Item button={checked7} onClick={() => { setChecked7(!checked7), handleCheckControlls8(8) }}>불안/우울</Item>
+        </Grid>
+        <Grid item xs={4}>
+          <Item button={checked8} onClick={() => { setChecked8(!checked8), handleCheckControlls9(9) }}>자존감</Item>
         </Grid>
       </Grid>
     </Box>
