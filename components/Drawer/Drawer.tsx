@@ -6,7 +6,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
-import AlertPopUp from '../Dialog/AlertPopUp';
+import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls } from '~/store/calendarDetailSlice';
 
@@ -181,6 +181,7 @@ export default function TemporaryDrawer(props: IProps) {
             </Drawer>
             <ApprovalModal open={modalOpen} close={close} userInfo={selectUserData} />
             <AlertPopUp />
+            <AlertPopUp3 />
         </>
     );
 }

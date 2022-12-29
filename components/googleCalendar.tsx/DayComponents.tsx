@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3 } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -20,7 +20,8 @@ import {
     setDashBoardSelectUser,
     selectChatBoxOpenState,
     setChatBoxOpenState,
-    selectCounselingTimes
+    selectCounselingTimes,
+    setAlertControlls2
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 
@@ -309,6 +310,7 @@ function DayComponents(props: IProps) {
 
     const handleDispatch = () => {
         close2()
+        dispatch(setAlertControlls2(true))
         dispatch(setCounselingState("start"));
         dispatch(setCounselingStart("start"));
         dispatch(setChatBoxOpenState('시작'));
@@ -372,7 +374,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
                                     useOpen !== "null" && res.status !== 2 ? console.log("done...") :
-                                        dispatch(setChatBoxOpenState('진행')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                        dispatch(setAlertControlls3(true)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusGreen />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -512,7 +514,7 @@ function DayComponents(props: IProps) {
                             </RoundedButton>
                             :
                             <RoundedButton
-                                onClick={() => { console.log("상담완료") }}
+                                onClick={() => { console.log("상담완료"), close2(), dispatch(setChatBoxOpenState("전화완료")) }}
                                 color="orange"
                                 css={{
                                     fontSize: rem(15),
@@ -521,7 +523,7 @@ function DayComponents(props: IProps) {
                                     width: "100%",
                                 }}
                             >
-                                상담완료
+                                상담완료(전화)
                             </RoundedButton>
                 }
 

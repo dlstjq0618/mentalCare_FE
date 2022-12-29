@@ -87,11 +87,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
                 opening_times: data.opening_times.length === 0 ? fileUploadDate.openingTimes : data.opening_times,
-                // opening_times: [{
-                //     weekday: 0,
-                //     start_time: '08:00:00',
-                //     end_time: "22:00:00"
-                // }],
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject
             })
             .then((res) => {

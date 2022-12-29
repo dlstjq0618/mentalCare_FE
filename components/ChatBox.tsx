@@ -423,24 +423,36 @@ export default function BoxSx() {
     const room_join = useSelector(selectDashBoardRoomJoin)
 
     async function handleRoomJoin() { // 처음 시작할때 
-        if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
-            // roomJoin
-            dispatch(setChatBoxOpenState('시작'))
-            const req = {
-                roomId: select_user.room_id,
-                user_type: 6,
-                message: "안녕하세요 상담을 시작하겠습니다."
-            };
-            console.log(req);
-            socket.emit('chat', {
-                "method": "join",
-                "datas": req
-            });
-        } else {
-            await dispatch(setChatBoxOpenState('null'))
-        }
+        dispatch(setChatBoxOpenState('시작'))
+        const req = {
+            roomId: select_user.room_id,
+            user_type: 6,
+            message: "안녕하세요 상담을 시작하겠습니다."
+        };
+        console.log(req);
+        socket.emit('chat', {
+            "method": "join",
+            "datas": req
+        });
+        // if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
+        //     // roomJoin
+        //     dispatch(setChatBoxOpenState('시작'))
+        //     const req = {
+        //         roomId: select_user.room_id,
+        //         user_type: 6,
+        //         message: "안녕하세요 상담을 시작하겠습니다."
+        //     };
+        //     console.log(req);
+        //     socket.emit('chat', {
+        //         "method": "join",
+        //         "datas": req
+        //     });
+        // } else {
+        //     await dispatch(setChatBoxOpenState('null'))
+        // }
     }
     const alert_status = useSelector(selectAlertControlls);
+    const alert_status3 = useSelector(selectAlertControlls);
 
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방
         console.log("협의방 오픈!!");
@@ -482,21 +494,19 @@ export default function BoxSx() {
     }
 
     async function handleWaitingRoomJoin() { // 진행중
-        if (confirm("상담중인 대화방 참여")) {
-            await dispatch(clear())
-            await handleFinishChatList()
-            // roomJoin
-            const req = {
-                roomId: select_user.room_id,
-                user_type: 6,
-                message: "안녕하세요 상담을 시작하겠습니다."
-            };
-            console.log(req);
-            socket.emit('chat', {
-                "method": "join",
-                "datas": req
-            });
-        }
+        await dispatch(clear())
+        await handleFinishChatList()
+        // roomJoin
+        const req = {
+            roomId: select_user.room_id,
+            user_type: 6,
+            message: "안녕하세요 상담을 시작하겠습니다."
+        };
+        console.log(req);
+        socket.emit('chat', {
+            "method": "join",
+            "datas": req
+        });
     }
 
     const intRoom_id = Number(select_user.room_id)
@@ -524,7 +534,7 @@ export default function BoxSx() {
         socket.emit('counsel_submit', data1);
     }
 
-    const handleOnComplete = () => { // 상담완료, 채팅창의 선택박스에서 상담완료 설정 
+    const handleOnComplete = () => { // 상담완료, 채팅창의 선택박스에서 상담완료 설정
         socket.emit('counsel_submit', {
             method: 'room/complete',
             datas: {
@@ -533,6 +543,16 @@ export default function BoxSx() {
             }
         })
         handleFinishChatList()
+    }
+
+    async function handleCallOnComplete() { //  전화 상담완료
+        socket.emit('counsel_submit', {
+            method: 'room/complete',
+            datas: {
+                roomId: intRoom_id,
+                user_type: 6
+            }
+        })
     }
 
     const handleCallCounselorting = () => {
@@ -679,6 +699,13 @@ export default function BoxSx() {
             handleOnComplete()
         }
     }, [useOpen])
+
+    useEffect(() => { // 캘린더 컨트롤 
+        if (useOpen === '전화완료') {
+            handleCallOnComplete()
+        }
+    }, [useOpen])
+
     useEffect(() => {  // 진행중인 화면, 즉 기록이 있는 채팅 
         if (useOpen === '진행') {
             handleWaitingRoomJoin()
@@ -690,13 +717,6 @@ export default function BoxSx() {
             handleRoomJoin()
         }
     }, [useOpen])
-
-    // useEffect(() => {
-    //     if (useOpen === '전화') { //전화 상담 시작할때 
-    //         handleCallCounselorting()
-    //     }
-    // }, [useOpen])
-
 
     useEffect(() => { // 상담승인 할때 이벤트 발생
         if (finalStep === 'yes') {
@@ -754,6 +774,8 @@ export default function BoxSx() {
 
 
     const select_room_id = Number(select_user.room_id)
+
+    console.log("useOpen", useOpen);
 
     console.log("isMessage_chat", isMessage)
     console.log("arrisMessage", filterMessage);

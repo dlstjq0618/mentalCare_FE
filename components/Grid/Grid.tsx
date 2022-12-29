@@ -7,7 +7,6 @@ import styled, { css } from 'styled-components';
 import { useFormContext } from "react-hook-form";
 import { useSelector } from 'react-redux';
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
-import CheckIcon from '@mui/icons-material/Check';
 
 interface IStyled {
   button?: boolean;

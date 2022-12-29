@@ -39,7 +39,16 @@ type DiagnosisDetailStoreState = {
   select: any;
   room: any;
   finish_chat: any;
-  open: "시작" | "진행" | "완료" | "닫기" | "null" | "협의" | "시작전" | "전화";
+  open:
+    | "시작"
+    | "진행"
+    | "완료"
+    | "닫기"
+    | "null"
+    | "협의"
+    | "시작전"
+    | "전화"
+    | "전화완료";
   select_timenum: number;
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
   before_wating: any;
@@ -50,6 +59,8 @@ type DiagnosisDetailStoreState = {
   user_call_number: any;
   cancel: boolean;
   alert: boolean;
+  alert2: boolean;
+  alert3: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -97,6 +108,8 @@ const initialState: DiagnosisDetailStoreState = {
   user_call_number: "",
   cancel: false,
   alert: false,
+  alert2: false,
+  alert3: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -411,6 +424,20 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.alert = action.payload;
     },
+    setAlertControlls2(
+      // 채팅방 입장 alert 컨트롤
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["alert2"]>
+    ) {
+      state.alert2 = action.payload;
+    },
+    setAlertControlls3(
+      // 채팅방 입장 alert 컨트롤
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["alert3"]>
+    ) {
+      state.alert3 = action.payload;
+    },
   },
 });
 
@@ -457,6 +484,8 @@ export const {
   setCancelStatus,
   setUserCallStatus,
   setAlertControlls,
+  setAlertControlls2,
+  setAlertControlls3,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -542,5 +571,9 @@ export const selectUserCall = (state: RootState) =>
   state.calendarDetail.user_call;
 export const selectAlertControlls = (state: RootState) =>
   state.calendarDetail.alert;
+export const selectAlertControlls2 = (state: RootState) =>
+  state.calendarDetail.alert2;
+export const selectAlertControlls3 = (state: RootState) =>
+  state.calendarDetail.alert3;
 
 export default calendarDetailSilce.reducer;
