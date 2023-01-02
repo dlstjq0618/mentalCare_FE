@@ -4,7 +4,8 @@ import { FC, FormEventHandler, ReactNode } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Image from 'next/image'
+import Image from 'next/image';
+import styled, { css } from "styled-components";
 import {
   Input,
   RegisterPageHeading,
@@ -23,6 +24,22 @@ import { useSelector } from "react-redux";
 import counselorLogo from '../../../public/counser.png'
 
 const isDev = process.env.NODE_ENV !== "production";
+
+const StyledInput = styled.div`
+  height: 23px;
+  padding: 3px 4px 0;
+  border-radius: 18px;
+  border: solid 2px #e73e11;
+  letter-spacing: -0.4px;
+  background-color: #e8440a;
+  margin-top: 30px;
+  margin-left: -12px;
+    width: 60px;
+    text-align: center;
+  color: #fff;
+    line-height: 1.4;
+    z-index: 20;
+`;
 
 export const RegisterPageLayout: FC = ({ children }) => {
   const formMethods = useForm({
@@ -101,8 +118,11 @@ export const RegisterPageLayout: FC = ({ children }) => {
           backgroundColor: "$white",
         }}
       >
-        <Div css={{ fontSize: rem(44) }}>
-          <Image src={counselorLogo} width={114} height={45.6} />
+        <Div css={{ fontSize: rem(44), display: 'flex' }}>
+          <div style={{ zIndex: 30 }}>
+            <Image src={counselorLogo} width={114} height={45.6} />
+          </div>
+          <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
         </Div>
         <RegisterPageHeading style={{ display: "flex", justifyContent: "space-between" }}>
           <div>회원가입</div>
