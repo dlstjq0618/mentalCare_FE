@@ -26,9 +26,7 @@ interface IStyled {
 
 
 const Text = styled.span<IStyled>` 
-    font-weight: bold;
     padding: ${rem(20)} 0 ${rem(20)} 0;
-    margin: ${rem(40)} 0 ${rem(0)} 0;
     margin-bottom: ${rem(10)};
     letter-spacing: -0.72px;
     line-height: 1.4;
@@ -48,26 +46,23 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     const dispatch = useDispatch()
     const handleClose = () => dispatch(setAlertControlls(false));
 
-    console.log("open", open);
-
-
 
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
             style={{
                 marginTop: '23vh',
                 width: `${rem(376)}`,
-                height: `${rem(300)}`,
+                height: `${rem(248)}`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
             }}>
             <Text size={17} color={"#333"}>
-                (일정협의) {wating_user.user_name}님과 하시겠습니까?
+                <span style={{ fontWeight: "bold" }}>{wating_user.user_name}</span>님과
+                <p>예약 상담 일정 협의를 시작하시겠습니까?</p>
             </Text>
             <RoundedButton
                 onClick={() => { console.log("확인"), dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
                 color="orange"
                 css={{
-                    marginTop: rem(50),
                     fontSize: rem(15),
                     height: rem(50),
                     width: "100%",
@@ -90,17 +85,17 @@ export function AlertPopUp3(props: IProps) { // 진행중인 팝업
             style={{
                 marginTop: '23vh',
                 width: `${rem(376)}`,
-                height: `${rem(300)}`,
+                height: `${rem(248)}`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
             }}>
             <Text size={17} color={"#333"}>
-                {select_user.user_name}님과 상담을 이어가시겠습니까?
+                <span style={{ fontWeight: "bold" }}>{select_user.user_name}</span>님과
+                <p>상담을 이어가시겠습니까?</p>
             </Text>
             <RoundedButton
                 onClick={() => { console.log("확인"), dispatch(setAlertControlls3(false)), dispatch(setChatBoxOpenState('진행')) }}
                 color="orange"
                 css={{
-                    marginTop: rem(50),
                     fontSize: rem(15),
                     height: rem(50),
                     width: "100%",
