@@ -336,8 +336,8 @@ export default function BoxSx() {
                     // const arrisMessage = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
                     //     arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
                     // });
-                    setIsMessage([...chatList, ...test]);
-                // setIsMessage([...isMessage, ...chatList]);
+                    // setIsMessage([...chatList, ...test]);
+                    setIsMessage([...isMessage, ...chatList]);
             }
         })
     }, [select_user, before_wating.user_name, user_name])
@@ -391,20 +391,13 @@ export default function BoxSx() {
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => {
             dispatch(setLoggedUser(res?.datas));
-            dispatch(setUserChatRefresh(res?.datas));
         })
     }, [])
-
 
 
     useEffect(() => { // 새로운 정보 들어왔는지 확인
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
     }, [userPaymentRequestStatus]);
-
-    const userChat_Refresh = useSelector(selectUserChatRefresh);
-    useEffect(() => {
-        setIsMessage([...isMessage, userChat_Refresh]);
-    }, [userChat_Refresh])
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
@@ -827,7 +820,7 @@ export default function BoxSx() {
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                         <Div bg='#ffffe7' type="right">
                                                                             {res?.message}
-                                                                        </Div>
+                                                                        </Div>.
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                             {format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                         </Div>
