@@ -21,6 +21,7 @@ import { selectCounselorName } from '~/store/doctorInfoForChangeSlice';
 import { selectCounselingInfoData, setCounselingProfileImage, selectCounselingProfileImage, setSettingSaveControlls } from '~/store/calendarDetailSlice';
 import { info } from 'console';
 import { RowAndColumnSpacing } from '../Grid/Grid';
+import PriceGrid from '../Grid/PriceGrid';
 
 interface IProps {
 
@@ -529,135 +530,6 @@ function SettingInfoForm(props: IProps) {
                     />
                 </StyledDiv>
 
-                <StyledDiv>
-                    <Label
-                        htmlFor="AmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"전화 상담비 (주간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.callConsultationDayTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setCallDayPrice(e.target.value), setValue('call_consultation_fee_day', e.target.value)
-                        }}
-                        type="number"
-                        placeholder={callDayPrice?.toLocaleString()}
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-
-                </StyledDiv>
-                <StyledDiv>
-                    <Label
-                        htmlFor="PmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"전화 상담비 (야간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.callConsultationNightTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setCallNightPrice(e.target.value), setValue('call_consultation_fee_night', e.target.value)
-                        }}
-                        type="number"
-                        placeholder={callNightPrice?.toLocaleString()}
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-                </StyledDiv>
-                <StyledDiv>
-                    <Label
-                        htmlFor="PmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"채팅 상담비 (주간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.consultationNightTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
-                        }}
-                        type="number"
-                        placeholder={dayPrice?.toLocaleString()}
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-                </StyledDiv>
-                <StyledDiv>
-                    <Label
-                        htmlFor="PmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"채팅 상담비 (야간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.consultationNightTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setNightPrice(e.target.value), setValue('consultation_fee_night', e.target.value)
-                        }}
-                        placeholder={nightPrice?.toLocaleString()}
-                        type="number"
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-                </StyledDiv>
                 <StyledDiv>
                     <Label
                         htmlFor="PmPrice"

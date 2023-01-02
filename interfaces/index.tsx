@@ -199,10 +199,17 @@ export interface CounselorPayload {
   qualification_level: string;
   education: string;
   other_history: string;
-  consultation_fee_day: number;
-  consultation_fee_night: number;
-  call_consultation_fee_day: number;
-  call_consultation_fee_night: number;
+
+  call_consultation_fifty_fee_day: number; //전화상담 주간 50분
+  call_consultation_fifty_fee_night: number; //전화상담 야간 50분
+  call_thirty_consultation_fee_day: number; //전화상담 야간 30분
+  call_thirty_consultation_fee_night: number; //전화상담 주간 30분
+
+  consultation_thirty_fee_day: number; //채팅상담 주간 30분
+  consultation_thirty_fee_night: number; //채팅상담 야간 30분
+  consultation_fifty_fee_day: number; // 채팅상담 주간50분
+  consultation_fifty_fee_night: number; // 채팅상담 야간50분
+
   opening_times?: any;
   account_info?: {
     bank_name: string;

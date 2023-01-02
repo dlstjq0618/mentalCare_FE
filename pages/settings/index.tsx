@@ -25,6 +25,7 @@ import OpeningTimeForm from "~/components/settingPage/OpeningTimeForm";
 import { api } from "~/woozooapi";
 import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
 import { selectCounselingInfoData, selectSettingSaveControlls, setChatBoxOpenState } from "~/store/calendarDetailSlice";
+import PriceGrid from "~/components/Grid/PriceGrid";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -77,10 +78,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 qualification_level: data.qualification_level,
                 education: data.education,
                 other_history: data.other_history,
-                consultation_fee_day: data.consultation_fee_day,
-                consultation_fee_night: data.consultation_fee_night,
-                call_consultation_fee_day: data.call_consultation_fee_day === null ? fileUploadDate.callConsultationFeeDay : data.call_consultation_fee_day,
-                call_consultation_fee_night: data.call_consultation_fee_day === null ? fileUploadDate.callConsultationFeeNight : data.call_consultation_fee_night,
+
                 account_info: {
                     bank_name: data.bankName === "" ? fileUploadDate.accountInfo.bankName : data.bankName,
                     account_holder: data.accountHolder === "" ? fileUploadDate.accountInfo.accountHolder : data.accountHolder,
@@ -88,7 +86,17 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
                 opening_times: data.opening_times.length === 0 ? fileUploadDate.openingTimes : data.opening_times,
-                counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject
+                counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject,
+                /** 전화상담 금액 */
+                call_consultation_fifty_fee_day: data.call_consultation_fifty_fee_day,
+                call_consultation_fifty_fee_night: data.call_consultation_fifty_fee_night,
+                call_thirty_consultation_fee_day: data.call_thirty_consultation_fee_day,
+                call_thirty_consultation_fee_night: data.call_thirty_consultation_fee_night,
+                /** 채팅상담 금액 */
+                consultation_thirty_fee_day: data.consultation_thirty_fee_day,
+                consultation_thirty_fee_night: data.consultation_thirty_fee_night,
+                consultation_fifty_fee_day: data.consultation_fifty_fee_day,
+                consultation_fifty_fee_night: data.consultation_fifty_fee_night,
             })
             .then((res) => {
                 if (res.isSuccess) {
@@ -124,6 +132,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             <FormProvider {...methods}>
                 <RegisterForm onSubmit={methods.handleSubmit(onSubmit)} style={{ position: 'sticky', zIndex: 1 }}>
                     <SettingInfoForm />
+                    <PriceGrid />
                     <BankAccountInfoForm title={true} />
                     <OpeningTimeForm />
                     <Div css={{
