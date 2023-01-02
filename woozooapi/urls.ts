@@ -56,6 +56,7 @@ export const URLS = {
     CALCULATE: (id: number | undefined, year: number) =>
       `/api/psychological/v1/calculate/${id}?diff=${year}`,
     STATUS: "/api/user/v1/counselor/activate",
+    STATUS2: "/api/user/v1/counselor/immediately",
   },
   DIAGNOSIS: {
     GET_LIST: `/api/service/diagnosis`,

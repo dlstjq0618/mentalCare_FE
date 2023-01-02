@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { rem } from "polished";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Image from 'next/image'
 import {
   RocketDoctorLogo,
   PreviousCounselingIcon,
@@ -42,7 +43,7 @@ import {
   setSocketControlls
 } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
-import BoxSx from "../ChatBox";
+import counselorLogo from '../../public/counser.png'
 
 const { Sider } = Layout;
 
@@ -103,15 +104,6 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
 
   const watingRoom_count = consultingList.count + reservationList.count;
-
-  useEffect(() => {
-    console.log("watingRoom_count", watingRoom_count);
-    // console.log("1111", reservationList)
-    // console.log("2222", waitlist)
-    // console.log("3333", consultingList)
-    // console.log("4444", completeList)
-    // console.log("5555", cancelList)
-  }, [reservationList])
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);
@@ -221,18 +213,6 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   //     audioRef.current.play();
   //   }
   // }, [dispatch, shouldNotificate, waitingListInfo]);
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    setTimeout(() => {
-      setCount(count + 1);
-    }, 2000)
-  }, [])
-
-  useEffect(() => {
-    console.log("count", count)
-  }, [])
-
 
   return (
     <>
@@ -247,11 +227,26 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
           }}
         >
           <Link href="/" passHref>
-            <Div className="logo" css={{ cursor: "pointer", fontSize: rem(40) }}>
-              <RocketDoctorLogo />
+            <Div className="logo" css={{ cursor: "pointer" }}>
+              {/* <RocketDoctorLogo /> */}
+              <Image src={counselorLogo} width={70} height={40} />
             </Div>
           </Link>
-          <div className="text">
+          <span style={{
+            color: '#fff',
+            background: "#e8440a",
+            border: "solid 1.5px #e73e11",
+            fontSize: 10,
+            height: 24.8,
+            padding: '2.3px 3px 4px 3px',
+            position: 'absolute',
+            left: `${rem(35)}`,
+            marginTop: `${rem(-25)}`,
+            textAlign: 'center',
+            borderRadius: 16,
+            width: `${rem(51)}`
+          }}>마음상담</span>
+          <div className="text" style={{ marginTop: 25.1 }}>
             <span>
               <span className="doctor-name">
                 {userName}
@@ -266,7 +261,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               href="/calendar"
               visiting={path === "/calendar" ? true : false}
             >
-              <span>{watingRoom_count}</span>
+              <span>{Number.isNaN(watingRoom_count) ? 0 : watingRoom_count}</span>
               <div>대기실</div>
             </SideBarButtons>
             <SideBarButtons

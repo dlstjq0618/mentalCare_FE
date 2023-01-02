@@ -18,7 +18,8 @@ type DiagnosisDetailStoreState = {
   info: any;
   imageUrl: any;
   password: boolean;
-  socket: string | null;
+  socket: any;
+  socket2: any;
   chat: any;
   connect: any;
   socketInfo: any;
@@ -78,6 +79,7 @@ const initialState: DiagnosisDetailStoreState = {
   imageUrl: "",
   password: false,
   socket: "",
+  socket2: "",
   chat: "",
   connect: "",
   socketInfo: {},
@@ -220,6 +222,12 @@ export const calendarDetailSilce = createSlice({
       action: PayloadAction<DiagnosisDetailStoreState["socket"]>
     ) {
       state.socket = action.payload;
+    },
+    setSocketControlls2(
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["socket2"]>
+    ) {
+      state.socket2 = action.payload;
     },
     setSocketChattingData(
       // 채팅데이터  사용X
@@ -486,6 +494,7 @@ export const {
   setAlertControlls,
   setAlertControlls2,
   setAlertControlls3,
+  setSocketControlls2,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -514,6 +523,8 @@ export const selectSettingSaveControlls = (state: RootState) =>
   state.calendarDetail.password;
 export const selectSocketControlls = (state: RootState) =>
   state.calendarDetail.socket;
+export const selectSocketControlls2 = (state: RootState) =>
+  state.calendarDetail.socket2;
 export const selectSocketChattingData = (state: RootState) =>
   state.calendarDetail.chat;
 export const selectSocketConnected = (state: RootState) =>

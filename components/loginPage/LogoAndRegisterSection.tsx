@@ -4,6 +4,7 @@ import { Div, P } from "../Elements";
 import { RocketDoctorLogo } from "../icons";
 import { BI, Image } from "~/components";
 import { styled } from "~/stitches.config";
+import counselorLogo from '../../public/counser.png';
 
 const BISectionWrapper = styled("aside", {
   flex: "auto",
@@ -35,7 +36,7 @@ export const LogoAndRegisterSection = () => {
           },
         }}
       >
-        <RocketDoctorLogo />
+        <Image src={counselorLogo} width={100} height={50} />
         <P
           css={{
             fontSize: rem(20),

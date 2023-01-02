@@ -187,6 +187,7 @@ function SettingInfoForm(props: IProps) {
     const [isPhoneNumber, setIsPhoneNumber] = useState('');
 
     const phoneNumber = infoData.mobile?.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '0$2-$3-$4');
+    const phoneNumber2 = infoData.mobile?.substr(0, 3) + '-' + infoData.mobile?.substr(3, 4) + '-' + infoData.mobile?.substr(7, 4)
 
     const handleProfilePicUpload = async (file: File) => {
         const result = validateImageFile(file);
@@ -303,10 +304,18 @@ function SettingInfoForm(props: IProps) {
                                 {"휴대폰번호"}
                             </Text>
                             <Text size={17} color={"#333"} style={{ width: `${rem(225)}` }}>
-                                <div style={{ textAlign: `left` }}>
-                                    {phoneNumber}
-                                    {/* <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text> */}
-                                </div>
+                                {
+                                    !phoneNumberChange ?
+                                        <div style={{ textAlign: `left` }}>
+                                            {infoData?.mobile?.length === 11 ? phoneNumber2 : phoneNumber}
+                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text>
+                                        </div>
+                                        :
+                                        <div style={{ display: 'flex' }}><Input css={{ height: rem(31), width: rem(150) }} onChange={(e) => {
+                                            setValue('mobile', e.target.value)
+                                        }} maxLength={11} />
+                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text></div>
+                                }
                             </Text>
                         </MainDiv>
                     </div>

@@ -4,6 +4,7 @@ import { FC, FormEventHandler, ReactNode } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Image from 'next/image'
 import {
   Input,
   RegisterPageHeading,
@@ -19,6 +20,7 @@ import { PageTitle } from "~/components/PageTitle";
 import { registerFormSchema2 } from "~/utils/form.utils";
 import { api } from "~/woozooapi";
 import { useSelector } from "react-redux";
+import counselorLogo from '../../../public/counser.png'
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -100,7 +102,7 @@ export const RegisterPageLayout: FC = ({ children }) => {
         }}
       >
         <Div css={{ fontSize: rem(44) }}>
-          <RocketDoctorLogo />
+          <Image src={counselorLogo} width={114} height={45.6} />
         </Div>
         <RegisterPageHeading style={{ display: "flex", justifyContent: "space-between" }}>
           <div>회원가입</div>

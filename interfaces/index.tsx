@@ -222,6 +222,9 @@ export interface CounselorPayload {
 export interface TogglePayload {
   is_working: boolean;
 }
+export interface Toggle2Payload {
+  is_immediately: boolean;
+}
 
 export interface DoctorSignUpRequestPayload2 {
   email: string;
