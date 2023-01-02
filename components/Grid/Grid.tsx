@@ -126,23 +126,23 @@ export function RowAndColumnSpacing() {
     }
   }
   const handleCheckControlls7 = (name: number) => {
-    if (name === 7 && !checked5) {
+    if (name === 7 && !checked6) {
       onCreate("청소년")
-    } else if (name === 7 && checked5) {
+    } else if (name === 7 && checked6) {
       onRemove("청소년")
     }
   }
   const handleCheckControlls8 = (name: number) => {
-    if (name === 8 && !checked5) {
+    if (name === 8 && !checked7) {
       onCreate("불안/우울")
-    } else if (name === 8 && checked5) {
+    } else if (name === 8 && checked7) {
       onRemove("불안/우울")
     }
   }
   const handleCheckControlls9 = (name: number) => {
-    if (name === 9 && !checked5) {
+    if (name === 9 && !checked8) {
       onCreate("자존감")
-    } else if (name === 9 && checked5) {
+    } else if (name === 9 && checked8) {
       onRemove("자존감")
     }
   }
@@ -158,6 +158,7 @@ export function RowAndColumnSpacing() {
       setUsers([])
     }
   }, [infoData])
+
 
   useEffect(() => {
     infoData.counselingSubject?.find(findData) !== undefined ? setChecked(true) : setChecked(false);

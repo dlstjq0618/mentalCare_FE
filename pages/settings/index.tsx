@@ -70,7 +70,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         api.counselor
             .update(userId, {
                 password: data.password,
-                introduction: data.introduction,
+                introduction: data.introduction === "" ? fileUploadDate.inintroduction : data.introduction,
                 mobile: data.mobile,
                 image: data.image === "" ? fileUploadDate.image : data.image,
                 certificate_image: data.certificate_image === "" ? fileUploadDate.certificateImage : data.certificate_image,
