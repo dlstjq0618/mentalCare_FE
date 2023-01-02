@@ -36,6 +36,7 @@ const StyledInput = styled.div`
   margin-left: -12px;
     width: 60px;
     text-align: center;
+    
   color: #fff;
     line-height: 1.4;
     z-index: 20;

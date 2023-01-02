@@ -15,6 +15,21 @@ const BISectionWrapper = styled("aside", {
   backgroundColor: "transparent",
 });
 
+const StyledInput = styled("div", {
+  height: "23px",
+  borderRadius: "18px",
+  border: "solid 2px #e73e11",
+  letterSpacing: "-0.4px",
+  backgroundColor: "#e8440a",
+  marginTop: "30px",
+  marginLeft: "-12px",
+  width: "60px",
+  textAlign: "center",
+  color: "#fff",
+  lineHeight: 1.4,
+  Zindex: 20,
+});
+
 const MAIN_COPY = `가장 빠른
 나만의 주치의
 
@@ -36,7 +51,10 @@ export const LogoAndRegisterSection = () => {
           },
         }}
       >
-        <Image src={counselorLogo} width={100} height={50} />
+        <div style={{ display: 'flex' }}>
+          <Image src={counselorLogo} width={100} height={50} />
+          <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
+        </div>
         <P
           css={{
             fontSize: rem(20),
