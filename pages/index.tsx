@@ -5,8 +5,8 @@ const Home: NextPage = (props) => {
 
   return (
     <Head>
-      <title>우주상담소</title>
-      <meta name="description" content="우주상담소" />
+      <title>우주약방 마음상담</title>
+      <meta name="description" content="우주약방 마음상담" />
       {/* TODO: add favicon */}
       <link rel="icon" href="/favicon.ico" />
     </Head>

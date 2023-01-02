@@ -92,7 +92,7 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   const handleToggleState2 = (data: any) => {
     api.counselor.status2({
       is_immediately: data
-    }).then((res: any) => { dispatch(setSocketControlls(res.isImmediately)) })
+    }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)) })
   }
 
   useEffect(() => {
@@ -101,6 +101,7 @@ export const ToggleButton = ({ activeState }: Toggle) => {
     }
   }, [infoData?.id])
 
+  console.log("status2", status2);
 
   return (
     <>
