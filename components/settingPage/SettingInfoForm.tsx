@@ -394,9 +394,9 @@ function SettingInfoForm(props: IProps) {
                     </Label>
                     <TextArea
                         onChange={(e) => {
-                            setValue("education", e.target.value)
+                            setValue("introduction", e.target.value)
                         }}
-                        defaultValue={""}
+                        defaultValue={infoData.introduction}
                         css={{
                             maxHeight: rem(150),
                             minHeight: rem(120),

@@ -194,6 +194,7 @@ export interface CounselorPayload {
   mobile: string;
   image: string;
   certificate_image: string;
+  introduction: string;
   career: string;
   qualification_level: string;
   education: string;

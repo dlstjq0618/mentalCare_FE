@@ -28,7 +28,7 @@ interface IStyled {
 const Text = styled.span<IStyled>` 
     font-weight: bold;
     padding: ${rem(20)} 0 ${rem(20)} 0;
-    margin: ${rem(70)} 0 ${rem(0)} 0;
+    margin: ${rem(40)} 0 ${rem(0)} 0;
     margin-bottom: ${rem(10)};
     letter-spacing: -0.72px;
     line-height: 1.4;
@@ -55,9 +55,9 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
             style={{
-                marginTop: '18vh',
+                marginTop: '23vh',
                 width: `${rem(376)}`,
-                height: `${rem(422)}`,
+                height: `${rem(300)}`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
             }}>
             <Text size={17} color={"#333"}>
@@ -67,7 +67,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
                 onClick={() => { console.log("확인"), dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
                 color="orange"
                 css={{
-                    marginTop: rem(130),
+                    marginTop: rem(50),
                     fontSize: rem(15),
                     height: rem(50),
                     width: "100%",
@@ -88,9 +88,9 @@ export function AlertPopUp3(props: IProps) { // 진행중인 팝업
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="상담중 입장 팝업"
             style={{
-                marginTop: '18vh',
+                marginTop: '23vh',
                 width: `${rem(376)}`,
-                height: `${rem(422)}`,
+                height: `${rem(300)}`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
             }}>
             <Text size={17} color={"#333"}>
@@ -100,7 +100,7 @@ export function AlertPopUp3(props: IProps) { // 진행중인 팝업
                 onClick={() => { console.log("확인"), dispatch(setAlertControlls3(false)), dispatch(setChatBoxOpenState('진행')) }}
                 color="orange"
                 css={{
-                    marginTop: rem(130),
+                    marginTop: rem(50),
                     fontSize: rem(15),
                     height: rem(50),
                     width: "100%",

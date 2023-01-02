@@ -776,7 +776,6 @@ export default function BoxSx() {
     const select_room_id = Number(select_user.room_id)
 
     console.log("useOpen", useOpen);
-
     console.log("isMessage_chat", isMessage)
     console.log("arrisMessage", filterMessage);
     console.log('test', test);
