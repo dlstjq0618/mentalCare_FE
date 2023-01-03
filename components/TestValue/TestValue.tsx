@@ -19,7 +19,7 @@ function TestValue(props: Iprops) {
     return (
         <>
             <BaseDialog2 showDialog={props.open} close={props.cancel}>
-                {result?.datas.map((res: any, index: number) => {
+                {result?.datas?.map((res: any, index: number) => {
                     <div>
                         {res.qustion}
                     </div>
