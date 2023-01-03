@@ -8,8 +8,8 @@ import {
     MoneyInput
 } from "~/components";
 import styled, { css } from 'styled-components';
-import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
-import { useSelector } from 'react-redux';
+import { selectCounselingInfoData, setPriceZreo } from '~/store/calendarDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface IStyled {
     margin?: number;
@@ -64,10 +64,16 @@ export default function PriceGrid() {
     const [call_am50time, setCallAm50time] = useState("");
     const [call_pm50time, setCallPm50time] = useState("");
     const infoData = useSelector(selectCounselingInfoData);
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log("infoData", infoData);
-    }, [infoData])
+        if (Number(am30time) + Number(pm30time) + Number(am50time) + Number(pm50time) + Number(call_am30time) + Number(call_pm30time) + Number(call_am50time) + Number(call_pm50time) === 0) {
+            dispatch(setPriceZreo(true));
+        } else {
+            dispatch(setPriceZreo(false));
+        }
+    })
+
 
 
     return (

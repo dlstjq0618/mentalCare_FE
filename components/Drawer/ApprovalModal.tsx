@@ -20,7 +20,8 @@ import {
     setCounselingFinalStepData,
     setScheduleSelectModla,
     selectScheduleSelectModla,
-    selectWatingListBefore
+    selectWatingListBefore,
+    selectDashBoardSelectUser
 } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
@@ -142,14 +143,15 @@ function ApprovalModal(props: IProps) {
     const [show, setShow] = useState(false)
     const [show2, setShow2] = useState<boolean>(props.open);
     const [userName, setUserName] = useState("");
-    const [userDate, setUserDate] = useState("");
+    const [userData, setUserData] = useState("");
     const [selectTimes, setSelectTimes] = useState("");
     const [datePicker, setDatePicker] = useState(false);
     const storeData = useSelector(selectCounselingDate);
     const selectTime = useSelector(selectCounselingTimes);
     const finalStepData = useSelector(selectCounselingFinalStepData);
     const modalState = useSelector(selectScheduleSelectModla)
-    const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터 
+    const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터
+    const select_user = useSelector(selectDashBoardSelectUser);
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러

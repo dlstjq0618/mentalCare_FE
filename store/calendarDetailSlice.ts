@@ -62,6 +62,9 @@ type DiagnosisDetailStoreState = {
   alert: boolean;
   alert2: boolean;
   alert3: boolean;
+  result: any;
+  test_modal: boolean;
+  price: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -99,7 +102,7 @@ const initialState: DiagnosisDetailStoreState = {
   cancelList: {},
   select: {},
   room: "",
-  finish_chat: {},
+  finish_chat: [],
   open: "null",
   select_timenum: 0,
   select_controll: "null",
@@ -112,6 +115,9 @@ const initialState: DiagnosisDetailStoreState = {
   alert: false,
   alert2: false,
   alert3: false,
+  result: {},
+  test_modal: false,
+  price:false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -446,6 +452,20 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.alert3 = action.payload;
     },
+    setTestResultValue(
+      // 테스트 결과값
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["result"]>
+    ) {
+      state.result = action.payload;
+    },
+    setPriceZreo(
+      // 모든 상담 금액이 0원 일때
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["price"]>
+    ) {
+      state.price = action.payload;
+    },
   },
 });
 
@@ -495,6 +515,8 @@ export const {
   setAlertControlls2,
   setAlertControlls3,
   setSocketControlls2,
+  setTestResultValue,
+  setPriceZreo,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -586,5 +608,9 @@ export const selectAlertControlls2 = (state: RootState) =>
   state.calendarDetail.alert2;
 export const selectAlertControlls3 = (state: RootState) =>
   state.calendarDetail.alert3;
+export const selectTestResultValue = (state: RootState) =>
+  state.calendarDetail.result;
+  export const selectPriceZreo = (state: RootState) =>
+  state.calendarDetail.price;
 
 export default calendarDetailSilce.reducer;

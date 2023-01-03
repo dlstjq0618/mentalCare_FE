@@ -24,6 +24,7 @@ import {
     setAlertControlls2
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
+import TestValue from '../TestValue/TestValue';
 
 
 // 스텝바 진행상황 체크 ex) 상담중, 상담완료, 상담실패 등등 
@@ -288,14 +289,7 @@ function DayComponents(props: IProps) {
     const [callStatus, setCallStatus] = useState<boolean>(false)
     const userPhoneNumber = useSelector(selectUserCallNumber);
 
-
-
-
-    useEffect(() => {
-        console.log("userphone", userPhoneNumber.VirtualNumber);
-    })
-
-
+    const [test_modal, setTest_modal] = useState(false);
 
     const handleCancel = () => dispatch(setCancelStatus(true))
     const cancelOpen = () => setCancelModal(true);
@@ -307,6 +301,8 @@ function DayComponents(props: IProps) {
         dispatch(setChatBoxOpenState("null"));
     };
     const open2 = () => setShow2(true);
+    const open3 = () => setTest_modal(true);
+    const close3 = () => setTest_modal(false)
 
     const handleDispatch = () => {
         close2()
@@ -387,7 +383,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
                                     useOpen !== "null" ? console.log("done...") :
-                                        dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                        dispatch(setChatBoxOpenState("완료")), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -413,9 +409,9 @@ function DayComponents(props: IProps) {
                     <Text size={20}>
                         {userName}{" 님"}
                     </Text>
-                    {/* <Text size={13} button>
+                    <Text size={13} button onClick={open3}>
                         테스트 결과보기
-                    </Text> */}
+                    </Text>
                 </Div>
                 <Line />
                 <Div step style={{ marginTop: 0 }}>
@@ -562,6 +558,7 @@ function DayComponents(props: IProps) {
                     취소 완료
                 </RoundedButton>
             </BaseDialog2>
+            <TestValue open={test_modal} cancel={close3} />
         </>
     );
 }

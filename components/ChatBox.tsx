@@ -59,6 +59,7 @@ import {
     setCancelStatus,
     selectUserCall,
     selectAlertControlls,
+    setTestResultValue,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -307,13 +308,16 @@ export default function BoxSx() {
 
 
     useEffect(() => {
-        console.log("asdasdasdasdasdasdsa")
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
             console.log("counsel_noti", method)
             console.log("counsel_noti_ res", res)
             const waitingIofo = datas?.waitingList;
             switch (method) {
+                case "room/test/result":
+                    console.log("테스트결과값", res)
+                    dispatch(setTestResultValue(res.datas))
+                    break;
                 case "room/call/join/":
                     console.log("전화상담 데이터", res);
                     dispatch(setUserCallNumber(res.datas))
@@ -338,6 +342,7 @@ export default function BoxSx() {
                     // });
                     // setIsMessage([...chatList, ...test]);
                     setIsMessage([...isMessage, ...chatList]);
+
             }
         })
     }, [select_user, before_wating.user_name, user_name])
@@ -394,6 +399,8 @@ export default function BoxSx() {
         })
     }, [])
 
+    const finish_chat = useSelector(selectFinishChatList)
+
 
     useEffect(() => { // 새로운 정보 들어왔는지 확인
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
@@ -411,6 +418,16 @@ export default function BoxSx() {
         socket.emit('counsel_submit', data1);
         console.log("emit 실행");
         await dispatch(setCounselingFinalStep(""))
+    }
+
+    const handleTest = () => {
+        const data1 = {
+            method: "room/test/result",
+            datas: {
+                roomId: 276
+            }
+        }
+        socket.emit('counsel_submit', data1)
     }
 
     const room_join = useSelector(selectDashBoardRoomJoin)
@@ -517,6 +534,7 @@ export default function BoxSx() {
     }
 
     async function handleFinishChatList() { // 지난 채팅 리스트 불러옴
+        await dispatch(clear())
         const data1 = {
             method: "room/chat/list",
             datas: {
@@ -729,7 +747,6 @@ export default function BoxSx() {
         }
     }, [select_user])
 
-
     // useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
     // }, [])
 
@@ -754,25 +771,19 @@ export default function BoxSx() {
         }
     }, [cancel_status])
 
-    useEffect(() => {
-        console.log("cancel_status", cancel_status);
-    })
-
-    useEffect(() => {
-        console.log("select_user22", select_user);
-    }, [select_user])
-
-
 
 
 
     const select_room_id = Number(select_user.room_id)
 
+    console.log("finish_chat", finish_chat); // 완료된 상담내역 리스트 체크 
+
     console.log("useOpen", useOpen);
     console.log("isMessage_chat", isMessage)
     console.log("arrisMessage", filterMessage);
-    console.log('test', test);
+    console.log('finish', finish_chat);
     console.log("counselingStatus", counselingStatus);
+    console.log("select_user", select_user);
     // console.log("select_room_id", select_room_id) // map 에서 룸 ID 체크해서 채팅방 노출, 룸ID 와 select_roomId 가 같으면 표출
 
     return (
@@ -800,6 +811,7 @@ export default function BoxSx() {
                                         우주 상담소(완료)
                                     </Text>
                                     <TimeSleectBox />
+                                    <button onClick={() => handleTest()}>aaaaaa</button>
                                 </Div>
                                 <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                     <Div type='time' >
@@ -810,7 +822,7 @@ export default function BoxSx() {
                                     </Div>
                                     <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                         {
-                                            isMessage?.map((res: any, index: number) => (
+                                            finish_chat?.map((res: any, index: number) => (
                                                 <>
                                                     <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                         {
@@ -1042,7 +1054,7 @@ export default function BoxSx() {
                                             </Div>
                                             <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                 {
-                                                    test && test?.map((res: any, index: number) => (
+                                                    isMessage && isMessage?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                 <span></span>

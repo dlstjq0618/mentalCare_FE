@@ -24,7 +24,7 @@ import SettingInfoForm from "~/components/settingPage/SettingInfoForm";
 import OpeningTimeForm from "~/components/settingPage/OpeningTimeForm";
 import { api } from "~/woozooapi";
 import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
-import { selectCounselingInfoData, selectSettingSaveControlls, setChatBoxOpenState } from "~/store/calendarDetailSlice";
+import { selectCounselingInfoData, selectPriceZreo, selectSettingSaveControlls, setChatBoxOpenState } from "~/store/calendarDetailSlice";
 import PriceGrid from "~/components/Grid/PriceGrid";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
@@ -36,6 +36,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     const fileUploadDate = useSelector(selectCounselingInfoData)
     const passwordSave = useSelector(selectSettingSaveControlls);
     const dispatch = useDispatch();
+    const price = useSelector(selectPriceZreo);
 
     useSession({
         required: true,
@@ -60,12 +61,18 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         dispatch(setChatBoxOpenState("null"))
     }, [])
 
+    console.log("price", price);
+
     const onSubmit = (data: any) => { // vi signUp Api request
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
         }
         const isMobile = data.mobile?.replace('010', '');
         const customMobile = "0810" + isMobile
+
+        if (price) {
+            return alert("가격 0원이상 입력해 주세요.")
+        }
 
         api.counselor
             .update(userId, {
