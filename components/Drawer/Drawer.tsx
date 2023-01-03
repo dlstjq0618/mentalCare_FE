@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls } from '~/store/calendarDetailSlice';
+import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -142,7 +142,7 @@ export default function TemporaryDrawer(props: IProps) {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setWatingListBefore(list)), dispatch(setAlertControlls(true)) }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setAlertControlls(true)) }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />

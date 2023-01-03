@@ -60,6 +60,7 @@ import {
     selectUserCall,
     selectAlertControlls,
     setTestResultValue,
+    selectTestResultValueStatus,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -240,46 +241,36 @@ export default function BoxSx() {
     const storeData = useSelector(selectCounselingDate);
     const selectTime = useSelector(selectCounselingTimeStemp);
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터 
-
     const reservationTime = (new Date(storeData).getTime() / 1000);
     const selectNum = useSelector(selectCounselingTimeStempNumber);
     const totalTime = reservationTime + selectNum
-
     const roomJoin = useSelector(selectCounselingStart);
     const watingList = useSelector(selectSocketData);
     const [lastChatlist, setLastChatList] = useState<any>([])
     const select_user = useSelector(selectDashBoardSelectUser);
-
     const user_dashborad = useSelector(selectChatBoxOpenState)
     const [user_name, setUser_name] = useState('');
-
     const [roomId, setRoomId] = useState(0);
     const [userPaymentRequestStatus, setUserPaymentRequestStatus] = useState(false);
     const [userPaymentList, setUserPaymentList] = useState<any>([]);
     const [open, setOpen] = useState(false);
     const [filterMessage, setFilterMessage] = useState<any>([]);
-
     const [waitCount, setWaitCount] = useState(0); // 상담대기중 count
     const [waitList, setWaitList] = useState<any>([]); // 상담대기중 list
-
     const consultingList = useSelector(selectConsultingList); // 상담중
     const reservationList = useSelector(selectReservationList); // 예약 확정 O
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const completeList = useSelector(selectCompleteList); // 상담완료 O
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 닫기
-
     const cancel_status = useSelector(selectCancelStatus);
-
     const nowTime = Date.now();
     const getTime = nowTime;
     const [finishChat, setFinishChat] = useState<any>([]);
     const [isMessage, setIsMessage] = useState<any>([])
     const messageEndRef = useRef<any>(null);
-
     const status = useSelector(selectUserCall)
-
     const [userName, setUserName] = useState("")
-
+    const test_status = useSelector(selectTestResultValueStatus);
 
     console.log("before_wating", before_wating);
 
@@ -424,7 +415,7 @@ export default function BoxSx() {
         const data1 = {
             method: "room/test/result",
             datas: {
-                roomId: 276
+                roomId: select_user.room_id
             }
         }
         socket.emit('counsel_submit', data1)
@@ -747,6 +738,12 @@ export default function BoxSx() {
         }
     }, [select_user])
 
+    useEffect(() => { // 테스트 결과보기
+        if (test_status) {
+            handleTest()
+        }
+    }, [test_status])
+
     // useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
     // }, [])
 
@@ -811,7 +808,6 @@ export default function BoxSx() {
                                         우주 상담소(완료)
                                     </Text>
                                     <TimeSleectBox />
-                                    <button onClick={() => handleTest()}>aaaaaa</button>
                                 </Div>
                                 <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                     <Div type='time' >

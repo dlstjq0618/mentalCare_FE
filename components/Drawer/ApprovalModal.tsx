@@ -21,11 +21,13 @@ import {
     setScheduleSelectModla,
     selectScheduleSelectModla,
     selectWatingListBefore,
-    selectDashBoardSelectUser
+    selectDashBoardSelectUser,
+    selectChatBoxOpenState
 } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
 import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
+import TestValue from '../TestValue/TestValue';
 
 interface IProps {
     userInfo: any;
@@ -152,26 +154,23 @@ function ApprovalModal(props: IProps) {
     const modalState = useSelector(selectScheduleSelectModla)
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터
     const select_user = useSelector(selectDashBoardSelectUser);
+    const [test_modal, setTest_modal] = useState(false);
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러
         setSelectTimes(e.target.value)
     }
-
-    console.log("modalState", modalState);
+    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
 
     const modalClose = () => dispatch(setScheduleSelectModla(false))
-
-
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
     const open = () => {
         setShow(true);
     };
-
+    const close3 = () => setTest_modal(false)
     const close = () => setShow(false);
-
     const {
         register,
         setValue,
@@ -203,16 +202,22 @@ function ApprovalModal(props: IProps) {
     );
     const handleFinalStep = () => {
         dispatch(setCounselingFinalStep('yes'));
-        dispatch(setCounselingFinalStepData(before_wating));
+        dispatch(setCounselingFinalStepData(select_user));
         dispatch(setScheduleSelectModla(false));
+        if (useOpen === "시작전") {
+            return alert("일정이 변경되었습니다.")
+        }
     }
+
+    console.log("before_wating", before_wating);
+    console.log("select_user4444", select_user)
 
     return (
         <>
             <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
-                        {before_wating?.user_name} 님
+                        {select_user?.user_name} 님
                     </Text>
                     {/* <Text button>
                         테스트 결과보기
@@ -224,7 +229,7 @@ function ApprovalModal(props: IProps) {
                         상담 방식
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {before_wating?.method_str === "전화상담(주간50분)" ? "전화" : "채팅"}
+                        {select_user?.method_str === "전화상담(주간50분)" ? "전화" : "채팅"}
                     </Text>
                 </Div>
                 <Div>
@@ -232,7 +237,7 @@ function ApprovalModal(props: IProps) {
                         상담 요청 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {before_wating?.crated}
+                        {select_user?.crated}
                     </Text>
                 </Div>
                 <Div>
@@ -276,7 +281,7 @@ function ApprovalModal(props: IProps) {
                 height: `${rem(387)}`, textAlign: 'center', marginTop: " 14vh"
             }}>
                 <Text size={17} bold='normal' center>
-                    <Text>{before_wating?.user_name}</Text>님에게
+                    <Text>{select_user?.user_name}</Text>님에게
                     <div>상담 예정 알림이 발송됩니다.</div>
                 </Text>
                 <Text bg>
@@ -309,6 +314,7 @@ function ApprovalModal(props: IProps) {
                     </RoundedButton>
                 </Div>
             </BaseDialog2>
+            {/* <TestValue open={test_modal} cancel={close3} /> */}
         </>
     );
 }

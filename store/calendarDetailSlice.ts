@@ -49,6 +49,7 @@ type DiagnosisDetailStoreState = {
     | "협의"
     | "시작전"
     | "전화"
+    | "완료상태"
     | "전화완료";
   select_timenum: number;
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
@@ -65,6 +66,7 @@ type DiagnosisDetailStoreState = {
   result: any;
   test_modal: boolean;
   price: boolean;
+  test_status: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -117,7 +119,8 @@ const initialState: DiagnosisDetailStoreState = {
   alert3: false,
   result: {},
   test_modal: false,
-  price:false,
+  price: false,
+  test_status: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -368,6 +371,11 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.finish_chat = action.payload;
     },
+
+    clear2: (state) => {
+      state.finish_chat = initialState.finish_chat;
+    },
+
     setChatBoxOpenState(
       // 채팅박스 열려있는지 체크
       state,
@@ -466,6 +474,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.price = action.payload;
     },
+    setTestResultValueStatus(
+      // 모든 상담 금액이 0원 일때
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["test_status"]>
+    ) {
+      state.test_status = action.payload;
+    },
   },
 });
 
@@ -507,6 +522,7 @@ export const {
   setScheduleSelectModla,
   removeList,
   clear,
+  clear2,
   setUserChatRefresh,
   setUserCallNumber,
   setCancelStatus,
@@ -517,6 +533,7 @@ export const {
   setSocketControlls2,
   setTestResultValue,
   setPriceZreo,
+  setTestResultValueStatus,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -610,7 +627,8 @@ export const selectAlertControlls3 = (state: RootState) =>
   state.calendarDetail.alert3;
 export const selectTestResultValue = (state: RootState) =>
   state.calendarDetail.result;
-  export const selectPriceZreo = (state: RootState) =>
-  state.calendarDetail.price;
+export const selectPriceZreo = (state: RootState) => state.calendarDetail.price;
+export const selectTestResultValueStatus = (state: RootState) =>
+  state.calendarDetail.test_status;
 
 export default calendarDetailSilce.reducer;

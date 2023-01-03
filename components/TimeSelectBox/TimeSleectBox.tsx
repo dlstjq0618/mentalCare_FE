@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls } from '~/store/calendarDetailSlice';
+import { clear2, setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls } from '~/store/calendarDetailSlice';
 
 interface Iprops {
     first?: boolean;
@@ -121,6 +121,7 @@ function TimeSleectBox(props: Iprops) {
         dispatch(setCounselingState("null"))
         dispatch(setChatBoxOpenState('null'))
         dispatch(setSelectBoxControlls('완료'))
+        dispatch(clear2())
     }
 
     return (

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3 } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -21,7 +21,8 @@ import {
     selectChatBoxOpenState,
     setChatBoxOpenState,
     selectCounselingTimes,
-    setAlertControlls2
+    setAlertControlls2,
+    selectCounselingFinalStep
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 import TestValue from '../TestValue/TestValue';
@@ -288,6 +289,7 @@ function DayComponents(props: IProps) {
     const selectTime = useSelector(selectCounselingTimes);
     const [callStatus, setCallStatus] = useState<boolean>(false)
     const userPhoneNumber = useSelector(selectUserCallNumber);
+    const finalStep = useSelector(selectCounselingFinalStep); // 최종 예약 확인
 
     const [test_modal, setTest_modal] = useState(false);
 
@@ -301,8 +303,8 @@ function DayComponents(props: IProps) {
         dispatch(setChatBoxOpenState("null"));
     };
     const open2 = () => setShow2(true);
-    const open3 = () => setTest_modal(true);
-    const close3 = () => setTest_modal(false)
+    const open3 = () => { setTest_modal(true); dispatch(setTestResultValueStatus(true)) }
+    const close3 = () => { setTest_modal(false), dispatch(setTestResultValueStatus(false)) }
 
     const handleDispatch = () => {
         close2()
@@ -311,6 +313,12 @@ function DayComponents(props: IProps) {
         dispatch(setCounselingStart("start"));
         dispatch(setChatBoxOpenState('시작'));
     }
+
+    useEffect(() => {
+        if (finalStep === "yes") {
+            close2()
+        }
+    }, [finalStep])
 
     // 영어 => 월화수목금토일 한글로  
     useEffect(() => {
@@ -355,7 +363,7 @@ function DayComponents(props: IProps) {
                         return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                             <StyledDiv key={index} onClick={() => {
                                 useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
-                                    open2(), res.method_str === "채팅상담(주간50분)" || res.method_str === "채팅상담(야간50분)" ? setUserType("채팅") : setUserType("전화"),
+                                    open2(), res.method_str?.substr(0, 2) === "채팅" ? setUserType("채팅") : setUserType("전화"),
                                     setUserName(res.user_name),
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
@@ -383,7 +391,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
                                     useOpen !== "null" ? console.log("done...") :
-                                        dispatch(setChatBoxOpenState("완료")), dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                        dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -425,7 +433,7 @@ function DayComponents(props: IProps) {
                     <Text bold='normal' size={18} color={"#666"}>
                         시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date}</span>
                     </Text>
-                    <TimeChip label='시간변경' />
+                    {/* <TimeChip label='시간변경' /> */}
                 </Div>
                 {
                     userType === "전화" ?
@@ -442,7 +450,7 @@ function DayComponents(props: IProps) {
                         :
                         <Div step style={{ marginTop: 0 }}>
                             <Text bold='normal' size={18} color={"#666"}>
-                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{userType}</span>
+                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data?.method_str?.substr(0, 2)}</span>
                             </Text>
                         </Div>
                 }
