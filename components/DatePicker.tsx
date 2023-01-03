@@ -33,8 +33,6 @@ export function DatePicker({
   const today = new Date()
   const day = today.getDay()
 
-  console.log("day", day);
-
   let handlePrevDateClick = useCallback(() => {
     setSelectedDate(sub(selectedDate, { days: 1 }));
   }, [selectedDate]);
@@ -82,7 +80,6 @@ export function DatePicker({
         <Div css={{ height: rem(55) }} />
         <RoundedButton
           disabled={selectedDate.getDay() < day ? true : false}
-          // color="orange"
           color={selectedDate.getDay() < day ? "gray" : "orange"}
           css={{
             fontSize: rem(15),

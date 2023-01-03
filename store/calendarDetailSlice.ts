@@ -117,7 +117,7 @@ const initialState: DiagnosisDetailStoreState = {
   alert: false,
   alert2: false,
   alert3: false,
-  result: {},
+  result: [],
   test_modal: false,
   price: false,
   test_status: false,

@@ -10,7 +10,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { ConnectingAirportsOutlined, ConstructionOutlined, ResetTvRounded } from '@mui/icons-material';
+import { ChatBubble, ConnectingAirportsOutlined, ConstructionOutlined, ResetTvRounded } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     setCounselingState,
@@ -271,6 +271,9 @@ export default function BoxSx() {
     const status = useSelector(selectUserCall)
     const [userName, setUserName] = useState("")
     const test_status = useSelector(selectTestResultValueStatus);
+    const [comfrim_isMessage, setComfrimIsMessage] = useState<any>([])
+    const [object, setObject] = useState({});
+
 
     console.log("before_wating", before_wating);
 
@@ -281,22 +284,27 @@ export default function BoxSx() {
         });
     }, [])
 
-    // useEffect(() => {
-    //     dispatch(setChatBoxOpenState(true));
-    //     return () => {
-    //         dispatch(setChatBoxOpenState(false))
-    //     }
-    // }, [])
-
     const test = useSelector(selectLoggedUser);
-    const filterData = test.filter((res: any) => {
-        return res?.roomId === select_user.room_id
-    })
 
-    useEffect(() => {
-        console.log("filterData", filterData)
-    })
+    // useEffect(() => {
+    //     const filterData = test.filter((res: any) => {
+    //         return res?.roomId === select_user.room_id
+    //     })
 
+    //     const newArray = test?.filter((item: { chat_id: any; }, i: any) => {
+    //         return (
+    //             test?.findIndex((item2: { chat_id: any; }, j: any) => {
+    //                 return item?.chat_id === item2?.chat_id;
+    //             }) === i
+    //         );
+    //     });
+
+    // }, [test])
+
+
+    // console.log("newArray", newArray);
+    console.log("test", test);
+    console.log("comfrim_isMessage", comfrim_isMessage);
 
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
@@ -323,7 +331,7 @@ export default function BoxSx() {
                     setUserPaymentRequestStatus(true);
                     break;
                 case "room/chat/list":
-                    const chatList = res.datas?.list
+                    const chatList = res.datas?.list // 이전대화 리스트
                     const historyList = res.datas?.list[0]
                     setFinishChat(chatList); // 이전대화 목록이 들어간다.
                     dispatch(setHistoryChat(historyList));
@@ -332,7 +340,7 @@ export default function BoxSx() {
                     //     arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
                     // });
                     // setIsMessage([...chatList, ...test]);
-                    setIsMessage([...isMessage, ...chatList]);
+                    setIsMessage([...isMessage, ...chatList]); // 기존 배열에 이전 대화 리스트 들어간다.
 
             }
         })
@@ -385,10 +393,18 @@ export default function BoxSx() {
     // 정리 : 새로고침후 처음 다시 드로워에 있는 데이터를 클릭했을 때, 드로워 데이터를 가지고 이전 대화리스트 불러온 후 추가로 입력하는 정보를 뿌려줘라.
 
     useEffect(() => { // 상대방 채팅데이터
-        socket.on("chat", (res: any) => {
+        socket.on("chat", (res: any) => { // 만약 selectLoggedUser를 filter 를 사용하여 chat_id 와 res.datas.chat_id 와 같은게 있으면 넣지 마라 
             dispatch(setLoggedUser(res?.datas));
+            setObject(res?.datas)
         })
     }, [])
+
+    useEffect(() => {
+        setIsMessage([...isMessage, object])
+    }, [object])
+
+
+
 
     const finish_chat = useSelector(selectFinishChatList)
 
@@ -399,6 +415,7 @@ export default function BoxSx() {
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
+        setIsMessage([])
         const data1 = {
             method: "room/reservation_date",
             datas: {
@@ -408,6 +425,7 @@ export default function BoxSx() {
         }
         socket.emit('counsel_submit', data1);
         console.log("emit 실행");
+
         await dispatch(setCounselingFinalStep(""))
     }
 
@@ -456,42 +474,18 @@ export default function BoxSx() {
     const alert_status3 = useSelector(selectAlertControlls);
 
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방
-        console.log("협의방 오픈!!");
-        dispatch(clear())
-        setFinishChat([{
-            message: '일정 협의'
-        }]);
+        await dispatch(clear());
+        await handleFinishChatList();
         // roomJoin
         const req = {
             roomId: before_wating.room_id,
             user_type: 6,
             message: "안녕하세요 상담을 시작하겠습니다."
         };
-        console.log(req);
         socket.emit('chat', {
             "method": "join",
             "datas": req
         });
-
-        // if (confirm(`테스트용 일정협의 채팅을 "${before_wating.user_name}" 님과 시작 하시겠습니까?`)) {
-        //     dispatch(clear())
-        //     setFinishChat([{
-        //         message: '일정 협의'
-        //     }]);
-        //     // roomJoin
-        //     const req = {
-        //         roomId: before_wating.room_id,
-        //         user_type: 6,
-        //         message: "안녕하세요 상담을 시작하겠습니다."
-        //     };
-        //     console.log(req);
-        //     socket.emit('chat', {
-        //         "method": "join",
-        //         "datas": req
-        //     });
-        // } else {
-        //     dispatch(setChatBoxOpenState('닫기'));
-        // }
     }
 
     async function handleWaitingRoomJoin() { // 진행중
@@ -578,7 +572,6 @@ export default function BoxSx() {
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 채팅방에서 마우스 클릭
         if (state.message !== '') {
-            event.preventDefault();
             const chat = {
                 datas: {
                     message: state.message,
@@ -588,7 +581,8 @@ export default function BoxSx() {
                 roomId: intRoom_id,
                 user_type: 6,
                 message: state.message,
-                time: getTime
+                time: getTime,
+                type: "send"
             };
             socket.emit('chat', {
                 method: "chat",
@@ -602,7 +596,6 @@ export default function BoxSx() {
 
     const handleMouseFirstDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 채팅방에서 마우스 클릭
         if (state.message !== '') {
-            event.preventDefault();
             const chat = {
                 datas: {
                     message: state.message,
@@ -612,7 +605,8 @@ export default function BoxSx() {
                 roomId: before_wating.room_id,
                 user_type: 6,
                 message: state.message,
-                time: getTime
+                time: getTime,
+                type: "send"
             };
             socket.emit('chat', {
                 method: "chat",
@@ -671,7 +665,6 @@ export default function BoxSx() {
                 datas: chat
             });
             dispatch(setLoggedUser(chat));
-            setFinishChat([...finishChat, chat])
             setIsMessage([...isMessage, chat]);
             setState({ message: '' })
         }
@@ -758,6 +751,10 @@ export default function BoxSx() {
     });
 
     useEffect(() => {
+        console.log("isMessage", isMessage);
+    }, [isMessage])
+
+    useEffect(() => {
         setUserName(select_user?.user_name)
     }, [counselingStatus])
 
@@ -776,8 +773,7 @@ export default function BoxSx() {
     console.log("finish_chat", finish_chat); // 완료된 상담내역 리스트 체크 
 
     console.log("useOpen", useOpen);
-    console.log("isMessage_chat", isMessage)
-    console.log("arrisMessage", filterMessage);
+    // console.log("arrisMessage", filterMessage);
     console.log('finish', finish_chat);
     console.log("counselingStatus", counselingStatus);
     console.log("select_user", select_user);
@@ -805,7 +801,7 @@ export default function BoxSx() {
                             <Div type='main'>
                                 <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                     <Text size={17} bold="600" color='#000' type='title'>
-                                        우주 상담소(완료)
+                                        우주약방 마음상담(완료)
                                     </Text>
                                     <TimeSleectBox />
                                 </Div>
@@ -923,7 +919,7 @@ export default function BoxSx() {
                                 <Div type='main'>
                                     <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                         <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                            우주 상담소<div style={{ color: '#b53e14' }}>({select_user?.user_name})</div>(시작)
+                                            우주약방 마음상담<div style={{ color: '#b53e14' }}>({select_user?.user_name})</div>(시작)
                                         </Text>
                                         <div style={{ display: 'flex' }}>
                                             {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
@@ -1037,20 +1033,17 @@ export default function BoxSx() {
                                     <Div type='main'>
                                         <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                             <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
-                                                우주 상담소<div style={{ color: '#b53e14' }}>({before_wating.user_name})</div>(협의)
+                                                우주약방 마음상담<div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                             </Text>
                                             <TimeSleectBox first />
                                         </Div>
                                         <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                             <Div type='time' >
                                                 <Text size={13} color='#b53e14' >{"일정을 협의해 주세요."}</Text>
-                                                {/* <Text size={12} type='button' color='#e8440a'>
-                                        상담 경과 44:15 
-                                    </Text> */}
                                             </Div>
                                             <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                 {
-                                                    isMessage && isMessage?.map((res: any, index: number) => (
+                                                    isMessage?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                 <span></span>
@@ -1160,7 +1153,7 @@ export default function BoxSx() {
                                         <Div type='main'>
                                             <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                                 <Text size={17} bold="600" color='#000' type='title'>
-                                                    우주 상담소(진행)
+                                                    우주약방 마음상담(진행)
                                                 </Text>
                                                 <div style={{ display: 'flex' }}>
                                                     {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}

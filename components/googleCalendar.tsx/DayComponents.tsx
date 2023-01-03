@@ -22,6 +22,7 @@ import {
     setChatBoxOpenState,
     selectCounselingTimes,
     setAlertControlls2,
+    selectTestResultValue,
     selectCounselingFinalStep
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
@@ -302,8 +303,9 @@ function DayComponents(props: IProps) {
         setShow2(false);
         dispatch(setChatBoxOpenState("null"));
     };
+    const result = useSelector(selectTestResultValue);
     const open2 = () => setShow2(true);
-    const open3 = () => { setTest_modal(true); dispatch(setTestResultValueStatus(true)) }
+    const open3 = () => { setTest_modal(true); }
     const close3 = () => { setTest_modal(false), dispatch(setTestResultValueStatus(false)) }
 
     const handleDispatch = () => {
@@ -367,6 +369,7 @@ function DayComponents(props: IProps) {
                                     setUserName(res.user_name),
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
+                                    dispatch(setTestResultValueStatus(true)),
                                     res.method_str?.substr(0, 2) === "전화" ? dispatch(setChatBoxOpenState("전화")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <StyledRadius />
@@ -417,9 +420,14 @@ function DayComponents(props: IProps) {
                     <Text size={20}>
                         {userName}{" 님"}
                     </Text>
-                    <Text size={13} button onClick={open3}>
-                        테스트 결과보기
-                    </Text>
+                    {
+                        result === undefined ?
+                            ""
+                            :
+                            <Text size={13} button onClick={open3}>
+                                테스트 결과보기
+                            </Text>
+                    }
                 </Div>
                 <Line />
                 <Div step style={{ marginTop: 0 }}>

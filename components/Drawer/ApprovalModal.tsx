@@ -214,7 +214,7 @@ function ApprovalModal(props: IProps) {
 
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
+            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, marginTop: `${rem(240)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
                         {select_user?.user_name} 님
@@ -278,7 +278,7 @@ function ApprovalModal(props: IProps) {
                 datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
             }
             <BaseDialog2 showDialog={show} close={close} style={{
-                height: `${rem(387)}`, textAlign: 'center', marginTop: " 14vh"
+                height: `${rem(387)}`, textAlign: 'center', marginTop: " 20vh"
             }}>
                 <Text size={17} bold='normal' center>
                     <Text>{select_user?.user_name}</Text>님에게

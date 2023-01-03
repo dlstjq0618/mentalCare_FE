@@ -70,9 +70,9 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         const isMobile = data.mobile?.replace('010', '');
         const customMobile = "0810" + isMobile
 
-        if (price) {
-            return alert("가격 0원이상 입력해 주세요.")
-        }
+        // if (price) {
+        //     return alert("가격 0원이상 입력해 주세요.")
+        // }
 
         api.counselor
             .update(userId, {

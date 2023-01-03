@@ -28,6 +28,7 @@ const StyledInput = styled("div", {
   color: "#fff",
   lineHeight: 1.4,
   Zindex: 20,
+  padding: 3
 });
 
 const MAIN_COPY = `가장 빠른
