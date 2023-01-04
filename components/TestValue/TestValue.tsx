@@ -58,7 +58,7 @@ function TestValue(props: Iprops) {
                         </Text>
                         <div>
                             {
-                                Object?.entries(res?.answer).map(([key, value]) => {
+                                Object?.entries(res?.answer).map(([key, value]: any) => {
                                     return <div key={index} style={{ color: 'red' }}>
                                         {value}
                                     </div>
