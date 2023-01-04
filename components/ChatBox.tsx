@@ -696,6 +696,17 @@ export default function BoxSx() {
         await dispatch(setCancelStatus(false))
     }
 
+    async function handleComplete() { // 협의 완료시 실행되어야함
+        console.log("협의완료시작")
+        socket.emit('counsel_submit', {
+            method: 'room/confirm/complete',
+            datas: {
+                roomId: select_user.room_id,
+            }
+        })
+        await dispatch(setChatBoxOpenState("null"))
+    }
+
 
     const use_last_chat = useSelector(selectFinishChatList);
 
@@ -718,6 +729,8 @@ export default function BoxSx() {
             handleFirstRoomJoin()
         } else if (useOpen === "전화") {
             handleCallCounselorting()
+        } else if (useOpen === "협의완료") {
+            handleComplete()
         }
 
         console.log("useOpen", useOpen);

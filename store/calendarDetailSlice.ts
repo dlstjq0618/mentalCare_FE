@@ -50,6 +50,7 @@ type DiagnosisDetailStoreState = {
     | "시작전"
     | "전화"
     | "완료상태"
+    | "협의완료"
     | "전화완료";
   select_timenum: number;
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";

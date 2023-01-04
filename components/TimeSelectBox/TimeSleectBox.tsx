@@ -130,7 +130,7 @@ function TimeSleectBox(props: Iprops) {
                 {
                     props.first ?
                         <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => {
-                            dispatch(setChatBoxOpenState("null")),
+                            dispatch(setChatBoxOpenState("협의완료")),
                                 handleOpenStatus2(),
                                 dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
                         }}>
