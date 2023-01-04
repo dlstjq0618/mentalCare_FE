@@ -82,6 +82,7 @@ const Div = styled.div<IStyled>`
 `;
 const StyledDiv = styled.div`
     cursor: pointer;
+    align-items: center;
     &:hover{
         background-color: #FDEAE4;
     };
