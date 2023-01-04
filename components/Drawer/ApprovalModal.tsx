@@ -239,7 +239,7 @@ function ApprovalModal(props: IProps) {
                         상담 방식
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {select_user?.method_str.substr(2, 2) === "전화" ? "전화" : "채팅"}
+                        {select_user?.method_str?.substr(2, 2) === "전화" ? "전화" : "채팅"}
                     </Text>
                 </Div>
                 <Div>
