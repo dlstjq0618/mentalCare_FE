@@ -426,7 +426,7 @@ function DayComponents(props: IProps) {
                     </Text>
                     {
                         result.datas?.subject_name ?
-                            ""
+                            <Text size={15}>{result.datas?.subject_name}</Text>
                             :
                             <Text size={13} button onClick={open3}>
                                 테스트 결과보기

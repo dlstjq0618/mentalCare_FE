@@ -226,7 +226,7 @@ function ApprovalModal(props: IProps) {
                     </Text>
                     {
                         result.datas?.subject_name ?
-                            ""
+                            <Text size={15}>{result.datas?.subject_name}</Text>
                             :
                             <Text size={13} button onClick={open3}>
                                 테스트 결과보기
@@ -239,7 +239,7 @@ function ApprovalModal(props: IProps) {
                         상담 방식
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {select_user?.method_str === "전화상담(주간50분)" ? "전화" : "채팅"}
+                        {select_user?.method_str.substr(2, 2) === "전화" ? "전화" : "채팅"}
                     </Text>
                 </Div>
                 <Div>

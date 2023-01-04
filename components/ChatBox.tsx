@@ -691,63 +691,33 @@ export default function BoxSx() {
     useEffect(() => { // 캘린더 컨트롤 
         if (useOpen === '완료') {
             handleOnComplete()
-        }
-    }, [useOpen])
-
-    useEffect(() => { // 캘린더 컨트롤 
-        if (useOpen === '전화완료') {
+        } else if (useOpen === '전화완료') {
             handleCallOnComplete()
-        }
-    }, [useOpen])
-
-    useEffect(() => {  // 진행중인 화면, 즉 기록이 있는 채팅 
-        if (useOpen === '진행') {
+        } else if (useOpen === '진행') {
             handleWaitingRoomJoin()
+        } else if (useOpen === '시작') {
+            handleRoomJoin()
+        } else if (useOpen === "협의") {
+            handleFirstRoomJoin()
+        } else if (useOpen === "전화") {
+            handleCallCounselorting()
         }
+
+        console.log("useOpen", useOpen);
     }, [useOpen])
 
-    useEffect(() => {
-        if (useOpen === '시작') { // 채팅상담 시작
-            handleRoomJoin()
+
+    useEffect(() => { // 테스트 결과보기
+        if (test_status) {
+            handleTest()
         }
-    }, [useOpen])
+    }, [test_status])
 
     useEffect(() => { // 상담승인 할때 이벤트 발생
         if (finalStep === 'yes') {
             hadnleEmit()
         }
     }, [finalStep])
-
-    useEffect(() => { // 상담전 협의 챗 발생 
-        if (useOpen === "협의") {
-            handleFirstRoomJoin()
-        }
-    }, [useOpen])
-
-    useEffect(() => {
-        if (useOpen === "전화") { //전화 상담 시작할때 
-            console.log("전화상담 실행 ")
-            handleCallCounselorting()
-        }
-    }, [useOpen])
-
-    useEffect(() => { // 테스트 결과보기
-        if (test_status) {
-            handleTest()
-            console.log("태스트아이디 실행");
-        }
-    }, [test_status])
-
-    console.log("test_status", test_status)
-
-
-    useEffect(() => {
-        messageEndRef?.current?.scrollIntoView();
-    }, [test, isMessage, filterMessage])
-
-    const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
-        return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
-    });
 
     useEffect(() => {
         console.log("isMessage", isMessage);
@@ -764,6 +734,48 @@ export default function BoxSx() {
         }
     }, [cancel_status])
 
+    // useEffect(() => { // 캘린더 컨트롤 
+    //     if (useOpen === '전화완료') { 
+    //         handleCallOnComplete()
+    //     }
+    // }, [useOpen])
+
+    // useEffect(() => {  // 진행중인 화면, 즉 기록이 있는 채팅 
+    //     if (useOpen === '진행') { 
+    //         handleWaitingRoomJoin()
+    //     }
+    // }, [useOpen])
+
+    // useEffect(() => {
+    //     if (useOpen === '시작') { 
+    //         handleRoomJoin()
+    //     }
+    // }, [useOpen])
+
+    // useEffect(() => { // 상담전 협의 챗 발생 
+    //     if (useOpen === "협의") { //0
+    //         handleFirstRoomJoin()
+    //     }
+    // }, [useOpen])
+
+    // useEffect(() => {
+    //     if (useOpen === "전화") { //전화 상담 시작할때 
+    //         console.log("전화상담 실행 ")
+    //         handleCallCounselorting()
+    //     }
+    // }, [useOpen])
+
+
+    console.log("test_status", test_status)
+
+    useEffect(() => {
+        messageEndRef?.current?.scrollIntoView();
+    }, [test, isMessage, filterMessage])
+
+    const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
+        return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
+    });
+
 
 
 
@@ -771,11 +783,10 @@ export default function BoxSx() {
 
     console.log("finish_chat", finish_chat); // 완료된 상담내역 리스트 체크 
 
-    console.log("useOpen", useOpen);
-    // console.log("arrisMessage", filterMessage);
-    console.log('finish', finish_chat);
-    console.log("counselingStatus", counselingStatus);
-    console.log("select_user", select_user);
+    // console.log("useOpen", useOpen);
+    // console.log('finish', finish_chat);
+    // console.log("counselingStatus", counselingStatus);
+    // console.log("select_user", select_user);
     // console.log("select_room_id", select_room_id) // map 에서 룸 ID 체크해서 채팅방 노출, 룸ID 와 select_roomId 가 같으면 표출
 
     return (
