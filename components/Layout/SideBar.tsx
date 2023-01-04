@@ -230,7 +230,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
           <Link href="/" passHref>
             <Div className="logo" css={{ cursor: "pointer" }}>
               {/* <RocketDoctorLogo /> */}
-              <Image src={counselorLogo} width={70} height={40} />
+              <Image src={counselorLogo} width={90} height={37} />
             </Div>
           </Link>
           <span style={{

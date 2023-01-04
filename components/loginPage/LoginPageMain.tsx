@@ -4,8 +4,8 @@ import { styled } from "~/stitches.config";
 export const LoginPageMain = styled("main", {
   flex: 1,
   display: "flex",
-  maxWidth: rem(890),
-  height: rem(560),
+  maxWidth: rem(560),
+  height: "auto",
   borderRadius: rem(20),
   outline: "solid 1px $gray03",
   backgroundColor: "$white",

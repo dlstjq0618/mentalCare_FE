@@ -48,6 +48,7 @@ interface IStyled {
     bg?: boolean;
     step?: boolean;
     left?: boolean;
+    border?: string;
 }
 const Div = styled.div<IStyled>`
     border-bottom: 1px solid #d9d9d9;
@@ -86,6 +87,7 @@ const StyledDiv = styled.div`
     };
     display: flex;
     margin-left: ${rem(9)};
+    font-size: ${rem(12)};
 `;
 const Line = styled.div`
     height: 1px;
@@ -156,37 +158,28 @@ const StyledToday = styled.p`
     text-align: center;
     padding: ${rem(2)} ${rem(1)} 0 0;
 `;
-const StyledRadius = styled.div`
-    width: ${rem(8)};
-    height: ${rem(8)};
-    flex-grow: 0;
-    margin: ${rem(6)} ${rem(6)} ${rem(3)} 0;
-    border-radius: 30px;
-    background-color: #eb541e;
-`;
-const StyledRadiusBlack = styled.div`
-    width: ${rem(8)};
-    height: ${rem(8)};
-    flex-grow: 0;
-    margin: ${rem(6)} ${rem(6)} ${rem(3)} 0;
-    border-radius: 30px;
-    background-color: #000;
-`;
-const StyledRadiusGray = styled.div`
-    width: ${rem(8)};
-    height: ${rem(8)};
-    flex-grow: 0;
-    margin: ${rem(6)} ${rem(6)} ${rem(3)} 0;
-    border-radius: 30px;
-    background-color: lightgray;
-`;
-const StyledRadiusGreen = styled.div`
-    width: ${rem(8)};
-    height: ${rem(8)};
-    flex-grow: 0;
-    margin: ${rem(6)} ${rem(6)} ${rem(3)} 0;
-    border-radius: 30px;
-    background-color: lightgreen;
+
+const Status = styled.span<IStyled>`
+    width: ${rem(25)};
+    height: ${rem(17)};
+    margin-top: ${rem(2)};
+    padding-bottom: ${rem(14)};
+    border-radius: ${rem(3)};
+    line-height: 1.4;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: -0.3px;
+    ${(props) =>
+        props.color &&
+        css`
+            color: ${props.color};
+        `}
+        ${(props) =>
+        props.border &&
+        css`
+            border: solid 0.5px ${props.color};
+        `}
 `;
 
 const Text = styled.span<IStyled>` 
@@ -376,7 +369,7 @@ function DayComponents(props: IProps) {
                 <span>
                     {reservationList && reservationList.result?.map((res: any, index: number) => { // 예약중
                         return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
-                            <StyledDiv key={index} onClick={() => {
+                            <StyledDiv style={{ color: '#eb541e' }} key={index} onClick={() => {
                                 useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
                                     open2(), res.method_str?.substr(0, 4) === "주간채팅" || res.method_str?.substr(0, 4) === "야간채팅" ? setUserType("채팅") : setUserType("전화"),
                                     setUserName(res.user_name),
@@ -385,19 +378,22 @@ function DayComponents(props: IProps) {
                                     dispatch(setTestResultValueStatus(true)),
                                     res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("null")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
-                                <StyledRadius />
-                                {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
+                                <Status color='#d8430e' border='#eb541e'>예약</Status>
+                                <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                             </StyledDiv> : ""
                     })}
                     {
                         consultingList && consultingList.result?.map((res: any, index: number) => { //채팅중
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
-                                <StyledDiv key={index} onClick={() => {
+                                <StyledDiv style={{ color: '#60ae92' }} key={index} onClick={() => {
                                     useOpen !== "null" && res.status !== 2 ? console.log("done...") :
                                         dispatch(setAlertControlls3(true)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
-                                    <StyledRadiusGreen />
-                                    {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
+
+                                    <Status color='#60ae92' border='#60ae92'>진행</Status>
+                                    <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                    {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
                                 : ""
                         })
@@ -405,12 +401,13 @@ function DayComponents(props: IProps) {
                     {
                         completeList && completeList.result?.map((res: any, index: number) => { // 완료됨
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
-                                <StyledDiv key={index} onClick={() => {
+                                <StyledDiv style={{ color: '#666' }} key={index} onClick={() => {
                                     useOpen !== "null" ? handleFinishDispatch() :
                                         handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
-                                    <StyledRadiusBlack />
-                                    {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
+                                    <Status color='#666' border='#666'>완료</Status>
+                                    <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                    {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
                                 : ""
                         })
@@ -418,9 +415,10 @@ function DayComponents(props: IProps) {
                     {
                         cancelList && cancelList.result?.map((res: any, index: number) => { // 취소됨
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
-                                <StyledDiv key={index} onClick={() => { console.log("취소된 상담 건입니다.") }}>
-                                    <StyledRadiusGray />
-                                    {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
+                                <StyledDiv style={{ color: '#b4b4b4' }} key={index} onClick={() => { console.log("취소된 상담 건입니다.") }}>
+                                    <Status color='#b4b4b4' border='#b4b4b4'>취소</Status>
+                                    <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                    {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
                                 : ""
                         })

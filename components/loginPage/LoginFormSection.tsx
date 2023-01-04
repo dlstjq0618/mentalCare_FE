@@ -15,7 +15,7 @@ import { styled } from "~/stitches.config";
 import { loginFormSchema } from "~/utils/form.utils";
 import { signIn } from "~/utils/nextAuth.utils";
 import { api } from "~/woozooapi";
-import counselorLogo from '../../public/counser.png';
+import counselorLogo from '../../public/counser@3x.png';
 import { Image } from "~/components";
 
 const LoginFormSectionWrapper = styled("article", {
@@ -53,14 +53,14 @@ const LoginFormSectionWrapper = styled("article", {
 });
 
 const StyledInput = styled("div", {
-  height: "23px",
-  borderRadius: "18px",
+  width: rem(51.4),
+  height: rem(23),
+  borderRadius: rem(18),
   border: "solid 2px #e73e11",
   letterSpacing: "-0.4px",
   backgroundColor: "#e8440a",
-  marginTop: "30px",
-  marginLeft: "-12px",
-  width: "60px",
+  marginTop: rem(30),
+  marginLeft: rem(-12),
   textAlign: "center",
   color: "#fff",
   lineHeight: 1.4,
@@ -116,11 +116,11 @@ export const LoginFormSection = () => {
 
   return (
     <LoginFormSectionWrapper>
-      <h1>로그인</h1>
-      {/* <div style={{ display: 'flex', alignSelf: 'center', marginBottom: '38.8px' }}>
-        <Image src={counselorLogo} width={100} height={50} />
+      {/* <h1>로그인</h1> */}
+      <div style={{ display: 'flex', alignSelf: 'center', marginBottom: '38.8px' }}>
+        <Image src={counselorLogo} width={146.4} height={58.6} />
         <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
-      </div> */}
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div
           css={{
@@ -159,6 +159,17 @@ export const LoginFormSection = () => {
         <Aside css={{ a: { color: "$gray05", textDecoration: "underline" } }}>
           <AutoLoginToggle />
           {/* <Link href="/auth/recovery">아이디 비밀번호 찾기</Link> */}
+          <Div
+            css={{
+              a: {
+                fontSize: rem(14),
+                color: "$primary",
+                textDecoration: "underline",
+              },
+            }}
+          >
+            <Link href="/auth/register">회원가입</Link>
+          </Div>
         </Aside>
       </form>
     </LoginFormSectionWrapper>
