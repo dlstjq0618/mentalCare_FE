@@ -79,8 +79,8 @@ export function DatePicker({
         <ScheduleCalendar />
         <Div css={{ height: rem(55) }} />
         <RoundedButton
-          disabled={selectedDate.getDay() < day ? true : false}
-          color={selectedDate.getDay() < day ? "gray" : "orange"}
+          disabled={selectedDate.getDate() < day ? true : false}
+          color={selectedDate.getDate() < day ? "gray" : "orange"}
           css={{
             fontSize: rem(15),
             fontWeight: "bold",

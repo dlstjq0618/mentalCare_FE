@@ -745,7 +745,6 @@ export default function BoxSx() {
         messageEndRef?.current?.scrollIntoView();
     }, [test, isMessage, filterMessage])
 
-
     const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
         return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
     });
@@ -935,7 +934,7 @@ export default function BoxSx() {
                                         </Div>
                                         <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                             {
-                                                test && test?.map((res: any, index: number) => (
+                                                isMessage && isMessage?.map((res: any, index: number) => (
                                                     <>
                                                         <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                             {
@@ -1076,15 +1075,17 @@ export default function BoxSx() {
                                                                                 </Div>
                                                                             </Div>
                                                                             :
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
-                                                                                <Div bg='#ffffe7' type="right">
-                                                                                    {`${before_wating.user_name} 님이 입장하셨습니다.`}
+                                                                            res === undefined ?
+                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                                    <Div bg='#ffffe7' type="right">
+                                                                                        {`${before_wating.user_name} 님이 입장하셨습니다.`}
+                                                                                    </Div>
+                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                        {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                        {res?.timestr}
+                                                                                    </Div>
                                                                                 </Div>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                    {res?.timestr}
-                                                                                </Div>
-                                                                            </Div>
+                                                                                : ""
                                                                 }
                                                             </div>
                                                             <div ref={messageEndRef} />

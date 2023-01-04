@@ -245,7 +245,7 @@ function ApprovalModal(props: IProps) {
                         상담 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {"50분"}
+                        {select_user?.method_str}
                     </Text>
                 </Div>
 

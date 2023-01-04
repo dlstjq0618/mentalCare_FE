@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser } from '~/store/calendarDetailSlice';
+import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -99,10 +99,19 @@ export default function TemporaryDrawer(props: IProps) {
         dispatch(setCounselingTimes(""))
     }
 
-    const handleBeforeChat = () => { // 예약전 협의 채팅하기 위해 dispatch 로 전달 하기위한 함수
-
-
+    const handleIsImmediateDispatch = (data: any) => {
+        if (data.isimmediate) {
+            dispatch(setScheduleSelectModla(true));
+            dispatch(setDashBoardSelectUser(data));
+            dispatch(setAlertControlls(false));
+        } else {
+            dispatch(setDashBoardSelectUser(data)),
+                console.log("bbbbbb"),
+                dispatch(setWatingListBefore(data)),
+                dispatch(setAlertControlls(true))
+        }
     }
+
     console.log("waitlist", waitlist);
 
     const toggleDrawer =
@@ -142,20 +151,39 @@ export default function TemporaryDrawer(props: IProps) {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setAlertControlls(true)) }}>
+                        <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
                             </div>
                             <div style={{ display: "grid" }}>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>요청 시간 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.crated}</Text></Text>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>상담 방식 <Text subtitle style={{ marginLeft: `${rem(20)}` }} bold={false} size={15} color="#000">{list.method_str}</Text></Text>
+                                <Text
+                                    color=' rgba(0, 0, 0, 0.4)'
+                                    bold={false} size={15}>
+                                    요청 시간
+                                    <Text
+                                        subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false} size={15} color="#000">
+                                        {list.crated}
+                                    </Text>
+                                </Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                    상담 방식
+                                    <Text subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false}
+                                        size={15}
+                                        color="#000">
+                                        {list.isimmediate === true ? <span style={{ fontWeight: 'bold', color: '#eb541e' }}>[바로상담]</span> : <span style={{ fontWeight: 'bold', color: '#60ae92' }}>[예약상담]</span>}{list.method_str}
+                                    </Text>
+                                </Text>
                             </div>
                         </BoxItem>
                     )
                 })
             }
-        </Box>
+        </Box >
     );
 
     return (

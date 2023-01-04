@@ -341,6 +341,10 @@ function DayComponents(props: IProps) {
         }
     }, [])
 
+    useEffect(() => {
+        console.log("userType", userType);
+    }, [userType])
+
     return (
         <>
             <Div primary={props.days.format('ddd')} idx={props.rowIdx}>
@@ -365,7 +369,7 @@ function DayComponents(props: IProps) {
                         return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                             <StyledDiv key={index} onClick={() => {
                                 useOpen !== "null" && useOpen !== "시작전" && useOpen !== "전화" ? console.log("done...") :
-                                    open2(), res.method_str?.substr(0, 2) === "채팅" ? setUserType("채팅") : setUserType("전화"),
+                                    open2(), res.method_str?.substr(0, 4) === "주간채팅" || res.method_str?.substr(0, 4) === "야간채팅" ? setUserType("채팅") : setUserType("전화"),
                                     setUserName(res.user_name),
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
@@ -458,7 +462,7 @@ function DayComponents(props: IProps) {
                         :
                         <Div step style={{ marginTop: 0 }}>
                             <Text bold='normal' size={18} color={"#666"}>
-                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data?.method_str?.substr(0, 2)}</span>
+                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data?.method_str?.substr(0, 8)}</span>
                             </Text>
                         </Div>
                 }
@@ -476,7 +480,7 @@ function DayComponents(props: IProps) {
                             상담 시간
                         </Text>
                         <Text bold='normal'>
-                            {"50분"}
+                            {select_data?.method_str?.substr(4, 5)}
                         </Text>
                     </div>
                 </Text>
@@ -498,7 +502,7 @@ function DayComponents(props: IProps) {
                     }
                 </Text>
                 {
-                    select_data?.method_str?.substr(0, 2) === "전화" && callStatus === false ?
+                    userType === "전화" && callStatus === false ?
                         <RoundedButton
                             onClick={() => { console.log("전화 콜센터"), setCallStatus(true) }}
                             color="orange"
@@ -511,7 +515,7 @@ function DayComponents(props: IProps) {
                         >
                             상담시작(전화)
                         </RoundedButton>
-                        : select_data?.method_str?.substr(0, 2) === "채팅" ?
+                        : userType === "채팅" ?
                             <RoundedButton
                                 onClick={() => { handleDispatch(), console.log("채팅") }}
                                 color="orange"

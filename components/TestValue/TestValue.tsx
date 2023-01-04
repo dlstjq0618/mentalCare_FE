@@ -32,20 +32,21 @@ interface Iprops {
 function TestValue(props: Iprops) {
     const result = useSelector(selectTestResultValue);
     const test = useSelector(selectTestResultValueStatus);
+
     console.log("result", result)
 
     return (
         <>
             <BaseDialog2 showDialog={props.open} close={props.cancel} style={{ width: `${rem(600)}`, paddingBottom: `${rem(42)}` }}>
                 <Text bold size={20}>테스트 결과</Text>
-                {/* {result && result?.datas?.map((res: any, index: number) => {
+                {result.datas?.length > 0 && result?.datas?.map((res: any, index: number) => {
                     return <div key={index}>
                         <div>
                             {res?.question}
                         </div>
                         <div>
                             {
-                                Object.entries(res?.answer).map(([key, value]) => {
+                                Object?.entries(res?.answer).map(([key, value]) => {
                                     return <div key={index} style={{ color: 'red' }}>
                                         {value}
                                     </div>
@@ -53,7 +54,7 @@ function TestValue(props: Iprops) {
                             }
                         </div>
                     </div>
-                })} */}
+                })}
             </BaseDialog2>
         </>
     );

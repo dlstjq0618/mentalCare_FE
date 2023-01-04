@@ -46,6 +46,8 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     const dispatch = useDispatch()
     const handleClose = () => dispatch(setAlertControlls(false));
 
+    console.log("openopen", open)
+
 
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
@@ -60,7 +62,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
                 <p>예약 상담 일정 협의를 시작하시겠습니까?</p>
             </Text>
             <RoundedButton
-                onClick={() => { console.log("확인"), dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
+                onClick={() => { dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
                 color="orange"
                 css={{
                     fontSize: rem(15),

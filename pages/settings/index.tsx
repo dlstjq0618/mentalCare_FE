@@ -92,7 +92,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_holder_birthdate: data.accountHolderBirthdate === "" ? fileUploadDate.accountInfo.accountHolderBirthdate : data.accountHolderBirthdate,
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
-                opening_times: data.opening_times.length === 0 ? fileUploadDate.openingTimes : data.opening_times,
+                opening_times: data.opening_times,
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject,
                 /** 전화상담 금액 */
                 call_consultation_fifty_fee_day: data.call_consultation_fifty_fee_day,
