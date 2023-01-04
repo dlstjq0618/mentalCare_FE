@@ -22,7 +22,8 @@ import {
     selectScheduleSelectModla,
     selectWatingListBefore,
     selectDashBoardSelectUser,
-    selectChatBoxOpenState
+    selectChatBoxOpenState,
+    selectTestResultValue
 } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
@@ -172,6 +173,7 @@ function ApprovalModal(props: IProps) {
     const open = () => {
         setShow(true);
     };
+    const result = useSelector(selectTestResultValue);
 
     const close = () => setShow(false);
     const {
@@ -222,9 +224,14 @@ function ApprovalModal(props: IProps) {
                     <Text size={20} bold="bold">
                         {select_user?.user_name} 님
                     </Text>
-                    <Text size={13} button onClick={open3}>
-                        테스트 결과보기
-                    </Text>
+                    {
+                        result.datas?.subject_name ?
+                            ""
+                            :
+                            <Text size={13} button onClick={open3}>
+                                테스트 결과보기
+                            </Text>
+                    }
                 </Div>
                 <Line />
                 <Div>
