@@ -23,7 +23,8 @@ import {
     selectCounselingTimes,
     setAlertControlls2,
     selectTestResultValue,
-    selectCounselingFinalStep
+    selectCounselingFinalStep,
+    setChangeBeforeChatList
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 import TestValue from '../TestValue/TestValue';
@@ -345,6 +346,14 @@ function DayComponents(props: IProps) {
         console.log("userType", userType);
     }, [userType])
 
+    useEffect(() => {
+        console.log("select_data", select_data);
+    }, [select_data])
+
+    const handleFinishDispatch = () => {
+        dispatch(setChangeBeforeChatList(true));
+        dispatch(setCounselingState('finish'));
+    }
     return (
         <>
             <Div primary={props.days.format('ddd')} idx={props.rowIdx}>
@@ -397,8 +406,8 @@ function DayComponents(props: IProps) {
                         completeList && completeList.result?.map((res: any, index: number) => { // 완료됨
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv key={index} onClick={() => {
-                                    useOpen !== "null" ? console.log("done...") :
-                                        dispatch(setCounselingState('finish')), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                    useOpen !== "null" ? handleFinishDispatch() :
+                                        handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <StyledRadiusBlack />
                                     {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -452,7 +461,13 @@ function DayComponents(props: IProps) {
                         <>
                             <Div step style={{ marginTop: 0 }}>
                                 <Text bold='normal' size={18} color={"#666"}>
-                                    방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{userType}</span>
+                                    방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>
+                                        {select_data.isimmediate ?
+                                            <span>[바로상담]{select_data.method === 1 || select_data.method === 3 ? "전화상담(주간)" : "전화상담(야간)"}</span>
+                                            :
+                                            <span>[예약상담]{select_data.method === 1 || select_data.method === 3 ? "전화상담(주간)" : "전화상담(야간)"}</span>
+                                        }
+                                    </span>
                                 </Text>
                             </Div>
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
@@ -464,8 +479,17 @@ function DayComponents(props: IProps) {
                         </>
                         :
                         <Div step style={{ marginTop: 0 }}>
-                            <Text bold='normal' size={18} color={"#666"}>
+                            {/* <Text bold='normal' size={18} color={"#666"}>
                                 방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data?.method_str?.substr(0, 8)}</span>
+                            </Text> */}
+                            <Text bold='normal' size={18} color={"#666"}>
+                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>
+                                    {select_data.isimmediate ?
+                                        <span>[바로상담]{select_data.method === 5 || select_data.method === 7 ? "채팅상담(주간)" : "채팅상담(야간)"}</span>
+                                        :
+                                        <span>[예약상담]{select_data.method === 5 || select_data.method === 5 ? "채팅상담(주간)" : "채팅상담(야간)"}</span>
+                                    }
+                                </span>
                             </Text>
                         </Div>
                 }

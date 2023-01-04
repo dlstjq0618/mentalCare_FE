@@ -60,6 +60,8 @@ import {
     selectAlertControlls,
     setTestResultValue,
     selectTestResultValueStatus,
+    selectChangeBeforeChatList,
+    setChangeBeforeChatList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -272,6 +274,11 @@ export default function BoxSx() {
     const test_status = useSelector(selectTestResultValueStatus);
     const [comfrim_isMessage, setComfrimIsMessage] = useState<any>([])
     const [object, setObject] = useState({});
+    const coco = useSelector(selectChangeBeforeChatList);
+
+    useEffect(() => {
+        console.log("coco", coco)
+    }, [coco])
 
 
     console.log("before_wating", before_wating);
@@ -439,6 +446,7 @@ export default function BoxSx() {
 
     async function handleRoomJoin() { // 처음 시작할때 
         dispatch(setChatBoxOpenState('시작'))
+        setIsMessage([])
         const req = {
             roomId: select_user.room_id,
             user_type: 6,
@@ -525,6 +533,7 @@ export default function BoxSx() {
             }
         }
         socket.emit('counsel_submit', data1);
+        await dispatch(setChangeBeforeChatList(false))
     }
 
     const handleOnComplete = () => { // 상담완료, 채팅창의 선택박스에서 상담완료 설정
@@ -686,7 +695,7 @@ export default function BoxSx() {
         if (counselingStatus === 'finish') {
             handleFinishChatList()
         }
-    }, [counselingStatus])
+    }, [counselingStatus, coco])
 
     useEffect(() => { // 캘린더 컨트롤 
         if (useOpen === '완료') {
@@ -706,6 +715,10 @@ export default function BoxSx() {
         console.log("useOpen", useOpen);
     }, [useOpen])
 
+    useEffect(() => {
+        console.log("counselingStatus", counselingStatus)
+    }, [counselingStatus])
+
 
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
@@ -722,10 +735,6 @@ export default function BoxSx() {
     useEffect(() => {
         console.log("isMessage", isMessage);
     }, [isMessage])
-
-    useEffect(() => {
-        setUserName(select_user?.user_name)
-    }, [counselingStatus])
 
     useEffect(() => {
         if (cancel_status) {
@@ -830,7 +839,7 @@ export default function BoxSx() {
                                                         {
                                                             res?.type === 'receve' ?
                                                                 <>
-                                                                    <span>{userName}</span>
+                                                                    <span>{select_user?.user_name}</span>
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                         <Div bg='#ffffe7' type="right">
                                                                             {res?.message}

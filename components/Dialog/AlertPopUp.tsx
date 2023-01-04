@@ -12,6 +12,7 @@ import {
     setAlertControlls3,
     setChatBoxOpenState,
     selectAlertControlls2,
+    setCounselingState,
     selectAlertControlls3,
 } from '~/store/calendarDetailSlice';
 
@@ -83,6 +84,7 @@ export function AlertPopUp3(props: IProps) { // 진행중인 팝업
         await dispatch(setChatBoxOpenState('null'));
         dispatch(setAlertControlls3(false))
         await dispatch(setChatBoxOpenState('진행'));
+        dispatch(setCounselingState("null"))
     }
 
 

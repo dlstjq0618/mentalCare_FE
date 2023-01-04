@@ -67,6 +67,7 @@ type DiagnosisDetailStoreState = {
   test_modal: boolean;
   price: boolean;
   test_status: boolean;
+  bofore_chat: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -121,6 +122,7 @@ const initialState: DiagnosisDetailStoreState = {
   test_modal: false,
   price: false,
   test_status: false,
+  bofore_chat: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -481,6 +483,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.test_status = action.payload;
     },
+    setChangeBeforeChatList(
+      // 지난 대화방을 보고있을 때 이전 대화방 리스트 불러오는 boolean type, 단순 랜더링 용도
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["bofore_chat"]>
+    ) {
+      state.bofore_chat = action.payload;
+    },
   },
 });
 
@@ -534,6 +543,7 @@ export const {
   setTestResultValue,
   setPriceZreo,
   setTestResultValueStatus,
+  setChangeBeforeChatList,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -630,5 +640,7 @@ export const selectTestResultValue = (state: RootState) =>
 export const selectPriceZreo = (state: RootState) => state.calendarDetail.price;
 export const selectTestResultValueStatus = (state: RootState) =>
   state.calendarDetail.test_status;
+export const selectChangeBeforeChatList = (state: RootState) =>
+  state.calendarDetail.bofore_chat;
 
 export default calendarDetailSilce.reducer;
