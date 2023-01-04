@@ -374,7 +374,7 @@ function DayComponents(props: IProps) {
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
                                     dispatch(setTestResultValueStatus(true)),
-                                    res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("전화")) : dispatch(setChatBoxOpenState('시작전'))
+                                    res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("null")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <StyledRadius />
                                 {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -425,7 +425,7 @@ function DayComponents(props: IProps) {
                         {userName}{" 님"}
                     </Text>
                     {
-                        result === undefined ?
+                        result.datas?.subject_name ?
                             ""
                             :
                             <Text size={13} button onClick={open3}>
@@ -456,6 +456,9 @@ function DayComponents(props: IProps) {
                                 </Text>
                             </Div>
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
+                                {
+                                    console.log("userPhoneNumber", userPhoneNumber)
+                                }
                                 {userPhoneNumber && userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
                             </Text>
                         </>
@@ -504,7 +507,7 @@ function DayComponents(props: IProps) {
                 {
                     userType === "전화" && callStatus === false ?
                         <RoundedButton
-                            onClick={() => { console.log("전화 콜센터"), setCallStatus(true) }}
+                            onClick={() => { setCallStatus(true), dispatch(setChatBoxOpenState("전화")) }}
                             color="orange"
                             css={{
                                 fontSize: rem(15),
@@ -530,7 +533,7 @@ function DayComponents(props: IProps) {
                             </RoundedButton>
                             :
                             <RoundedButton
-                                onClick={() => { console.log("상담완료"), close2(), dispatch(setChatBoxOpenState("전화완료")) }}
+                                onClick={() => { console.log("상담완료"), close2(), dispatch(setChatBoxOpenState("전화완료")), setUserType("") }}
                                 color="orange"
                                 css={{
                                     fontSize: rem(15),

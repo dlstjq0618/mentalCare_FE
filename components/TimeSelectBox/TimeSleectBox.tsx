@@ -128,7 +128,14 @@ function TimeSleectBox(props: Iprops) {
         <>
             <Arricle>
                 {
-                    props.first ? <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => { dispatch(setChatBoxOpenState("null")), handleOpenStatus2(), dispatch(setScheduleSelectModla(true)) }}>{"협의완료"}</Button>
+                    props.first ?
+                        <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => {
+                            dispatch(setChatBoxOpenState("null")),
+                                handleOpenStatus2(),
+                                dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
+                        }}>
+                            {"협의완료"}
+                        </Button>
                         :
                         counselingStatus === 'finish' ?
                             <Button onClick={handleClose} type={"finish"}>{"닫기"}</Button>

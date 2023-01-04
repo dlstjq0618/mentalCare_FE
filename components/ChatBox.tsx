@@ -52,8 +52,7 @@ import {
     selectSelectBoxControlls,
     removeList,
     clear,
-    setUserChatRefresh,
-    selectUserChatRefresh,
+    setTestResultValueStatus,
     setUserCallNumber,
     selectCancelStatus,
     setCancelStatus,
@@ -425,7 +424,7 @@ export default function BoxSx() {
         await dispatch(setCounselingFinalStep(""))
     }
 
-    const handleTest = () => {
+    async function handleTest() {
         const data1 = {
             method: "room/test/result",
             datas: {
@@ -433,6 +432,7 @@ export default function BoxSx() {
             }
         }
         socket.emit('counsel_submit', data1)
+        await dispatch(setTestResultValueStatus(false))
     }
 
     const room_join = useSelector(selectDashBoardRoomJoin)
@@ -546,9 +546,10 @@ export default function BoxSx() {
                 user_type: 6
             }
         })
+        await dispatch(setUserCallNumber(""))
     }
 
-    const handleCallCounselorting = () => {
+    async function handleCallCounselorting() {
         console.log("전화 핸들러 실행");
         socket.emit('counsel_submit', {
             method: 'room/call/join',
@@ -556,6 +557,7 @@ export default function BoxSx() {
                 roomId: select_user.room_id,
             }
         })
+        await dispatch(setChatBoxOpenState("null"))
     }
 
     const handleFirstOnComplete = () => { // 일정 협의 채팅방 종료 
@@ -732,8 +734,11 @@ export default function BoxSx() {
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
             handleTest()
+            console.log("태스트아이디 실행");
         }
     }, [test_status])
+
+    console.log("test_status", test_status)
 
 
     useEffect(() => {

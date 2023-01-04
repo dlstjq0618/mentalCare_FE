@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -100,13 +100,13 @@ export default function TemporaryDrawer(props: IProps) {
     }
 
     const handleIsImmediateDispatch = (data: any) => {
+        dispatch(setTestResultValueStatus(true))
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(true));
             dispatch(setDashBoardSelectUser(data));
             dispatch(setAlertControlls(false));
         } else {
             dispatch(setDashBoardSelectUser(data)),
-                console.log("bbbbbb"),
                 dispatch(setWatingListBefore(data)),
                 dispatch(setAlertControlls(true))
         }
