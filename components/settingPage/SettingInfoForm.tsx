@@ -313,9 +313,11 @@ function SettingInfoForm(props: IProps) {
                                         :
                                         <div style={{ display: 'flex' }}>
                                             <Input css={{ height: rem(31), width: rem(150) }}
+                                                value={textValue}
                                                 autoComplete='false'
                                                 onChange={(e) => {
-                                                    setValue('mobile', e.target.value)
+                                                    // setValue('mobile', e.target.value)
+                                                    onlyNumberText(e.target.value)
                                                 }} maxLength={11} />
                                             <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text>
                                         </div>
@@ -344,7 +346,7 @@ function SettingInfoForm(props: IProps) {
                         onChange={(e) => {
                             setIsPassword(e.target.value)
                         }}
-                        autoComplete='false'
+                        autoComplete='new-password'
                         id="password"
                         type="password"
                         placeholder="비밀번호를 입력해주세요."
