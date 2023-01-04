@@ -7,6 +7,8 @@ import styled, { css } from 'styled-components';
 interface IStyled {
     size?: any;
     bold?: boolean;
+    center?: boolean;
+
 }
 const Text = styled.div<IStyled>`
 line-height: 1.4;
@@ -18,9 +20,19 @@ line-height: 1.4;
     ${(props) =>
         props.bold &&
         css`
-        text-align: center;
         font-weight: bold;
         color: #333;
+    `}
+    ${(props) =>
+        props.bold &&
+        css`
+        font-weight: bold;
+        color: #333;
+    `}
+    ${(props) =>
+        props.center &&
+        css`
+        text-align: center;
     `}
 `;
 
@@ -37,13 +49,13 @@ function TestValue(props: Iprops) {
 
     return (
         <>
-            <BaseDialog2 showDialog={props.open} close={props.cancel} style={{ width: `${rem(600)}`, paddingBottom: `${rem(42)}` }}>
-                <Text bold size={20}>테스트 결과</Text>
+            <BaseDialog2 showDialog={props.open} close={props.cancel} style={{ width: `${rem(570)}`, padding: `${rem(40)}` }}>
+                <Text bold center size={20}>테스트 결과</Text>
                 {result.datas?.length > 0 && result?.datas?.map((res: any, index: number) => {
                     return <div key={index}>
-                        <div>
+                        <Text size={15} bold>
                             {res?.question}
-                        </div>
+                        </Text>
                         <div>
                             {
                                 Object?.entries(res?.answer).map(([key, value]) => {

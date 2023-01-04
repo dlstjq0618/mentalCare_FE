@@ -154,7 +154,10 @@ function ApprovalModal(props: IProps) {
     const modalState = useSelector(selectScheduleSelectModla)
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터
     const select_user = useSelector(selectDashBoardSelectUser);
+
     const [test_modal, setTest_modal] = useState(false);
+    const open3 = () => { setTest_modal(true); }
+    const close3 = () => setTest_modal(false)
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러
@@ -169,7 +172,7 @@ function ApprovalModal(props: IProps) {
     const open = () => {
         setShow(true);
     };
-    const close3 = () => setTest_modal(false)
+
     const close = () => setShow(false);
     const {
         register,
@@ -219,9 +222,9 @@ function ApprovalModal(props: IProps) {
                     <Text size={20} bold="bold">
                         {select_user?.user_name} 님
                     </Text>
-                    {/* <Text button>
+                    <Text size={13} button onClick={open3}>
                         테스트 결과보기
-                    </Text> */}
+                    </Text>
                 </Div>
                 <Line />
                 <Div>
@@ -314,7 +317,7 @@ function ApprovalModal(props: IProps) {
                     </RoundedButton>
                 </Div>
             </BaseDialog2>
-            {/* <TestValue open={test_modal} cancel={close3} /> */}
+            <TestValue open={test_modal} cancel={close3} />
         </>
     );
 }
