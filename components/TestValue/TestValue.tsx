@@ -8,9 +8,10 @@ interface IStyled {
     size?: any;
     bold?: boolean;
     center?: boolean;
+    discription?: boolean;
 
 }
-const Text = styled.div<IStyled>`
+const Text = styled.span<IStyled>`
 line-height: 1.4;
     ${(props) =>
         props.size &&
@@ -32,7 +33,14 @@ line-height: 1.4;
     ${(props) =>
         props.center &&
         css`
+        padding-bottom: 32px;
         text-align: center;
+    `}
+    ${(props) =>
+        props.discription &&
+        css`
+        margin-bottom: 14px;
+    letter-spacing: -0.45px;
     `}
 `;
 
@@ -52,20 +60,20 @@ function TestValue(props: Iprops) {
             <BaseDialog2 showDialog={props.open} close={props.cancel} style={{ width: `${rem(570)}`, padding: `${rem(40)}` }}>
                 <Text bold center size={20}>테스트 결과</Text>
                 {result.datas?.length > 0 && result?.datas?.map((res: any, index: number) => {
-                    return <div key={index}>
+                    return <Text key={index} discription>
                         <Text size={15} bold>
                             {res?.question}
                         </Text>
                         <div>
                             {
                                 Object?.entries(res?.answer).map(([key, value]: any) => {
-                                    return <div key={index} style={{ color: 'red' }}>
+                                    return <Text key={index} size={15}>
                                         {value}
-                                    </div>
+                                    </Text>
                                 })
                             }
                         </div>
-                    </div>
+                    </Text>
                 })}
             </BaseDialog2>
         </>
