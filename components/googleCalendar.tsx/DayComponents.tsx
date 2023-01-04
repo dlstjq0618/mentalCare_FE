@@ -379,7 +379,7 @@ function DayComponents(props: IProps) {
                                     res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("null")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <Status color='#d8430e' border='#eb541e'>예약</Status>
-                                <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                 {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                             </StyledDiv> : ""
                     })}
@@ -392,7 +392,7 @@ function DayComponents(props: IProps) {
                                 }}>
 
                                     <Status color='#60ae92' border='#60ae92'>진행</Status>
-                                    <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                    <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
                                 : ""
@@ -406,7 +406,7 @@ function DayComponents(props: IProps) {
                                         handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <Status color='#666' border='#666'>완료</Status>
-                                    <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                    <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
                                 : ""
@@ -417,7 +417,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv style={{ color: '#b4b4b4' }} key={index} onClick={() => { console.log("취소된 상담 건입니다.") }}>
                                     <Status color='#b4b4b4' border='#b4b4b4'>취소</Status>
-                                    <span style={{ letterSpacing: '-1.4px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
+                                    <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
                                 : ""
