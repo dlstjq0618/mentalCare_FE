@@ -14,7 +14,9 @@ import {
 import { styled } from "~/stitches.config";
 import { loginFormSchema } from "~/utils/form.utils";
 import { signIn } from "~/utils/nextAuth.utils";
-import { api } from "~/woozooapi"
+import { api } from "~/woozooapi";
+import counselorLogo from '../../public/counser.png';
+import { Image } from "~/components";
 
 const LoginFormSectionWrapper = styled("article", {
   position: "relative",
@@ -49,6 +51,23 @@ const LoginFormSectionWrapper = styled("article", {
     alignItems: "center",
   },
 });
+
+const StyledInput = styled("div", {
+  height: "23px",
+  borderRadius: "18px",
+  border: "solid 2px #e73e11",
+  letterSpacing: "-0.4px",
+  backgroundColor: "#e8440a",
+  marginTop: "30px",
+  marginLeft: "-12px",
+  width: "60px",
+  textAlign: "center",
+  color: "#fff",
+  lineHeight: 1.4,
+  Zindex: 20,
+  padding: 3
+});
+
 
 const resolver: Resolver<{ email: string; password: string }> =
   yupResolver(loginFormSchema);
@@ -98,6 +117,10 @@ export const LoginFormSection = () => {
   return (
     <LoginFormSectionWrapper>
       <h1>로그인</h1>
+      {/* <div style={{ display: 'flex', alignSelf: 'center', marginBottom: '38.8px' }}>
+        <Image src={counselorLogo} width={100} height={50} />
+        <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
+      </div> */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div
           css={{

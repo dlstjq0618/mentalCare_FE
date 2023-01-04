@@ -62,7 +62,6 @@ export default function App({
   //     });
   // }, []);
 
-  console.log("app")
 
   return (
     <>
@@ -71,7 +70,7 @@ export default function App({
         <ContextWrapper >
           <SessionProvider session={session}>
             <Head>
-              <title>우주상담소</title>
+              <title>우주약방 마음상담</title>
               <meta name="description" content="로켓닥터" />
               <link rel="shortcut icon" href="/favicon.ico" />
             </Head>

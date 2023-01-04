@@ -273,7 +273,7 @@ export default function BoxSx() {
     const [userName, setUserName] = useState("")
     const test_status = useSelector(selectTestResultValueStatus);
     const [comfrim_isMessage, setComfrimIsMessage] = useState<any>([])
-    const [object, setObject] = useState({});
+    const [object, setObject] = useState<any>({});
     const coco = useSelector(selectChangeBeforeChatList);
 
     useEffect(() => {
@@ -291,21 +291,6 @@ export default function BoxSx() {
     }, [])
 
     const test = useSelector(selectLoggedUser);
-
-    // useEffect(() => {
-    //     const filterData = test.filter((res: any) => {
-    //         return res?.roomId === select_user.room_id
-    //     })
-
-    //     const newArray = test?.filter((item: { chat_id: any; }, i: any) => {
-    //         return (
-    //             test?.findIndex((item2: { chat_id: any; }, j: any) => {
-    //                 return item?.chat_id === item2?.chat_id;
-    //             }) === i
-    //         );
-    //     });
-
-    // }, [test])
 
 
     // console.log("newArray", newArray);
@@ -397,12 +382,35 @@ export default function BoxSx() {
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => { // 만약 selectLoggedUser를 filter 를 사용하여 chat_id 와 res.datas.chat_id 와 같은게 있으면 넣지 마라 
             dispatch(setLoggedUser(res?.datas));
-            setObject(res?.datas)
+            setObject(res?.datas);
         })
     }, [])
 
+    //     useEffect(() => {
+    //     const filterData = object.filter((res: any) => {
+    //         return res?.roomId === select_user.room_id
+    //     })
+
+    //     const newArray = test?.filter((item: { chat_id: any; }, i: any) => {
+    //         return (
+    //             test?.findIndex((item2: { chat_id: any; }, j: any) => {
+    //                 return item?.chat_id === item2?.chat_id;
+    //             }) === i
+    //         );
+    //     });
+
+    // }, [test])
+
+
     useEffect(() => {
-        setIsMessage([...isMessage, object])
+        if (object?.roomId !== undefined) {
+            if (object?.roomId === select_user?.room_id) {
+                console.log("같음");
+                setIsMessage([...isMessage, object])
+            } else {
+                console.log("다름")
+            }
+        }
     }, [object])
 
 

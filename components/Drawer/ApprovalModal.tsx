@@ -215,7 +215,7 @@ function ApprovalModal(props: IProps) {
     }
 
     console.log("before_wating", before_wating);
-    console.log("select_user4444", select_user)
+    console.log("select_user4444", select_user);
 
     return (
         <>

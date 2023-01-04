@@ -101,6 +101,7 @@ export default function TemporaryDrawer(props: IProps) {
 
     const handleIsImmediateDispatch = (data: any) => {
         dispatch(setTestResultValueStatus(true))
+        dispatch(setChatBoxOpenState('null'))
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(true));
             dispatch(setDashBoardSelectUser(data));

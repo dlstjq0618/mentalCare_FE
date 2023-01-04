@@ -102,8 +102,9 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
 
   const consultingList = useSelector(selectConsultingList); // 상담중
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
+  const waitingList = useSelector(selectWaitlist)
 
-  const watingRoom_count = consultingList.count + reservationList.count;
+  const watingRoom_count = consultingList.count + reservationList.count + waitingList.count;
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);

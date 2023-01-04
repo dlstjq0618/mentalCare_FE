@@ -53,8 +53,6 @@ function TestValue(props: Iprops) {
     const result = useSelector(selectTestResultValue);
     const test = useSelector(selectTestResultValueStatus);
 
-    // console.log("result", result)
-
     return (
         <>
             <BaseDialog2 showDialog={props.open} close={props.cancel} style={{ width: `${rem(570)}`, padding: `${rem(40)}` }}>

@@ -13,7 +13,7 @@ const LoginPage = () => {
       <PageTitle>로그인</PageTitle>
       <LoginPageWrapper>
         <LoginPageMain>
-          <LogoAndRegisterSection />
+          {/* <LogoAndRegisterSection /> */}
           <LoginFormSection />
         </LoginPageMain>
       </LoginPageWrapper>
