@@ -46,9 +46,6 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     const dispatch = useDispatch()
     const handleClose = () => dispatch(setAlertControlls(false));
 
-    console.log("openopen", open)
-
-
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
             style={{
@@ -82,6 +79,14 @@ export function AlertPopUp3(props: IProps) { // 진행중인 팝업
     const dispatch = useDispatch()
     const handleClose = () => dispatch(setAlertControlls3(false));
 
+    async function handleChatingRoomOpen() {
+        await dispatch(setChatBoxOpenState('null'));
+        dispatch(setAlertControlls3(false))
+        await dispatch(setChatBoxOpenState('진행'));
+    }
+
+
+
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="상담중 입장 팝업"
             style={{
@@ -95,7 +100,7 @@ export function AlertPopUp3(props: IProps) { // 진행중인 팝업
                 <p>상담을 이어가시겠습니까?</p>
             </Text>
             <RoundedButton
-                onClick={() => { console.log("확인"), dispatch(setAlertControlls3(false)), dispatch(setChatBoxOpenState('진행')) }}
+                onClick={() => { handleChatingRoomOpen() }}
                 color="orange"
                 css={{
                     fontSize: rem(15),

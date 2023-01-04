@@ -374,7 +374,7 @@ function DayComponents(props: IProps) {
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
                                     dispatch(setTestResultValueStatus(true)),
-                                    res.method_str?.substr(0, 2) === "전화" ? dispatch(setChatBoxOpenState("전화")) : dispatch(setChatBoxOpenState('시작전'))
+                                    res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("전화")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <StyledRadius />
                                 {res.user_name.length > 6 ? res.user_name.substr(0, 7) + "..." : res.user_name}
@@ -456,7 +456,7 @@ function DayComponents(props: IProps) {
                                 </Text>
                             </Div>
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
-                                {userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
+                                {userPhoneNumber && userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
                             </Text>
                         </>
                         :

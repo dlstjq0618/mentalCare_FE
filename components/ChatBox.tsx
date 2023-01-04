@@ -304,7 +304,6 @@ export default function BoxSx() {
 
     // console.log("newArray", newArray);
     console.log("test", test);
-    console.log("comfrim_isMessage", comfrim_isMessage);
 
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
@@ -336,15 +335,12 @@ export default function BoxSx() {
                     setFinishChat(chatList); // 이전대화 목록이 들어간다.
                     dispatch(setHistoryChat(historyList));
                     dispatch(setFinishChatList(chatList));
-                    // const arrisMessage = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
-                    //     arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
-                    // });
-                    // setIsMessage([...chatList, ...test]);
-                    setIsMessage([...isMessage, ...chatList]); // 기존 배열에 이전 대화 리스트 들어간다.
+                    // setIsMessage([...isMessage, ...chatList]); // 기존 배열에 이전 대화 리스트 들어간다.
+                    setIsMessage(chatList)
 
             }
         })
-    }, [select_user, before_wating.user_name, user_name])
+    }, [select_user, before_wating.user_name])
 
     useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
@@ -489,8 +485,8 @@ export default function BoxSx() {
     }
 
     async function handleWaitingRoomJoin() { // 진행중
-        await dispatch(clear())
-        await handleFinishChatList()
+        await dispatch(clear());
+        await handleFinishChatList();
         // roomJoin
         const req = {
             roomId: select_user.room_id,
@@ -520,6 +516,7 @@ export default function BoxSx() {
 
     async function handleFinishChatList() { // 지난 채팅 리스트 불러옴
         await dispatch(clear())
+        await setIsMessage([]);
         const data1 = {
             method: "room/chat/list",
             datas: {
@@ -556,7 +553,7 @@ export default function BoxSx() {
         socket.emit('counsel_submit', {
             method: 'room/call/join',
             datas: {
-                roomId: intRoom_id,
+                roomId: select_user.room_id,
             }
         })
     }
@@ -726,19 +723,17 @@ export default function BoxSx() {
     }, [useOpen])
 
     useEffect(() => {
-        if (select_user.method_str?.substr(0, 2) === "전화") { //전화 상담 시작할때 
+        if (useOpen === "전화") { //전화 상담 시작할때 
+            console.log("전화상담 실행 ")
             handleCallCounselorting()
         }
-    }, [select_user])
+    }, [useOpen])
 
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
             handleTest()
         }
     }, [test_status])
-
-    // useEffect(() => { // 채팅창의 선택박스 컨트롤 한것이 여기로 들어가서 이벤트 발생 !
-    // }, [])
 
 
     useEffect(() => {

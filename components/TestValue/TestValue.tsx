@@ -53,7 +53,7 @@ function TestValue(props: Iprops) {
     const result = useSelector(selectTestResultValue);
     const test = useSelector(selectTestResultValueStatus);
 
-    console.log("result", result)
+    // console.log("result", result)
 
     return (
         <>
