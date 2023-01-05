@@ -380,6 +380,9 @@ export default function BoxSx() {
                 const result3 = datas.list;
                 console.log("취소", result3);
                 dispatch(setDashBoardCancelList(result3))
+            } else if (method === 'paidList') {
+                const result4 = datas.list;
+                console.log("결제완료", result4)
             }
         })
     }, [user_dashborad, user_name])

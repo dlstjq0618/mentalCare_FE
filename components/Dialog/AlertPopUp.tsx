@@ -39,6 +39,9 @@ const Text = styled.span<IStyled>`
         color: ${props.color};
     `}
 `;
+const P = styled.p<IStyled>` 
+    margin-bottom: 5px;
+`;
 
 export function AlertPopUp(props: IProps) { // 협의 팝업
     const select_user = useSelector(selectDashBoardSelectUser);
@@ -51,25 +54,41 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
             style={{
                 marginTop: '23vh',
-                width: `${rem(376)}`,
-                height: `${rem(248)}`,
+                width: `${rem(440)}`,
+                height: `auto`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
             }}>
             <Text size={17} color={"#333"}>
                 <span style={{ fontWeight: "bold" }}>{wating_user.user_name}</span>님과
-                <p>예약 상담 일정 협의를 시작하시겠습니까?</p>
+                <P>예약 상담 일정 협의를 시작하시겠습니까?</P>
+                <P>확인을 누르면 내담자에게 즉시</P>
+                <P>일정 협의 요청 카카오 알림톡이 발송 됩니다.</P>
             </Text>
-            <RoundedButton
-                onClick={() => { dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
-                color="orange"
-                css={{
-                    fontSize: rem(15),
-                    height: rem(50),
-                    width: "100%",
-                }}
-            >
-                확인
-            </RoundedButton>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <RoundedButton
+                    onClick={() => { dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
+                    color="orange"
+                    css={{
+                        width: rem(190),
+                        fontSize: rem(15),
+                        height: rem(50),
+                    }}
+                >
+                    확인
+                </RoundedButton>
+                <RoundedButton
+                    onClick={() => { dispatch(setAlertControlls(false)) }}
+                    color="gray"
+                    css={{
+                        width: rem(190),
+                        fontSize: rem(15),
+                        height: rem(50),
+                    }}
+                >
+                    취소
+                </RoundedButton>
+            </div>
+
         </BaseDialog2>
     );
 }
