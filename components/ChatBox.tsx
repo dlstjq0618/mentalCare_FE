@@ -73,7 +73,7 @@ interface IStyled {
     center?: boolean;
     bg?: string;
     height?: string | number;
-    type?: "time" | "footer" | "main" | "button" | "chat" | "left" | "right" | "finish" | "title";
+    type?: "time" | "footer" | "main" | "button" | "chat" | "left" | "right" | "finish" | "title" | "name";
 }
 
 const chatData = [{
@@ -121,7 +121,8 @@ ${(props) =>
     ${(props) =>
         props.type === "main" &&
         css`
-        background: linear-gradient(-45deg, lightblue, #f3f3a9);
+        /* background: linear-gradient(-45deg, lightblue, #f3f3a9); */
+        background: #fff1ea;
     `}
     ${(props) =>
         props.height &&
@@ -158,6 +159,19 @@ ${(props) =>
 `;
 
 const Text = styled.div<IStyled>`
+    ${(props) =>
+        props.type === "name" &&
+        css`
+  flex-grow: 0;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000;
+    `}
+
     ${(props) =>
         props.type === "title" &&
         css`
@@ -277,13 +291,6 @@ export default function BoxSx() {
     const coco = useSelector(selectChangeBeforeChatList);
 
     useEffect(() => {
-        console.log("coco", coco)
-    }, [coco])
-
-
-    console.log("before_wating", before_wating);
-
-    useEffect(() => {
         socket.on("connect", () => {
             console.log("SOCKET CONNECTED!", socket.id);
             // connection id 바꼇으면 감지하여 룸입장 다시해야함
@@ -291,10 +298,6 @@ export default function BoxSx() {
     }, [])
 
     const test = useSelector(selectLoggedUser);
-
-
-    // console.log("newArray", newArray);
-    console.log("test", test);
 
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
@@ -732,7 +735,6 @@ export default function BoxSx() {
         } else if (useOpen === "협의완료") {
             handleComplete()
         }
-
         console.log("useOpen", useOpen);
     }, [useOpen])
 
@@ -860,7 +862,7 @@ export default function BoxSx() {
                                                         {
                                                             res?.type === 'receve' ?
                                                                 <>
-                                                                    <span>{select_user?.user_name}</span>
+                                                                    <Text type='name'>{select_user?.user_name}</Text>
                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                         <Div bg='#ffffe7' type="right">
                                                                             {res?.message}
@@ -981,8 +983,8 @@ export default function BoxSx() {
                                                             {
                                                                 res?.type === 'receve' ?
                                                                     <>
-                                                                        <span>{select_user?.user_name}</span>
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                        <Text type='name'>{select_user?.user_name}</Text>
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
                                                                                 {res?.message}
                                                                             </Div>
@@ -1086,12 +1088,11 @@ export default function BoxSx() {
                                                     isMessage?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                <span></span>
                                                                 {
                                                                     res?.type === 'receve' ?
                                                                         <>
-                                                                            <span>{before_wating.user_name}</span>
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                            <Text type='name'>{before_wating.user_name}</Text>
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
                                                                                 <Div bg='#ffffe7' type="right">
                                                                                     {res?.message}
                                                                                 </Div>
@@ -1209,11 +1210,11 @@ export default function BoxSx() {
                                                 <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                     {
                                                         isMessage?.map((res: any, index: number) => (
-                                                            res?.type === 'receve' ?
-                                                                <>
-                                                                    <span>{select_user?.user_name}</span>
-                                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(20)}` }}>
+                                                            <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                {res?.type === 'receve' ?
+                                                                    <>
+                                                                        <Text type='name'>{select_user?.user_name}</Text>
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
                                                                                 {res?.message}
                                                                             </Div>
@@ -1221,11 +1222,9 @@ export default function BoxSx() {
                                                                                 {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                             </Div>
                                                                         </Div>
-                                                                    </div>
-                                                                </>
-                                                                :
-                                                                res?.type === 'send' ?
-                                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                    </>
+                                                                    :
+                                                                    res?.type === 'send' ?
                                                                         <Div type='chat'>
                                                                             <div />
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
@@ -1237,10 +1236,10 @@ export default function BoxSx() {
                                                                                 </Div>
                                                                             </Div>
                                                                         </Div>
-                                                                    </div>
-                                                                    :
-                                                                    console.log("다른것")
-
+                                                                        :
+                                                                        console.log("다른것")
+                                                                }
+                                                            </div>
 
                                                         ))
                                                     }
