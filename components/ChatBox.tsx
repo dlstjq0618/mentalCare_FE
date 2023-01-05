@@ -490,7 +490,18 @@ export default function BoxSx() {
     const alert_status = useSelector(selectAlertControlls);
     const alert_status3 = useSelector(selectAlertControlls);
 
+    async function handleChatCreate() { // 협의 시작 하기전 앱으로 던지는 이벤트 
+        const data1 = {
+            method: "room/reservation/chat/create",
+            datas: {
+                roomId: select_user.room_id
+            }
+        }
+        socket.emit('counsel_submit', data1)
+    }
+
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방
+        await handleChatCreate();
         await dispatch(clear());
         await handleFinishChatList();
         // roomJoin
@@ -503,6 +514,7 @@ export default function BoxSx() {
             "method": "join",
             "datas": req
         });
+
     }
 
     async function handleWaitingRoomJoin() { // 진행중
@@ -971,7 +983,7 @@ export default function BoxSx() {
                                 <Div type='main'>
                                     <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                         <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                            우주약방 마음상담<div style={{ color: '#b53e14' }}>({select_user?.user_name})</div>(시작)
+                                            우주약방 마음상담<div style={{ color: '#b53e14' }}>({select_user?.user_name.length > 7 ? select_user?.user_name?.substr(0, 7) + "..." : select_user?.user_name})</div>(시작)
                                         </Text>
                                         <div style={{ display: 'flex' }}>
                                             {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
@@ -1236,17 +1248,19 @@ export default function BoxSx() {
                                                                         </div>
                                                                         :
                                                                         res?.type === 'send' ?
-                                                                            <Div type='chat'>
-                                                                                <div />
-                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                        {format(new Date(res?.time), 'a hh:mm')}
-                                                                                    </Div>
-                                                                                    <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                        {res?.message}
+                                                                            <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                                <Div type='chat'>
+                                                                                    <div />
+                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                            {format(new Date(res?.time), 'a hh:mm')}
+                                                                                        </Div>
+                                                                                        <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                            {res?.message}
+                                                                                        </Div>
                                                                                     </Div>
                                                                                 </Div>
-                                                                            </Div>
+                                                                            </div>
                                                                             :
                                                                             console.log("다른것")
                                                                 }

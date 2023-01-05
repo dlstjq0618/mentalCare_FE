@@ -11,4 +11,5 @@ export const LoginPageMain = styled("main", {
   backgroundColor: "$white",
   overflow: "hidden",
   boxShadow: "0 8px 8px 0 rgba(0, 0, 0, 0.1)",
+  marginTop: '22vh'
 });

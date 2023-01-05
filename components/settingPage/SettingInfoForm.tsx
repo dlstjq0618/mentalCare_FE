@@ -295,7 +295,7 @@ function SettingInfoForm(props: IProps) {
                             <Text size={17} color={"#999"}>
                                 {"email"}
                             </Text>
-                            <Text size={17} color={"#333"}>
+                            <Text size={17} color={"#333"} width={225} style={{ marginRight: `${rem(120)}` }}>
                                 {infoData.uid}
                             </Text>
                         </MainDiv>
@@ -303,7 +303,7 @@ function SettingInfoForm(props: IProps) {
                             <Text size={17} color={"#999"} style={{ minWidth: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}` }}>
+                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}`, marginRight: `${rem(120)}` }}>
                                 {
                                     !phoneNumberChange ?
                                         <div style={{ textAlign: `left` }}>
