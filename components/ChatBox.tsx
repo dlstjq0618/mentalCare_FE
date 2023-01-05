@@ -813,9 +813,6 @@ export default function BoxSx() {
     // }, [useOpen])
 
 
-    console.log("test_status", test_status)
-    console.log("status_alert", status_alert);
-
     useEffect(() => {
         if (!status_alert) {
             setUserName(select_user?.user_name)
@@ -834,8 +831,6 @@ export default function BoxSx() {
 
 
     const select_room_id = Number(select_user.room_id)
-
-    console.log("finish_chat", finish_chat); // 완료된 상담내역 리스트 체크 
 
     // console.log("useOpen", useOpen);
     // console.log('finish', finish_chat);
