@@ -67,11 +67,15 @@ export default function PriceGrid() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (Number(am30time) + Number(pm30time) + Number(am50time) + Number(pm50time) + Number(call_am30time) + Number(call_pm30time) + Number(call_am50time) + Number(call_pm50time) === 0) {
+        if (Number(am30time) + Number(pm30time) + Number(am50time) + Number(pm50time) + Number(call_am30time) + Number(call_pm30time) + Number(call_am50time) + Number(call_pm50time) === 0
+        ) {
             dispatch(setPriceZreo(true));
         } else {
             dispatch(setPriceZreo(false));
         }
+
+        const totle_length = am30time.length + pm30time.length + am50time.length + pm50time.length + call_am30time.length + call_pm30time.length + call_am50time.length + call_pm50time.length
+        console.log("totle_length", totle_length)
     })
 
 
@@ -91,7 +95,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>30분*</span>
+                            <span>30분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setAm30time(e.target.value), setValue('consultation_thirty_fee_day', e.target.value)
@@ -109,7 +113,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>30분*</span>
+                            <span>30분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setPm30time(e.target.value), setValue('consultation_thirty_fee_night', e.target.value)
@@ -127,7 +131,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>50분*</span>
+                            <span>50분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setAm50time(e.target.value), setValue('consultation_fifty_fee_day', e.target.value)
@@ -145,7 +149,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>50분*</span>
+                            <span>50분<span style={{ color: '#221b18' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setPm50time(e.target.value), setValue('consultation_fifty_fee_night', e.target.value)
@@ -177,7 +181,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>30분*</span>
+                            <span>30분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setCallAm30time(e.target.value), setValue('call_thirty_consultation_fee_day', e.target.value)
@@ -195,7 +199,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>30분*</span>
+                            <span>30분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setCallPm30time(e.target.value), setValue('call_thirty_consultation_fee_night', e.target.value)
@@ -213,7 +217,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>50분*</span>
+                            <span>50분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setCallAm50time(e.target.value), setValue('call_consultation_fifty_fee_day', e.target.value)
@@ -231,7 +235,7 @@ export default function PriceGrid() {
                     </Grid>
                     <Grid item xs={6}>
                         <Item>
-                            <span>50분*</span>
+                            <span>50분<span style={{ color: '#eb541e' }}>*</span></span>
                             <MoneyInput
                                 onChange={(e) => {
                                     setCallPm50time(e.target.value), setValue('call_consultation_fifty_fee_night', e.target.value)

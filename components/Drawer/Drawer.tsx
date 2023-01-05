@@ -176,7 +176,14 @@ export default function TemporaryDrawer(props: IProps) {
                                         bold={false}
                                         size={15}
                                         color="#000">
-                                        {list.isimmediate === true ? <span style={{ fontWeight: 'bold', color: '#eb541e' }}>[바로상담]</span> : <span style={{ fontWeight: 'bold', color: '#60ae92' }}>[예약상담]</span>}{list.method_str}
+                                        {list.isimmediate === true ?
+                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                [바로상담]
+                                            </span>
+                                            :
+                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                [예약상담]
+                                            </span>}{list.method_str}
                                     </Text>
                                 </Text>
                             </div>

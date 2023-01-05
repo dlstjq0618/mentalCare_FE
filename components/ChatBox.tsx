@@ -308,6 +308,8 @@ export default function BoxSx() {
             console.log("counsel_noti_ res", res)
             const waitingIofo = datas?.waitingList;
             switch (method) {
+                case "payment/user/ok":
+                    console.log("결제완료 데이터", res)
                 case "room/test/result":
                     console.log("테스트결과값", res)
                     dispatch(setTestResultValue(res.datas))

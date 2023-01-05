@@ -80,7 +80,6 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   const boolStatus2 = Boolean(status2);
   const [activate, setActivate] = useState<boolean>(boolStatus);
   const [activate2, setActivate2] = useState<boolean>(boolStatus2);
-  const [doctorId, setDoctorId] = useState<number>(0)
   const infoData = useSelector(selectCounselingInfoData);
 
   const handleToggleState = (data: any) => {
@@ -100,6 +99,7 @@ export const ToggleButton = ({ activeState }: Toggle) => {
       api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking), dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
     }
   }, [infoData?.id])
+
 
 
   return (
