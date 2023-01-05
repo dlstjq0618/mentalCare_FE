@@ -309,8 +309,7 @@ export default function BoxSx() {
             console.log("counsel_noti_ res", res)
             const waitingIofo = datas?.waitingList;
             switch (method) {
-                case "payment/user/ok":
-                    console.log("결제완료 데이터", res);
+                case "payment/user/ok": ;
                     dispatch(setAccountList(res.datas))
                 case "room/test/result":
                     console.log("테스트결과값", res)
@@ -855,7 +854,7 @@ export default function BoxSx() {
                                 zIndex: 10,
                                 boxShadow: `3px 2px 5px black;`,
                                 width: 500,
-                                maxWidth: 500,
+                                maxWidth: rem(500),
                                 maxHeight: rem(1000),
                                 Height: rem(1000),
                                 position: 'absolute',
