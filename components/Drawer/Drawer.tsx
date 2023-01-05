@@ -162,89 +162,47 @@ export default function TemporaryDrawer(props: IProps) {
                 <ModalCloseIcon />
             </Div>
             {
-                waitlist?.result?.length !== 0 ?
-                    waitlist?.result?.map((list: any, index: number) => {
-                        return (
-                            // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                            <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }}>
-                                <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                    <Text bold size={18}>{list.user_name}</Text>
-                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
-                                </div>
-                                <div style={{ display: "grid" }}>
-                                    <Text
-                                        color=' rgba(0, 0, 0, 0.4)'
-                                        bold={false} size={15}>
-                                        요청 시간
-                                        <Text
-                                            subtitle
-                                            style={{ marginLeft: `${rem(20)}` }}
-                                            bold={false} size={15} color="#000">
-                                            {list.crated}
-                                        </Text>
-                                    </Text>
-                                    <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
-                                        상담 방식
-                                        <Text subtitle
-                                            style={{ marginLeft: `${rem(20)}` }}
-                                            bold={false}
-                                            size={15}
-                                            color="#000">
-                                            {list.isimmediate === true ?
-                                                <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
-                                                    [바로상담]
-                                                </span>
-                                                :
-                                                <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                                    [예약상담]
-                                                </span>}{list.method_str}
-                                        </Text>
-                                    </Text>
-                                </div>
-                            </BoxItem>
-                        )
-                    })
-                    :
-                    <BoxItem onClick={() => { dispatch(setScheduleSelectModla(true)) }}>
-                        <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                            <Text bold size={18}>{account_list?.user_name}</Text>
-                            <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
-                        </div>
-                        <div style={{ display: "grid" }}>
-                            <Text
-                                color=' rgba(0, 0, 0, 0.4)'
-                                bold={false} size={15}>
-                                요청 시간
+                waitlist?.result?.map((list: any, index: number) => {
+                    return (
+                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }}>
+                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                <Text bold size={18}>{list.user_name}</Text>
+                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                            </div>
+                            <div style={{ display: "grid" }}>
                                 <Text
-                                    subtitle
-                                    style={{ marginLeft: `${rem(20)}` }}
-                                    bold={false} size={15} color="#000">
-                                    {"2023-01-05 17:08"}
+                                    color=' rgba(0, 0, 0, 0.4)'
+                                    bold={false} size={15}>
+                                    요청 시간
+                                    <Text
+                                        subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false} size={15} color="#000">
+                                        {list.crated}
+                                    </Text>
                                 </Text>
-                            </Text>
-                            <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
-                                상담 방식
-                                <Text subtitle
-                                    style={{ marginLeft: `${rem(20)}` }}
-                                    bold={false}
-                                    size={15}
-                                    color="#000">
-                                    {/* {list.isimmediate === true ?
-                                    <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
-                                        [바로상담]
-                                    </span>
-                                    :
-                                    <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                        [예약상담]
-                                    </span>
-                                    }{list.method_str} */}
-                                    <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                        [예약상담] 주간채팅 30분 상당
-                                    </span>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                    상담 방식
+                                    <Text subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false}
+                                        size={15}
+                                        color="#000">
+                                        {list.isimmediate === true ?
+                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                [바로상담]
+                                            </span>
+                                            :
+                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                [예약상담]
+                                            </span>}{list.method_str}
+                                    </Text>
                                 </Text>
-                            </Text>
-                        </div>
-                    </BoxItem>
+                            </div>
+                        </BoxItem>
+                    )
+                })
             }
         </Box >
     );
