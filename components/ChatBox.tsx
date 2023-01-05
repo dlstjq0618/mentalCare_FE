@@ -63,6 +63,7 @@ import {
     selectTestResultValueStatus,
     selectChangeBeforeChatList,
     setChangeBeforeChatList,
+    setAccountList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -309,7 +310,8 @@ export default function BoxSx() {
             const waitingIofo = datas?.waitingList;
             switch (method) {
                 case "payment/user/ok":
-                    console.log("결제완료 데이터", res)
+                    console.log("결제완료 데이터", res);
+                    dispatch(setAccountList(res.datas))
                 case "room/test/result":
                     console.log("테스트결과값", res)
                     dispatch(setTestResultValue(res.datas))
