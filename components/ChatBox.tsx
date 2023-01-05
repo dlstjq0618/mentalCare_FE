@@ -49,6 +49,7 @@ import {
     selectCompleteList,
     selectCounselingTimeStempNumber,
     selectWatingListBefore,
+    selectAlertControlls3,
     selectSelectBoxControlls,
     removeList,
     clear,
@@ -289,6 +290,7 @@ export default function BoxSx() {
     const [comfrim_isMessage, setComfrimIsMessage] = useState<any>([])
     const [object, setObject] = useState<any>({});
     const coco = useSelector(selectChangeBeforeChatList);
+    const status_alert = useSelector(selectAlertControlls3);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -738,6 +740,7 @@ export default function BoxSx() {
         console.log("useOpen", useOpen);
     }, [useOpen])
 
+
     useEffect(() => {
         console.log("counselingStatus", counselingStatus)
     }, [counselingStatus])
@@ -799,6 +802,13 @@ export default function BoxSx() {
 
 
     console.log("test_status", test_status)
+    console.log("status_alert", status_alert);
+
+    useEffect(() => {
+        if (!status_alert) {
+            setUserName(select_user?.user_name)
+        }
+    }, [status_alert])
 
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
@@ -1211,10 +1221,10 @@ export default function BoxSx() {
                                                     {
                                                         isMessage?.map((res: any, index: number) => (
                                                             <>
-                                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                    {res?.type === 'receve' ?
-                                                                        <>
-                                                                            <Text type='name'>{select_user?.user_name}</Text>
+                                                                {
+                                                                    res?.type === 'receve' ?
+                                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                            <Text type='name'>{userName}</Text>
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
                                                                                 <Div bg='#ffffe7' type="right">
                                                                                     {res?.message}
@@ -1223,7 +1233,7 @@ export default function BoxSx() {
                                                                                     {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                                 </Div>
                                                                             </Div>
-                                                                        </>
+                                                                        </div>
                                                                         :
                                                                         res?.type === 'send' ?
                                                                             <Div type='chat'>
@@ -1239,8 +1249,7 @@ export default function BoxSx() {
                                                                             </Div>
                                                                             :
                                                                             console.log("다른것")
-                                                                    }
-                                                                </div>
+                                                                }
                                                                 < div ref={messageEndRef} />
                                                             </>
 
