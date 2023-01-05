@@ -162,7 +162,7 @@ export default function TemporaryDrawer(props: IProps) {
                 <ModalCloseIcon />
             </Div>
             {
-                waitlist?.result.length !== 0 ?
+                waitlist?.result?.length !== 0 ?
                     waitlist?.result?.map((list: any, index: number) => {
                         return (
                             // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
