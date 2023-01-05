@@ -129,6 +129,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   useEffect(() => {
     console.log("SOCKET_INFO", socketInfo);
   }, [socketInfo])
+
   useEffect(() => {
     const userId = window?.localStorage?.getItem("userId");
     const sessionId = window?.localStorage?.getItem("session");

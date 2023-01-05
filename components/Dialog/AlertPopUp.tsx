@@ -69,7 +69,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
                     onClick={() => { dispatch(setAlertControlls(false)), dispatch(setChatBoxOpenState("협의")) }}
                     color="orange"
                     css={{
-                        width: rem(190),
+                        width: '100%',
                         fontSize: rem(15),
                         height: rem(50),
                     }}
@@ -80,7 +80,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
                     onClick={() => { dispatch(setAlertControlls(false)) }}
                     color="gray"
                     css={{
-                        width: rem(190),
+                        width: '100%',
                         fontSize: rem(15),
                         height: rem(50),
                     }}
