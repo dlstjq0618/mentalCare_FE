@@ -79,9 +79,15 @@ function ReservationSelect(props: Iprops) {
     const min = Number(select.substring(6, 8)) * 60;
     const selectTimeNumber = hour + min;
 
+    const time = new Date().getHours();
+
     useEffect(() => {
         dispatch(setCounselingTimeStempNumber(selectTimeNumber))
     }, [selectTimeNumber])
+
+    useEffect(() => {
+        console.log("time", time);
+    }, [time])
 
 
     return (
@@ -99,7 +105,9 @@ function ReservationSelect(props: Iprops) {
                                     setSelect(res.label), setCheck(false), dispatch(setCounselingTimes(res.label)),
                                         dispatch(setCounselingTimeStemp(res.value))
                                 }}
-                                    key={index} value={res.value}>{res.label}</Li>
+                                    key={index} value={res.value}>
+                                    {res.label}
+                                </Li>
                             })
                         }
                     </Ul>

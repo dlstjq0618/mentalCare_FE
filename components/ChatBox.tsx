@@ -291,6 +291,7 @@ export default function BoxSx() {
     const test_status = useSelector(selectTestResultValueStatus);
     const [comfrim_isMessage, setComfrimIsMessage] = useState<any>([])
     const [object, setObject] = useState<any>({});
+    const [hello, setHello] = useState<any>({});
     const coco = useSelector(selectChangeBeforeChatList);
     const status_alert = useSelector(selectAlertControlls3);
 
@@ -398,7 +399,7 @@ export default function BoxSx() {
         socket.on("chat", (res: any) => { // 만약 selectLoggedUser를 filter 를 사용하여 chat_id 와 res.datas.chat_id 와 같은게 있으면 넣지 마라 
             dispatch(setLoggedUser(res?.datas));
             setObject(res?.datas);
-            console.log('dadadad')
+            setHello(res);
         })
     }, [])
 
@@ -413,6 +414,23 @@ export default function BoxSx() {
         }
     }, [object])
 
+    useEffect(() => {
+        if (hello?.roomId !== undefined) {
+            if (hello?.roomId === select_user?.room_id) {
+                if (hello?.message) {
+                    const data1 = {
+                        type: "receve",
+                        message: hello.message,
+                        timestr: "",
+                        time: getTime / 1000
+                    }
+                    setIsMessage([...isMessage, data1])
+                }
+            } else {
+                console.log("다름")
+            }
+        }
+    }, [hello])
 
 
 
@@ -496,7 +514,7 @@ export default function BoxSx() {
     }
 
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방
-        await handleChatCreate();
+        handleChatCreate();
         await dispatch(clear());
         await handleFinishChatList();
         // roomJoin
@@ -544,7 +562,7 @@ export default function BoxSx() {
 
     async function handleFinishChatList() { // 지난 채팅 리스트 불러옴
         await dispatch(clear())
-        await setIsMessage([]);
+        setIsMessage([]);
         const data1 = {
             method: "room/chat/list",
             datas: {
@@ -646,7 +664,6 @@ export default function BoxSx() {
         }
     };
 
-
     const handleEnter = (e: any) => { // 유입된 유저와 대화했던 데이터 저장 채팅방 엔터 눌렀을때 전송
         setState({ message: e.target.value }); // 이거는 인풋박스 온체인지
         if (e.key === "Enter" && state.message !== "") { // 엔터를 했을때 쳇 데이터 안에 룸 번호와 메세지와 시간을 보낸다.
@@ -685,7 +702,6 @@ export default function BoxSx() {
                 roomId: before_wating.room_id,
                 user_type: 6,
                 message: e.target.value,
-                time: getTime,
                 type: "send"
             };
             socket.emit('chat', {
@@ -744,6 +760,7 @@ export default function BoxSx() {
         } else if (useOpen === "협의완료") {
             handleComplete()
         }
+        console.log("useOpen", useOpen)
     }, [useOpen])
 
 
@@ -784,7 +801,7 @@ export default function BoxSx() {
     }, [status_alert])
 
     useEffect(() => {
-        messageEndRef?.current?.scrollIntoView();
+        messageEndRef?.current?.scrollIntoView(false);
     }, [isMessage, filterMessage])
 
     const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
@@ -956,7 +973,7 @@ export default function BoxSx() {
                                                                 res?.type === 'receve' ?
                                                                     <>
                                                                         <Text type='name'>{select_user?.user_name}</Text>
-                                                                        <Div ref={messageEndRef} style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
+                                                                        <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
                                                                                 {res?.message}
                                                                             </Div>
@@ -972,7 +989,7 @@ export default function BoxSx() {
                                                                             <div />
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                                    {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
                                                                                 </Div>
                                                                                 <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                     {res?.message}
