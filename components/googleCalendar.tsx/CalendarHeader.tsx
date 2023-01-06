@@ -116,7 +116,7 @@ function CalendarHeader() {
         if (account_list.count === undefined) {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
-        } else {
+        } else if (account_list.count !== undefined) {
             const totalCount1 = account_list?.count + waitlist?.count;
             setCount(totalCount1)
         }
@@ -137,7 +137,7 @@ function CalendarHeader() {
             </Header>
             <Header schedule={true}>
                 <Div>
-                    <StyledSpan underLine size={30} color='#eb541e' count>{count}
+                    <StyledSpan underLine size={30} color='#eb541e' count>{Number.isNaN(count) ? 0 : count}
                     </StyledSpan><StyledSpan size={30} count color='black'>
                         명
                     </StyledSpan>&nbsp;<StyledSpan count size={20}>

@@ -166,11 +166,11 @@ export default function TemporaryDrawer(props: IProps) {
                 <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
-            {
+            {/* {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}(협의중)</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
@@ -208,7 +208,7 @@ export default function TemporaryDrawer(props: IProps) {
                         </BoxItem>
                     )
                 })
-            }
+            } */}
             {
                 account_list?.result?.map((list: any, index: number) => {
                     return (

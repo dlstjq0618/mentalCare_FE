@@ -337,6 +337,8 @@ export default function BoxSx() {
                     // setIsMessage([...isMessage, ...chatList]); // 기존 배열에 이전 대화 리스트 들어간다.
                     setIsMessage(chatList)
 
+                    console.log("chatList", chatList);
+
             }
         })
     }, [select_user, before_wating.user_name])
@@ -396,6 +398,7 @@ export default function BoxSx() {
         socket.on("chat", (res: any) => { // 만약 selectLoggedUser를 filter 를 사용하여 chat_id 와 res.datas.chat_id 와 같은게 있으면 넣지 마라 
             dispatch(setLoggedUser(res?.datas));
             setObject(res?.datas);
+            console.log('dadadad')
         })
     }, [])
 
@@ -498,7 +501,7 @@ export default function BoxSx() {
         await handleFinishChatList();
         // roomJoin
         const req = {
-            roomId: before_wating.room_id,
+            roomId: select_user.room_id,
             user_type: 6,
             message: "안녕하세요 상담을 시작하겠습니다."
         };
@@ -741,7 +744,6 @@ export default function BoxSx() {
         } else if (useOpen === "협의완료") {
             handleComplete()
         }
-        console.log("useOpen", useOpen);
     }, [useOpen])
 
 
@@ -773,36 +775,6 @@ export default function BoxSx() {
         }
     }, [cancel_status])
 
-    // useEffect(() => { // 캘린더 컨트롤 
-    //     if (useOpen === '전화완료') { 
-    //         handleCallOnComplete()
-    //     }
-    // }, [useOpen])
-
-    // useEffect(() => {  // 진행중인 화면, 즉 기록이 있는 채팅 
-    //     if (useOpen === '진행') { 
-    //         handleWaitingRoomJoin()
-    //     }
-    // }, [useOpen])
-
-    // useEffect(() => {
-    //     if (useOpen === '시작') { 
-    //         handleRoomJoin()
-    //     }
-    // }, [useOpen])
-
-    // useEffect(() => { // 상담전 협의 챗 발생 
-    //     if (useOpen === "협의") { //0
-    //         handleFirstRoomJoin()
-    //     }
-    // }, [useOpen])
-
-    // useEffect(() => {
-    //     if (useOpen === "전화") { //전화 상담 시작할때 
-    //         console.log("전화상담 실행 ")
-    //         handleCallCounselorting()
-    //     }
-    // }, [useOpen])
 
 
     useEffect(() => {
@@ -819,16 +791,7 @@ export default function BoxSx() {
         return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
     });
 
-
-
-
     const select_room_id = Number(select_user.room_id)
-
-    // console.log("useOpen", useOpen);
-    // console.log('finish', finish_chat);
-    // console.log("counselingStatus", counselingStatus);
-    // console.log("select_user", select_user);
-    // console.log("select_room_id", select_room_id) // map 에서 룸 ID 체크해서 채팅방 노출, 룸ID 와 select_roomId 가 같으면 표출
 
     return (
         <>
