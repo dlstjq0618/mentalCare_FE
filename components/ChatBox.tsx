@@ -64,6 +64,7 @@ import {
     selectChangeBeforeChatList,
     setChangeBeforeChatList,
     setAccountList,
+    setConferenceList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -310,7 +311,6 @@ export default function BoxSx() {
             const waitingIofo = datas?.waitingList;
             switch (method) {
                 case "payment/user/ok": ;
-                    dispatch(setAccountList(res.datas))
                 case "room/test/result":
                     console.log("테스트결과값", res)
                     dispatch(setTestResultValue(res.datas))
@@ -382,13 +382,15 @@ export default function BoxSx() {
             } else if (method === 'paidList') {
                 const result4 = datas.list;
                 console.log("결제완료", result4)
+                dispatch(setAccountList(result4));
+            } else if (method === 'confirmRequestList') {
+                const result5 = datas.list;
+                dispatch(setConferenceList(result5))
+                console.log("협의중인 데이터", result5)
             }
         })
     }, [user_dashborad, user_name])
 
-
-
-    // 정리 : 새로고침후 처음 다시 드로워에 있는 데이터를 클릭했을 때, 드로워 데이터를 가지고 이전 대화리스트 불러온 후 추가로 입력하는 정보를 뿌려줘라.
 
     useEffect(() => { // 상대방 채팅데이터
         socket.on("chat", (res: any) => { // 만약 selectLoggedUser를 filter 를 사용하여 chat_id 와 res.datas.chat_id 와 같은게 있으면 넣지 마라 
@@ -396,22 +398,6 @@ export default function BoxSx() {
             setObject(res?.datas);
         })
     }, [])
-
-    //     useEffect(() => {
-    //     const filterData = object.filter((res: any) => {
-    //         return res?.roomId === select_user.room_id
-    //     })
-
-    //     const newArray = test?.filter((item: { chat_id: any; }, i: any) => {
-    //         return (
-    //             test?.findIndex((item2: { chat_id: any; }, j: any) => {
-    //                 return item?.chat_id === item2?.chat_id;
-    //             }) === i
-    //         );
-    //     });
-
-    // }, [test])
-
 
     useEffect(() => {
         if (object?.roomId !== undefined) {
@@ -827,7 +813,7 @@ export default function BoxSx() {
 
     useEffect(() => {
         messageEndRef?.current?.scrollIntoView();
-    }, [test, isMessage, filterMessage])
+    }, [isMessage, filterMessage])
 
     const arrUnique = test.filter((character: { chat_id: string }, idx: any, arr: any) => {
         return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
@@ -1007,7 +993,7 @@ export default function BoxSx() {
                                                                 res?.type === 'receve' ?
                                                                     <>
                                                                         <Text type='name'>{select_user?.user_name}</Text>
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
+                                                                        <Div ref={messageEndRef} style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
                                                                             <Div bg='#ffffe7' type="right">
                                                                                 {res?.message}
                                                                             </Div>
@@ -1032,7 +1018,6 @@ export default function BoxSx() {
                                                                         </Div> : ""
                                                             }
                                                         </div>
-                                                        <div ref={messageEndRef} />
                                                     </>
                                                 ))
 
@@ -1206,7 +1191,7 @@ export default function BoxSx() {
                                         sx={{
                                             zIndex: 10,
                                             boxShadow: `3px 2px 5px black;`,
-                                            width: 500,
+                                            width: rem(500),
                                             maxWidth: 500,
                                             maxHeight: rem(1000),
                                             Height: rem(1000),

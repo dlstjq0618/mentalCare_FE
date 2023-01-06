@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import styled, { css } from 'styled-components';
 import TemporaryDrawer from '../Drawer/Drawer';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
+import { selectAccoutList, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface IStyled {
     schedule?: boolean;
@@ -91,7 +91,8 @@ function CalendarHeader() {
     const dispatch = useDispatch();
     const socketInfo = useSelector(selectSocketData);
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
-
+    const account_list = useSelector(selectAccoutList);
+    const [count, setCount] = useState(0);
 
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
@@ -111,7 +112,16 @@ function CalendarHeader() {
         dispatch(setCalendarMonthState(dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")))
     }, [dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")])
 
+    useEffect(() => {
+        if (account_list.count === undefined) {
+            const totalCount = 0 + waitlist?.count;
+            setCount(totalCount)
+        } else {
+            const totalCount1 = account_list?.count + waitlist?.count;
+            setCount(totalCount1)
+        }
 
+    }, [account_list.count, waitlist.count])
 
     return (
         <>
@@ -127,7 +137,7 @@ function CalendarHeader() {
             </Header>
             <Header schedule={true}>
                 <Div>
-                    <StyledSpan underLine size={30} color='#eb541e' count>{waitlist?.count}
+                    <StyledSpan underLine size={30} color='#eb541e' count>{count}
                     </StyledSpan><StyledSpan size={30} count color='black'>
                         명
                     </StyledSpan>&nbsp;<StyledSpan count size={20}>

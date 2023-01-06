@@ -70,6 +70,7 @@ type DiagnosisDetailStoreState = {
   test_status: boolean;
   bofore_chat: boolean;
   account: any;
+  conference: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -125,7 +126,8 @@ const initialState: DiagnosisDetailStoreState = {
   price: false,
   test_status: false,
   bofore_chat: false,
-  account: {},
+  account: [],
+  conference: [],
 };
 
 export const calendarDetailSilce = createSlice({
@@ -500,6 +502,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.account = action.payload;
     },
+    setConferenceList(
+      // 협의중인 데이터
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["conference"]>
+    ) {
+      state.conference = action.payload;
+    },
   },
 });
 
@@ -555,6 +564,7 @@ export const {
   setTestResultValueStatus,
   setChangeBeforeChatList,
   setAccountList,
+  setConferenceList,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -655,5 +665,7 @@ export const selectChangeBeforeChatList = (state: RootState) =>
   state.calendarDetail.bofore_chat;
 export const selectAccoutList = (state: RootState) =>
   state.calendarDetail.account;
+export const selectConferenceList = (state: RootState) =>
+  state.calendarDetail.conference;
 
 export default calendarDetailSilce.reducer;

@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -80,6 +80,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectUserData, setSelectUserData] = useState<any>();
     const account_list = useSelector(selectAccoutList);
+    const conference_list = useSelector(selectConferenceList);
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
     const [wating_add, setWating_add] = useState<any>([])
@@ -90,17 +91,21 @@ export default function TemporaryDrawer(props: IProps) {
         bottom: false,
         right: false,
     });
+    const [count, setCount] = useState(0);
+
 
     useEffect(() => {
-        console.log("기존 대기리스트1", waitlist)
-        setWating_add(waitlist.result);
-    }, [waitlist])
+        if (account_list.count === undefined) {
+            const totalCount = 0 + waitlist?.count;
+            setCount(totalCount)
+        } else {
+            const totalCount1 = account_list?.count + waitlist?.count;
+            setCount(totalCount1)
+        }
 
-    // useEffect(() => {
-    //     console.log("결제완료 된 리스트", account_list);
-    //     setWating_add([...wating_add, account_list])
-    //     console.log("추가된 대기리스트", wating_add);
-    // }, [account_list])
+    }, [account_list.count, waitlist.count])
+
+    console.log("conference_list", conference_list)
 
 
 
@@ -158,14 +163,100 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{waitlist?.count}</div>건</Title>
+                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
+            {
+                conference_list?.result?.map((list: any, index: number) => {
+                    return (
+                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
+                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                <Text bold size={18}>{list.user_name}(협의중)</Text>
+                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                            </div>
+                            <div style={{ display: "grid" }}>
+                                <Text
+                                    color=' rgba(0, 0, 0, 0.4)'
+                                    bold={false} size={15}>
+                                    요청 시간
+                                    <Text
+                                        subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false} size={15} color="#000">
+                                        {list.crated}
+                                    </Text>
+                                </Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                    상담 방식
+                                    <Text subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false}
+                                        size={15}
+                                        color="#000">
+                                        {list.isimmediate === true ?
+                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                [바로상담]
+                                            </span>
+                                            :
+                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                [예약상담]
+                                            </span>}{list.method_str}
+                                    </Text>
+                                </Text>
+                            </div>
+                        </BoxItem>
+                    )
+                })
+            }
+            {
+                account_list?.result?.map((list: any, index: number) => {
+                    return (
+                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
+                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                <Text bold size={18}>{list.user_name}(결제완료)</Text>
+                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                            </div>
+                            <div style={{ display: "grid" }}>
+                                <Text
+                                    color=' rgba(0, 0, 0, 0.4)'
+                                    bold={false} size={15}>
+                                    요청 시간
+                                    <Text
+                                        subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false} size={15} color="#000">
+                                        {list.crated}
+                                    </Text>
+                                </Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                    상담 방식
+                                    <Text subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false}
+                                        size={15}
+                                        color="#000">
+                                        {list.isimmediate === true ?
+                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                [바로상담]
+                                            </span>
+                                            :
+                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                [예약상담]
+                                            </span>}{list.method_str}
+                                    </Text>
+                                </Text>
+                            </div>
+                        </BoxItem>
+                    )
+                })
+            }
             {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }}>
+                        <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
