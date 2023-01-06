@@ -31,6 +31,7 @@ import {
   isMobile
 } from "react-device-detect";
 import {
+  selectAccoutList,
   selectCalendarUserList,
   selectCancelList,
   selectCompleteList,
@@ -103,12 +104,13 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const consultingList = useSelector(selectConsultingList); // 상담중
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
   const waitingList = useSelector(selectWaitlist)
+  const account_list = useSelector(selectAccoutList);
 
-  const watingRoom_count = consultingList.count + reservationList.count + waitingList.count;
+  const watingRoom_count = consultingList.count + reservationList.count + waitingList.count + account_list.count;
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);
-
+  const [count, setCount] = useState(0);
 
   const handleToast = () => {
     Store.addNotification({
@@ -215,6 +217,17 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   //     audioRef.current.play();
   //   }
   // }, [dispatch, shouldNotificate, waitingListInfo]);
+
+  useEffect(() => {
+    if (account_list.count === undefined) {
+      const totalCount = 0 + waitingList?.count;
+      setCount(totalCount)
+    } else if (account_list.count !== undefined) {
+      const totalCount1 = account_list?.count + waitingList?.count;
+      setCount(totalCount1)
+    }
+
+  }, [account_list.count, waitingList.count])
 
   return (
     <>
