@@ -83,7 +83,7 @@ function ReservationSelect(props: Iprops) {
     const minut = new Date().getMinutes();
 
     // 분으로 계산한 후 비교 time*60 + minit
-    const lastTime = time * 60 + minut + 9;
+    const lastTime = time * 60 + minut + 1;
 
     useEffect(() => {
         dispatch(setCounselingTimeStempNumber(selectTimeNumber))
@@ -105,8 +105,7 @@ function ReservationSelect(props: Iprops) {
                                 const times = Number(res.value?.substring(0, 2));
                                 const minuts = Number(res.value?.substring(3, 5));
                                 const last_times = times * 60 + minuts;
-                                console.log("minuts", last_times);
-                                if (lastTime <= last_times) {
+                                if (lastTime < last_times) {
                                     return <Li check onClick={() => {
                                         setSelect(res.label), setCheck(false), dispatch(setCounselingTimes(res.label)),
                                             dispatch(setCounselingTimeStemp(res.value))
