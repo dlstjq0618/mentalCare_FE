@@ -146,6 +146,7 @@ export default function TemporaryDrawer(props: IProps) {
     }, [account_list.count, waitlist.count])
 
     useEffect(() => {
+        console.log("이게 실행되는건가?")
         function is_true(element: any) {
             if (element.isimmediate === true) {
                 return true;
@@ -153,14 +154,11 @@ export default function TemporaryDrawer(props: IProps) {
         }
         const true_value = account_list.result?.filter(is_true);
         if (true_value?.length > 0) {
-            dispatch(setToggleButton(true));
+            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled 
         } else {
             dispatch(setToggleButton(false));
         }
     }, [account_list])
-
-    console.log("conference_list", conference_list)
-
 
 
     const [show, setShow] = useState(false);
@@ -224,7 +222,7 @@ export default function TemporaryDrawer(props: IProps) {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <Text bold size={18}>{list.user_name}(협의중)</Text>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />

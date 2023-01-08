@@ -84,6 +84,7 @@ type DiagnosisDetailStoreState = {
     | "";
   toggle: boolean;
   chat_toogle: boolean;
+  stop: "완료" | "null";
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -146,6 +147,7 @@ const initialState: DiagnosisDetailStoreState = {
   alert_type: "",
   toggle: false,
   chat_toogle: false,
+  stop: "null",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -562,6 +564,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.chat_toogle = action.payload;
     },
+    setStopModal(
+      // 토글버튼 상태
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["stop"]>
+    ) {
+      state.stop = action.payload;
+    },
   },
 });
 
@@ -623,6 +632,7 @@ export const {
   setAlertType,
   setToggleButton,
   setChatToggle,
+  setStopModal,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -735,4 +745,7 @@ export const selectToggleButton = (state: RootState) =>
   state.calendarDetail.toggle;
 export const selectChatToggle = (state: RootState) =>
   state.calendarDetail.chat_toogle;
+
+export const selectStopModal = (state: RootState) => state.calendarDetail.stop;
+
 export default calendarDetailSilce.reducer;

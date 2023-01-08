@@ -147,6 +147,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
 
 
     console.log("open", open);
+    console.log("typetype", type);
 
     return (
         type === '협의취소' ?
@@ -207,7 +208,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                     </Text>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <RoundedButton
-                            onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("협의완료")) }}
+                            onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("협의완료")), dispatch(setAlertType("")) }}
                             color="orange"
                             css={{
                                 width: '100%',

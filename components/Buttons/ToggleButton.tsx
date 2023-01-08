@@ -82,9 +82,9 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   const [activate2, setActivate2] = useState<boolean>(boolStatus2);
   const infoData = useSelector(selectCounselingInfoData);
   const account_list = useSelector(selectAccoutList);
-  const test = useSelector(selectToggleButton);
+  const test = useSelector(selectToggleButton); //바로상담 건이 있을때 true , 바로상담은 false 이고 버튼은 disabled
 
-  const chat_toggle = useSelector(selectChatToggle);
+  const chat_toggle = useSelector(selectChatToggle); // 채팅방 알럿을 통해 바로 상담 상태를 나타냄 
 
 
 
@@ -101,25 +101,30 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   }
 
   useEffect(() => {
-    if (chat_toggle) {
-      handleToggleState2(true)
-    } else {
-      handleToggleState2(false)
-    }
     if (infoData.id) {
       api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking), dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
     }
-  }, [infoData?.id, chat_toggle])
-
-  console.log("chat_toggle", chat_toggle);
+  }, [infoData?.id])
 
   useEffect(() => {
-    if (test === true) {
+    if (chat_toggle) {
+      api.counselor.status2({
+        is_immediately: chat_toggle
+      }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) }).then(() => {
+        api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
+      })
+    }
+  }, [chat_toggle])
+
+  console.log("activate2", activate2);
+  console.log("test", test);
+
+  useEffect(() => {
+    if (test === true) { // 바로상담건이 있으니 버튼 조작 불가 및 상태 false
       api.counselor.status2({
         is_immediately: false
-      }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)) })
+      }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(false) })
     }
-    console.log('testtestetstestt', test);
   }, [test])
 
 

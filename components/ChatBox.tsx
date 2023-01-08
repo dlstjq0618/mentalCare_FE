@@ -370,6 +370,7 @@ export default function BoxSx() {
                 case "room/chat/list":
                     const chatList = res.datas?.list // 이전대화 리스트
                     const historyList = res.datas?.list[0]
+                    console.log("chatList", chatList)
                     setFinishChat(chatList); // 이전대화 목록이 들어간다.
                     dispatch(setHistoryChat(historyList));
                     dispatch(setFinishChatList(chatList));
@@ -608,7 +609,7 @@ export default function BoxSx() {
                 user_type: 6
             }
         })
-        handleFinishChatList()
+        handleFinishChatList();
     }
 
     async function handleCallOnComplete() { //  전화 상담완료

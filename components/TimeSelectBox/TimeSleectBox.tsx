@@ -4,8 +4,9 @@ import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectChatBoxOpenState, clear2, setCoustomAlert, setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls, setAlertType, setChatToggle } from '~/store/calendarDetailSlice';
+import { setSocketControlls2, selectChatBoxOpenState, clear2, setCoustomAlert, setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls, setAlertType, setChatToggle, setStopModal, selectStopModal } from '~/store/calendarDetailSlice';
 import { BaseDialog2, RoundedButton } from '~/components';
+import { api } from '~/woozooapi';
 
 interface Iprops {
     first?: boolean;
@@ -20,7 +21,7 @@ interface IStyled {
     bottom?: number;
     check?: boolean;
     type?: string;
-
+    center?: boolean;
 }
 
 const Arricle = styled.article<IStyled>`
@@ -60,6 +61,11 @@ const Text = styled.span<IStyled>`
         css`
         font-size: ${rem(props.size)};
         color: ${props.color};
+    `}
+    ${(props) =>
+        props.center &&
+        css`
+        text-align: center;
     `}
 
     ${(props) =>
@@ -124,25 +130,30 @@ function TimeSleectBox(props: Iprops) {
     const status = useSelector(selectCounselingState);
     const select_user = useSelector(selectDashBoardSelectUser);
     const counselingStatus = useSelector(selectCounselingState);
+    const box = useSelector(selectSelectBoxControlls);
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 닫기
-    const [show, setShow] = useState(false)
+    const [closeStatus, setCloseStatus] = useState<boolean>(false)
+    const stop = useSelector(selectStopModal);
 
-    console.log("show", show);
+    console.log("closeStatus", closeStatus);
 
-    const open = () => setShow(true);
-    const close = () => { setShow(false), dispatch(setCounselingState("null")) };
+    const open = () => setCloseStatus(true);
+    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")) };
 
     const handleOpenStatus = (data: any) => {
+        console.log("data", data)
         if (data === 'finish') {
-            dispatch(setSelectBoxControlls('완료'))
-            dispatch(setChatBoxOpenState('완료'))
-            dispatch(setCounselingState("null"))
+            dispatch(setSelectBoxControlls('완료'));
+            dispatch(setChatBoxOpenState("완료"));
+            dispatch(setCounselingState("null"));
+            dispatch(setStopModal("완료"));
         }
     }
 
     async function handleOpenStatus2() {
         dispatch(setSelectBoxControlls('완료'))
         await dispatch(setSelectBoxControlls("null"))
+        dispatch(setCounselingState("null"))
     }
 
     async function handleClose() {
@@ -152,6 +163,12 @@ function TimeSleectBox(props: Iprops) {
         dispatch(clear2())
     }
 
+    useEffect(() => {
+        console.log("stop", stop)
+        if (stop === '완료') {
+            setCloseStatus(true)
+        }
+    }, [counselingStatus])
 
     return (
         <>
@@ -163,14 +180,15 @@ function TimeSleectBox(props: Iprops) {
                             dispatch(setCoustomAlert(true)),
                                 dispatch(setAlertType('협의완료')),
                                 handleOpenStatus2(),
-                                dispatch
-                            dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
+                                dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
                         }}>
                             {"협의완료"}
                         </Button>
                         :
                         counselingStatus === 'finish' ?
-                            <Button onClick={handleClose} type={"finish"}>{"닫기"}</Button>
+                            <>
+                                <Button onClick={handleClose} type={"finish"}>{"닫기"}</Button>
+                            </>
                             :
                             <Button type={status} onClick={() => setCheck(!check)}>{type} <KeyboardArrowDownIcon /></Button>
                 }
@@ -180,9 +198,7 @@ function TimeSleectBox(props: Iprops) {
                         {
                             selectType.map((res: { label: string, value: string }, index: number) => {
                                 return <Li check onClick={() => {
-                                    setShow(true),
-                                        console.log("showshow", show),
-                                        setType(res.label),
+                                    setType(res.label),
                                         setCheck(false),
                                         handleOpenStatus(res.value),
                                         dispatch(setCounselingState(res.value))
@@ -193,47 +209,51 @@ function TimeSleectBox(props: Iprops) {
                         }
                     </Ul>
                 }
-                {
-                    counselingStatus === 'finish' && useOpen === '완료' ?
-                        <BaseDialog2 showDialog={true} close={close} aria-label="팝업"
-                            style={{
-                                marginTop: '18vh',
-                                width: `${rem(376)}`,
-                                // height: `${rem(422)}`,
-                                height: 'auto',
-                                padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
-                            }}>
-                            <Text size={17} color={"#333"}>
-                                상담이 완료되었습니다. 바로상담을 on 상태로 켜서 상담을 받으실 경우 확인 버튼을 바로상담을 off 상태로 유지 하실경우 취소 버튼을 눌러주세요.
-                            </Text>
-                            <div style={{ display: 'flex' }}>
-                                <RoundedButton
-                                    onClick={() => { dispatch(setChatToggle(true)), close() }}
-                                    color="orange"
-                                    css={{
-                                        fontSize: rem(15),
-                                        height: rem(50),
-                                        width: "100%",
-                                    }}
-                                >
-                                    확인
-                                </RoundedButton>
-                                <RoundedButton
-                                    onClick={() => { dispatch(setChatToggle(false)), close() }}
-                                    color="gray"
-                                    css={{
-                                        fontSize: rem(15),
-                                        height: rem(50),
-                                        width: "100%",
-                                    }}
-                                >
-                                    취소
-                                </RoundedButton>
-                            </div>
-                        </BaseDialog2> : ""
-                }
-
             </Arricle>
+            <BaseDialog2 showDialog={closeStatus} close={close} aria-label="팝업"
+                style={{
+                    zIndex: 99,
+                    marginTop: '18vh',
+                    width: `${rem(500)}`,
+                    // height: `${rem(422)}`,
+                    height: 'auto',
+                    padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
+                }}>
+                <Text center size={17} color={"#333"}>
+                    <p style={{ fontWeight: 'bold' }}>상담이 완료되었습니다.</p>
+                    <p>바로상담을 on 상태로 켜서 상담을 받으실 경우 확인 버튼을</p>
+                    <p>바로상담을 off 상태로 유지 하실경우 취소 버튼을 눌러주세요.</p>
+                </Text>
+                <div style={{ display: 'flex' }}>
+                    <RoundedButton
+                        onClick={() => {
+                            dispatch(setChatToggle(true)), close(), dispatch(setStopModal("null"))
+                        }}
+                        color="orange"
+                        css={{
+                            fontSize: rem(15),
+                            height: rem(50),
+                            width: "100%",
+                        }}
+                    >
+                        확인
+                    </RoundedButton>
+                    <RoundedButton
+                        onClick={() => {
+                            dispatch(setChatToggle(false)), close(), dispatch(setStopModal("null"))
+                        }}
+                        color="gray"
+                        css={{
+                            fontSize: rem(15),
+                            height: rem(50),
+                            width: "100%",
+                        }}
+                    >
+                        취소
+                    </RoundedButton>
+                </div>
+                {console.log("된거")}
+            </BaseDialog2>
         </>
     );
 }

@@ -322,30 +322,6 @@ function DayComponents(props: IProps) {
         dispatch(setChatBoxOpenState('시작'));
     }
 
-    console.log("reservationList", reservationList);
-
-    useEffect(() => {
-        function is_true(element: any) {
-            if (element.isimmediate === true) {
-                return true;
-            }
-        }
-        function is_status(element: any) {
-            if (element.status === 5) {
-                return true;
-            }
-        }
-        const true_value = reservationList.result?.filter(is_true);
-        const status_value = reservationList.result?.filter(is_status);
-
-        console.log("status_value", status_value);
-
-        if (true_value?.length > 0 && status_value?.length > 0) {
-            dispatch(setToggleButton(true));
-        } else {
-            dispatch(setToggleButton(false));
-        }
-    }, [reservationList])
 
     useEffect(() => {
         if (finalStep === "yes") {
@@ -378,13 +354,6 @@ function DayComponents(props: IProps) {
         }
     }, [])
 
-    useEffect(() => {
-        console.log("userType", userType);
-    }, [userType])
-
-    useEffect(() => {
-        console.log("select_data", select_data);
-    }, [select_data])
 
     const handleFinishDispatch = () => {
         dispatch(setChangeBeforeChatList(true));
