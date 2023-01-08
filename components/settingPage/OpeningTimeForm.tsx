@@ -285,7 +285,7 @@ function OpeningTimeForm() {
 
 
     return (
-        <InfoGrid width={900} >
+        <InfoGrid width={900} style={{ display: 'none' }}>
             <Div className='OpeningTime' margin={24}>
                 <Text size={18} bold='bold' color='#382b2b'>
                     운영시간

@@ -51,52 +51,52 @@ export const SettlementList = () => {
   const userid = useSelector(selectCounselorId);
   const month = [
     {
-      name: "apr",
-      value: list?.apr,
-    },
-    {
-      name: "aug",
-      value: list?.aug,
-    },
-    {
-      name: "dec",
-      value: list?.dec,
+      name: "jan",
+      value: list?.jan,
     },
     {
       name: "feb",
       value: list?.feb,
     },
     {
-      name: "jan",
-      value: list?.jan,
-    },
-    {
-      name: "jul",
-      value: list?.jul,
-    },
-    {
-      name: "jun",
-      value: list?.jun,
-    },
-    {
       name: "mar",
       value: list?.mar,
+    },
+    {
+      name: "apr",
+      value: list?.apr,
     },
     {
       name: "may",
       value: list?.may,
     },
     {
-      name: "nov",
-      value: list?.nov,
+      name: "jun",
+      value: list?.jun,
+    },
+    {
+      name: "jul",
+      value: list?.jul,
+    },
+    {
+      name: "aug",
+      value: list?.aug,
+    },
+    {
+      name: "sep",
+      value: list?.sep,
     },
     {
       name: "oct",
       value: list?.oct,
     },
     {
-      name: "sep",
-      value: list?.sep,
+      name: "nov",
+      value: list?.nov,
+    },
+    {
+      name: "dec",
+      value: list?.dec,
     },
   ]
   /*

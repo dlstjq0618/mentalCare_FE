@@ -65,10 +65,14 @@ import {
     setChangeBeforeChatList,
     setAccountList,
     setConferenceList,
+    setTimeCount,
+    selectTimeCount,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
 import { async } from '@firebase/util';
+import { setTimeout } from 'timers';
+import useInterval from '~/utils/hook/useInterval';
 
 interface IStyled {
     size?: any;
@@ -159,6 +163,29 @@ ${(props) =>
         display: flex;
         justify-content: space-between;
     `}
+`;
+const Button = styled.div<IStyled>`
+align-items: center;
+display: flex;
+color: #fff;
+width: ${rem(100)};
+justify-content: space-around;
+height: 36px;
+background-color: #eb541e;
+${(props) =>
+        props.type === 'finish' &&
+        css`
+        background-color: #999;
+        width: 60px;
+    `}
+margin: 12px 0;
+  flex-grow: 0;
+  border-radius: 6px;
+  border: solid 1px #d3d3d3;
+  font-weight: bold;
+  font-size: 14px;
+  justify-content: center;
+  cursor: pointer;
 `;
 
 const Text = styled.div<IStyled>`
@@ -294,6 +321,13 @@ export default function BoxSx() {
     const [hello, setHello] = useState<any>({});
     const coco = useSelector(selectChangeBeforeChatList);
     const status_alert = useSelector(selectAlertControlls3);
+    const [time_count, setTime_count] = useState("");
+    const [time, setTime] = useState(0);
+    const [count_start, setCount_start] = useState(0);
+    const default_count = useSelector(selectTimeCount);
+
+
+
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -337,12 +371,13 @@ export default function BoxSx() {
                     dispatch(setFinishChatList(chatList));
                     // setIsMessage([...isMessage, ...chatList]); // 기존 배열에 이전 대화 리스트 들어간다.
                     setIsMessage(chatList)
-
-                    console.log("chatList", chatList);
+                    setTime_count(res.datas?.start_time);
+                // console.log("chatList", chatList);
 
             }
         })
     }, [select_user, before_wating.user_name])
+
 
     useEffect(() => {
         // dashboard 내용 받기 count 리랜더링 되어야함 
@@ -472,6 +507,7 @@ export default function BoxSx() {
 
     async function handleRoomJoin() { // 처음 시작할때 
         dispatch(setChatBoxOpenState('시작'))
+        handleFinishChatList();
         setIsMessage([])
         const req = {
             roomId: select_user.room_id,
@@ -483,22 +519,6 @@ export default function BoxSx() {
             "method": "join",
             "datas": req
         });
-        // if (confirm(`테스트용 채팅을 "${select_user.user_name}" 님과 시작 하시겠습니까?`)) {
-        //     // roomJoin
-        //     dispatch(setChatBoxOpenState('시작'))
-        //     const req = {
-        //         roomId: select_user.room_id,
-        //         user_type: 6,
-        //         message: "안녕하세요 상담을 시작하겠습니다."
-        //     };
-        //     console.log(req);
-        //     socket.emit('chat', {
-        //         "method": "join",
-        //         "datas": req
-        //     });
-        // } else {
-        //     await dispatch(setChatBoxOpenState('null'))
-        // }
     }
     const alert_status = useSelector(selectAlertControlls);
     const alert_status3 = useSelector(selectAlertControlls);
@@ -545,6 +565,8 @@ export default function BoxSx() {
             "datas": req
         });
     }
+
+    console.log("count_srtart", count_start);
 
     const intRoom_id = Number(select_user.room_id)
 
@@ -760,8 +782,9 @@ export default function BoxSx() {
         } else if (useOpen === "협의완료") {
             handleComplete()
         }
-        console.log("useOpen", useOpen)
     }, [useOpen])
+
+
 
 
     useEffect(() => {
@@ -808,7 +831,51 @@ export default function BoxSx() {
         return arr.findIndex((item: { chat_id: string }) => item?.chat_id === character?.chat_id) === idx
     });
 
-    const select_room_id = Number(select_user.room_id)
+    const select_room_id = Number(select_user.room_id);
+
+    console.log("time_count", time_count); // 시작시간
+
+
+    // if (affter_time < 20 && affter_time >= 0) {
+    //     console.log("타이머 적용")
+
+    // }
+
+
+    useEffect(() => {
+        if (select_user?.method === 5 || select_user?.method === 6) {
+            setTime(30);
+        } else if (select_user?.method === 7 || select_user?.method === 8) {
+            setTime(50);
+        }
+    }, [select_user.method])
+
+    useInterval(() => {
+        if (useOpen === '진행' || useOpen === '시작' && count_start > 0) {
+            setCount_start(count_start - 1);
+        }
+    }, 60000);
+
+    console.log("affter", default_count);
+    useEffect(() => {
+        // 시간 공식
+        const times = Number(time_count?.substring(11, 13));
+        const minut = Number(time_count?.substring(14, 16));
+        const start = times * 60 + minut;
+        const end = start + time;
+
+        // 현재시간 공식
+        const get_Time = new Date().getHours();
+        const get_Miu = new Date().getMinutes();
+        const get_Times = get_Time * 60 + get_Miu;
+        const affter_time = end - get_Times;
+
+        console.log("affter_time", affter_time);
+
+        setCount_start(affter_time); // 남은시간 체크 하기위한 랜더링
+    }, [time_count])
+
+
 
     return (
         <>
@@ -831,8 +898,9 @@ export default function BoxSx() {
                         >
                             <Div type='main'>
                                 <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-                                    <Text size={17} bold="600" color='#000' type='title'>
-                                        우주약방 마음상담(완료)
+
+                                    <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
+                                        <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(완료)
                                     </Text>
                                     <TimeSleectBox />
                                 </Div>
@@ -950,7 +1018,7 @@ export default function BoxSx() {
                                 <Div type='main'>
                                     <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                         <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                            우주약방 마음상담<div style={{ color: '#b53e14' }}>({select_user?.user_name.length > 7 ? select_user?.user_name?.substr(0, 7) + "..." : select_user?.user_name})</div>(시작)
+                                            <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(시작)
                                         </Text>
                                         <div style={{ display: 'flex' }}>
                                             {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
@@ -959,10 +1027,8 @@ export default function BoxSx() {
                                     </Div>
                                     <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                         <Div type='time' >
-                                            <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
-                                            {/* <Text size={12} type='button' color='#e8440a'>
-                                        상담 경과 44:15 
-                                    </Text> */}
+                                            {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
+                                            <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
                                         </Div>
                                         <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                             {
@@ -1063,9 +1129,12 @@ export default function BoxSx() {
                                     <Div type='main'>
                                         <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                             <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
-                                                우주약방 마음상담<div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
+                                                <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                             </Text>
-                                            <TimeSleectBox first />
+                                            <div style={{ display: 'flex' }}>
+                                                <Button type={"finish"}>{"협의취소"}</Button>
+                                                <TimeSleectBox first />
+                                            </div>
                                         </Div>
                                         <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                             <Div type='time' >
@@ -1183,8 +1252,8 @@ export default function BoxSx() {
                                     >
                                         <Div type='main'>
                                             <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-                                                <Text size={17} bold="600" color='#000' type='title'>
-                                                    우주약방 마음상담(진행)
+                                                <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
+                                                    <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{userName}</div></div>(진행)
                                                 </Text>
                                                 <div style={{ display: 'flex' }}>
                                                     {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
@@ -1193,7 +1262,8 @@ export default function BoxSx() {
                                             </Div>
                                             <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                                 <Div type='time' >
-                                                    <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                                    {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
+                                                    <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
                                                 </Div>
                                                 <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                     {
@@ -1228,7 +1298,22 @@ export default function BoxSx() {
                                                                                 </Div>
                                                                             </div>
                                                                             :
-                                                                            console.log("다른것")
+                                                                            res?.type === 'noti' ?
+                                                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                                    <Div type='chat'>
+                                                                                        <div />
+                                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                                {format(new Date(res?.time), 'a hh:mm')}
+                                                                                            </Div>
+                                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                                {res?.message}
+                                                                                            </Div>
+                                                                                        </Div>
+                                                                                    </Div>
+                                                                                </div>
+                                                                                :
+                                                                                console.log("다른것")
                                                                 }
                                                                 < div ref={messageEndRef} />
                                                             </>

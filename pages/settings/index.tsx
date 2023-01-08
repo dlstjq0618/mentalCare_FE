@@ -64,6 +64,8 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     console.log("price", price);
 
     const onSubmit = (data: any) => { // vi signUp Api request
+
+        console.log("data.opening_times", data.opening_times);
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
         }
@@ -92,7 +94,49 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     account_holder_birthdate: data.accountHolderBirthdate === "" ? fileUploadDate.accountInfo.accountHolderBirthdate : data.accountHolderBirthdate,
                     account_number: data.accountNumber === "" ? fileUploadDate.accountInfo.accountNumber : data.accountNumber,
                 },
-                opening_times: data.opening_times,
+                // opening_times: data.opening_times,
+                opening_times: [
+                    {
+                        weekday: 0,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 1,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 2,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 3,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 4,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 5,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 6,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                    {
+                        weekday: 7,
+                        startTime: "09:00:00",
+                        endTime: "22:00:00"
+                    },
+                ],
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject,
                 /** 전화상담 금액 */
                 call_consultation_fifty_fee_day: data.call_consultation_fifty_fee_day,
@@ -114,22 +158,23 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 response: {
                     data: {
                         [x: string]: any;
-                        detail: string; password: string;
+                        detail: string; password: string; counselingSubject: string;
                     };
                 };
             }) => {
+                console.log('error', error.response)
                 if (error.response.data.image) {
                     return alert("프로필 사진을 등록해 주세요.")
                 }
                 if (error.response.data.password) {
                     return alert("비밀번호는 8자리 이상 입력해 주세요.")
                 }
-                if (error.response.data.counseling_subject) {
+                if (error.response.data.counselingSubject) {
                     return alert('상담과목을 선택해 주세요.')
                 }
-                if (data.opening_times.length === 0) {
-                    return alert('상담시간을 선택해 주세요.')
-                }
+                // if (data.opening_times.length === 0) {
+                //     return alert('상담시간을 선택해 주세요.')
+                // }
             });
     };
 

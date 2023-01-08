@@ -21,6 +21,9 @@ interface IStyled {
     size?: any;
     bold?: boolean;
     subtitle?: boolean;
+    badge?: boolean;
+    border?: boolean;
+    left?: number;
 
 }
 
@@ -34,6 +37,29 @@ const Title = styled.span<IStyled>`
   letter-spacing: normal;
   text-align: left;
   color: #000;
+`;
+const Badge = styled.div<IStyled>`
+    padding-top: ${rem(4)};
+    width: ${rem(60)};
+    height: ${rem(24)};
+    margin-top: ${rem(2)};
+    padding-bottom: ${rem(14)};
+    border-radius: ${rem(3)};
+    line-height: 1.4;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: -0.3px;
+    ${(props) =>
+        props.color &&
+        css`
+            color: ${props.color};
+        `}
+        ${(props) =>
+        props.border &&
+        css`
+            border: solid 0.5px ${props.color};
+        `}
 `;
 
 const Text = styled.span<IStyled>`
@@ -61,6 +87,11 @@ const Text = styled.span<IStyled>`
         props.subtitle &&
         css`
         font-weight: normal;
+    `}
+    ${(props) =>
+        props.left &&
+        css`
+        margin-left: ${rem(props.left)};
     `}
 `;
 
@@ -215,7 +246,10 @@ export default function TemporaryDrawer(props: IProps) {
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <Text bold size={18}>{list.user_name}(결제완료)</Text>
+                                <div style={{ display: 'flex' }}>
+                                    <Badge color='#0078D0' border>결제완료</Badge>
+                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                </div>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
                             </div>
                             <div style={{ display: "grid" }}>
