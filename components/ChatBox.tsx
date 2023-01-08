@@ -341,11 +341,12 @@ export default function BoxSx() {
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
-            console.log("counsel_noti", method)
-            console.log("counsel_noti_ res", res)
+            console.log("counsel_noti", method);
+            console.log("counsel_noti_ res", res);
             const waitingIofo = datas?.waitingList;
             switch (method) {
                 case "payment/user/ok": ;
+
                 case "room/test/result":
                     console.log("테스트결과값", res)
                     dispatch(setTestResultValue(res.datas))
@@ -757,6 +758,16 @@ export default function BoxSx() {
         await dispatch(setChatBoxOpenState("null"))
     }
 
+    async function handleConfirmCancel() {
+        console.log("상담중 취소")
+        socket.emit('counsel_submit', {
+            method: 'room/confirm/cancel',
+            datas: {
+                roomId: select_user.room_id,
+            }
+        })
+        await dispatch(setChatBoxOpenState("null"))
+    }
 
     const use_last_chat = useSelector(selectFinishChatList);
 
@@ -1132,7 +1143,7 @@ export default function BoxSx() {
                                                 <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                             </Text>
                                             <div style={{ display: 'flex' }}>
-                                                <Button type={"finish"}>{"협의취소"}</Button>
+                                                <Button onClick={() => handleConfirmCancel()} type={"finish"}>{"협의취소"}</Button>
                                                 <TimeSleectBox first />
                                             </div>
                                         </Div>

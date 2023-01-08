@@ -51,6 +51,7 @@ type DiagnosisDetailStoreState = {
     | "전화"
     | "완료상태"
     | "협의완료"
+    | "협의취소"
     | "전화완료";
   select_timenum: number;
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
@@ -64,6 +65,7 @@ type DiagnosisDetailStoreState = {
   alert: boolean;
   alert2: boolean;
   alert3: boolean;
+  coustom_alert: boolean;
   result: any;
   test_modal: boolean;
   price: boolean;
@@ -72,7 +74,6 @@ type DiagnosisDetailStoreState = {
   account: any;
   conference: any;
   time_count: number;
-
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -131,6 +132,7 @@ const initialState: DiagnosisDetailStoreState = {
   account: [],
   conference: [],
   time_count: 0,
+  coustom_alert: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -519,6 +521,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.time_count = action.payload;
     },
+    setCoustomAlert(
+      // 협의중인 데이터
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["coustom_alert"]>
+    ) {
+      state.coustom_alert = action.payload;
+    },
   },
 });
 
@@ -576,6 +585,7 @@ export const {
   setAccountList,
   setConferenceList,
   setTimeCount,
+  setCoustomAlert,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -678,7 +688,8 @@ export const selectAccoutList = (state: RootState) =>
   state.calendarDetail.account;
 export const selectConferenceList = (state: RootState) =>
   state.calendarDetail.conference;
-  export const selectTimeCount = (state: RootState) =>
+export const selectTimeCount = (state: RootState) =>
   state.calendarDetail.time_count;
-
+export const selectCoustomAlert = (state: RootState) =>
+  state.calendarDetail.coustom_alert;
 export default calendarDetailSilce.reducer;

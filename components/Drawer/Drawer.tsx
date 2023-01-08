@@ -292,7 +292,10 @@ export default function TemporaryDrawer(props: IProps) {
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <Text bold size={18}>{list.user_name}</Text>
+                                <div style={{ display: 'flex' }}>
+                                    {list.isimmediate ? <Badge color='#0078D0' border>결제완료</Badge> : <Badge color='#046400' border>협의대기</Badge>}
+                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                </div>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
                             </div>
                             <div style={{ display: "grid" }}>
