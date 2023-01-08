@@ -41,7 +41,8 @@ import {
   selectWaitlist,
   setCounselingInfoData,
   setSessionId,
-  setSocketControlls
+  setSocketControlls,
+  setToggleButton
 } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 import counselorLogo from '../../public/counser.png'
@@ -151,6 +152,31 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
     dispatch(setSessionId(sessionId))
   }, [sessionId])
 
+  // useEffect(() => {
+  //   function is_true(element: any) {
+  //     if (element.isimmediate === true) {
+  //       return true;
+  //     }
+  //   }
+  //   function is_status(element: any) {
+  //     if (element.status === 5) {
+  //       return true;
+  //     }
+  //   }
+  //   const true_value = reservationList.result?.filter(is_true);
+  //   const status_value = reservationList.result?.filter(is_status);
+
+  //   console.log("status_value", status_value);
+  //   console.log("true_value", true_value);
+
+  //   if (true_value?.length > 0 && status_value?.length > 0) {
+  //     dispatch(setToggleButton(true));
+  //     console.log("맞아");
+  //   } else {
+  //     dispatch(setToggleButton(false));
+  //     console.log("맞아2")
+  //   }
+  // }, [reservationList])
 
   // useEffect(() => {
   //   if (waitingCount !== notifyNum && focus) {

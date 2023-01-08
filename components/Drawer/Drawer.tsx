@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -124,6 +124,15 @@ export default function TemporaryDrawer(props: IProps) {
     });
     const [count, setCount] = useState(0);
 
+    useEffect(() => {
+        const value = account_list.result?.map((res: any) => {
+            return res.isimmediate === true
+        })
+
+        console.log("value", value)
+    }, [account_list])
+
+
 
     useEffect(() => {
         if (account_list.count === undefined) {
@@ -135,6 +144,20 @@ export default function TemporaryDrawer(props: IProps) {
         }
 
     }, [account_list.count, waitlist.count])
+
+    useEffect(() => {
+        function is_true(element: any) {
+            if (element.isimmediate === true) {
+                return true;
+            }
+        }
+        const true_value = account_list.result?.filter(is_true);
+        if (true_value?.length > 0) {
+            dispatch(setToggleButton(true));
+        } else {
+            dispatch(setToggleButton(false));
+        }
+    }, [account_list])
 
     console.log("conference_list", conference_list)
 
@@ -272,7 +295,7 @@ export default function TemporaryDrawer(props: IProps) {
                                         size={15}
                                         color="#000">
                                         {list.isimmediate === true ?
-                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                            <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
                                                 [바로상담]
                                             </span>
                                             :

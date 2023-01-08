@@ -5,7 +5,7 @@ import { styled } from "~/stitches.config";
 import { api, doctor } from "~/woozooapi";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToggleState, setToggleState } from "~/store/settingsSlice";
-import { selectCounselingInfoData, selectSocketControlls, selectSocketControlls2, setSocketControlls, setSocketControlls2 } from "~/store/calendarDetailSlice";
+import { selectAccoutList, selectChatToggle, selectCounselingInfoData, selectSocketControlls, selectSocketControlls2, selectToggleButton, setSocketControlls, setSocketControlls2 } from "~/store/calendarDetailSlice";
 
 interface Toggle {
   checkedContent?: string;
@@ -81,6 +81,12 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   const [activate, setActivate] = useState<boolean>(boolStatus);
   const [activate2, setActivate2] = useState<boolean>(boolStatus2);
   const infoData = useSelector(selectCounselingInfoData);
+  const account_list = useSelector(selectAccoutList);
+  const test = useSelector(selectToggleButton);
+
+  const chat_toggle = useSelector(selectChatToggle);
+
+
 
   const handleToggleState = (data: any) => {
     api.counselor.status({
@@ -95,11 +101,26 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   }
 
   useEffect(() => {
+    if (chat_toggle) {
+      handleToggleState2(true)
+    } else {
+      handleToggleState2(false)
+    }
     if (infoData.id) {
       api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking), dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
     }
-  }, [infoData?.id])
+  }, [infoData?.id, chat_toggle])
 
+  console.log("chat_toggle", chat_toggle);
+
+  useEffect(() => {
+    if (test === true) {
+      api.counselor.status2({
+        is_immediately: false
+      }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)) })
+    }
+    console.log('testtestetstestt', test);
+  }, [test])
 
 
   return (
@@ -117,6 +138,7 @@ export const ToggleButton = ({ activeState }: Toggle) => {
         checkedChildren={"바로상담"}
         unCheckedChildren={"바로상담"}
         checked={activate2}
+        disabled={test}
       />
     </>
   );

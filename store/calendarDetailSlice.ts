@@ -82,6 +82,8 @@ type DiagnosisDetailStoreState = {
     | "상담시작"
     | "상담취소"
     | "";
+  toggle: boolean;
+  chat_toogle: boolean;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -142,6 +144,8 @@ const initialState: DiagnosisDetailStoreState = {
   time_count: 0,
   coustom_alert: false,
   alert_type: "",
+  toggle: false,
+  chat_toogle: false,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -544,6 +548,20 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.alert_type = action.payload;
     },
+    setToggleButton(
+      // 토글버튼 상태
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["toggle"]>
+    ) {
+      state.toggle = action.payload;
+    },
+    setChatToggle(
+      // 토글버튼 상태
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["chat_toogle"]>
+    ) {
+      state.chat_toogle = action.payload;
+    },
   },
 });
 
@@ -603,6 +621,8 @@ export const {
   setTimeCount,
   setCoustomAlert,
   setAlertType,
+  setToggleButton,
+  setChatToggle,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -711,4 +731,8 @@ export const selectCoustomAlert = (state: RootState) =>
   state.calendarDetail.coustom_alert;
 export const selectAlertType = (state: RootState) =>
   state.calendarDetail.alert_type;
+export const selectToggleButton = (state: RootState) =>
+  state.calendarDetail.toggle;
+export const selectChatToggle = (state: RootState) =>
+  state.calendarDetail.chat_toogle;
 export default calendarDetailSilce.reducer;
