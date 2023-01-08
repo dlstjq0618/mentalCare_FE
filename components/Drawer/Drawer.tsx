@@ -197,7 +197,7 @@ export default function TemporaryDrawer(props: IProps) {
                 <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
-            {/* {
+            {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
@@ -239,7 +239,7 @@ export default function TemporaryDrawer(props: IProps) {
                         </BoxItem>
                     )
                 })
-            } */}
+            }
             {
                 account_list?.result?.map((list: any, index: number) => {
                     return (

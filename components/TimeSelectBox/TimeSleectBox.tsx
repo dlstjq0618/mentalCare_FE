@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch, useSelector } from 'react-redux';
-import { clear2, setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls } from '~/store/calendarDetailSlice';
+import { clear2, setCoustomAlert, setScheduleSelectModla, selectCounselingState, setCounselingState, selectDashBoardSelectUser, setDashBoardRoomJoin, setChatBoxOpenState, setSelectBoxControlls, selectSelectBoxControlls, setAlertType } from '~/store/calendarDetailSlice';
 
 interface Iprops {
     first?: boolean;
@@ -130,9 +130,12 @@ function TimeSleectBox(props: Iprops) {
                 {
                     props.first ?
                         <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => {
-                            dispatch(setChatBoxOpenState("협의완료")),
+                            // dispatch(setChatBoxOpenState("협의완료")),
+                            dispatch(setCoustomAlert(true)),
+                                dispatch(setAlertType('협의완료')),
                                 handleOpenStatus2(),
-                                dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
+                                dispatch
+                            dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
                         }}>
                             {"협의완료"}
                         </Button>

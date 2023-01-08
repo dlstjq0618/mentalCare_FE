@@ -67,12 +67,15 @@ import {
     setConferenceList,
     setTimeCount,
     selectTimeCount,
+    setCoustomAlert,
+    setAlertType,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
 import { async } from '@firebase/util';
 import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
+import { CoustomAlertPopUp } from './Dialog/AlertPopUp';
 
 interface IStyled {
     size?: any;
@@ -792,7 +795,11 @@ export default function BoxSx() {
             handleCallCounselorting()
         } else if (useOpen === "협의완료") {
             handleComplete()
+        } else if (useOpen === "협의취소") {
+            handleConfirmCancel()
         }
+
+        console.log("useOpen", useOpen);
     }, [useOpen])
 
 
@@ -1143,10 +1150,11 @@ export default function BoxSx() {
                                                 <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                             </Text>
                                             <div style={{ display: 'flex' }}>
-                                                <Button onClick={() => handleConfirmCancel()} type={"finish"}>{"협의취소"}</Button>
+                                                <Button onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
                                                 <TimeSleectBox first />
                                             </div>
                                         </Div>
+                                        <CoustomAlertPopUp />
                                         <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                             <Div type='time' >
                                                 <Text size={13} color='#b53e14' >{"일정을 협의해 주세요."}</Text>

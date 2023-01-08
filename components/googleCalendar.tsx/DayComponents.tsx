@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -24,10 +24,11 @@ import {
     setAlertControlls2,
     selectTestResultValue,
     selectCounselingFinalStep,
-    setChangeBeforeChatList
+    setChangeBeforeChatList,
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 import TestValue from '../TestValue/TestValue';
+import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 
 
 // 스텝바 진행상황 체크 ex) 상담중, 상담완료, 상담실패 등등 
@@ -237,6 +238,9 @@ const Text = styled.span<IStyled>`
         font-size: 12px;
     `}
 `;
+const P = styled.p<IStyled>` 
+    margin-bottom: 5px;
+`;
 
 const Input = styled.textarea`
     width: 316px;
@@ -286,6 +290,7 @@ function DayComponents(props: IProps) {
     const [callStatus, setCallStatus] = useState<boolean>(false)
     const userPhoneNumber = useSelector(selectUserCallNumber);
     const finalStep = useSelector(selectCounselingFinalStep); // 최종 예약 확인
+    const [render, setRender] = useState("");
 
     const [test_modal, setTest_modal] = useState(false);
 
@@ -295,16 +300,24 @@ function DayComponents(props: IProps) {
     const handlePause = () => setPause(!pause);
     const start = () => setStartButton(true);
     const close2 = () => {
-        setShow2(false);
-        dispatch(setChatBoxOpenState("null"));
+        dispatch(setCoustomAlert(true));
     };
+    const call_type = useSelector(selectChatBoxOpenState);
+    const type = useSelector(selectAlertType);
+    const type2 = useSelector(selectCoustomAlert);
+
+    console.log("call_type", call_type);
+    console.log("type", type)
+    console.log("type2", type2);
     const result = useSelector(selectTestResultValue);
     const open2 = () => setShow2(true);
+    const close4 = () => { setShow2(false), dispatch(setChatBoxOpenState("null")); }
     const open3 = () => { setTest_modal(true); }
     const close3 = () => { setTest_modal(false), dispatch(setTestResultValueStatus(false)) }
 
     const handleDispatch = () => {
         close2()
+        setShow2(false)
         dispatch(setAlertControlls2(true))
         dispatch(setCounselingState("start"));
         dispatch(setCounselingStart("start"));
@@ -316,6 +329,12 @@ function DayComponents(props: IProps) {
             close2()
         }
     }, [finalStep])
+
+    useEffect(() => {
+        if (type2 === false && type === '') {
+            setShow2(false);
+        }
+    }, [type2])
 
     // 영어 => 월화수목금토일 한글로  
     useEffect(() => {
@@ -426,7 +445,7 @@ function DayComponents(props: IProps) {
                     }
                 </span>
             </Div>
-            <BaseDialog2 showDialog={show2} close={close2} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
+            <BaseDialog2 showDialog={show2} close={close4} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
                 <StepsBar current={1} />
                 <Div step>
                     <Text size={20}>
@@ -527,10 +546,11 @@ function DayComponents(props: IProps) {
                             </div>
                     }
                 </Text>
+                <CoustomAlertPopUp />
                 {
-                    userType === "전화" && callStatus === false ?
+                    userType === "전화" && type !== "상담시작" ?
                         <RoundedButton
-                            onClick={() => { setCallStatus(true), dispatch(setChatBoxOpenState("전화")) }}
+                            onClick={() => { setCallStatus(true), dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
                             color="orange"
                             css={{
                                 fontSize: rem(15),
@@ -543,7 +563,7 @@ function DayComponents(props: IProps) {
                         </RoundedButton>
                         : userType === "채팅" ?
                             <RoundedButton
-                                onClick={() => { handleDispatch(), console.log("채팅") }}
+                                onClick={() => { handleDispatch() }}
                                 color="orange"
                                 css={{
                                     fontSize: rem(15),
@@ -554,19 +574,21 @@ function DayComponents(props: IProps) {
                             >
                                 상담시작
                             </RoundedButton>
-                            :
-                            <RoundedButton
-                                onClick={() => { console.log("상담완료"), close2(), dispatch(setChatBoxOpenState("전화완료")), setUserType("") }}
-                                color="orange"
-                                css={{
-                                    fontSize: rem(15),
-                                    margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
-                                    height: rem(50),
-                                    width: "100%",
-                                }}
-                            >
-                                상담완료(전화)
-                            </RoundedButton>
+                            : type === '상담시작' || callStatus === true ?
+                                <RoundedButton
+                                    onClick={() => { close2(), dispatch(setAlertType('상담완료')), setUserType("") }}
+                                    color="orange"
+                                    css={{
+                                        fontSize: rem(15),
+                                        margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
+                                        height: rem(50),
+                                        width: "100%",
+                                    }}
+                                >
+                                    상담완료(전화)
+                                </RoundedButton>
+                                :
+                                ""
                 }
 
                 <div style={{ textAlign: 'center', marginBottom: `${rem(40)}` }}>
@@ -582,18 +604,23 @@ function DayComponents(props: IProps) {
                 style={{
                     marginTop: '18vh',
                     width: `${rem(376)}`,
-                    height: `${rem(422)}`,
+                    // height: `${rem(422)}`,
+                    height: 'auto',
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
                 }}>
                 <Text center size={17} color={"#333"}>
                     상담을 취소 하시겠습니까?
                     <div style={{ fontSize: 15, fontWeight: "normal" }} >
-                        사유를 입력해주세요.
+                        <P>사유를 입력해주세요.</P>
+                        {/* <P>상담을 취소하시겠습니까?</P> */}
+                        <P>취소 완료 버튼 클릭시 내담자가 결제한 금액은</P>
+                        <P>측시 취소되며 재결제 불가합니다</P>
+                        <P>정말 취소하시겠습니까?</P>
                     </div>
                 </Text>
                 <Input onChange={(e) => setCancelValue(e.target.value)} value={cancelValue} />
                 <RoundedButton
-                    onClick={() => { cancelClose(), close2(), handleCancel() }}
+                    onClick={() => { cancelClose(), close4(), handleCancel() }}
                     color="orange"
                     css={{
                         fontSize: rem(15),
@@ -605,6 +632,7 @@ function DayComponents(props: IProps) {
                 </RoundedButton>
             </BaseDialog2>
             <TestValue open={test_modal} cancel={close3} />
+
         </>
     );
 }

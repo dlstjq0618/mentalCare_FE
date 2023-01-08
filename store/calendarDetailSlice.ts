@@ -74,6 +74,14 @@ type DiagnosisDetailStoreState = {
   account: any;
   conference: any;
   time_count: number;
+  alert_type:
+    | "협의취소"
+    | "협의완료"
+    | "상담취소"
+    | "상담완료"
+    | "상담시작"
+    | "상담취소"
+    | "";
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -133,6 +141,7 @@ const initialState: DiagnosisDetailStoreState = {
   conference: [],
   time_count: 0,
   coustom_alert: false,
+  alert_type: "",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -528,6 +537,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.coustom_alert = action.payload;
     },
+    setAlertType(
+      // 협의중인 데이터
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["alert_type"]>
+    ) {
+      state.alert_type = action.payload;
+    },
   },
 });
 
@@ -586,6 +602,7 @@ export const {
   setConferenceList,
   setTimeCount,
   setCoustomAlert,
+  setAlertType,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -692,4 +709,6 @@ export const selectTimeCount = (state: RootState) =>
   state.calendarDetail.time_count;
 export const selectCoustomAlert = (state: RootState) =>
   state.calendarDetail.coustom_alert;
+export const selectAlertType = (state: RootState) =>
+  state.calendarDetail.alert_type;
 export default calendarDetailSilce.reducer;
