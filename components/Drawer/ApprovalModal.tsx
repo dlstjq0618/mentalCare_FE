@@ -23,7 +23,8 @@ import {
     selectWatingListBefore,
     selectDashBoardSelectUser,
     selectChatBoxOpenState,
-    selectTestResultValue
+    selectTestResultValue,
+    setTestResultValueStatus
 } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
@@ -157,7 +158,7 @@ function ApprovalModal(props: IProps) {
     const select_user = useSelector(selectDashBoardSelectUser);
 
     const [test_modal, setTest_modal] = useState(false);
-    const open3 = () => { setTest_modal(true); }
+    const open3 = () => { setTest_modal(true), dispatch(setTestResultValueStatus(true)) }
     const close3 = () => setTest_modal(false)
 
     const handleClose = props.close
@@ -174,6 +175,8 @@ function ApprovalModal(props: IProps) {
         setShow(true);
     };
     const result = useSelector(selectTestResultValue);
+
+    console.log("resultresult", result)
 
     const close = () => setShow(false);
     const {

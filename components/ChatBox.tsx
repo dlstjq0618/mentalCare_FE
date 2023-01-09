@@ -812,7 +812,6 @@ export default function BoxSx() {
         console.log("counselingStatus", counselingStatus)
     }, [counselingStatus])
 
-
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
             handleTest()

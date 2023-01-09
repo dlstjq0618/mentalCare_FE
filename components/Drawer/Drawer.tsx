@@ -223,7 +223,7 @@ export default function TemporaryDrawer(props: IProps) {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
                                     <Badge color='#046400' border>협의대기</Badge>
@@ -268,7 +268,7 @@ export default function TemporaryDrawer(props: IProps) {
                 account_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
+                        <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
                                     <Badge color='#0078D0' border>결제완료</Badge>
