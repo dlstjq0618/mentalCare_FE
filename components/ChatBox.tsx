@@ -462,7 +462,7 @@ export default function BoxSx() {
                         type: "receve",
                         message: hello.message,
                         timestr: "",
-                        time: getTime / 1000
+                        time: getTime
                     }
                     setIsMessage([...isMessage, data1])
                 }
@@ -1065,7 +1065,7 @@ export default function BoxSx() {
                                                                             </Div>
                                                                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
                                                                                 {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                {res?.timestr}
+                                                                                {res?.timestr ? res?.timestr : format(new Date(res?.time), 'a hh:mm')}
                                                                             </Div>
                                                                         </Div>
                                                                     </>
