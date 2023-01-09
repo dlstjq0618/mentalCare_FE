@@ -83,7 +83,7 @@ type DiagnosisDetailStoreState = {
     | "상담취소"
     | "";
   toggle: boolean;
-  chat_toogle: boolean;
+  chat_toogle: boolean | null;
   stop: "완료" | "null";
 };
 
@@ -146,7 +146,7 @@ const initialState: DiagnosisDetailStoreState = {
   coustom_alert: false,
   alert_type: "",
   toggle: false,
-  chat_toogle: false,
+  chat_toogle: null,
   stop: "null",
 };
 

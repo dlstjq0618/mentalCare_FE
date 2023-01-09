@@ -142,7 +142,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
     const wating_user = useSelector(selectWatingListBefore) // 상담전 예약 데이터
     const open = useSelector(selectCoustomAlert); // 컨트롤하는 스토어 
     const dispatch = useDispatch()
-    const handleClose = () => dispatch(setCoustomAlert(false));
+    const handleClose = () => { dispatch(setCoustomAlert(false)), dispatch(setAlertType("")) };
     const type = useSelector(selectAlertType);
 
 
@@ -259,7 +259,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                                 확인
                             </RoundedButton>
                             <RoundedButton
-                                onClick={() => { dispatch(setCoustomAlert(false)) }}
+                                onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setAlertType("")) }}
                                 color="gray"
                                 css={{
                                     width: '100%',

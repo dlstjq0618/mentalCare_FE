@@ -5,7 +5,7 @@ import { styled } from "~/stitches.config";
 import { api, doctor } from "~/woozooapi";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToggleState, setToggleState } from "~/store/settingsSlice";
-import { selectAccoutList, selectChatToggle, selectCounselingInfoData, selectSocketControlls, selectSocketControlls2, selectToggleButton, setSocketControlls, setSocketControlls2 } from "~/store/calendarDetailSlice";
+import { selectAccoutList, selectChatToggle, selectCounselingInfoData, selectSocketControlls, selectSocketControlls2, selectToggleButton, setChatToggle, setSocketControlls, setSocketControlls2 } from "~/store/calendarDetailSlice";
 
 interface Toggle {
   checkedContent?: string;
@@ -107,18 +107,20 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   }, [infoData?.id])
 
   useEffect(() => {
-    if (chat_toggle) {
+    if (chat_toggle !== null) {
+      console.log("chat_toggle", chat_toggle);
       api.counselor.status2({
         is_immediately: chat_toggle
       }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) }).then(() => {
         api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
-      })
+      }).then(() => dispatch(setChatToggle(null)))
     }
-
-    console.log("activate2", activate2);
-    console.log("chat_toggle", chat_toggle);
+    console.log("이건 실행됨?")
 
   }, [chat_toggle])
+
+  console.log("activate2", activate2);
+  console.log("chat_toggle", chat_toggle);
 
   console.log("test", test);
 
