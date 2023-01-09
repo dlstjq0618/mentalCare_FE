@@ -287,7 +287,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
             borderRadius: 16,
             width: `${rem(51)}`
           }}>마음상담</span>
-          <div className="text" style={{ marginTop: 25.1 }}>
+          <div className="text" style={{ margin: `${rem(25)} 0 ${rem(28)}` }}>
             <span>
               <span className="doctor-name">
                 {userName}
