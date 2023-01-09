@@ -460,7 +460,8 @@ export default function BoxSx() {
                 if (hello?.message) {
                     const data1 = {
                         type: "receve",
-                        message: hello.message,
+                        // message: hello.message,
+                        message: select_user.user_name + "님 입장하였습니다.",
                         timestr: "",
                         time: getTime
                     }

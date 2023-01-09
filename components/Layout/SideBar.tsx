@@ -302,7 +302,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               href="/calendar"
               visiting={path === "/calendar" ? true : false}
             >
-              <span>{Number.isNaN(watingRoom_count) ? 0 : watingRoom_count}</span>
+              <span>{Number.isNaN(count) ? 0 : count}</span>
               <div>대기실</div>
             </SideBarButtons>
             <SideBarButtons
