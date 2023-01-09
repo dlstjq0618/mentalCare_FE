@@ -729,7 +729,8 @@ export default function BoxSx() {
                 roomId: before_wating.room_id,
                 user_type: 6,
                 message: e.target.value,
-                type: "send"
+                type: "send",
+                time: getTime,
             };
             socket.emit('chat', {
                 method: "chat",
@@ -944,7 +945,7 @@ export default function BoxSx() {
                                                                             {res?.message}
                                                                         </Div>.
                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                            {format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                            {format(new Date(res?.time), 'a hh:mm')}
                                                                         </Div>
                                                                     </Div>
 
@@ -955,7 +956,7 @@ export default function BoxSx() {
                                                                         <div />
                                                                         <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                                {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                             </Div>
                                                                             <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                 {res?.message}
@@ -1074,7 +1075,7 @@ export default function BoxSx() {
                                                                             <div />
                                                                             <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                                    {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                                 </Div>
                                                                                 <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                     {res?.message}
@@ -1083,6 +1084,7 @@ export default function BoxSx() {
                                                                         </Div> : ""
                                                             }
                                                         </div>
+                                                        <div ref={messageEndRef} />
                                                     </>
                                                 ))
 
@@ -1186,7 +1188,7 @@ export default function BoxSx() {
                                                                                 <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
                                                                                         {/* {res?.time} */}
-                                                                                        {res?.time && format(new Date(res?.time / 1000), 'a hh:mm')}
+                                                                                        {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                                     </Div>
                                                                                     <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                         {res?.message}
@@ -1298,7 +1300,7 @@ export default function BoxSx() {
                                                                                     {res?.message}
                                                                                 </Div>
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {res?.time && format(new Date(res?.time * 1000), 'a hh:mm')}
+                                                                                    {res?.timestr ? res?.timestr : res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                                 </Div>
                                                                             </Div>
                                                                         </div>

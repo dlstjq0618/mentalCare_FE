@@ -114,9 +114,12 @@ export const ToggleButton = ({ activeState }: Toggle) => {
         api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
       })
     }
+
+    console.log("activate2", activate2);
+    console.log("chat_toggle", chat_toggle);
+
   }, [chat_toggle])
 
-  console.log("activate2", activate2);
   console.log("test", test);
 
   useEffect(() => {
