@@ -227,7 +227,7 @@ function TimeSleectBox(props: Iprops) {
                 <div style={{ display: 'flex' }}>
                     <RoundedButton
                         onClick={() => {
-                            dispatch(setChatToggle(true)), close(), dispatch(setStopModal("null"))
+                            dispatch(setChatToggle(true)), close(), dispatch(setStopModal("null")), dispatch(setAlertType(''))
                         }}
                         color="orange"
                         css={{
@@ -240,7 +240,7 @@ function TimeSleectBox(props: Iprops) {
                     </RoundedButton>
                     <RoundedButton
                         onClick={() => {
-                            dispatch(setChatToggle(false)), close(), dispatch(setStopModal("null"))
+                            dispatch(setChatToggle(false)), close(), dispatch(setStopModal("null")), dispatch(setAlertType(''))
                         }}
                         color="gray"
                         css={{
