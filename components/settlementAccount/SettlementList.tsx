@@ -10,7 +10,7 @@ import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
 const Subtitle = styled.span`
   height: 17px;
   flex-grow: 0;
-  margin: 3px 102px 25px 0;
+  margin: 3px 102px 3px 0;
   font-family: NotoSansCJKKR;
   font-size: 12px;
   font-style: normal;
@@ -138,7 +138,15 @@ export const SettlementList = () => {
       }}
     >
       <Title>예상 정산 금액</Title>
-      <Subtitle style={{ color: "#eb541e", marginBottom: `${rem(25)}` }}>카드 수수료를 제외한 예상 정산 금액이며, 수동 정산 등으로 금액이 다소 상이 할 수 있습니다.</Subtitle>
+      <Subtitle style={{ color: "#000", }}>
+        - 매월 1일~말일까지 상담이 완료된 순수 상담비에 대해 월별로 내역이 보여집니다.
+      </Subtitle>
+      <Subtitle style={{ color: "#000", }}>
+        - 계약된 수수료를 제외한 상담사 수입 금액에 대해 사업소득 3.3% 원천징수 후 익월 10일에 지급합니다.
+      </Subtitle>
+      <Subtitle style={{ color: "#000", marginBottom: `${rem(25)}` }}>
+        - 건별 내역은 제휴 담당자가 매월 7일~9일 전달 드리며 쌍방 내역 검토 완료 후 정산 지급 처리 합니다.
+      </Subtitle>
       <Grid
         css={{
           width: "100%",
