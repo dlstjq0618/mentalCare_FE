@@ -273,7 +273,7 @@ function DayComponents(props: IProps) {
     const [startButton, setStartButton] = useState(false);
     const [pause, setPause] = useState(false);
     const [cancelModal, setCancelModal] = useState(false);
-    const [cancelValue, setCancelValue] = useState("고객 부재로 인한 취소");
+    const [cancelValue, setCancelValue] = useState("");
     const state = useSelector(selectCounselingState);
     const userId = useSelector(selectCounselingInfoData);
     const storeData = useSelector(selectCounselingDate);
@@ -610,7 +610,7 @@ function DayComponents(props: IProps) {
                         <P>정말 취소하시겠습니까?</P>
                     </div>
                 </Text>
-                <Input onChange={(e) => setCancelValue(e.target.value)} value={cancelValue} />
+                <Input onChange={(e) => setCancelValue(e.target.value)} value={cancelValue} placeholder={"고객 부재로 인한 취소"} />
                 <RoundedButton
                     onClick={() => { cancelClose(), close4(), handleCancel() }}
                     color="orange"
