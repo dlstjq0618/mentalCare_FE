@@ -80,16 +80,16 @@ function ReservationSelect(props: Iprops) {
     const min = Number(select.substring(6, 8)) * 60;
     const selectTimeNumber = hour + min;
 
-    const time = new Date().getHours();
+    const time = new Date().getHours() * 60;
     const minut = new Date().getMinutes();
-    const day = new Date().getDay() * 60 * 24;
+    const day = new Date().getDate() * 60 * 24;
 
 
+
+    const days = new Date(selectDate).getDate() * 60 * 24; //선택한 날짜 
 
     // 분으로 계산한 후 비교 time*60 + minit
-    const lastTime = day + time * 60 + minut + 1;
-
-    console.log("selectDate", new Date(selectDate).getDate());
+    const lastTime = day + time + minut + 1;
 
     useEffect(() => {
         dispatch(setCounselingTimeStempNumber(selectTimeNumber))
@@ -108,11 +108,10 @@ function ReservationSelect(props: Iprops) {
                     <Ul style={{ zIndex: 10 }}>
                         {
                             UPDATE_OPEN_TIMES_ALL.map((res: { label: string, value: string }, index: number) => {
-                                console.log("update_open_times", res.value);
-                                const days = new Date(selectDate).getDate() * 60 * 24;
                                 const times = Number(res.value?.substring(0, 2));
                                 const minuts = Number(res.value?.substring(3, 5));
                                 const last_times = times * 60 + minuts + days;
+
                                 if (lastTime < last_times) {
                                     return <Li check onClick={() => {
                                         setSelect(res.label), setCheck(false), dispatch(setCounselingTimes(res.label)),

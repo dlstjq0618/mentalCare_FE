@@ -541,7 +541,6 @@ export default function BoxSx() {
     async function handleFirstRoomJoin() { // 일정 협의 할 채팅방
         handleChatCreate();
         await dispatch(clear());
-        await handleFinishChatList();
         // roomJoin
         const req = {
             roomId: select_user.room_id,
@@ -552,12 +551,12 @@ export default function BoxSx() {
             "method": "join",
             "datas": req
         });
+        await handleFinishChatList();
 
     }
 
     async function handleWaitingRoomJoin() { // 진행중
         await dispatch(clear());
-        await handleFinishChatList();
         // roomJoin
         const req = {
             roomId: select_user.room_id,
@@ -569,6 +568,7 @@ export default function BoxSx() {
             "method": "join",
             "datas": req
         });
+        await handleFinishChatList();
     }
 
     console.log("count_srtart", count_start);
@@ -1186,7 +1186,7 @@ export default function BoxSx() {
                                                                                 <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
                                                                                         {/* {res?.time} */}
-                                                                                        {res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                                        {res?.time && format(new Date(res?.time / 1000), 'a hh:mm')}
                                                                                     </Div>
                                                                                     <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                         {res?.message}

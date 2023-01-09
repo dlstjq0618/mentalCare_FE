@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import styled, { css } from 'styled-components';
 import TemporaryDrawer from '../Drawer/Drawer';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccoutList, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
+import { selectConferenceList, selectAccoutList, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface IStyled {
     schedule?: boolean;
@@ -93,6 +93,7 @@ function CalendarHeader() {
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const account_list = useSelector(selectAccoutList);
     const [count, setCount] = useState(0);
+    const conference_list = useSelector(selectConferenceList);
 
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
@@ -117,11 +118,11 @@ function CalendarHeader() {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
         } else if (account_list.count !== undefined) {
-            const totalCount1 = account_list?.count + waitlist?.count;
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
             setCount(totalCount1)
         }
 
-    }, [account_list.count, waitlist.count])
+    }, [account_list.count, waitlist.count, conference_list.count])
 
     return (
         <>

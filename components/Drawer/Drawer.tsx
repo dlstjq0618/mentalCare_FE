@@ -50,6 +50,7 @@ const Badge = styled.div<IStyled>`
     font-weight: bold;
     text-align: center;
     letter-spacing: -0.3px;
+    font-size: 12px;
     ${(props) =>
         props.color &&
         css`
@@ -224,8 +225,10 @@ export default function TemporaryDrawer(props: IProps) {
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <Text bold size={18}>{list.user_name}(협의중)</Text>
-                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                                <div style={{ display: 'flex' }}>
+                                    <Badge color='#046400' border>협의대기</Badge>
+                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                </div>
                             </div>
                             <div style={{ display: "grid" }}>
                                 <Text
