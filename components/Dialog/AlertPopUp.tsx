@@ -19,6 +19,9 @@ import {
     setCounselingStart,
     selectAlertType,
     setAlertType,
+    setChatToggle,
+    setStopModal,
+    setCallFinish
 } from '~/store/calendarDetailSlice';
 
 interface IProps {
@@ -54,6 +57,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     const open = useSelector(selectAlertControlls);
     const dispatch = useDispatch()
     const handleClose = () => dispatch(setAlertControlls(false));
+    const handleClose2 = () => { dispatch(setAlertType("")) }
 
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
@@ -289,7 +293,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                             </Text>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <RoundedButton
-                                    onClick={() => { dispatch(setChatBoxOpenState("null")), dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("전화완료")), dispatch(setAlertType('')) }}
+                                    onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("전화완료")), dispatch(setAlertType("전화상담완료")) }}
                                     color="orange"
                                     css={{
                                         width: '100%',
@@ -352,6 +356,51 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                                     </RoundedButton>
                                 </div>
                             </BaseDialog2>
-                            : <></>
+                            : type === '전화상담완료' ?
+                                <BaseDialog2 showDialog={true} close={() => dispatch(setAlertType(""))} aria-label="팝업"
+                                    style={{
+                                        zIndex: 99,
+                                        marginTop: '18vh',
+                                        width: `${rem(500)}`,
+                                        // height: `${rem(422)}`,
+                                        height: 'auto',
+                                        padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
+                                    }}>
+                                    <Text size={17} color={"#333"}>
+                                        <P style={{ fontWeight: 'bold' }}>상담이 완료되었습니다.</P>
+                                        <P>바로상담을 on 상태로 켜서 상담을 받으실 경우 확인 버튼을</P>
+                                        <P>바로상담을 off 상태로 유지 하실경우 취소 버튼을 눌러주세요.</P>
+                                    </Text>
+                                    <div style={{ display: 'flex' }}>
+                                        <RoundedButton
+                                            onClick={() => {
+                                                dispatch(setCallFinish("완료")), dispatch(setChatToggle(true)), dispatch(setStopModal("null")), dispatch(setAlertType(''))
+                                            }}
+                                            color="orange"
+                                            css={{
+                                                fontSize: rem(15),
+                                                height: rem(50),
+                                                width: "100%",
+                                            }}
+                                        >
+                                            확인
+                                        </RoundedButton>
+                                        <RoundedButton
+                                            onClick={() => {
+                                                dispatch(setCallFinish("완료")), dispatch(setChatToggle(false)), dispatch(setStopModal("null")), dispatch(setAlertType(''))
+                                            }}
+                                            color="gray"
+                                            css={{
+                                                fontSize: rem(15),
+                                                height: rem(50),
+                                                width: "100%",
+                                            }}
+                                        >
+                                            취소
+                                        </RoundedButton>
+                                    </div>
+                                </BaseDialog2>
+                                :
+                                <></>
     );
 }

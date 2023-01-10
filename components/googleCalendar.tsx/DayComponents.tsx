@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -25,7 +25,9 @@ import {
     selectTestResultValue,
     selectCounselingFinalStep,
     setChangeBeforeChatList,
-    setToggleButton
+    setToggleButton,
+    setStopModal,
+    setChatToggle
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 import TestValue from '../TestValue/TestValue';
@@ -278,6 +280,7 @@ function DayComponents(props: IProps) {
     const userId = useSelector(selectCounselingInfoData);
     const storeData = useSelector(selectCounselingDate);
     const counselingStatus = useSelector(selectCounselingState);
+    const [show, setShow] = useState(false);
 
     const consultingList = useSelector(selectConsultingList); // 상담중
     const reservationList = useSelector(selectReservationList); // 예약 확정 O
@@ -291,8 +294,7 @@ function DayComponents(props: IProps) {
     const [callStatus, setCallStatus] = useState<boolean>(false)
     const userPhoneNumber = useSelector(selectUserCallNumber);
     const finalStep = useSelector(selectCounselingFinalStep); // 최종 예약 확인
-    const [render, setRender] = useState("");
-
+    const call_finish = useSelector(selectCallFinish);
     const [test_modal, setTest_modal] = useState(false);
 
     const handleCancel = () => dispatch(setCancelStatus(true))
@@ -328,6 +330,13 @@ function DayComponents(props: IProps) {
             close2()
         }
     }, [finalStep])
+
+    useEffect(() => {
+        if (call_finish === '완료') {
+            close4();
+            dispatch(setCallFinish(""));
+        }
+    }, [call_finish])
 
     useEffect(() => {
         if (type2 === false && type === '') {
@@ -624,7 +633,6 @@ function DayComponents(props: IProps) {
                 </RoundedButton>
             </BaseDialog2>
             <TestValue open={test_modal} cancel={close3} />
-
         </>
     );
 }

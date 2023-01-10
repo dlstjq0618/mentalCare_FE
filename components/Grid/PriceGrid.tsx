@@ -8,7 +8,7 @@ import {
     MoneyInput
 } from "~/components";
 import styled, { css } from 'styled-components';
-import { selectCounselingInfoData, setPriceZreo } from '~/store/calendarDetailSlice';
+import { selectCounselingInfoData, selectPriceZreo, setPriceZreo } from '~/store/calendarDetailSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IStyled {
@@ -66,8 +66,16 @@ export default function PriceGrid() {
     const infoData = useSelector(selectCounselingInfoData);
     const dispatch = useDispatch()
 
+    const priceData = useSelector(selectPriceZreo);
+
     useEffect(() => {
-        if (Number(am30time) + Number(pm30time) + Number(am50time) + Number(pm50time) + Number(call_am30time) + Number(call_pm30time) + Number(call_am50time) + Number(call_pm50time) === 0
+
+        if (Number(am30time) + Number(pm30time) + Number(am50time) + Number(pm50time)
+            + Number(call_am30time) + Number(call_pm30time) + Number(call_am50time) + Number(call_pm50time) === 0
+            // + infoData?.callConsultationFiftyFeeDay + infoData?.callConsultationFiftyFeeNight +
+            // infoData?.callThirtyConsultationFeeDay + infoData.callThirtyConsultationFeeNight +
+            // infoData.consultationFiftyFeeDay + infoData.consultationFiftyFeeNight +
+            // infoData?.consultationThirtyFeeDay + infoData.consultationThirtyFeeNight === 0
         ) {
             dispatch(setPriceZreo(true));
         } else {
@@ -76,6 +84,8 @@ export default function PriceGrid() {
 
         const totle_length = am30time.length + pm30time.length + am50time.length + pm50time.length + call_am30time.length + call_pm30time.length + call_am50time.length + call_pm50time.length
         console.log("totle_length", totle_length)
+
+        console.log("propiocze", priceData)
     })
 
 

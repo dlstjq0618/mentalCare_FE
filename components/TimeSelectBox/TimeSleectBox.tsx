@@ -252,7 +252,6 @@ function TimeSleectBox(props: Iprops) {
                         취소
                     </RoundedButton>
                 </div>
-                {console.log("된거")}
             </BaseDialog2>
         </>
     );

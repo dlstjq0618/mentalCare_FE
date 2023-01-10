@@ -137,7 +137,7 @@ export const SettlementList = () => {
         gap: rem(0),
       }}
     >
-      <Title>예상 정산 금액</Title>
+      {/* <Title>예상 정산 금액</Title> */}
       <Subtitle style={{ color: "#000", }}>
         - 매월 1일~말일까지 상담이 완료된 순수 상담비에 대해 월별로 내역이 보여집니다.
       </Subtitle>
@@ -145,7 +145,7 @@ export const SettlementList = () => {
         - 계약된 수수료를 제외한 상담사 수입 금액에 대해 사업소득 3.3% 원천징수 후 익월 10일에 지급합니다.
       </Subtitle>
       <Subtitle style={{ color: "#000", marginBottom: `${rem(25)}` }}>
-        - 건별 내역은 제휴 담당자가 매월 7일~9일 전달 드리며 쌍방 내역 검토 완료 후 정산 지급 처리 합니다.
+        - 건별 내역은 제휴 담당자가 매월 7일~9일 전달1 드리며 쌍방 내역 검토 완료 후 정산 지급 처리 합니다.
       </Subtitle>
       <Grid
         css={{
