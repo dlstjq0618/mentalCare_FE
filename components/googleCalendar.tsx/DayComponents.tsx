@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
-import { BaseDialog2, RoundedButton } from '~/components';
+import { BaseDialog2, RoundedButton, Image } from '~/components';
 import { rem } from "polished";
 import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
 import { ConstructionOutlined, ContentPasteSearchOutlined } from '@mui/icons-material';
+import calendarIcon from '../../public/icon_calendar@3x.png';
 import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
+import call_icon from '../../public/call@3x.png'
+import chat_icon from '../../public/chat@3x.png'
 import {
     selectCalendarUserList,
     selectCancelList,
@@ -174,6 +177,7 @@ const Status = styled.span<IStyled>`
     font-size: 10px;
     font-weight: bold;
     text-align: center;
+    margin-right: 3px;
     letter-spacing: -0.3px;
     ${(props) =>
         props.color &&
@@ -406,6 +410,7 @@ function DayComponents(props: IProps) {
                                     res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("null")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <Status color='#d8430e' border='#eb541e'>예약</Status>
+                                <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                 <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                 {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                             </StyledDiv> : ""
@@ -419,6 +424,7 @@ function DayComponents(props: IProps) {
                                 }}>
 
                                     <Status color='#60ae92' border='#60ae92'>진행</Status>
+                                    <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                     <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
@@ -433,6 +439,7 @@ function DayComponents(props: IProps) {
                                         handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <Status color='#666' border='#666'>완료</Status>
+                                    <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                     <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
@@ -444,6 +451,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv style={{ color: '#b4b4b4' }} key={index} onClick={() => { console.log("취소된 상담 건입니다.") }}>
                                     <Status color='#b4b4b4' border='#b4b4b4'>취소</Status>
+                                    <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                     <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
@@ -455,14 +463,14 @@ function DayComponents(props: IProps) {
             <BaseDialog2 showDialog={show2} close={close4} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
                 <StepsBar current={1} />
                 <Div step>
-                    <Text size={20}>
+                    <Text style={{ marginBottom: 0 }} size={20}>
                         {userName}{" 님"}
                     </Text>
                     {
                         result.datas?.subject_name ?
-                            <Text size={15}>{result.datas?.subject_name}</Text>
+                            <Text style={{ marginBottom: 0, color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
                             :
-                            <Text size={13} button onClick={open3}>
+                            <Text style={{ marginBottom: 0 }} size={13} button onClick={open3}>
                                 테스트 결과보기
                             </Text>
                     }
@@ -471,13 +479,22 @@ function DayComponents(props: IProps) {
                 <Div step style={{ marginTop: 0 }}>
                     <Text bold='normal' size={18} color={"#666"} style={{ display: 'flex' }}>
                         <div>일정</div>
-                        <div style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date?.substr(0, 10)}</div>
+                        <div style={{ color: "#000", marginLeft: `${rem(14)}` }}>
+                            {select_data.reservation_date?.substr(0, 10)?.replace(/-/gi, '.')}
+                        </div>
                     </Text>
-                    <CalendarChip label='일정변경' />
+                    {/* <CalendarChip label='일정변경' /> */}
+                    <div style={{ color: "#666", border: 'solid 1px #d3d3d3', borderRadius: 50, padding: '5px 13px 7px 11px', display: 'flex', height: 29 }}>
+                        <div style={{ placeSelf: 'center', marginRight: 2, marginTop: 3 }}><Image src={calendarIcon} width={15} height={15} /></div>
+                        <span style={{ placeSelf: 'center' }}>일정변경</span>
+                    </div>
                 </Div>
                 <Div step style={{ marginTop: 0 }}>
                     <Text bold='normal' size={18} color={"#666"}>
-                        시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date}</span>
+                        시간
+                        <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>
+                            {select_data.reservation_date?.substr(10)}
+                        </span>
                     </Text>
                     {/* <TimeChip label='시간변경' /> */}
                 </Div>
@@ -520,18 +537,18 @@ function DayComponents(props: IProps) {
                 }
                 <Text bg size={15}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <Text bold='500'>
+                        <Text bold='500' style={{ color: "rgba(0, 0, 0, 0.5)" }}>
                             상담 요청 시간
                         </Text>
                         <Text bold='normal'>
-                            {select_data.crated}
+                            {select_data.crated?.replace(/-/gi, '.')}
                         </Text>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <Text bold='500'>
+                        <Text bold='500' style={{ color: "rgba(0, 0, 0, 0.5)" }}>
                             상담 시간
                         </Text>
-                        <Text bold='normal'>
+                        <Text bold='normal' >
                             {select_data?.method_str?.substr(4, 5)}
                         </Text>
                     </div>

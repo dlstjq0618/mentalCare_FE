@@ -21,7 +21,7 @@ export const NavBar = styled("div", {
   display: "flex",
   justifyContent: "end",
   alignItems: "center",
-  width: rem(940),
+  width: rem(1085),
   span: {
     display: "flex",
     justifyContent: "center",

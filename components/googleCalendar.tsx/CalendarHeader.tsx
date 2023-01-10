@@ -25,7 +25,7 @@ const Header = styled.header<IStyled>`
     justify-content: space-between;
     display: flex;
     background: #fff;
-    width: ${rem(900)};
+    width: ${rem(1050)};
     height: ${rem(60)};
     flex-grow: 0;
     margin: ${rem(30)} 0 ${rem(25)};
@@ -35,7 +35,7 @@ const Header = styled.header<IStyled>`
     ${(props) =>
         props.schedule === true &&
         css`
-    width: ${rem(900)};
+    width: ${rem(1050)};
     height: ${rem(90)};
     background-color:#f7f7f7;
   flex-grow: 0;

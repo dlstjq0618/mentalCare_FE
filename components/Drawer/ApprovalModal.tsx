@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BaseDialog2, RoundedButton } from '~/components';
+import { BaseDialog2, RoundedButton, Image } from '~/components';
 import ko from "date-fns/locale/ko";
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { format } from "date-fns";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import calendarIcon from '../../public/icon_calendar@3x.png';
 import { DatePicker } from '../DatePicker';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
@@ -262,9 +264,12 @@ function ApprovalModal(props: IProps) {
                     </Text>
                 </Div>
 
-                <Input style={{ marginTop: `${rem(21)}` }} onClick={dateOpen}>
-                    <CalendarTodayIcon />
-                    <Text style={{ marginLeft: `${rem(10)}` }}>{storeData ? format(storeData, "PPP", { locale: ko }) : "날짜선택"}</Text>
+                <Input style={{ marginTop: `${rem(21)}`, justifyContent: 'space-between' }} onClick={dateOpen}>
+                    <div style={{ display: 'flex' }}>
+                        <Image src={calendarIcon} width={20} height={20} />
+                        <Text style={{ marginLeft: `${rem(10)}`, display: 'flex' }}>{storeData ? format(storeData, "PPP", { locale: ko }) : <div>날짜선택</div>}</Text>
+                    </div>
+                    <KeyboardArrowDownIcon />
                 </Input>
                 <ReservationSelect />
                 <div>
@@ -291,7 +296,7 @@ function ApprovalModal(props: IProps) {
                 datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
             }
             <BaseDialog2 showDialog={show} close={close} style={{
-                height: `${rem(387)}`, textAlign: 'center', marginTop: " 20vh"
+                textAlign: 'center', marginTop: " 20vh", paddingBottom: `${rem(40)}`, width: `${rem(376)}`
             }}>
                 <Text size={17} bold='normal' center>
                     <Text>{select_user?.user_name}</Text>님에게

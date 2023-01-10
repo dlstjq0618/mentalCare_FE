@@ -9,13 +9,13 @@ interface Iprops {
 }
 
 const Div = styled.div`
-width: ${rem(897)};
+width: ${rem(1055)};
 border-radius: 20px;
 line-height: normal;
 background: #fff;
 display: grid;
 
-grid-template: ${rem(161)} auto auto auto auto auto / ${rem(128)} ${rem(128)} ${rem(128)} ${rem(128)} ${rem(128)} ${rem(128)} ${rem(128)};
+grid-template: ${rem(161)} auto auto auto auto auto / ${rem(151)} ${rem(151)} ${rem(151)} ${rem(151)} ${rem(151)} ${rem(151)} ${rem(151)};
 `;
 
 

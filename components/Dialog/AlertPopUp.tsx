@@ -223,7 +223,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                             확인
                         </RoundedButton>
                         <RoundedButton
-                            onClick={() => { dispatch(setCoustomAlert(false)) }}
+                            onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setAlertType("")) }}
                             color="gray"
                             css={{
                                 width: '100%',
