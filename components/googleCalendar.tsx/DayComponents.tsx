@@ -324,6 +324,12 @@ function DayComponents(props: IProps) {
         dispatch(setChatBoxOpenState('시작'));
     }
 
+    useEffect(() => {
+        return () => {
+            dispatch(setAlertType(''));
+        }
+    }, [])
+
 
     useEffect(() => {
         if (finalStep === "yes") {
