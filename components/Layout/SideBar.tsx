@@ -32,6 +32,7 @@ import {
 } from "react-device-detect";
 import {
   selectAccoutList,
+  selectConferenceList,
   selectCalendarUserList,
   selectCancelList,
   selectCompleteList,
@@ -106,6 +107,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
   const waitingList = useSelector(selectWaitlist)
   const account_list = useSelector(selectAccoutList);
+  const conference_list = useSelector(selectConferenceList);
 
   const watingRoom_count = consultingList.count + reservationList.count + waitingList.count + account_list.count;
 
@@ -249,11 +251,11 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
       const totalCount = 0 + waitingList?.count;
       setCount(totalCount)
     } else if (account_list.count !== undefined) {
-      const totalCount1 = account_list?.count + waitingList?.count;
+      const totalCount1 = account_list?.count + waitingList?.count + conference_list?.count;
       setCount(totalCount1)
     }
 
-  }, [account_list.count, waitingList.count])
+  }, [account_list.count, waitingList.count, conference_list.count])
 
   return (
     <>

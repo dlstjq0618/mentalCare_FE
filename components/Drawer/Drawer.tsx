@@ -139,12 +139,14 @@ export default function TemporaryDrawer(props: IProps) {
         if (account_list.count === undefined) {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
-        } else {
-            const totalCount1 = account_list?.count + waitlist?.count;
+        } else if (account_list.count !== undefined) {
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
             setCount(totalCount1)
         }
 
     }, [account_list.count, waitlist.count])
+
+    console.log("count", count);
 
     useEffect(() => {
         console.log("이게 실행되는건가?")
