@@ -1153,7 +1153,7 @@ export default function BoxSx() {
                                                 <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                             </Text>
                                             <div style={{ display: 'flex' }}>
-                                                <Button onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
+                                                <Button style={{ width: `${rem(90)}`, marginRight: `${rem(-10)}` }} onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
                                                 <TimeSleectBox first />
                                             </div>
                                         </Div>
