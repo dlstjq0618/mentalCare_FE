@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import InputAdornments from '~/components/Textfield/ChatTextField';
+import { io } from 'socket.io-client';
+import { useSelector } from 'react-redux';
+import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
+import { api } from "~/woozooapi";
 
 const chatData = [{
     id: "기분좋아231",
@@ -28,72 +32,6 @@ const chatData = [{
     discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
     time: "PM 10:25"
 },
-{
-    id: "기분좋아231",
-    discription: "아무말대잔치로 육행시 해보겠습니다.ㅋㅋ.",
-    time: "PM 10:27"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "안녕하세요. 상담메이트 김우주 입니다.어떤 상담이 필요하세요?",
-    time: "PM 10:25"
-},
-{
-    id: "기분좋아231",
-    discription: "아무말대잔치로 육행시 해보겠습니다.ㅋㅋ.",
-    time: "PM 10:27"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-{
-    id: "",
-    discription: "평소 잠은 잘 주무시나요? 무기력하세요?",
-    time: "PM 10:38"
-},
-
 ]
 
 interface IStyled {
@@ -122,8 +60,9 @@ ${(props) =>
         props.type === "footer" &&
         css`
         clear: both;
-        position: relative;
+        position: absolute;
         height: auto;
+        bottom: 0;
         margin-top: 4%;
         width: 100%;
         padding: 7.3px;
@@ -215,15 +154,66 @@ const Text = styled.div<IStyled>`
     `}
 `;
 
-function sortDate2(chatData: any) {
-    const sorted_list = chatData.sort(function (a: any, b: any) {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-    }).reverse();
-    return sorted_list;
-}
-
-function ChattingPage() {
+function ChatDetail() {
     const [state, setState] = useState("");
+
+    /**
+     1. 상담이 완료됐을 때 끊어주는 이벤트 emit
+     2. 채팅창 component 에서 연결해주는 socket 이벤트
+     
+     */
+
+    // useEffect(() => {
+    //     let chatId;
+    //     api.counselor.info(NumUserId).then((res: any) => {
+    //         chatId = res.id
+    //     }).then(() => { })
+
+    //     const userId = window?.localStorage?.getItem("userId");
+    //     // 로그인 비로그인 체크 해야함
+    //     const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
+    //     const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
+    //     console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64DecodedText)
+    //     // const socket = io("http://bo.local.api.woozoo.clinic", {
+    //     const socket = io("https://bo.dev.api.woozoo.clinic", {
+    //         // transports: ["websocket"],
+    //         transports: ["polling"],
+    //         extraHeaders: {
+    //             "identity": "counselor",
+    //             "x-auth-token": base64EncodedText,
+    //         }
+    //     });
+    //     // log socket connection
+    //     socket.on("connect", () => {
+    //         console.log("SOCKET CONNECTED!", socket.id);
+    //     });
+    //     socket.emit("counsel_noti", '여기는 우주상담사 웹에서 보내고 있다!');
+
+    //     socket.on("counsel_noti", (res: any) => {
+    //         console.log("chatBrowser", res)
+    //         // console.log('받은 내용!', res + `${userNumber}`);
+
+    //         switch (res.method) {
+    //             case 'new-1': res.data.a; // 들어온값을 어딘가 보여주면됨
+    //         }
+    //         // 먼가 왓는데 그게 상담을 받는거야
+    //         // 상담사에게 상담예약을 하라고 서버가 알려준거야.
+    //     });
+    //     // 이곳은 상담요청이 들어 왓을때 데이터가 들어오는 곳입니다.
+    //     socket.on('advice/request', (res: any) => {
+    //         console.log("advice", res)
+    //     })
+    //     socket.on('ping', (res: any) => {
+    //         console.log("ping", res)
+    //     })
+
+    //     // socket disconnect on component unmount if exists
+    //     socket.on("disconnect", () => {
+    //         console.log("SOCKET DIE!", socket.id);
+    //     });
+    //     // socket.disconnect(); // 로그아웃시 작동해야함
+    // }, []);
+
     return (
         <>
             <Div type='main'>
@@ -296,4 +286,4 @@ function ChattingPage() {
     );
 }
 
-export default ChattingPage;
+export default ChatDetail;

@@ -1,4 +1,4 @@
-import { isPast, isToday } from "date-fns";
+import { isPast, isToday, isYesterday } from "date-fns";
 import { rem } from "polished";
 import { memo, useContext, useEffect } from "react";
 import { useCalendar } from "@h6s/calendar";
@@ -52,13 +52,13 @@ const DayElement = styled("div", {
         color: "$gray04",
       },
     },
-    today: {
-      true: {
-        border: "1px solid $primary",
-        backgroundColor: "$white",
-        color: "$gray01",
-      },
-    },
+    // today: {
+    //   true: {
+    //     border: "1px solid $primary",
+    //     backgroundColor: "$white",
+    //     color: "$gray01",
+    //   },
+    // },
     selectedDay: {
       true: {
         color: "$white",
@@ -89,6 +89,10 @@ function Calendar() {
   const { cursorDate, headers, body, navigation } = useCalendar({
     defaultDate: pickedDate,
   });
+
+  const today = new Date();
+  const month = today.getMonth() + 1
+
 
   const handleDayClick = (value: Date) => {
     navigation.setDate(value);
@@ -134,7 +138,7 @@ function Calendar() {
             width: rem(60),
           }}
           onClick={() => {
-            navigation.setToday();
+            navigation.setToday()
           }}
         >
           오늘
@@ -154,7 +158,7 @@ function Calendar() {
           <Div
             role="button"
             onClick={() => {
-              navigation.toPrev();
+              month < cursorDate.getMonth() + 1 ? navigation.toPrev() : console.log("이전으로 갈수없음.")
             }}
           >
             <PrevMonthIcon />
@@ -187,12 +191,12 @@ function Calendar() {
               <DayElement
                 role="button"
                 key={key}
-                today={value.getDate() === new Date().getDate()}
+                // today={value.getDate() === new Date().getDate()}
                 currentMonth={isCurrentMonth}
                 selectedDay={value.toDateString() === cursorDate.toDateString()}
                 disabled={!isToday(value) && isPast(value)}
                 onClick={() => {
-                  if (isPast(value)) return;
+                  if (!isToday(value) && isPast(value)) return;
                   handleDayClick(value);
                 }}
               >

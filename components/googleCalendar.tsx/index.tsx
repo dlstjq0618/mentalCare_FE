@@ -4,6 +4,7 @@ import CalendarHeader from "./CalendarHeader";
 import Month from "./Month";
 import GlobalContext from "~/context/GlobalContext";
 import styled from 'styled-components';
+import BoxSx from "../ChatBox";
 
 const Div = styled.div`
     width: 100%;

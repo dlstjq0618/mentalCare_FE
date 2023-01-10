@@ -21,6 +21,7 @@ import { selectCounselorName } from '~/store/doctorInfoForChangeSlice';
 import { selectCounselingInfoData, setCounselingProfileImage, selectCounselingProfileImage, setSettingSaveControlls } from '~/store/calendarDetailSlice';
 import { info } from 'console';
 import { RowAndColumnSpacing } from '../Grid/Grid';
+import PriceGrid from '../Grid/PriceGrid';
 
 interface IProps {
 
@@ -115,13 +116,12 @@ const Text = styled.span<IStyled>`
         css`
         cursor: pointer;
         flex-grow: 0;
-        width: 42px;
-        height: 25px;
+        height: 28px;
         flex-direction: row;
         text-align: center;
         padding: 1px 10px;
         align-items: flex-start;
-        margin: 8px 3px 1px 14px;
+        margin: 0px 3px 1px 14px;
         gap: 10px;
         border-radius: 4px;
         border: solid 1px rgba(0, 0, 0, 0.3);
@@ -181,10 +181,13 @@ function SettingInfoForm(props: IProps) {
     const [callNightPrice, setCallNightPrice] = useState("");
 
     const [isPassword, setIsPassword] = useState("")
-    const [isPasswordConfirm, setIsPasswordConfirm] = useState("")
+    const [isPasswordConfirm, setIsPasswordConfirm] = useState("");
+    const [phoneNumberChange, setPhoneNumberChange] = useState(false);
+
+    const [isPhoneNumber, setIsPhoneNumber] = useState('');
 
     const phoneNumber = infoData.mobile?.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '0$2-$3-$4');
-
+    const phoneNumber2 = infoData.mobile?.substr(0, 3) + '-' + infoData.mobile?.substr(3, 4) + '-' + infoData.mobile?.substr(7, 4)
 
     const handleProfilePicUpload = async (file: File) => {
         const result = validateImageFile(file);
@@ -251,7 +254,6 @@ function SettingInfoForm(props: IProps) {
         setNightPrice(infoData.consultationFeeNight);
         setCallNightPrice(infoData.callConsultationFeeNight);
         setCallDayPrice(infoData.callConsultationFeeDay);
-
     }, [infoData])
 
     useEffect(() => {
@@ -261,6 +263,19 @@ function SettingInfoForm(props: IProps) {
             dispatch2(setSettingSaveControlls(false))
         }
     }, [isPassword, isPasswordConfirm])
+
+    const onlyNumberText = (data: string) => {
+        setTextValue(data)
+        if (data) {
+            const replaceData = data.replace(/[^0-9]/g, "")
+            setValue('mobile', replaceData)
+            return setTextValue(replaceData)
+        }
+    };
+
+    useEffect(() => {
+        setIsPhoneNumber(infoData.mobile)
+    }, [infoData])
 
 
     return (
@@ -280,17 +295,33 @@ function SettingInfoForm(props: IProps) {
                             <Text size={17} color={"#999"}>
                                 {"email"}
                             </Text>
-                            <Text size={17} color={"#333"}>
+                            <Text size={17} color={"#333"} width={225} style={{ marginRight: `${rem(120)}` }}>
                                 {infoData.uid}
                             </Text>
                         </MainDiv>
-                        <MainDiv margin={40} className="phone">
-                            <Text size={17} color={"#999"}>
+                        <MainDiv margin={40} className="phone" style={{ justifyContent: 'space-between' }}>
+                            <Text size={17} color={"#999"} style={{ minWidth: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} margin={135}>
-                                {phoneNumber}
-                                {/* <Text button>수정</Text> */}
+                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}`, marginRight: `${rem(120)}` }}>
+                                {
+                                    !phoneNumberChange ?
+                                        <div style={{ textAlign: `left` }}>
+                                            {infoData?.mobile?.length === 11 ? phoneNumber2 : phoneNumber}
+                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text>
+                                        </div>
+                                        :
+                                        <div style={{ display: 'flex' }}>
+                                            <Input css={{ height: rem(31), width: rem(150) }}
+                                                value={textValue}
+                                                autoComplete='false'
+                                                onChange={(e) => {
+                                                    // setValue('mobile', e.target.value)
+                                                    onlyNumberText(e.target.value)
+                                                }} maxLength={11} />
+                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text>
+                                        </div>
+                                }
                             </Text>
                         </MainDiv>
                     </div>
@@ -315,7 +346,7 @@ function SettingInfoForm(props: IProps) {
                         onChange={(e) => {
                             setIsPassword(e.target.value)
                         }}
-                        autoComplete='off'
+                        autoComplete='new-password'
                         id="password"
                         type="password"
                         placeholder="비밀번호를 입력해주세요."
@@ -363,6 +394,36 @@ function SettingInfoForm(props: IProps) {
                     handleUpload={handleDoctorLicenseUpload}
                     handleDelete={handleDoctorLicenseDelete}
                 />
+                <StyledDiv style={{ marginTop: '20px' }}>
+                    <Label
+                        htmlFor="education"
+                        css={{
+                            marginBottom: rem(10),
+                            fontSize: rem(15),
+                            paddingTop: "0.5rem",
+                        }}
+                    >
+                        자기소개
+                        <span style={{ color: "#eb541e" }}>
+                            *
+                        </span>
+                    </Label>
+                    <TextArea
+                        onChange={(e) => {
+                            setValue("introduction", e.target.value)
+                        }}
+                        defaultValue={infoData.introduction}
+                        css={{
+                            maxHeight: rem(150),
+                            minHeight: rem(120),
+                            height: rem(120),
+                            width: rem(480),
+                            border: "1px solid $gray06",
+                            borderRadius: rem(20),
+                            padding: `${rem(16)} ${rem(30)} ${rem(20)}`,
+                        }}
+                    />
+                </StyledDiv>
                 <StyledDiv style={{ marginTop: '20px' }}>
                     <Label
                         htmlFor="cereer"
@@ -483,144 +544,7 @@ function SettingInfoForm(props: IProps) {
                         }}
                     />
                 </StyledDiv>
-                {/* <SettingLicenceField
-                    required
-                    label='경력'
-                    name="career"
-                    fileName={registerFormState.careerLicenseFileName}
-                    handleUpload={handleCareerLicenseUpload}
-                    handleDelete={handleCareerLicenseDelete}
-                /> */}
 
-                <StyledDiv>
-                    <Label
-                        htmlFor="AmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"전화 상담비 (주간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.callConsultationDayTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setCallDayPrice(e.target.value), setValue('call_consultation_fee_day', e.target.value)
-                        }}
-                        type="number"
-                        value={callDayPrice}
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-
-                </StyledDiv>
-                <StyledDiv>
-                    <Label
-                        htmlFor="PmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"전화 상담비 (야간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.callConsultationNightTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setCallNightPrice(e.target.value), setValue('call_consultation_fee_night', e.target.value)
-                        }}
-                        type="number"
-                        value={callNightPrice}
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-                </StyledDiv>
-                <StyledDiv>
-                    <Label
-                        htmlFor="PmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"채팅 상담비 (주간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.consultationNightTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setDayPrice(e.target.value), setValue('consultation_fee_day', e.target.value)
-                        }}
-                        type="number"
-                        value={dayPrice}
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-                </StyledDiv>
-                <StyledDiv>
-                    <Label
-                        htmlFor="PmPrice"
-                        css={{
-                            marginBottom: rem(10),
-                            fontSize: rem(15),
-                            marginTop: rem(33)
-                        }}
-                    >
-                        <div>
-                            {"채팅 상담비 (야간)"}
-                            <span style={{ color: "#eb541e" }}>
-                                *
-                            </span>
-                        </div>
-                        <Text spacing={-1.47}>
-                            {infoData.consultationNightTime}
-                        </Text>
-                    </Label>
-                    <MoneyInput
-                        onChange={(e) => {
-                            setNightPrice(e.target.value), setValue('consultation_fee_night', e.target.value)
-                        }}
-                        value={nightPrice}
-                        type="number"
-                        css={{
-                            input: { fontSize: rem(17) },
-                            span: { fontSize: rem(14) },
-                        }}
-                        min={0}
-                    />
-                </StyledDiv>
                 <StyledDiv>
                     <Label
                         htmlFor="PmPrice"

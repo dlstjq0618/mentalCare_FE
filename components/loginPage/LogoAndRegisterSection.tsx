@@ -4,6 +4,7 @@ import { Div, P } from "../Elements";
 import { RocketDoctorLogo } from "../icons";
 import { BI, Image } from "~/components";
 import { styled } from "~/stitches.config";
+import counselorLogo from '../../public/counser.png';
 
 const BISectionWrapper = styled("aside", {
   flex: "auto",
@@ -12,6 +13,22 @@ const BISectionWrapper = styled("aside", {
   color: "$white",
   padding: `78px 0 0 ${rem(30)}`,
   backgroundColor: "transparent",
+});
+
+const StyledInput = styled("div", {
+  height: "23px",
+  borderRadius: "18px",
+  border: "solid 2px #e73e11",
+  letterSpacing: "-0.4px",
+  backgroundColor: "#e8440a",
+  marginTop: "30px",
+  marginLeft: "-12px",
+  width: "60px",
+  textAlign: "center",
+  color: "#fff",
+  lineHeight: 1.4,
+  Zindex: 20,
+  padding: 3
 });
 
 const MAIN_COPY = `가장 빠른
@@ -35,7 +52,10 @@ export const LogoAndRegisterSection = () => {
           },
         }}
       >
-        <RocketDoctorLogo />
+        <div style={{ display: 'flex' }}>
+          <Image src={counselorLogo} width={100} height={50} />
+          <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
+        </div>
         <P
           css={{
             fontSize: rem(20),

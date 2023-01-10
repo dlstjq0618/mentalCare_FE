@@ -1,8 +1,8 @@
 import { DateStringKebab } from "~/interfaces";
 
 export const HOST =
-  process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
-    ? "https://dev.server.woozoo.clinic/" // TODO: production api base url
+  process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+    ? "https://server.woozoo.clinic/" // TODO: production api base url
     : // : "https://devserver.woozoo.clinic";
       "https://dev.server.woozoo.clinic/";
 // "https://stag.server.woozoo.clinic/"; // Staging Server
@@ -55,6 +55,8 @@ export const URLS = {
     UPDATE: (id: number | undefined) => `/api/user/v1/counselor/${id}/info`,
     CALCULATE: (id: number | undefined, year: number) =>
       `/api/psychological/v1/calculate/${id}?diff=${year}`,
+    STATUS: "/api/user/v1/counselor/activate",
+    STATUS2: "/api/user/v1/counselor/immediately",
   },
   DIAGNOSIS: {
     GET_LIST: `/api/service/diagnosis`,

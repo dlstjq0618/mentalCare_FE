@@ -30,6 +30,10 @@ export function DatePicker({
   const [showCalendar, setShowCalendar] = useState(open);
   const [selectedDate, setSelectedDate] = useState(date);
   const dispatch = useDispatch();
+  const today = new Date()
+  const day = today.getDay()
+  const time = today.getTime();
+
   let handlePrevDateClick = useCallback(() => {
     setSelectedDate(sub(selectedDate, { days: 1 }));
   }, [selectedDate]);
@@ -76,7 +80,8 @@ export function DatePicker({
         <ScheduleCalendar />
         <Div css={{ height: rem(55) }} />
         <RoundedButton
-          color="orange"
+          disabled={selectedDate.getTime() + 86400000 < time ? true : false}
+          color={selectedDate.getTime() + 86400000 < time ? "gray" : "orange"}
           css={{
             fontSize: rem(15),
             fontWeight: "bold",
@@ -85,6 +90,7 @@ export function DatePicker({
           }}
           onClick={handleDateSelect}
         >
+          {console.log("selectedDate", selectedDate)}
           {format(selectedDate, "PPP", { locale: ko })} 선택
         </RoundedButton>
       </BaseDialog>

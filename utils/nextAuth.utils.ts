@@ -39,6 +39,7 @@ export const signIn = async ({
       })
       .then((res: any) => {
         if (res.counselorUserId) {
+          window.localStorage.setItem("status", JSON.stringify(res.isWorking));
           return window?.localStorage?.setItem(
             "userId",
             JSON.stringify(res.counselorUserId)

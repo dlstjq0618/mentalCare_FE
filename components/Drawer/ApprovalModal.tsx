@@ -11,11 +11,28 @@ import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
 import AntdTimePicker from '../googleCalendar.tsx/DatePicker';
-import { useSelector } from 'react-redux';
-import { selectCounselingDate } from '~/store/calendarDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectCounselingFinalStepData,
+    selectCounselingDate,
+    selectCounselingTimes,
+    setCounselingFinalStep,
+    setCounselingFinalStepData,
+    setScheduleSelectModla,
+    selectScheduleSelectModla,
+    selectWatingListBefore,
+    selectDashBoardSelectUser,
+    selectChatBoxOpenState,
+    selectTestResultValue,
+    setTestResultValueStatus
+} from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
+import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
+import ReservationSelect from '../TimeSelectBox/ReservationSelectBox';
+import TestValue from '../TestValue/TestValue';
 
 interface IProps {
+    userInfo: any;
     open: boolean;
     close: () => void;
 }
@@ -114,8 +131,8 @@ const Input = styled.div`
 `;
 
 const Select = styled.select<IStyled>`
-font-weight: bold;
-        display: flex;
+    font-weight: bold;
+    display: flex;
     cursor: pointer;
     height: ${rem(50)};
     flex-grow: 0;
@@ -126,29 +143,42 @@ font-weight: bold;
 `;
 
 function ApprovalModal(props: IProps) {
+    const dispatch = useDispatch();
     const [show, setShow] = useState(false)
     const [show2, setShow2] = useState<boolean>(props.open);
     const [userName, setUserName] = useState("");
-    const [userDate, setUserDate] = useState("");
+    const [userData, setUserData] = useState("");
     const [selectTimes, setSelectTimes] = useState("");
     const [datePicker, setDatePicker] = useState(false);
     const storeData = useSelector(selectCounselingDate);
+    const selectTime = useSelector(selectCounselingTimes);
+    const finalStepData = useSelector(selectCounselingFinalStepData);
+    const modalState = useSelector(selectScheduleSelectModla)
+    const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터
+    const select_user = useSelector(selectDashBoardSelectUser);
+
+    const [test_modal, setTest_modal] = useState(false);
+    const open3 = () => { setTest_modal(true), dispatch(setTestResultValueStatus(true)) }
+    const close3 = () => setTest_modal(false)
 
     const handleClose = props.close
     const handleSelectTime = (e: any) => { // 예약시간 핸들러
-        console.log("e", e)
         setSelectTimes(e.target.value)
     }
+    const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
 
+    const modalClose = () => dispatch(setScheduleSelectModla(false))
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
     const open = () => {
         setShow(true);
     };
+    const result = useSelector(selectTestResultValue);
+
+    console.log("resultresult", result)
 
     const close = () => setShow(false);
-
     const {
         register,
         setValue,
@@ -178,16 +208,33 @@ function ApprovalModal(props: IProps) {
         },
         [setValue]
     );
+    const handleFinalStep = () => {
+        dispatch(setCounselingFinalStep('yes'));
+        dispatch(setCounselingFinalStepData(select_user));
+        dispatch(setScheduleSelectModla(false));
+        if (useOpen === "시작전") {
+            return alert("일정이 변경되었습니다.")
+        }
+    }
+
+    console.log("before_wating", before_wating);
+    console.log("select_user4444", select_user);
+
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}` }} showDialog={props.open} close={handleClose} >
+            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, marginTop: `${rem(240)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
-                        {"기분좋아 2031"} 님
+                        {select_user?.user_name} 님
                     </Text>
-                    <Text button>
-                        테스트 결과보기
-                    </Text>
+                    {
+                        result.datas?.subject_name ?
+                            <Text size={15}>{result.datas?.subject_name}</Text>
+                            :
+                            <Text size={13} button onClick={open3}>
+                                테스트 결과보기
+                            </Text>
+                    }
                 </Div>
                 <Line />
                 <Div>
@@ -195,7 +242,7 @@ function ApprovalModal(props: IProps) {
                         상담 방식
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        전화
+                        {select_user?.method_str?.substr(2, 2) === "전화" ? "전화" : "채팅"}
                     </Text>
                 </Div>
                 <Div>
@@ -203,7 +250,7 @@ function ApprovalModal(props: IProps) {
                         상담 요청 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {"2022.10.12 12:30:45"}
+                        {select_user?.crated}
                     </Text>
                 </Div>
                 <Div>
@@ -211,44 +258,43 @@ function ApprovalModal(props: IProps) {
                         상담 시간
                     </Text>
                     <Text bold='normal' size={15} color='#666'>
-                        {"50분"}
+                        {select_user?.method_str}
                     </Text>
                 </Div>
 
                 <Input style={{ marginTop: `${rem(21)}` }} onClick={dateOpen}>
                     <CalendarTodayIcon />
-                    <Text style={{ marginLeft: `${rem(10)}` }}>날짜 선택</Text>
+                    <Text style={{ marginLeft: `${rem(10)}` }}>{storeData ? format(storeData, "PPP", { locale: ko }) : "날짜선택"}</Text>
                 </Input>
+                <ReservationSelect />
+                <div>
+                    <RoundedButton
+                        disabled={storeData !== "" && selectTime !== "" ? false : true}
+                        onClick={open}
+                        color={storeData !== "" && selectTime !== "" ? "orange" : "gray"}
+                        css={{
+                            fontSize: rem(15),
+                            margin: `0 ${rem(24)} 0 0`,
+                            height: rem(50),
+                            width: "86%",
+                            position: 'absolute',
+                            bottom: rem(40),
+                            zIndex: 1
+                        }}
+                    >
+                        상담 승인
+                    </RoundedButton>
 
-                <Select style={{ marginBottom: `${rem(40)}` }} onChange={handleSelectTime}>
-                    <option value={"none"}>날짜선택</option>
-                    {
-                        UPDATE_OPEN_TIMES_ALL.map((time: { label: string, value: string }, index: number) => {
-                            return <option key={index} value={time.value}>{time.label}</option>
-                        })
-                    }
-                </Select>
-                <RoundedButton
-                    onClick={open}
-                    color="orange"
-                    css={{
-                        fontSize: rem(15),
-                        margin: `0 ${rem(24)} 0 0`,
-                        height: rem(50),
-                        width: "100%",
-                    }}
-                >
-                    상담 승인
-                </RoundedButton>
+                </div>
             </BaseDialog2>
             {
                 datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
             }
             <BaseDialog2 showDialog={show} close={close} style={{
-                height: `${rem(387)}`, textAlign: 'center', marginTop: " 14vh"
+                height: `${rem(387)}`, textAlign: 'center', marginTop: " 20vh"
             }}>
                 <Text size={17} bold='normal' center>
-                    <Text>기분좋아293</Text>님에게
+                    <Text>{select_user?.user_name}</Text>님에게
                     <div>상담 예정 알림이 발송됩니다.</div>
                 </Text>
                 <Text bg>
@@ -256,7 +302,7 @@ function ApprovalModal(props: IProps) {
                         상담 예정 시간
                     </Text>
                     <Info>
-                        {storeData ? format(storeData, "PPP", { locale: ko }) + " " + selectTimes : ""}
+                        {storeData ? format(storeData, "PPP", { locale: ko }) + " " + selectTime : ""}
                     </Info>
                 </Text>
                 <Text size={17} color={"#333"} bold={"normal"}>
@@ -275,12 +321,13 @@ function ApprovalModal(props: IProps) {
                     <RoundedButton
                         color="orange"
                         css={{ flex: 1, height: rem(50), width: rem(153) }}
-                        onClick={() => { close(), handleClose() }} // 예약확인 api 후 return get api
+                        onClick={() => { close(), handleClose(), handleFinalStep() }}
                     >
                         확인
                     </RoundedButton>
                 </Div>
             </BaseDialog2>
+            <TestValue open={test_modal} cancel={close3} />
         </>
     );
 }

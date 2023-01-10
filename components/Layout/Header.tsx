@@ -87,7 +87,7 @@ const Header = ({ notificationsNo }: Props) => {
           정산
         </LinkComponent>
         <Divider type="vertical" />
-        <LinkComponent as="button" colors="gray" onClick={() => router.push("/auth/login")}>
+        <LinkComponent as="button" colors="gray" onClick={() => logOut()}>
           로그아웃
         </LinkComponent>
       </NavBar>
@@ -124,7 +124,7 @@ const Header = ({ notificationsNo }: Props) => {
           <RoundedButton
             color="orange"
             css={{ flex: 1, height: rem(50) }}
-          // onClick={() => handleLogOut(doctorId)}
+            onClick={() => { router.push("/auth/login"), localStorage.removeItem('session') }}
           >
             예
           </RoundedButton>

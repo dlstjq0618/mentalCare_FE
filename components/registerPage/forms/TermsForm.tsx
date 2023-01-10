@@ -105,7 +105,8 @@ export const TermsForm = () => {
       <Div
         css={{
           flex: "auto",
-          display: "flex",
+          // display: "flex",
+          display: 'none',
           alignItems: "center",
         }}
       >
@@ -121,7 +122,8 @@ export const TermsForm = () => {
       <Div
         css={{
           flex: "auto",
-          display: "flex",
+          display: "none",
+          // display: 'flex',
           alignItems: "center",
         }}
       >

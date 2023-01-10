@@ -7,8 +7,8 @@ import { BaseDialog2, RoundedButton } from '~/components';
 import dayjs from 'dayjs'
 import styled, { css } from 'styled-components';
 import TemporaryDrawer from '../Drawer/Drawer';
-import { useDispatch } from 'react-redux';
-import { setCalendarMonthState } from '~/store/calendarDetailSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectConferenceList, selectAccoutList, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface IStyled {
     schedule?: boolean;
@@ -89,6 +89,11 @@ function CalendarHeader() {
     const [show2, setShow2] = useState<boolean>(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const dispatch = useDispatch();
+    const socketInfo = useSelector(selectSocketData);
+    const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
+    const account_list = useSelector(selectAccoutList);
+    const [count, setCount] = useState(0);
+    const conference_list = useSelector(selectConferenceList);
 
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
@@ -104,10 +109,20 @@ function CalendarHeader() {
     const handleReset = () => {
         setMonthIndex(dayjs().month())
     }
-
     useEffect(() => {
         dispatch(setCalendarMonthState(dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")))
     }, [dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")])
+
+    useEffect(() => {
+        if (account_list.count === undefined) {
+            const totalCount = 0 + waitlist?.count;
+            setCount(totalCount)
+        } else if (account_list.count !== undefined) {
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
+            setCount(totalCount1)
+        }
+
+    }, [account_list.count, waitlist.count, conference_list.count])
 
     return (
         <>
@@ -123,7 +138,7 @@ function CalendarHeader() {
             </Header>
             <Header schedule={true}>
                 <Div>
-                    <StyledSpan underLine size={30} color='#eb541e' count>12
+                    <StyledSpan underLine size={30} color='#eb541e' count>{Number.isNaN(count) ? 0 : count}
                     </StyledSpan><StyledSpan size={30} count color='black'>
                         명
                     </StyledSpan>&nbsp;<StyledSpan count size={20}>

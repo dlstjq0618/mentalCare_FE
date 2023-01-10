@@ -5,6 +5,7 @@ import {
   LogoAndRegisterSection,
   LoginFormSection,
 } from "~/components";
+import FooterInfo from "~/components/loginPage/FooterInfo";
 import { PageTitle } from "~/components/PageTitle";
 
 const LoginPage = () => {
@@ -13,9 +14,10 @@ const LoginPage = () => {
       <PageTitle>로그인</PageTitle>
       <LoginPageWrapper>
         <LoginPageMain>
-          <LogoAndRegisterSection />
+          {/* <LogoAndRegisterSection /> */}
           <LoginFormSection />
         </LoginPageMain>
+        <FooterInfo />
       </LoginPageWrapper>
     </>
   );

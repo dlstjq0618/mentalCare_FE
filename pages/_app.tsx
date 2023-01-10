@@ -11,7 +11,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
 import { ReactElement, ReactNode, useEffect } from "react";
-import { Provider as ReduxProvider } from "react-redux";
+import { Provider as ReduxProvider, useDispatch } from "react-redux";
 import "antd/dist/antd.css";
 import "~/styles/globals.css";
 import { store } from "~/store";
@@ -19,6 +19,8 @@ import { firebaseApp, RECAPTCHA_ENTERPRISE_SITE_KEY } from "~/utils/firebase";
 import { ReactNotifications } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import ContextWrapper from '../context/ContextWrapper'
+import { io } from "socket.io-client";
+import _footer from "./_footer";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -34,29 +36,32 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
-  useEffect(() => {
-    console.log("RECAPTCHA_ENTERPRISE_SITE_KEY", RECAPTCHA_ENTERPRISE_SITE_KEY)
-    if (process.env.NODE_ENV !== "production") {
-      // @ts-ignore
-      // For dev/local env, we need to init debug mode
-      globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-    }
+  const [isChatting, setIsChatting] = useState<any>([]);
 
-    initializeAppCheck(firebaseApp, {
-      provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_ENTERPRISE_SITE_KEY),
-      isTokenAutoRefreshEnabled: true,
-    });
+  // useEffect(() => {
+  //   console.log("RECAPTCHA_ENTERPRISE_SITE_KEY", RECAPTCHA_ENTERPRISE_SITE_KEY)
+  //   if (process.env.NODE_ENV !== "production") {
+  //     // @ts-ignore
+  //     // For dev/local env, we need to init debug mode
+  //     globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  //   }
 
-    // Sign in firestore anonymously
-    const auth = getAuth();
-    signInAnonymously(auth)
-      .then(() => {
-        console.log("Sign in anonymously success.");
-      })
-      .catch((error) => {
-        console.log("code", error.code);
-      });
-  }, []);
+  //   initializeAppCheck(firebaseApp, {
+  //     provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_ENTERPRISE_SITE_KEY),
+  //     isTokenAutoRefreshEnabled: true,
+  //   });
+
+  //   // Sign in firestore anonymously
+  //   const auth = getAuth();
+  //   signInAnonymously(auth)
+  //     .then(() => {
+  //       console.log("Sign in anonymously success.");
+  //     })
+  //     .catch((error) => {
+  //       console.log("code", error.code);
+  //     });
+  // }, []);
+
 
   return (
     <>
@@ -65,7 +70,7 @@ export default function App({
         <ContextWrapper >
           <SessionProvider session={session}>
             <Head>
-              <title>우주상담소</title>
+              <title>우주약방 마음상담</title>
               <meta name="description" content="로켓닥터" />
               <link rel="shortcut icon" href="/favicon.ico" />
             </Head>
