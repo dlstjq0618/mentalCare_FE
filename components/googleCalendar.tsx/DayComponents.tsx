@@ -414,6 +414,7 @@ function DayComponents(props: IProps) {
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
                                     dispatch(setTestResultValueStatus(true)),
+                                    dispatch(setImmediate(true)),
                                     res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("null")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <Status color='#d8430e' border='#eb541e'>예약</Status>
@@ -427,7 +428,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv style={{ color: '#60ae92' }} key={index} onClick={() => {
                                     useOpen !== "null" && res.status !== 2 ? console.log("done...") :
-                                        dispatch(setAlertControlls3(true)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                        dispatch(setImmediate(true)), dispatch(setAlertControlls3(true)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <Status color='#60ae92' border='#60ae92'>진행</Status>
                                     <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
@@ -442,7 +443,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv style={{ color: '#666' }} key={index} onClick={() => {
                                     useOpen !== "null" ? handleFinishDispatch() :
-                                        handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
+                                        dispatch(setImmediate(true)), handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <Status color='#666' border='#666'>완료</Status>
                                     <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />

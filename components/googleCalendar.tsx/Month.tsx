@@ -310,12 +310,10 @@ function Month(props: Iprops) {
 
 
     useEffect(() => {
-        console.log("immediate", immediate);
         if (immediate) {
             setShow(true)
         }
     }, [immediate])
-    console.log("userType", userType);
     return (
         <>
             <Divs>
@@ -345,7 +343,7 @@ function Month(props: Iprops) {
                 </Div>
                 <Line />
                 {
-                    select_data?.isimmediate ??
+                    select_data?.isimmediate === false &&
                     <>
                         <Div step style={{ marginTop: 0 }}>
                             <Text bold='normal' size={18} color={"#666"} style={{ display: 'flex' }}>
@@ -446,9 +444,9 @@ function Month(props: Iprops) {
                 </Text>
                 <CoustomAlertPopUp />
                 {
-                    select_data?.method < 4 && callStatus === false ?
+                    select_data?.method < 4 && select_data?.status === 5 ?
                         <RoundedButton
-                            onClick={() => { setCallStatus(true), dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
+                            onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
                             color="orange"
                             css={{
                                 fontSize: rem(15),
@@ -472,7 +470,7 @@ function Month(props: Iprops) {
                             >
                                 상담시작
                             </RoundedButton>
-                            : type === '상담시작' || callStatus === true ?
+                            : select_data?.method < 4 && select_data?.status === 2 ?
                                 <RoundedButton
                                     onClick={() => { close2(), dispatch(setAlertType('상담완료')), setUserType("") }}
                                     color="orange"
