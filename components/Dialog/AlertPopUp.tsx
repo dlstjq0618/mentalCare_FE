@@ -21,7 +21,8 @@ import {
     setAlertType,
     setChatToggle,
     setStopModal,
-    setCallFinish
+    setCallFinish,
+    setScheduleSelectModla
 } from '~/store/calendarDetailSlice';
 
 interface IProps {

@@ -43,22 +43,22 @@ const Title = styled.span<IStyled>`
   color: #000;
 `;
 const Badge = styled.div<IStyled>`
-    padding-top: ${rem(4)};
-    width: ${rem(60)};
-    height: ${rem(24)};
+    padding: 0;
+    width: ${rem(47)};
+    height: ${rem(19)};
     margin-top: ${rem(2)};
-    padding-bottom: ${rem(14)};
     border-radius: ${rem(3)};
     line-height: 1.4;
     font-size: 10px;
-    font-weight: bold;
     text-align: center;
     letter-spacing: -0.3px;
     font-size: 12px;
+    color: #fff;
+    font-weight: 500;
     ${(props) =>
         props.color &&
         css`
-            color: ${props.color};
+        background-color: ${props.color};
         `}
         ${(props) =>
         props.border &&
@@ -336,7 +336,7 @@ export default function TemporaryDrawer(props: IProps) {
                         <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
-                                    <Badge color='#0078D0' border>결제대기</Badge>
+                                    <Badge color='#666666' border>결제대기</Badge>
                                     <Text left={18} bold size={18}>{list.user_name}</Text>
                                 </div>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />

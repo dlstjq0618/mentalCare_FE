@@ -643,6 +643,7 @@ export default function BoxSx() {
 
     async function handleCallCounselorting() {
         console.log("전화 핸들러 실행");
+        await hadnleEmit()
         socket.emit('counsel_submit', {
             method: 'room/call/join',
             datas: {
