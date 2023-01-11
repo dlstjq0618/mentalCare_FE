@@ -921,7 +921,6 @@ export default function BoxSx() {
         const affter_time = end - get_Times;
 
         console.log("affter_time", affter_time);
-
         setCount_start(affter_time); // 남은시간 체크 하기위한 랜더링
     }, [time_count])
 
