@@ -68,7 +68,9 @@ import {
     setTimeCount,
     selectTimeCount,
     setCoustomAlert,
+    setCounselingTimeStempNumber,
     setAlertType,
+    setCounselingTimeStemp,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -329,6 +331,8 @@ export default function BoxSx() {
     const [count_start, setCount_start] = useState(0);
     const default_count = useSelector(selectTimeCount);
 
+    console.log("reservationTime", reservationTime, selectNum)
+
 
 
 
@@ -496,6 +500,8 @@ export default function BoxSx() {
         console.log("emit 실행");
 
         await dispatch(setCounselingFinalStep(""))
+        await dispatch(setCounselingTimeStempNumber(0))
+        await dispatch(setCounselingTimeStemp(""))
     }
 
     async function handleTest() {

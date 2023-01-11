@@ -26,7 +26,9 @@ import {
     selectDashBoardSelectUser,
     selectChatBoxOpenState,
     selectTestResultValue,
-    setTestResultValueStatus
+    setTestResultValueStatus,
+    selectCounselingTimeStemp,
+    setCounselingTimeStemp
 } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
@@ -158,6 +160,10 @@ function ApprovalModal(props: IProps) {
     const modalState = useSelector(selectScheduleSelectModla)
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터
     const select_user = useSelector(selectDashBoardSelectUser);
+    const select_Time = useSelector(selectCounselingTimeStemp);
+
+
+    const hour = Number(select_Time.substring(0, 2));
 
     const [test_modal, setTest_modal] = useState(false);
     const open3 = () => { setTest_modal(true), dispatch(setTestResultValueStatus(true)) }
@@ -169,7 +175,7 @@ function ApprovalModal(props: IProps) {
     }
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
 
-    const modalClose = () => dispatch(setScheduleSelectModla(false))
+    const modalClose = () => { dispatch(setScheduleSelectModla(false)), dispatch(setCounselingTimeStemp("")) }
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
@@ -177,8 +183,6 @@ function ApprovalModal(props: IProps) {
         setShow(true);
     };
     const result = useSelector(selectTestResultValue);
-
-    console.log("resultresult", result)
 
     const close = () => setShow(false);
     const {
@@ -231,7 +235,7 @@ function ApprovalModal(props: IProps) {
                     </Text>
                     {
                         result.datas?.subject_name ?
-                            <Text size={15}>{result.datas?.subject_name}</Text>
+                            <Text style={{ color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
                             :
                             <Text size={13} button onClick={open3}>
                                 테스트 결과보기
@@ -274,9 +278,9 @@ function ApprovalModal(props: IProps) {
                 <ReservationSelect />
                 <div>
                     <RoundedButton
-                        disabled={storeData !== "" && selectTime !== "" ? false : true}
+                        disabled={storeData !== "" && selectTime !== "" && hour > 0 ? false : true}
                         onClick={open}
-                        color={storeData !== "" && selectTime !== "" ? "orange" : "gray"}
+                        color={storeData !== "" && selectTime !== "" && hour > 0 ? "orange" : "gray"}
                         css={{
                             fontSize: rem(15),
                             margin: `0 ${rem(24)} 0 0`,
