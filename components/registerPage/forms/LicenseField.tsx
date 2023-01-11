@@ -83,6 +83,7 @@ export const SettingLicenceField: FC<{
     getValues,
     formState: { errors },
   } = useFormContext();
+  const infoData = useSelector(selectCounselingInfoData);
   return (
     <FormRowItemWrapperSetting>
       <Label required={required}>{label}</Label>
@@ -102,6 +103,7 @@ export const SettingLicenceField: FC<{
             className="file"
             value={fileName}
             css={{ flex: 1, paddingRight: "4em" }}
+            placeholder={infoData?.certificateImage}
           />
           <IconButton
             css={{ position: "absolute", right: rem(10), cursor: "pointer" }}

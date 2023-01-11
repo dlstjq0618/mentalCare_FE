@@ -71,11 +71,7 @@ const MainDiv = styled.div<IStyled>`
         css`
         margin-left: ${rem(props.margin)};
     `}
-    ${(props) =>
-        props.flex &&
-        css`
-        justify-content: space-between;
-    `}
+
     ${(props) =>
         props.bottom &&
         css`
@@ -111,22 +107,24 @@ const Text = styled.span<IStyled>`
             letter-spacing: ${rem(props.spacing)};
             opacity: 0.5;
     `}
-    ${(props) =>
-        props.button &&
-        css`
+`;
+const Button = styled.div`
         cursor: pointer;
         flex-grow: 0;
-        height: 28px;
+        height: 25px;
         flex-direction: row;
         text-align: center;
-        padding: 1px 10px;
         align-items: flex-start;
-        margin: 0px 3px 1px 14px;
         gap: 10px;
         border-radius: 4px;
         border: solid 1px rgba(0, 0, 0, 0.3);
-    `}
-`;
+        width: 42px;
+        font-size: 13px;
+    letter-spacing: -0.36px;
+    color:rgba(0, 0, 0, 0.5);
+    margin-left: 14px;
+    padding: 3px;
+`
 
 const reducer: Reducer<
     {
@@ -291,24 +289,24 @@ function SettingInfoForm(props: IProps) {
                                 {userName}
                             </Text>
                         </MainDiv>
-                        <MainDiv margin={40} className="email" flex bottom={10}>
-                            <Text size={17} color={"#999"}>
+                        <MainDiv margin={40} className="email" bottom={10}>
+                            <Text size={17} style={{ width: `${rem(80)}` }} color={"#999"}>
                                 {"email"}
                             </Text>
-                            <Text size={17} color={"#333"} width={225} style={{ marginRight: `${rem(120)}` }}>
+                            <Text size={17} color={"#333"} width={225} style={{ marginLeft: 21 }}>
                                 {infoData.uid}
                             </Text>
                         </MainDiv>
-                        <MainDiv margin={40} className="phone" style={{ justifyContent: 'space-between' }}>
-                            <Text size={17} color={"#999"} style={{ minWidth: `${rem(80)}` }}>
+                        <MainDiv margin={40} className="phone">
+                            <Text size={17} color={"#999"} style={{ width: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}`, marginRight: `${rem(120)}` }}>
+                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}`, marginLeft: 21 }}>
                                 {
                                     !phoneNumberChange ?
-                                        <div style={{ textAlign: `left` }}>
+                                        <div style={{ textAlign: `left`, display: 'flex' }}>
                                             {infoData?.mobile?.length === 11 ? phoneNumber2 : phoneNumber}
-                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Text>
+                                            <Button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Button>
                                         </div>
                                         :
                                         <div style={{ display: 'flex' }}>
@@ -319,7 +317,7 @@ function SettingInfoForm(props: IProps) {
                                                     // setValue('mobile', e.target.value)
                                                     onlyNumberText(e.target.value)
                                                 }} maxLength={11} />
-                                            <Text button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Text>
+                                            <Button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Button>
                                         </div>
                                 }
                             </Text>
