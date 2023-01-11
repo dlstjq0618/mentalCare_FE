@@ -178,12 +178,14 @@ export default function TemporaryDrawer(props: IProps) {
         console.log("isimmediate", data.isimmediate)
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(false));
+            dispatch(setTestResultValueStatus(true));
+            dispatch(setDashBoardSelectUser(data));
+            dispatch(setImmediate(true));
         } else {
             dispatch(setScheduleSelectModla(true));
+            dispatch(setTestResultValueStatus(true));
+            dispatch(setDashBoardSelectUser(data));
         }
-        dispatch(setTestResultValueStatus(true));
-        dispatch(setDashBoardSelectUser(data));
-        dispatch(setImmediate(true));
     }
 
     useEffect(() => {
@@ -382,7 +384,7 @@ export default function TemporaryDrawer(props: IProps) {
                         <BoxItem key={index} onClick={() => {
                             list.isimmediate === true ? handleImmediate(list)
                                 :
-                                dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list))
+                                handleImmediate(list)
                         }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>

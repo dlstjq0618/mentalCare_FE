@@ -135,8 +135,6 @@ function TimeSleectBox(props: Iprops) {
     const [closeStatus, setCloseStatus] = useState<boolean>(false)
     const stop = useSelector(selectStopModal);
 
-    console.log("closeStatus", closeStatus);
-
     const open = () => setCloseStatus(true);
     const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")) };
 
