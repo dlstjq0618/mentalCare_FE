@@ -369,9 +369,9 @@ export default function TemporaryDrawer(props: IProps) {
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
                                     {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
-                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                    <Text left={list?.isimmediate ? 0 : 18} bold size={18}>{list.user_name}</Text>
                                 </div>
-                                {list.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
+                                {list?.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
                                     :
                                     <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
                             </div>
