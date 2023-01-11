@@ -162,6 +162,8 @@ function ApprovalModal(props: IProps) {
     const select_user = useSelector(selectDashBoardSelectUser);
     const select_Time = useSelector(selectCounselingTimeStemp);
 
+    console.log("modalState", modalState);
+
 
     const hour = Number(select_Time.substring(0, 2));
 
@@ -228,7 +230,12 @@ function ApprovalModal(props: IProps) {
 
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, marginTop: `${rem(240)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
+            <BaseDialog2 style={{
+                paddingBottom: `${rem(40)}`,
+                marginTop: `${rem(240)}`,
+                maxHeight: `${rem(490)}`,
+                minHeight: `${rem(490)}`
+            }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
                         {select_user?.user_name} 님

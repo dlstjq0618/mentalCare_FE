@@ -293,6 +293,7 @@ export default function BoxSx() {
     const selectTime = useSelector(selectCounselingTimeStemp);
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터 
     const reservationTime = (new Date(storeData).getTime() / 1000);
+    const nowTimes = new Date().getTime() / 1000
     const selectNum = useSelector(selectCounselingTimeStempNumber);
     const totalTime = reservationTime + selectNum
     const roomJoin = useSelector(selectCounselingStart);
@@ -332,7 +333,9 @@ export default function BoxSx() {
     const [count_start, setCount_start] = useState(0);
     const default_count = useSelector(selectTimeCount);
 
+
     console.log("reservationTime", reservationTime, selectNum)
+    console.log("nowTimes", nowTimes);
 
 
 
@@ -492,13 +495,16 @@ export default function BoxSx() {
     }, [userPaymentRequestStatus]);
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
+    // nowTime
+    console.log("finalSetData", finalSetData)
+
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         setIsMessage([])
         const data1 = {
             method: "room/reservation_date",
             datas: {
-                roomId: finalSetData.room_id,
-                reservation_date: totalTime
+                roomId: select_user?.room_id,
+                reservation_date: select_user.isimmediate ? nowTimes : totalTime
             }
         }
         socket.emit('counsel_submit', data1);

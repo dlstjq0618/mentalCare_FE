@@ -90,6 +90,7 @@ type DiagnosisDetailStoreState = {
   stop: "완료" | "null";
   call_finish: "완료" | "";
   paidList: any;
+  immediate: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -155,6 +156,7 @@ const initialState: DiagnosisDetailStoreState = {
   stop: "null",
   call_finish: "",
   paidList: [],
+  immediate: null,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -592,6 +594,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.paidList = action.payload;
     },
+    setImmediate(
+      // 바로상담 일 경우 상담시작 모달 오픈
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["immediate"]>
+    ) {
+      state.immediate = action.payload;
+    },
   },
 });
 
@@ -656,6 +665,7 @@ export const {
   setStopModal,
   setCallFinish,
   setPaidWaitList,
+  setImmediate,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -774,5 +784,8 @@ export const selectCallFinish = (state: RootState) =>
   state.calendarDetail.call_finish;
 export const selectPaidWaitLis = (state: RootState) =>
   state.calendarDetail.paidList;
+
+export const selectImmediate = (state: RootState) =>
+  state.calendarDetail.immediate;
 
 export default calendarDetailSilce.reducer;

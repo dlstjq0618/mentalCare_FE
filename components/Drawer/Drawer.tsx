@@ -8,7 +8,8 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis } from '~/store/calendarDetailSlice';
+import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -160,6 +161,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [selectUserData, setSelectUserData] = useState<any>();
     const account_list = useSelector(selectAccoutList);
     const conference_list = useSelector(selectConferenceList);
+    const paidWait_list = useSelector(selectPaidWaitLis);
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
     const [wating_add, setWating_add] = useState<any>([])
@@ -171,6 +173,18 @@ export default function TemporaryDrawer(props: IProps) {
         right: false,
     });
     const [count, setCount] = useState(0);
+
+    const handleImmediate = (data: any) => { // 즉시 시작일 때 
+        console.log("isimmediate", data.isimmediate)
+        if (data.isimmediate) {
+            dispatch(setScheduleSelectModla(false));
+        } else {
+            dispatch(setScheduleSelectModla(true));
+        }
+        dispatch(setTestResultValueStatus(true));
+        dispatch(setDashBoardSelectUser(data));
+        dispatch(setImmediate(true));
+    }
 
     useEffect(() => {
         const value = account_list.result?.map((res: any) => {
@@ -274,7 +288,6 @@ export default function TemporaryDrawer(props: IProps) {
             {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
-                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
@@ -317,10 +330,60 @@ export default function TemporaryDrawer(props: IProps) {
                 })
             }
             {
+                paidWait_list?.result?.map((list: any, index: number) => {
+                    return (
+                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
+                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                <div style={{ display: 'flex' }}>
+                                    <Badge color='#0078D0' border>결제대기</Badge>
+                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                </div>
+                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                            </div>
+                            <div style={{ display: "grid" }}>
+                                <Text
+                                    color=' rgba(0, 0, 0, 0.4)'
+                                    bold={false} size={15}>
+                                    요청 시간
+                                    <Text
+                                        subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false} size={15} color="#000">
+                                        {list.crated}
+                                    </Text>
+                                </Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                    상담 방식
+                                    <Text subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false}
+                                        size={15}
+                                        color="#000">
+                                        {list.isimmediate === true ?
+                                            <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                [바로상담]
+                                            </span>
+                                            :
+                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                [예약상담]
+                                            </span>}{list.method_str}
+                                    </Text>
+                                </Text>
+                            </div>
+                        </BoxItem>
+                    )
+                })
+            }
+            {
                 account_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
+                        <BoxItem key={index} onClick={() => {
+                            list.isimmediate === true ? handleImmediate(list)
+                                :
+                                dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list))
+                        }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
                                     <Badge color='#0078D0' border>결제완료</Badge>
