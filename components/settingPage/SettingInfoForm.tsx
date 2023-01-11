@@ -388,7 +388,7 @@ function SettingInfoForm(props: IProps) {
                     required
                     label='상담사 자격증'
                     name="certificate_image"
-                    fileName={infoData.certificateImage ? "등록된 정보 입니다." : registerFormState.doctorLicenseFileName}
+                    fileName={registerFormState.doctorLicenseFileName}
                     handleUpload={handleDoctorLicenseUpload}
                     handleDelete={handleDoctorLicenseDelete}
                 />
