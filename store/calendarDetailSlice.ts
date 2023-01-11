@@ -52,6 +52,7 @@ type DiagnosisDetailStoreState = {
     | "완료상태"
     | "협의완료"
     | "협의취소"
+    | "결제요청"
     | "전화완료";
   select_timenum: number;
   select_controll: "상담중" | "일시정지" | "완료" | "닫기" | "null";
@@ -82,11 +83,13 @@ type DiagnosisDetailStoreState = {
     | "상담시작"
     | "상담취소"
     | "전화상담완료"
+    | "승인요청"
     | "";
   toggle: boolean;
   chat_toogle: boolean | null;
   stop: "완료" | "null";
   call_finish: "완료" | "";
+  paidList: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -151,6 +154,7 @@ const initialState: DiagnosisDetailStoreState = {
   chat_toogle: null,
   stop: "null",
   call_finish: "",
+  paidList: [],
 };
 
 export const calendarDetailSilce = createSlice({
@@ -561,24 +565,32 @@ export const calendarDetailSilce = createSlice({
       state.toggle = action.payload;
     },
     setChatToggle(
-      // 토글버튼 상태
+      // 채팅방 상담완료 시 토글컨트롤 팝업
       state,
       action: PayloadAction<DiagnosisDetailStoreState["chat_toogle"]>
     ) {
       state.chat_toogle = action.payload;
     },
     setStopModal(
-      // 토글버튼 상태
+      // 협의취소 팝업
       state,
       action: PayloadAction<DiagnosisDetailStoreState["stop"]>
     ) {
       state.stop = action.payload;
     },
     setCallFinish(
+      // 전화상담완료 토글 컨트롤 팝업
       state,
       action: PayloadAction<DiagnosisDetailStoreState["call_finish"]>
     ) {
       state.call_finish = action.payload;
+    },
+    setPaidWaitList(
+      // 결제 대기중 리스트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["paidList"]>
+    ) {
+      state.paidList = action.payload;
     },
   },
 });
@@ -643,6 +655,7 @@ export const {
   setChatToggle,
   setStopModal,
   setCallFinish,
+  setPaidWaitList,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -759,5 +772,7 @@ export const selectChatToggle = (state: RootState) =>
 export const selectStopModal = (state: RootState) => state.calendarDetail.stop;
 export const selectCallFinish = (state: RootState) =>
   state.calendarDetail.call_finish;
+export const selectPaidWaitLis = (state: RootState) =>
+  state.calendarDetail.paidList;
 
 export default calendarDetailSilce.reducer;

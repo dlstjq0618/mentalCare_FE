@@ -411,6 +411,7 @@ function SettingInfoForm(props: IProps) {
                             setValue("introduction", e.target.value)
                         }}
                         defaultValue={infoData.introduction}
+
                         css={{
                             maxHeight: rem(150),
                             minHeight: rem(120),

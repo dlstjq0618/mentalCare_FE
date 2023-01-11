@@ -125,7 +125,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
-        duration: 30000,
+        duration: 10000,
         onScreen: true
       }
     });
@@ -153,6 +153,12 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   useEffect(() => {
     dispatch(setSessionId(sessionId))
   }, [sessionId])
+
+  // useEffect(() => {
+  //   if (count > 0) {
+  //     handleToast() 
+  //   }
+  // }, [count])
 
   // useEffect(() => {
   //   function is_true(element: any) {

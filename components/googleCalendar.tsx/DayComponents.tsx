@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton, Image } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish, selectAccoutList } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
 import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
@@ -292,6 +292,7 @@ function DayComponents(props: IProps) {
     const completeList = useSelector(selectCompleteList); // 상담완료 O
     const cancelList = useSelector(selectCancelList); // 상담 취소
 
+
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
     const select_data = useSelector(selectDashBoardSelectUser);
     const selectTime = useSelector(selectCounselingTimes);
@@ -309,6 +310,7 @@ function DayComponents(props: IProps) {
     const close2 = () => {
         dispatch(setCoustomAlert(true));
     };
+
     const call_type = useSelector(selectChatBoxOpenState);
     const type = useSelector(selectAlertType);
     const type2 = useSelector(selectCoustomAlert);
@@ -346,6 +348,7 @@ function DayComponents(props: IProps) {
             close4();
             dispatch(setCallFinish(""));
         }
+        console.log("call_finish", call_finish);
     }, [call_finish])
 
     useEffect(() => {

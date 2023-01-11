@@ -153,6 +153,12 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
     console.log("open", open);
     console.log("typetype", type);
 
+    const handleDispatch = () => { // 결제요청
+        dispatch(setChatBoxOpenState("결제요청"))
+        dispatch(setChatToggle(true))
+        dispatch(setStopModal("null"))
+        dispatch(setAlertType(''))
+    }
     return (
         type === '협의취소' ?
             <BaseDialog2 showDialog={open} close={() => handleClose()} aria-label="협의취소 팝업"
@@ -401,6 +407,52 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                                     </div>
                                 </BaseDialog2>
                                 :
-                                <></>
+                                type === '승인요청' ?
+                                    <BaseDialog2 showDialog={true} close={() => dispatch(setAlertType(""))} aria-label="팝업"
+                                        style={{
+                                            zIndex: 99,
+                                            marginTop: '18vh',
+                                            width: `${rem(500)}`,
+                                            // height: `${rem(422)}`,
+                                            height: 'auto',
+                                            padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
+                                        }}>
+                                        <Text size={17} color={"#333"}>
+                                            <P>확인시 내담자에게 결제요청 알림이 발송되며</P>
+                                            <P>내담자 결제 완료 후 상태값이 결제 완료로</P>
+                                            <P>변경되면 바로 상담을 진행할 수 있습니다.</P>
+                                            <P>바로 상담 요청을 승인하시겠습니까?</P>
+                                        </Text>
+                                        <div style={{ display: 'flex' }}>
+                                            <RoundedButton
+                                                onClick={() => {
+                                                    handleDispatch()
+                                                }}
+                                                color="orange"
+                                                css={{
+                                                    fontSize: rem(15),
+                                                    height: rem(50),
+                                                    width: "100%",
+                                                }}
+                                            >
+                                                확인
+                                            </RoundedButton>
+                                            <RoundedButton
+                                                onClick={() => {
+                                                    dispatch(setCallFinish("완료")), dispatch(setChatToggle(false)), dispatch(setStopModal("null")), dispatch(setAlertType(''))
+                                                }}
+                                                color="gray"
+                                                css={{
+                                                    fontSize: rem(15),
+                                                    height: rem(50),
+                                                    width: "100%",
+                                                }}
+                                            >
+                                                취소
+                                            </RoundedButton>
+                                        </div>
+                                    </BaseDialog2>
+                                    :
+                                    <></>
     );
 }

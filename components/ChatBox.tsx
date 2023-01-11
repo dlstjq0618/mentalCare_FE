@@ -71,6 +71,7 @@ import {
     setCounselingTimeStempNumber,
     setAlertType,
     setCounselingTimeStemp,
+    setPaidWaitList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -434,6 +435,10 @@ export default function BoxSx() {
                 const result5 = datas.list;
                 dispatch(setConferenceList(result5))
                 console.log("협의중인 데이터", result5)
+            } else if (method === 'paidWaitList') {
+                const result6 = datas.list;
+                console.log("결제대기", result6);
+                dispatch(setPaidWaitList(result6));
             }
         })
     }, [user_dashborad, user_name])
@@ -698,6 +703,7 @@ export default function BoxSx() {
         }
     };
 
+
     const handleEnter = (e: any) => { // 유입된 유저와 대화했던 데이터 저장 채팅방 엔터 눌렀을때 전송
         setState({ message: e.target.value }); // 이거는 인풋박스 온체인지
         if (e.key === "Enter" && state.message !== "") { // 엔터를 했을때 쳇 데이터 안에 룸 번호와 메세지와 시간을 보낸다.
@@ -781,6 +787,16 @@ export default function BoxSx() {
         await dispatch(setChatBoxOpenState("null"))
     }
 
+    async function handlePaidWaitList() { // 결제요청
+        socket.emit('counsel_submit', {
+            method: 'request/payment/confirm/immediate',
+            datas: {
+                roomId: select_user.room_id,
+            }
+        })
+        await dispatch(setChatBoxOpenState("null"))
+    }
+
     const use_last_chat = useSelector(selectFinishChatList);
 
     useEffect(() => {
@@ -806,6 +822,8 @@ export default function BoxSx() {
             handleComplete()
         } else if (useOpen === "협의취소") {
             handleConfirmCancel()
+        } else if (useOpen === "결제요청") {
+            handlePaidWaitList()
         }
 
         console.log("useOpen", useOpen);

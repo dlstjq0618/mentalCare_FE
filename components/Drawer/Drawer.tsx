@@ -6,9 +6,9 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
-import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
+import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType } from '~/store/calendarDetailSlice';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -24,6 +24,9 @@ interface IStyled {
     badge?: boolean;
     border?: boolean;
     left?: number;
+    schedule?: boolean;
+    count?: boolean;
+    underLine?: boolean;
 
 }
 
@@ -61,6 +64,50 @@ const Badge = styled.div<IStyled>`
         css`
             border: solid 0.5px ${props.color};
         `}
+`;
+const Divs = styled.div`
+    display: flex;
+    align-items: center;
+`;
+const Header = styled.header<IStyled>`
+    justify-content: space-between;
+    display: flex;
+    background: #fff;
+    width: ${rem(1050)};
+    height: ${rem(60)};
+    flex-grow: 0;
+    margin: ${rem(30)} 0 ${rem(25)};
+    padding: ${rem(14)} ${rem(35)} ${rem(14)} ${rem(30)};
+    border-radius: 20px;
+    background-color: #fff;
+    ${(props) =>
+        props.schedule === true &&
+        css`
+    width: ${rem(1050)};
+    height: ${rem(90)};
+    background-color:#f7f7f7;
+    flex-grow: 0;
+    padding: 20px 39px 20px 32px;
+    border-radius: 20px;
+    border: solid ${rem(2)} #eb541e;
+    justify-content: none;
+    `}
+`;
+const StyledSpan = styled.span<IStyled>` 
+    font-weight: bold;
+    ${(props) =>
+        props.count === true &&
+        css`
+        font-size: ${rem(props.size)};
+        color: ${props.color};
+    `}
+    ${(props) =>
+        props.underLine === true &&
+        css`
+        border-bottom: 1px solid;
+        cursor: pointer;
+    line-height: 1.2;
+    `}
 `;
 
 const Text = styled.span<IStyled>`
@@ -178,7 +225,8 @@ export default function TemporaryDrawer(props: IProps) {
         dispatch(setTestResultValueStatus(true))
         dispatch(setChatBoxOpenState('null'))
         if (data.isimmediate) {
-            dispatch(setScheduleSelectModla(true));
+            dispatch(setAlertType("승인요청"))
+            // dispatch(setScheduleSelectModla(true));
             dispatch(setDashBoardSelectUser(data));
             dispatch(setAlertControlls(false));
         } else {
@@ -189,7 +237,7 @@ export default function TemporaryDrawer(props: IProps) {
     }
 
     const toggleDrawer =
-        (anchor: Anchor, open: boolean) =>
+        (anchor: Anchor, open: boolean, title?: string) =>
             (event: React.KeyboardEvent | React.MouseEvent) => {
                 if (
                     event.type === 'keydown' &&
@@ -200,6 +248,7 @@ export default function TemporaryDrawer(props: IProps) {
                 }
 
                 setState({ ...state, [anchor]: open });
+                // setTitle("");
             };
 
     const list = (anchor: Anchor) => (
@@ -207,8 +256,8 @@ export default function TemporaryDrawer(props: IProps) {
             style={{ background: "#f7f7f7", padding: `${rem(30)}`, height: 'auto', minHeight: '100%' }}
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : `${rem(430)}` }}
             role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
+            onClick={toggleDrawer(anchor, false, title)}
+            onKeyDown={toggleDrawer(anchor, false, title)}
         >
             <Div
                 css={{
@@ -218,6 +267,7 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
+                {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
@@ -315,14 +365,15 @@ export default function TemporaryDrawer(props: IProps) {
             {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
-                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
-                                    {list.isimmediate ? <Badge color='#0078D0' border>결제완료</Badge> : <Badge color='#046400' border>협의대기</Badge>}
+                                    {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
                                     <Text left={18} bold size={18}>{list.user_name}</Text>
                                 </div>
-                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                                {list.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
+                                    :
+                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
                             </div>
                             <div style={{ display: "grid" }}>
                                 <Text
@@ -361,10 +412,12 @@ export default function TemporaryDrawer(props: IProps) {
         </Box >
     );
 
+    const [title, setTitle] = useState("")
+
     return (
         <>
             <RoundedButton
-                onClick={toggleDrawer("right", true)}
+                onClick={toggleDrawer("right", true, "")}
                 color="orange"
                 css={{
                     fontSize: rem(20),
@@ -374,17 +427,40 @@ export default function TemporaryDrawer(props: IProps) {
             >
                 {props.name}
             </RoundedButton>
+
+            {/* <Divs>
+                <StyledSpan count size={20}>
+                    바로상담 대기
+                </StyledSpan>&nbsp;&nbsp;&nbsp;
+                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
+                    {Number.isNaN(count) ? 0 : count}
+                </StyledSpan>
+                <StyledSpan size={30} count color='black'>
+                    명
+                </StyledSpan>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <StyledSpan count size={20}>
+                    예약상담 대기
+                </StyledSpan>&nbsp;&nbsp;&nbsp;
+                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
+                    {Number.isNaN(count) ? 0 : count}
+                </StyledSpan>
+                <StyledSpan size={30} count color='black'>
+                    명
+                </StyledSpan>
+            </Divs> */}
             <Drawer
                 sx={{ bg: "#f7f7f7" }}
                 anchor={"right"}
                 open={state["right"]}
-                onClose={toggleDrawer("right", false)}
+                onClose={toggleDrawer("right", false, "")}
             >
                 {list("right")}
             </Drawer>
             <ApprovalModal open={modalOpen} close={close} userInfo={selectUserData} />
             <AlertPopUp />
             <AlertPopUp3 />
+            <CoustomAlertPopUp />
         </>
     );
 }

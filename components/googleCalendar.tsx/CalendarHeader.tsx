@@ -38,10 +38,11 @@ const Header = styled.header<IStyled>`
     width: ${rem(1050)};
     height: ${rem(90)};
     background-color:#f7f7f7;
-  flex-grow: 0;
-  padding: 20px 39px 20px 32px;
-  border-radius: 20px;
-  border: solid ${rem(2)} #eb541e;
+    flex-grow: 0;
+    padding: 20px 39px 20px 32px;
+    border-radius: 20px;
+    border: solid ${rem(2)} #eb541e;
+    justify-content: none;
     `}
 `;
 const StyledSpan = styled.span<IStyled>` 
@@ -56,6 +57,7 @@ const StyledSpan = styled.span<IStyled>`
         props.underLine === true &&
         css`
         border-bottom: 1px solid;
+        cursor: pointer;
     line-height: 1.2;
     `}
 `;
@@ -130,6 +132,7 @@ function CalendarHeader() {
                 <Div>
                     <KeyboardArrowLeftIcon style={{ cursor: 'pointer' }} onClick={() => handlePrevMonth()} />
                     <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} onClick={() => handleNextMonth()} />
+
                     <StyledDate>{dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")}</StyledDate>
                     <StyledButton onClick={() => handleReset()}>
                         오늘
@@ -149,6 +152,29 @@ function CalendarHeader() {
                     <TemporaryDrawer open={drawerOpen} name={"스케줄 등록"} />
                 </Div>
             </Header>
+            {/* <Header schedule={true}> // 새로운 UI 캘린더헤더
+                <Div>
+                    <StyledSpan count size={20}>
+                        바로상담 대기
+                    </StyledSpan>&nbsp;&nbsp;&nbsp;
+                    <StyledSpan underLine size={30} color='#eb541e' count>
+                        {Number.isNaN(count) ? 0 : count}
+                    </StyledSpan>
+                    <StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <StyledSpan count size={20}>
+                        예약상담 대기
+                    </StyledSpan>&nbsp;&nbsp;&nbsp;
+                    <StyledSpan underLine size={30} color='#eb541e' count>
+                        {Number.isNaN(count) ? 0 : count}
+                    </StyledSpan>
+                    <StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>
+                </Div>
+            </Header> */}
         </>
     );
 }
