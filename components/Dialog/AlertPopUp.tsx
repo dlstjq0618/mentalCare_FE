@@ -152,6 +152,12 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
     const handleClose = () => { dispatch(setCoustomAlert(false)), dispatch(setAlertType("")) };
     const type = useSelector(selectAlertType);
 
+    const handleFinishDispatch = () => {
+        dispatch(setCallFinish("완료"));
+        dispatch(setAlertType(""));
+        dispatch(setChatToggle(false));
+    }
+
 
     console.log("open", open);
     console.log("typetype", type);

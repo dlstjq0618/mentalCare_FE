@@ -342,7 +342,11 @@ function Month(props: Iprops) {
                 {
                     select_data?.method < 4 && callStatus === false ?
                         <RoundedButton
-                            onClick={() => { setCallStatus(true), dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
+                            onClick={() => {
+                                setCallStatus(true),
+                                    dispatch(setCoustomAlert(true)),
+                                    dispatch(setAlertType('상담시작'))
+                            }}
                             color="orange"
                             css={{
                                 fontSize: rem(15),
