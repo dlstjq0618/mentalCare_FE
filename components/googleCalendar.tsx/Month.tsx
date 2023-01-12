@@ -166,7 +166,6 @@ function Month(props: Iprops) {
 
     const close2 = () => {
         dispatch(setCoustomAlert(true));
-        dispatch(setImmediate(false));
         setCallStatus(false);
     };
     console.log("callStatus", callStatus)
@@ -178,6 +177,7 @@ function Month(props: Iprops) {
         dispatch(setCounselingState("start"));
         dispatch(setCounselingStart("start"));
         dispatch(setChatBoxOpenState('시작'));
+        dispatch(setImmediate(false));
         dispatch(setCounselingFinalStep("yes"));
     }
 
