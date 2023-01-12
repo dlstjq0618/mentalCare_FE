@@ -168,7 +168,6 @@ function Month(props: Iprops) {
         dispatch(setCoustomAlert(true));
         setCallStatus(false);
     };
-    console.log("callStatus", callStatus)
 
     const handleDispatch = () => {
         close2()
