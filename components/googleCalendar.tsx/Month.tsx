@@ -318,7 +318,7 @@ function Month(props: Iprops) {
                 </Text>
                 <CoustomAlertPopUp />
                 {
-                    select_data?.method < 4 && select_data?.status === 5 || select_data?.status === 8 ?
+                    select_data?.method < 4 ?
                         <RoundedButton
                             onClick={() => { setCallStatus(true), dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
                             color="orange"
