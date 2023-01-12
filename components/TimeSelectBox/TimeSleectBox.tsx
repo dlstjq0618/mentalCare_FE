@@ -136,7 +136,7 @@ function TimeSleectBox(props: Iprops) {
     const stop = useSelector(selectStopModal);
 
     const open = () => setCloseStatus(true);
-    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")) };
+    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")), dispatch(setAlertType('')), dispatch(setChatToggle(false)) };
 
     const handleOpenStatus = (data: any) => {
         console.log("data", data)
@@ -208,7 +208,7 @@ function TimeSleectBox(props: Iprops) {
                     </Ul>
                 }
             </Arricle>
-            <BaseDialog2 showDialog={closeStatus} close={close} aria-label="팝업"
+            <BaseDialog2 showDialog={closeStatus} close={() => { console.log("팝업X") }} aria-label="팝업"
                 style={{
                     zIndex: 99,
                     marginTop: '18vh',
