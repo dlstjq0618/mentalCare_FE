@@ -340,7 +340,7 @@ function Month(props: Iprops) {
                 </Text>
                 <CoustomAlertPopUp />
                 {
-                    select_data?.method < 4 && callStatus === false ?
+                    select_data?.method < 4 ?
                         <RoundedButton
                             onClick={() => {
                                 setCallStatus(true),
