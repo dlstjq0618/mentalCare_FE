@@ -302,7 +302,13 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                             </Text>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <RoundedButton
-                                    onClick={() => { dispatch(setUserCallNumber("")), dispatch(setImmediate(false)), dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("전화완료")), dispatch(setAlertType("전화상담완료")) }}
+                                    onClick={() => {
+                                        dispatch(setUserCallNumber("")),
+                                            dispatch(setImmediate(false)),
+                                            dispatch(setCoustomAlert(false)),
+                                            dispatch(setChatBoxOpenState("전화완료")),
+                                            dispatch(setAlertType("전화상담완료"))
+                                    }}
                                     color="orange"
                                     css={{
                                         width: '100%',
