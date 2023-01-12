@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BaseDialog2, RoundedButton } from '~/components';
+import { BaseDialog2, RoundedButton, Image } from '~/components';
 import ko from "date-fns/locale/ko";
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { format } from "date-fns";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import calendarIcon from '../../public/icon_calendar@3x.png';
 import { DatePicker } from '../DatePicker';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import BasicSelect from './SelectBox';
 import { UPDATE_OPEN_TIMES_ALL } from '~/utils/constants';
@@ -24,7 +26,9 @@ import {
     selectDashBoardSelectUser,
     selectChatBoxOpenState,
     selectTestResultValue,
-    setTestResultValueStatus
+    setTestResultValueStatus,
+    selectCounselingTimeStemp,
+    setCounselingTimeStemp
 } from '~/store/calendarDetailSlice';
 import { selectTutorialTimeState } from '~/store/settingsSlice';
 import TimeSleectBox from '../TimeSelectBox/TimeSleectBox';
@@ -156,6 +160,12 @@ function ApprovalModal(props: IProps) {
     const modalState = useSelector(selectScheduleSelectModla)
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터
     const select_user = useSelector(selectDashBoardSelectUser);
+    const select_Time = useSelector(selectCounselingTimeStemp);
+
+    console.log("modalState", modalState);
+
+
+    const hour = Number(select_Time.substring(0, 2));
 
     const [test_modal, setTest_modal] = useState(false);
     const open3 = () => { setTest_modal(true), dispatch(setTestResultValueStatus(true)) }
@@ -167,7 +177,7 @@ function ApprovalModal(props: IProps) {
     }
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
 
-    const modalClose = () => dispatch(setScheduleSelectModla(false))
+    const modalClose = () => { dispatch(setScheduleSelectModla(false)), dispatch(setCounselingTimeStemp("")) }
     const dateOpen = () => setDatePicker(!datePicker);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
@@ -175,8 +185,6 @@ function ApprovalModal(props: IProps) {
         setShow(true);
     };
     const result = useSelector(selectTestResultValue);
-
-    console.log("resultresult", result)
 
     const close = () => setShow(false);
     const {
@@ -222,14 +230,19 @@ function ApprovalModal(props: IProps) {
 
     return (
         <>
-            <BaseDialog2 style={{ paddingBottom: `${rem(40)}`, marginTop: `${rem(240)}`, maxHeight: `${rem(490)}`, minHeight: `${rem(490)}` }} showDialog={modalState} close={modalClose} >
+            <BaseDialog2 style={{
+                paddingBottom: `${rem(40)}`,
+                marginTop: `${rem(240)}`,
+                maxHeight: `${rem(490)}`,
+                minHeight: `${rem(490)}`
+            }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
                         {select_user?.user_name} 님
                     </Text>
                     {
                         result.datas?.subject_name ?
-                            <Text size={15}>{result.datas?.subject_name}</Text>
+                            <Text style={{ color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
                             :
                             <Text size={13} button onClick={open3}>
                                 테스트 결과보기
@@ -262,16 +275,19 @@ function ApprovalModal(props: IProps) {
                     </Text>
                 </Div>
 
-                <Input style={{ marginTop: `${rem(21)}` }} onClick={dateOpen}>
-                    <CalendarTodayIcon />
-                    <Text style={{ marginLeft: `${rem(10)}` }}>{storeData ? format(storeData, "PPP", { locale: ko }) : "날짜선택"}</Text>
+                <Input style={{ marginTop: `${rem(21)}`, justifyContent: 'space-between' }} onClick={dateOpen}>
+                    <div style={{ display: 'flex' }}>
+                        <Image src={calendarIcon} width={20} height={20} />
+                        <Text style={{ marginLeft: `${rem(10)}`, display: 'flex' }}>{storeData ? format(storeData, "PPP", { locale: ko }) : <div>날짜선택</div>}</Text>
+                    </div>
+                    <KeyboardArrowDownIcon />
                 </Input>
                 <ReservationSelect />
                 <div>
                     <RoundedButton
-                        disabled={storeData !== "" && selectTime !== "" ? false : true}
+                        disabled={storeData !== "" && selectTime !== "" && hour > 0 ? false : true}
                         onClick={open}
-                        color={storeData !== "" && selectTime !== "" ? "orange" : "gray"}
+                        color={storeData !== "" && selectTime !== "" && hour > 0 ? "orange" : "gray"}
                         css={{
                             fontSize: rem(15),
                             margin: `0 ${rem(24)} 0 0`,
@@ -291,7 +307,7 @@ function ApprovalModal(props: IProps) {
                 datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
             }
             <BaseDialog2 showDialog={show} close={close} style={{
-                height: `${rem(387)}`, textAlign: 'center', marginTop: " 20vh"
+                textAlign: 'center', marginTop: " 20vh", paddingBottom: `${rem(40)}`, width: `${rem(376)}`
             }}>
                 <Text size={17} bold='normal' center>
                     <Text>{select_user?.user_name}</Text>님에게

@@ -95,6 +95,8 @@ function ReservationSelect(props: Iprops) {
         dispatch(setCounselingTimeStempNumber(selectTimeNumber))
     }, [selectTimeNumber])
 
+    console.log("timeDate", hour, selectDate)
+
 
 
     return (

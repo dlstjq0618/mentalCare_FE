@@ -42,7 +42,7 @@ const customStyles: ComponentProps<typeof Dropdown>["styles"] = {
     ...base,
     paddingLeft: rem(20),
     paddingBottom: rem(2),
-    color: "inherit",
+    color: "#000",
   }),
   indicatorsContainer: (base, state) => ({
     ...base,

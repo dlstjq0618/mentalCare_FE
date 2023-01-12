@@ -6,9 +6,10 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { RoundedButton, ModalCloseIcon, Div } from '~/components';
 import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
-import { AlertPopUp, AlertPopUp3 } from '../Dialog/AlertPopUp';
+import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis } from '~/store/calendarDetailSlice';
+import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -24,6 +25,9 @@ interface IStyled {
     badge?: boolean;
     border?: boolean;
     left?: number;
+    schedule?: boolean;
+    count?: boolean;
+    underLine?: boolean;
 
 }
 
@@ -39,22 +43,22 @@ const Title = styled.span<IStyled>`
   color: #000;
 `;
 const Badge = styled.div<IStyled>`
-    padding-top: ${rem(4)};
-    width: ${rem(60)};
-    height: ${rem(24)};
+    padding: 0;
+    width: ${rem(47)};
+    height: ${rem(19)};
     margin-top: ${rem(2)};
-    padding-bottom: ${rem(14)};
     border-radius: ${rem(3)};
     line-height: 1.4;
     font-size: 10px;
-    font-weight: bold;
     text-align: center;
     letter-spacing: -0.3px;
     font-size: 12px;
+    color: #fff;
+    font-weight: 500;
     ${(props) =>
         props.color &&
         css`
-            color: ${props.color};
+        background-color: ${props.color};
         `}
         ${(props) =>
         props.border &&
@@ -113,6 +117,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [selectUserData, setSelectUserData] = useState<any>();
     const account_list = useSelector(selectAccoutList);
     const conference_list = useSelector(selectConferenceList);
+    const paidWait_list = useSelector(selectPaidWaitLis);
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
     const [wating_add, setWating_add] = useState<any>([])
@@ -124,6 +129,20 @@ export default function TemporaryDrawer(props: IProps) {
         right: false,
     });
     const [count, setCount] = useState(0);
+
+    const handleImmediate = (data: any) => { // 즉시 시작일 때 
+        console.log("isimmediate", data.isimmediate)
+        if (data.isimmediate) {
+            dispatch(setScheduleSelectModla(false));
+            dispatch(setTestResultValueStatus(true));
+            dispatch(setDashBoardSelectUser(data));
+            dispatch(setImmediate(true));
+        } else {
+            dispatch(setScheduleSelectModla(true));
+            dispatch(setTestResultValueStatus(true));
+            dispatch(setDashBoardSelectUser(data));
+        }
+    }
 
     useEffect(() => {
         const value = account_list.result?.map((res: any) => {
@@ -139,12 +158,14 @@ export default function TemporaryDrawer(props: IProps) {
         if (account_list.count === undefined) {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
-        } else {
-            const totalCount1 = account_list?.count + waitlist?.count;
+        } else if (account_list.count !== undefined) {
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
             setCount(totalCount1)
         }
 
     }, [account_list.count, waitlist.count])
+
+    console.log("count", count);
 
     useEffect(() => {
         console.log("이게 실행되는건가?")
@@ -176,7 +197,8 @@ export default function TemporaryDrawer(props: IProps) {
         dispatch(setTestResultValueStatus(true))
         dispatch(setChatBoxOpenState('null'))
         if (data.isimmediate) {
-            dispatch(setScheduleSelectModla(true));
+            dispatch(setAlertType("승인요청"))
+            // dispatch(setScheduleSelectModla(true));
             dispatch(setDashBoardSelectUser(data));
             dispatch(setAlertControlls(false));
         } else {
@@ -187,7 +209,7 @@ export default function TemporaryDrawer(props: IProps) {
     }
 
     const toggleDrawer =
-        (anchor: Anchor, open: boolean) =>
+        (anchor: Anchor, open: boolean, title?: string) =>
             (event: React.KeyboardEvent | React.MouseEvent) => {
                 if (
                     event.type === 'keydown' &&
@@ -198,6 +220,7 @@ export default function TemporaryDrawer(props: IProps) {
                 }
 
                 setState({ ...state, [anchor]: open });
+                // setTitle("");
             };
 
     const list = (anchor: Anchor) => (
@@ -205,8 +228,8 @@ export default function TemporaryDrawer(props: IProps) {
             style={{ background: "#f7f7f7", padding: `${rem(30)}`, height: 'auto', minHeight: '100%' }}
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : `${rem(430)}` }}
             role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
+            onClick={toggleDrawer(anchor, false, title)}
+            onKeyDown={toggleDrawer(anchor, false, title)}
         >
             <Div
                 css={{
@@ -216,13 +239,13 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
+                {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{count}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
             {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
-                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
@@ -265,10 +288,60 @@ export default function TemporaryDrawer(props: IProps) {
                 })
             }
             {
+                paidWait_list?.result?.map((list: any, index: number) => {
+                    return (
+                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                        <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
+                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                <div style={{ display: 'flex' }}>
+                                    <Badge color='#666666' border>결제대기</Badge>
+                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                </div>
+                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                            </div>
+                            <div style={{ display: "grid" }}>
+                                <Text
+                                    color=' rgba(0, 0, 0, 0.4)'
+                                    bold={false} size={15}>
+                                    요청 시간
+                                    <Text
+                                        subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false} size={15} color="#000">
+                                        {list.crated}
+                                    </Text>
+                                </Text>
+                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                    상담 방식
+                                    <Text subtitle
+                                        style={{ marginLeft: `${rem(20)}` }}
+                                        bold={false}
+                                        size={15}
+                                        color="#000">
+                                        {list.isimmediate === true ?
+                                            <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                [바로상담]
+                                            </span>
+                                            :
+                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                [예약상담]
+                                            </span>}{list.method_str}
+                                    </Text>
+                                </Text>
+                            </div>
+                        </BoxItem>
+                    )
+                })
+            }
+            {
                 account_list?.result?.map((list: any, index: number) => {
                     return (
                         // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setScheduleSelectModla(true)), dispatch(setDashBoardSelectUser(list)) }} style={{ background: "#f7f7f7" }}>
+                        <BoxItem key={index} onClick={() => {
+                            list.isimmediate === true ? handleImmediate(list)
+                                :
+                                handleImmediate(list)
+                        }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
                                     <Badge color='#0078D0' border>결제완료</Badge>
@@ -313,14 +386,15 @@ export default function TemporaryDrawer(props: IProps) {
             {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
-                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
                         <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
-                                    {list.isimmediate ? <Badge color='#0078D0' border>결제완료</Badge> : <Badge color='#046400' border>협의대기</Badge>}
-                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                                    {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
+                                    <Text left={list?.isimmediate ? 0 : 18} bold size={18}>{list.user_name}</Text>
                                 </div>
-                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                                {list?.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
+                                    :
+                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
                             </div>
                             <div style={{ display: "grid" }}>
                                 <Text
@@ -359,10 +433,12 @@ export default function TemporaryDrawer(props: IProps) {
         </Box >
     );
 
+    const [title, setTitle] = useState("")
+
     return (
         <>
             <RoundedButton
-                onClick={toggleDrawer("right", true)}
+                onClick={toggleDrawer("right", true, "")}
                 color="orange"
                 css={{
                     fontSize: rem(20),
@@ -372,17 +448,40 @@ export default function TemporaryDrawer(props: IProps) {
             >
                 {props.name}
             </RoundedButton>
+
+            {/* <Divs>
+                <StyledSpan count size={20}>
+                    바로상담 대기
+                </StyledSpan>&nbsp;&nbsp;&nbsp;
+                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
+                    {Number.isNaN(count) ? 0 : count}
+                </StyledSpan>
+                <StyledSpan size={30} count color='black'>
+                    명
+                </StyledSpan>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <StyledSpan count size={20}>
+                    예약상담 대기
+                </StyledSpan>&nbsp;&nbsp;&nbsp;
+                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
+                    {Number.isNaN(count) ? 0 : count}
+                </StyledSpan>
+                <StyledSpan size={30} count color='black'>
+                    명
+                </StyledSpan>
+            </Divs> */}
             <Drawer
                 sx={{ bg: "#f7f7f7" }}
                 anchor={"right"}
                 open={state["right"]}
-                onClose={toggleDrawer("right", false)}
+                onClose={toggleDrawer("right", false, "")}
             >
                 {list("right")}
             </Drawer>
             <ApprovalModal open={modalOpen} close={close} userInfo={selectUserData} />
             <AlertPopUp />
             <AlertPopUp3 />
+            <CoustomAlertPopUp />
         </>
     );
 }

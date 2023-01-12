@@ -68,7 +68,10 @@ import {
     setTimeCount,
     selectTimeCount,
     setCoustomAlert,
+    setCounselingTimeStempNumber,
     setAlertType,
+    setCounselingTimeStemp,
+    setPaidWaitList,
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -290,6 +293,7 @@ export default function BoxSx() {
     const selectTime = useSelector(selectCounselingTimeStemp);
     const before_wating = useSelector(selectWatingListBefore) // 상담전 예약 데이터 
     const reservationTime = (new Date(storeData).getTime() / 1000);
+    const nowTimes = new Date().getTime() / 1000
     const selectNum = useSelector(selectCounselingTimeStempNumber);
     const totalTime = reservationTime + selectNum
     const roomJoin = useSelector(selectCounselingStart);
@@ -328,6 +332,10 @@ export default function BoxSx() {
     const [time, setTime] = useState(0);
     const [count_start, setCount_start] = useState(0);
     const default_count = useSelector(selectTimeCount);
+
+
+    console.log("reservationTime", reservationTime, selectNum)
+    console.log("nowTimes", nowTimes);
 
 
 
@@ -430,6 +438,10 @@ export default function BoxSx() {
                 const result5 = datas.list;
                 dispatch(setConferenceList(result5))
                 console.log("협의중인 데이터", result5)
+            } else if (method === 'paidWaitList') {
+                const result6 = datas.list;
+                console.log("결제대기", result6);
+                dispatch(setPaidWaitList(result6));
             }
         })
     }, [user_dashborad, user_name])
@@ -483,19 +495,24 @@ export default function BoxSx() {
     }, [userPaymentRequestStatus]);
 
     const finalSetData = useSelector(selectCounselingFinalStepData);
+    // nowTime
+    console.log("finalSetData", finalSetData)
+
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         setIsMessage([])
         const data1 = {
             method: "room/reservation_date",
             datas: {
-                roomId: finalSetData.room_id,
-                reservation_date: totalTime
+                roomId: select_user?.room_id,
+                reservation_date: select_user.isimmediate ? nowTimes : totalTime
             }
         }
         socket.emit('counsel_submit', data1);
         console.log("emit 실행");
 
         await dispatch(setCounselingFinalStep(""))
+        await dispatch(setCounselingTimeStempNumber(0))
+        await dispatch(setCounselingTimeStemp(""))
     }
 
     async function handleTest() {
@@ -626,6 +643,7 @@ export default function BoxSx() {
 
     async function handleCallCounselorting() {
         console.log("전화 핸들러 실행");
+        await hadnleEmit()
         socket.emit('counsel_submit', {
             method: 'room/call/join',
             datas: {
@@ -691,6 +709,7 @@ export default function BoxSx() {
             setIsMessage([...isMessage, chat])
         }
     };
+
 
     const handleEnter = (e: any) => { // 유입된 유저와 대화했던 데이터 저장 채팅방 엔터 눌렀을때 전송
         setState({ message: e.target.value }); // 이거는 인풋박스 온체인지
@@ -775,6 +794,16 @@ export default function BoxSx() {
         await dispatch(setChatBoxOpenState("null"))
     }
 
+    async function handlePaidWaitList() { // 결제요청
+        socket.emit('counsel_submit', {
+            method: 'request/payment/confirm/immediate',
+            datas: {
+                roomId: select_user.room_id,
+            }
+        })
+        await dispatch(setChatBoxOpenState("null"))
+    }
+
     const use_last_chat = useSelector(selectFinishChatList);
 
     useEffect(() => {
@@ -800,6 +829,8 @@ export default function BoxSx() {
             handleComplete()
         } else if (useOpen === "협의취소") {
             handleConfirmCancel()
+        } else if (useOpen === "결제요청") {
+            handlePaidWaitList()
         }
 
         console.log("useOpen", useOpen);
@@ -891,7 +922,6 @@ export default function BoxSx() {
         const affter_time = end - get_Times;
 
         console.log("affter_time", affter_time);
-
         setCount_start(affter_time); // 남은시간 체크 하기위한 랜더링
     }, [time_count])
 
@@ -1153,7 +1183,7 @@ export default function BoxSx() {
                                                 <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                             </Text>
                                             <div style={{ display: 'flex' }}>
-                                                <Button onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
+                                                <Button style={{ width: `${rem(90)}`, marginRight: `${rem(-10)}` }} onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
                                                 <TimeSleectBox first />
                                             </div>
                                         </Div>

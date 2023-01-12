@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
-import { BaseDialog2, RoundedButton } from '~/components';
+import { BaseDialog2, RoundedButton, Image } from '~/components';
 import { rem } from "polished";
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish } from "~/store/calendarDetailSlice"
+import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish, selectAccoutList, selectImmediate } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
-import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
-import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
-import { ConstructionOutlined, ContentPasteSearchOutlined } from '@mui/icons-material';
-import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
+import call_icon from '../../public/call@3x.png'
+import chat_icon from '../../public/chat@3x.png'
 import {
     selectCalendarUserList,
     selectCancelList,
     selectCompleteList,
     selectConsultingList,
     selectReservationList,
-    selectSocketData,
     selectWaitlist,
     setDashBoardSelectUser,
     selectChatBoxOpenState,
@@ -25,21 +22,18 @@ import {
     selectTestResultValue,
     selectCounselingFinalStep,
     setChangeBeforeChatList,
-    setToggleButton,
-    setStopModal,
-    setChatToggle
+    setImmediate
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 import TestValue from '../TestValue/TestValue';
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 
-
 // 스텝바 진행상황 체크 ex) 상담중, 상담완료, 상담실패 등등 
-
 interface IProps {
     days: any;
     rowIdx: number;
     key: number;
+    open: boolean;
 }
 interface IStyled {
     primary?: string;
@@ -174,6 +168,7 @@ const Status = styled.span<IStyled>`
     font-size: 10px;
     font-weight: bold;
     text-align: center;
+    margin-right: 3px;
     letter-spacing: -0.3px;
     ${(props) =>
         props.color &&
@@ -276,17 +271,13 @@ function DayComponents(props: IProps) {
     const [pause, setPause] = useState(false);
     const [cancelModal, setCancelModal] = useState(false);
     const [cancelValue, setCancelValue] = useState("");
-    const state = useSelector(selectCounselingState);
-    const userId = useSelector(selectCounselingInfoData);
-    const storeData = useSelector(selectCounselingDate);
-    const counselingStatus = useSelector(selectCounselingState);
-    const [show, setShow] = useState(false);
 
     const consultingList = useSelector(selectConsultingList); // 상담중
     const reservationList = useSelector(selectReservationList); // 예약 확정 O
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const completeList = useSelector(selectCompleteList); // 상담완료 O
     const cancelList = useSelector(selectCancelList); // 상담 취소
+
 
     const useOpen = useSelector(selectChatBoxOpenState) // 캘린더 클릭 X
     const select_data = useSelector(selectDashBoardSelectUser);
@@ -296,6 +287,7 @@ function DayComponents(props: IProps) {
     const finalStep = useSelector(selectCounselingFinalStep); // 최종 예약 확인
     const call_finish = useSelector(selectCallFinish);
     const [test_modal, setTest_modal] = useState(false);
+    const immediate = useSelector(selectImmediate);
 
     const handleCancel = () => dispatch(setCancelStatus(true))
     const cancelOpen = () => setCancelModal(true);
@@ -305,15 +297,17 @@ function DayComponents(props: IProps) {
     const close2 = () => {
         dispatch(setCoustomAlert(true));
     };
+
     const call_type = useSelector(selectChatBoxOpenState);
     const type = useSelector(selectAlertType);
     const type2 = useSelector(selectCoustomAlert);
 
     const result = useSelector(selectTestResultValue);
     const open2 = () => setShow2(true);
-    const close4 = () => { setShow2(false), dispatch(setChatBoxOpenState("null")); }
+    const close4 = () => { setShow2(false), dispatch(setChatBoxOpenState("null")), dispatch(setImmediate(null)), dispatch(setImmediate(false)) }
     const open3 = () => { setTest_modal(true); }
     const close3 = () => { setTest_modal(false), dispatch(setTestResultValueStatus(false)) }
+
 
     const handleDispatch = () => {
         close2()
@@ -342,6 +336,7 @@ function DayComponents(props: IProps) {
             close4();
             dispatch(setCallFinish(""));
         }
+        console.log("call_finish", call_finish);
     }, [call_finish])
 
     useEffect(() => {
@@ -403,9 +398,11 @@ function DayComponents(props: IProps) {
                                     setUserDate(res.reservation_date),
                                     dispatch(setDashBoardSelectUser(res)),
                                     dispatch(setTestResultValueStatus(true)),
+                                    dispatch(setImmediate(true)),
                                     res.method_str?.substr(2, 2) === "전화" ? dispatch(setChatBoxOpenState("null")) : dispatch(setChatBoxOpenState('시작전'))
                             }}>
                                 <Status color='#d8430e' border='#eb541e'>예약</Status>
+                                <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                 <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                 {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                             </StyledDiv> : ""
@@ -417,8 +414,8 @@ function DayComponents(props: IProps) {
                                     useOpen !== "null" && res.status !== 2 ? console.log("done...") :
                                         dispatch(setAlertControlls3(true)), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
-
                                     <Status color='#60ae92' border='#60ae92'>진행</Status>
+                                    <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                     <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
@@ -433,6 +430,7 @@ function DayComponents(props: IProps) {
                                         handleFinishDispatch(), dispatch(setDashBoardRoomJoin('complate')), dispatch(setDashBoardSelectUser(res))
                                 }}>
                                     <Status color='#666' border='#666'>완료</Status>
+                                    <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                     <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
@@ -444,6 +442,7 @@ function DayComponents(props: IProps) {
                             return res.reservation_date?.substr(0, 10) === props.days.format('YYYY-MM-DD') ?
                                 <StyledDiv style={{ color: '#b4b4b4' }} key={index} onClick={() => { console.log("취소된 상담 건입니다.") }}>
                                     <Status color='#b4b4b4' border='#b4b4b4'>취소</Status>
+                                    <Image src={res.method < 5 ? call_icon : chat_icon} width={12} height={12} />
                                     <span style={{ letterSpacing: '-1px', margin: `0 ${rem(3)}` }}>{res.reservation_date && res.reservation_date.substr(11, 5)}</span>
                                     {res.user_name.length > 5 ? res.user_name.substr(0, 4) + "..." : res.user_name}
                                 </StyledDiv>
@@ -452,161 +451,6 @@ function DayComponents(props: IProps) {
                     }
                 </span>
             </Div>
-            <BaseDialog2 showDialog={show2} close={close4} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
-                <StepsBar current={1} />
-                <Div step>
-                    <Text size={20}>
-                        {userName}{" 님"}
-                    </Text>
-                    {
-                        result.datas?.subject_name ?
-                            <Text size={15}>{result.datas?.subject_name}</Text>
-                            :
-                            <Text size={13} button onClick={open3}>
-                                테스트 결과보기
-                            </Text>
-                    }
-                </Div>
-                <Line />
-                <Div step style={{ marginTop: 0 }}>
-                    <Text bold='normal' size={18} color={"#666"} style={{ display: 'flex' }}>
-                        <div>일정</div>
-                        <div style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date?.substr(0, 10)}</div>
-                    </Text>
-                    <CalendarChip label='일정변경' />
-                </Div>
-                <Div step style={{ marginTop: 0 }}>
-                    <Text bold='normal' size={18} color={"#666"}>
-                        시간 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data.reservation_date}</span>
-                    </Text>
-                    {/* <TimeChip label='시간변경' /> */}
-                </Div>
-                {
-                    userType === "전화" ?
-                        <>
-                            <Div step style={{ marginTop: 0 }}>
-                                <Text bold='normal' size={18} color={"#666"}>
-                                    방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>
-                                        {select_data.isimmediate ?
-                                            <span>[바로상담]{select_data.method === 1 || select_data.method === 3 ? "전화상담(주간)" : "전화상담(야간)"}</span>
-                                            :
-                                            <span>[예약상담]{select_data.method === 1 || select_data.method === 3 ? "전화상담(주간)" : "전화상담(야간)"}</span>
-                                        }
-                                    </span>
-                                </Text>
-                            </Div>
-                            <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
-                                {
-                                    console.log("userPhoneNumber", userPhoneNumber)
-                                }
-                                {userPhoneNumber && userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
-                            </Text>
-                        </>
-                        :
-                        <Div step style={{ marginTop: 0 }}>
-                            {/* <Text bold='normal' size={18} color={"#666"}>
-                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>{select_data?.method_str?.substr(0, 8)}</span>
-                            </Text> */}
-                            <Text bold='normal' size={18} color={"#666"}>
-                                방식 <span style={{ color: "#000", marginLeft: `${rem(14)}` }}>
-                                    {select_data.isimmediate ?
-                                        <span>[바로상담]{select_data.method === 5 || select_data.method === 7 ? "채팅상담(주간)" : "채팅상담(야간)"}</span>
-                                        :
-                                        <span>[예약상담]{select_data.method === 5 || select_data.method === 5 ? "채팅상담(주간)" : "채팅상담(야간)"}</span>
-                                    }
-                                </span>
-                            </Text>
-                        </Div>
-                }
-                <Text bg size={15}>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <Text bold='500'>
-                            상담 요청 시간
-                        </Text>
-                        <Text bold='normal'>
-                            {select_data.crated}
-                        </Text>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <Text bold='500'>
-                            상담 시간
-                        </Text>
-                        <Text bold='normal'>
-                            {select_data?.method_str?.substr(4, 5)}
-                        </Text>
-                    </div>
-                </Text>
-                <Text color='#eb541e' size={13} bold='normal' center style={{ marginTop: `${rem(40)}` }}>
-                    {
-                        userType === "채팅" ?
-                            <span>
-                                상담시작 버튼을 누르면 채팅이 시작되며, 상담 시간이 카운트 됩니다.
-                            </span>
-                            :
-                            <div>
-                                <div>
-                                    상담시작 버튼을 누르면 상담이 시작되며,
-                                </div>
-                                <span>
-                                    상담이 종료되면 상담완료 버튼을 눌러주세요
-                                </span>
-                            </div>
-                    }
-                </Text>
-                <CoustomAlertPopUp />
-                {
-                    userType === "전화" && type !== "상담시작" ?
-                        <RoundedButton
-                            onClick={() => { setCallStatus(true), dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
-                            color="orange"
-                            css={{
-                                fontSize: rem(15),
-                                margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
-                                height: rem(50),
-                                width: "100%",
-                            }}
-                        >
-                            상담시작(전화)
-                        </RoundedButton>
-                        : userType === "채팅" ?
-                            <RoundedButton
-                                onClick={() => { handleDispatch() }}
-                                color="orange"
-                                css={{
-                                    fontSize: rem(15),
-                                    margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
-                                    height: rem(50),
-                                    width: "100%",
-                                }}
-                            >
-                                상담시작
-                            </RoundedButton>
-                            : type === '상담시작' || callStatus === true ?
-                                <RoundedButton
-                                    onClick={() => { close2(), dispatch(setAlertType('상담완료')), setUserType("") }}
-                                    color="orange"
-                                    css={{
-                                        fontSize: rem(15),
-                                        margin: `${rem(0)} ${rem(24)} ${rem(30)} 0`,
-                                        height: rem(50),
-                                        width: "100%",
-                                    }}
-                                >
-                                    상담완료(전화)
-                                </RoundedButton>
-                                :
-                                ""
-                }
-
-                <div style={{ textAlign: 'center', marginBottom: `${rem(40)}` }}>
-                    <Text size={13} bold="normal" color='#666' center
-                        style={{ width: `${rem(51)}`, borderBottom: `1px solid #666`, cursor: "pointer" }}
-                        onClick={cancelOpen}
-                    >
-                        상담취소
-                    </Text>
-                </div>
-            </BaseDialog2>
             <BaseDialog2 showDialog={cancelModal} close={cancelClose} aria-label="취소 팝업"
                 style={{
                     marginTop: '18vh',
