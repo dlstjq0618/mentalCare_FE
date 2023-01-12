@@ -270,7 +270,7 @@ function DayComponents(props: IProps) {
     const [startButton, setStartButton] = useState(false);
     const [pause, setPause] = useState(false);
     const [cancelModal, setCancelModal] = useState(false);
-    const [cancelValue, setCancelValue] = useState("");
+
 
     const consultingList = useSelector(selectConsultingList); // 상담중
     const reservationList = useSelector(selectReservationList); // 예약 확정 O
@@ -291,7 +291,7 @@ function DayComponents(props: IProps) {
 
     const handleCancel = () => dispatch(setCancelStatus(true))
     const cancelOpen = () => setCancelModal(true);
-    const cancelClose = () => setCancelModal(false);
+
     const handlePause = () => setPause(!pause);
     const start = () => setStartButton(true);
     const close2 = () => {
@@ -451,37 +451,6 @@ function DayComponents(props: IProps) {
                     }
                 </span>
             </Div>
-            <BaseDialog2 showDialog={cancelModal} close={cancelClose} aria-label="취소 팝업"
-                style={{
-                    marginTop: '18vh',
-                    width: `${rem(376)}`,
-                    // height: `${rem(422)}`,
-                    height: 'auto',
-                    padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
-                }}>
-                <Text center size={17} color={"#333"}>
-                    상담을 취소 하시겠습니까?
-                    <div style={{ fontSize: 15, fontWeight: "normal" }} >
-                        <P>사유를 입력해주세요.</P>
-                        {/* <P>상담을 취소하시겠습니까?</P> */}
-                        <P>취소 완료 버튼 클릭시 내담자가 결제한 금액은</P>
-                        <P>측시 취소되며 재결제 불가합니다</P>
-                        <P>정말 취소하시겠습니까?</P>
-                    </div>
-                </Text>
-                <Input onChange={(e) => setCancelValue(e.target.value)} value={cancelValue} placeholder={"고객 부재로 인한 취소"} />
-                <RoundedButton
-                    onClick={() => { cancelClose(), close4(), handleCancel() }}
-                    color="orange"
-                    css={{
-                        fontSize: rem(15),
-                        height: rem(50),
-                        width: "100%",
-                    }}
-                >
-                    취소 완료
-                </RoundedButton>
-            </BaseDialog2>
             <TestValue open={test_modal} cancel={close3} />
         </>
     );

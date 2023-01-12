@@ -22,6 +22,7 @@ import {
     setAlertControlls2,
     selectTestResultValue,
     setCounselingFinalStep,
+    setCancelStatus,
     setImmediate
 } from "~/store/calendarDetailSlice";
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
@@ -52,6 +53,23 @@ interface IStyled {
     left?: boolean;
     border?: string;
 }
+const Input = styled.textarea`
+    width: 316px;
+    height: 160px;
+    flex-grow: 0;
+    margin: 25px 10px 30px;
+    padding: 16px 30px;
+    border-radius: 20px;
+    border: solid 1px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    outline: none !important;
+    max-height: ${rem(170)};
+    min-height: ${rem(170)};
+    &:focus{
+            border: 2px solid #eb541e;
+        };
+`;
+
 const Div = styled.div<IStyled>`
     border-bottom: 1px solid #d9d9d9;
     border-right: 1px solid #d9d9d9;
@@ -144,6 +162,9 @@ const Text = styled.span<IStyled>`
         font-size: 12px;
     `}
 `;
+const P = styled.p<IStyled>` 
+    margin-bottom: 5px;
+`;
 
 
 function Month(props: Iprops) {
@@ -163,6 +184,9 @@ function Month(props: Iprops) {
     const [cancelModal, setCancelModal] = useState(false);
     const [callStatus, setCallStatus] = useState<boolean>(false);
     const cancelOpen = () => setCancelModal(true);
+    const [cancelValue, setCancelValue] = useState("");
+    const cancelClose = () => setCancelModal(false);
+    const handleCancel = () => dispatch(setCancelStatus(true))
 
     const close2 = () => {
         dispatch(setCoustomAlert(true));
@@ -368,6 +392,37 @@ function Month(props: Iprops) {
                         상담취소
                     </Text>
                 </div>
+            </BaseDialog2>
+            <BaseDialog2 showDialog={cancelModal} close={cancelClose} aria-label="취소 팝업"
+                style={{
+                    marginTop: '18vh',
+                    width: `${rem(376)}`,
+                    // height: `${rem(422)}`,
+                    height: 'auto',
+                    padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
+                }}>
+                <Text center size={17} color={"#333"}>
+                    상담을 취소 하시겠습니까?
+                    <div style={{ fontSize: 15, fontWeight: "normal" }} >
+                        <P>사유를 입력해주세요.</P>
+                        {/* <P>상담을 취소하시겠습니까?</P> */}
+                        <P>취소 완료 버튼 클릭시 내담자가 결제한 금액은</P>
+                        <P>측시 취소되며 재결제 불가합니다</P>
+                        <P>정말 취소하시겠습니까?</P>
+                    </div>
+                </Text>
+                <Input onChange={(e) => setCancelValue(e.target.value)} value={cancelValue} placeholder={"고객 부재로 인한 취소"} />
+                <RoundedButton
+                    onClick={() => { cancelClose(), close4(), handleCancel() }}
+                    color="orange"
+                    css={{
+                        fontSize: rem(15),
+                        height: rem(50),
+                        width: "100%",
+                    }}
+                >
+                    취소 완료
+                </RoundedButton>
             </BaseDialog2>
         </>
     );
