@@ -340,7 +340,7 @@ function Month(props: Iprops) {
                 </Text>
                 <CoustomAlertPopUp />
                 {
-                    select_data?.method < 4 ?
+                    select_data?.method < 5 ?
                         <RoundedButton
                             onClick={() => {
                                 setCallStatus(true),
@@ -371,7 +371,7 @@ function Month(props: Iprops) {
                                 상담시작
                             </RoundedButton>
                             // : select_data?.method < 4 && select_data?.status === 2 ?
-                            : userPhoneNumber?.VirtualNumber ?
+                            : select_data?.method < 4 && userPhoneNumber?.VirtualNumber ?
                                 <RoundedButton
                                     onClick={() => { close2(), dispatch(setAlertType('상담완료')), setUserType("") }}
                                     color="orange"
