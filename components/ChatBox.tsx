@@ -531,7 +531,6 @@ export default function BoxSx() {
 
     async function handleRoomJoin() { // 처음 시작할때 
         hadnleEmit();
-        dispatch(setChatBoxOpenState('시작'))
         handleFinishChatList();
         setIsMessage([])
         const req = {
