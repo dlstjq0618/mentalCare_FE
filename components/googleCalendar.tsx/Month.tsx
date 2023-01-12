@@ -345,7 +345,7 @@ function Month(props: Iprops) {
                                 상담시작
                             </RoundedButton>
                             // : select_data?.method < 4 && select_data?.status === 2 ?
-                            : callStatus === true ?
+                            : userPhoneNumber?.VirtualNumber ?
                                 <RoundedButton
                                     onClick={() => { close2(), dispatch(setAlertType('상담완료')), setUserType("") }}
                                     color="orange"
