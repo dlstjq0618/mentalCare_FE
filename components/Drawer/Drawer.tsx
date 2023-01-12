@@ -66,50 +66,6 @@ const Badge = styled.div<IStyled>`
             border: solid 0.5px ${props.color};
         `}
 `;
-const Divs = styled.div`
-    display: flex;
-    align-items: center;
-`;
-const Header = styled.header<IStyled>`
-    justify-content: space-between;
-    display: flex;
-    background: #fff;
-    width: ${rem(1050)};
-    height: ${rem(60)};
-    flex-grow: 0;
-    margin: ${rem(30)} 0 ${rem(25)};
-    padding: ${rem(14)} ${rem(35)} ${rem(14)} ${rem(30)};
-    border-radius: 20px;
-    background-color: #fff;
-    ${(props) =>
-        props.schedule === true &&
-        css`
-    width: ${rem(1050)};
-    height: ${rem(90)};
-    background-color:#f7f7f7;
-    flex-grow: 0;
-    padding: 20px 39px 20px 32px;
-    border-radius: 20px;
-    border: solid ${rem(2)} #eb541e;
-    justify-content: none;
-    `}
-`;
-const StyledSpan = styled.span<IStyled>` 
-    font-weight: bold;
-    ${(props) =>
-        props.count === true &&
-        css`
-        font-size: ${rem(props.size)};
-        color: ${props.color};
-    `}
-    ${(props) =>
-        props.underLine === true &&
-        css`
-        border-bottom: 1px solid;
-        cursor: pointer;
-    line-height: 1.2;
-    `}
-`;
 
 const Text = styled.span<IStyled>`
         ${(props) =>

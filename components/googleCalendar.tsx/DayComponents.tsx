@@ -5,11 +5,6 @@ import { BaseDialog2, RoundedButton, Image } from '~/components';
 import { rem } from "polished";
 import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish, selectAccoutList, selectImmediate } from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
-import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
-import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
-import { ConstructionOutlined, ContentPasteSearchOutlined } from '@mui/icons-material';
-import calendarIcon from '../../public/icon_calendar@3x.png';
-import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
 import call_icon from '../../public/call@3x.png'
 import chat_icon from '../../public/chat@3x.png'
 import {
@@ -18,7 +13,6 @@ import {
     selectCompleteList,
     selectConsultingList,
     selectReservationList,
-    selectSocketData,
     selectWaitlist,
     setDashBoardSelectUser,
     selectChatBoxOpenState,
@@ -28,18 +22,13 @@ import {
     selectTestResultValue,
     selectCounselingFinalStep,
     setChangeBeforeChatList,
-    setToggleButton,
-    setStopModal,
-    setChatToggle,
     setImmediate
 } from "~/store/calendarDetailSlice";
 import { format } from "date-fns";
 import TestValue from '../TestValue/TestValue';
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 
-
 // 스텝바 진행상황 체크 ex) 상담중, 상담완료, 상담실패 등등 
-
 interface IProps {
     days: any;
     rowIdx: number;
@@ -282,11 +271,6 @@ function DayComponents(props: IProps) {
     const [pause, setPause] = useState(false);
     const [cancelModal, setCancelModal] = useState(false);
     const [cancelValue, setCancelValue] = useState("");
-    const state = useSelector(selectCounselingState);
-    const userId = useSelector(selectCounselingInfoData);
-    const storeData = useSelector(selectCounselingDate);
-    const counselingStatus = useSelector(selectCounselingState);
-    const [show, setShow] = useState(false);
 
     const consultingList = useSelector(selectConsultingList); // 상담중
     const reservationList = useSelector(selectReservationList); // 예약 확정 O

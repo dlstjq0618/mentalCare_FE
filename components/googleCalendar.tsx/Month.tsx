@@ -4,39 +4,26 @@ import DayComponents from './DayComponents';
 import dayjs from 'dayjs';
 import styled, { css } from 'styled-components';
 import { BaseDialog2, RoundedButton, Image } from '~/components';
-import { selectCalendarModalState, setCounselingStart, selectCounselingInfoData, selectCalendarMonthState, setCounselingState, selectCounselingState, selectCounselingDate, selectDashBoardSelectUser, setDashBoardRoomJoin, selectUserCallNumber, setCancelStatus, setUserCallStatus, setAlertControlls3, setTestResultValueStatus, setAlertType, setCoustomAlert, selectAlertType, selectCoustomAlert, selectCallFinish, setCallFinish, selectAccoutList, selectImmediate } from "~/store/calendarDetailSlice"
+import {
+    setCounselingStart,
+    setCounselingState,
+    selectDashBoardSelectUser,
+    selectUserCallNumber,
+    setAlertType,
+    setCoustomAlert,
+    selectAlertType,
+    selectImmediate
+} from "~/store/calendarDetailSlice"
 import { useDispatch, useSelector } from 'react-redux';
 import { StepsBar } from '../treatmentRoom/stepBar/StepsBar';
-import ButtonGroup from '../Buttons/ButtonGroup/ButtonGroup';
-import { ConstructionOutlined, ContentPasteSearchOutlined } from '@mui/icons-material';
 import calendarIcon from '../../public/icon_calendar@3x.png';
-import { CalendarChip, TimeChip } from '../Chip/AvatarChips';
-import call_icon from '../../public/call@3x.png'
-import chat_icon from '../../public/chat@3x.png'
 import {
-    selectCalendarUserList,
-    selectCancelList,
-    selectCompleteList,
-    selectConsultingList,
-    selectReservationList,
-    selectSocketData,
-    selectWaitlist,
-    setDashBoardSelectUser,
-    selectChatBoxOpenState,
     setChatBoxOpenState,
-    selectCounselingTimes,
     setAlertControlls2,
     selectTestResultValue,
-    selectCounselingFinalStep,
-    setChangeBeforeChatList,
-    setToggleButton,
-    setStopModal,
-    setChatToggle,
     setCounselingFinalStep,
     setImmediate
 } from "~/store/calendarDetailSlice";
-import { format } from "date-fns";
-import TestValue from '../TestValue/TestValue';
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 
 interface Iprops {
@@ -95,108 +82,12 @@ const Div = styled.div<IStyled>`
         justify-content: space-between;
     `}
 `;
-const StyledDiv = styled.div`
-    cursor: pointer;
-    align-items: center;
-    &:hover{
-        background-color: #FDEAE4;
-    };
-    display: flex;
-    margin-left: ${rem(9)};
-    font-size: ${rem(12)};
-`;
+
 const Line = styled.div`
     height: 1px;
     flex-grow: 0;
     margin: 20px 0 20px 0;
     background-color: #d9d9d9;
-`;
-
-const StyledP = styled.div`
-    text-align: center;
-    flex-grow: 0;
-    height: ${rem(37)};
-    font-size: ${rem(14)};
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    letter-spacing: normal;
-    color: #666;
-    padding-top: ${rem(8)};
-    background-color: #FDEAE4;
-`;
-const StyledDaySun = styled.p`
-    text-align: center;
-    flex-grow: 0;
-    height: ${rem(37)};
-    font-size: ${rem(14)};
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    letter-spacing: normal;
-    color: #666;
-    padding-top: ${rem(8)};
-    background-color: #FDEAE4;
-    border-top-left-radius: 20px;
-`;
-const StyledDaySat = styled.p`
-    text-align: center;
-    flex-grow: 0;
-    height: ${rem(37)};
-    font-size: ${rem(14)};
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    letter-spacing: normal;
-    color: #666;
-    padding-top: ${rem(8)};
-    background-color: #FDEAE4;
-    border-top-right-radius: 20px;
-`;
-
-const StyledSeeMonth = styled.p<IStyled>`
-margin-top: ${rem(8)};
-margin-left: ${rem(13)};
-margin-bottom: ${rem(6)};
-${(props) =>
-        props.month === false &&
-        css`
-        color:#b4b4b4;
-    `}
-`;
-const StyledToday = styled.p`
-    background-color: #FDEAE4;
-    margin-top: ${rem(8)};
-    margin-left: ${rem(13)};
-    width: ${rem(26)};
-    height: ${rem(26)};
-    border-radius: ${rem(20)};
-    text-align: center;
-    padding: ${rem(2)} ${rem(1)} 0 0;
-`;
-
-const Status = styled.span<IStyled>`
-    width: ${rem(25)};
-    height: ${rem(17)};
-    margin-top: ${rem(2)};
-    padding-bottom: ${rem(14)};
-    border-radius: ${rem(3)};
-    line-height: 1.4;
-    font-size: 10px;
-    font-weight: bold;
-    text-align: center;
-    margin-right: 3px;
-    letter-spacing: -0.3px;
-    ${(props) =>
-        props.color &&
-        css`
-            color: ${props.color};
-        `}
-        ${(props) =>
-        props.border &&
-        css`
-            border: solid 0.5px ${props.color};
-        `}
 `;
 
 const Text = styled.span<IStyled>` 
@@ -253,26 +144,6 @@ const Text = styled.span<IStyled>`
         font-size: 12px;
     `}
 `;
-const P = styled.p<IStyled>` 
-    margin-bottom: 5px;
-`;
-
-const Input = styled.textarea`
-    width: 316px;
-    height: 160px;
-    flex-grow: 0;
-    margin: 25px 10px 30px;
-    padding: 16px 30px;
-    border-radius: 20px;
-    border: solid 1px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-    outline: none !important;
-    max-height: ${rem(170)};
-    min-height: ${rem(170)};
-    &:focus{
-            border: 2px solid #eb541e;
-        };
-`;
 
 
 function Month(props: Iprops) {
@@ -296,6 +167,7 @@ function Month(props: Iprops) {
     const close2 = () => {
         dispatch(setCoustomAlert(true));
     };
+    console.log("callStatus", callStatus)
 
     const handleDispatch = () => {
         close2()
@@ -314,6 +186,8 @@ function Month(props: Iprops) {
             setShow(true)
         }
     }, [immediate])
+
+    console.log("typetype", type);
     return (
         <>
             <Divs>
@@ -444,9 +318,9 @@ function Month(props: Iprops) {
                 </Text>
                 <CoustomAlertPopUp />
                 {
-                    select_data?.method < 4 && select_data?.status === 5 ?
+                    select_data?.method < 4 && select_data?.status === 5 || select_data?.status === 8 ?
                         <RoundedButton
-                            onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
+                            onClick={() => { setCallStatus(true), dispatch(setCoustomAlert(true)), dispatch(setAlertType('상담시작')) }}
                             color="orange"
                             css={{
                                 fontSize: rem(15),
@@ -470,7 +344,8 @@ function Month(props: Iprops) {
                             >
                                 상담시작
                             </RoundedButton>
-                            : select_data?.method < 4 && select_data?.status === 2 ?
+                            // : select_data?.method < 4 && select_data?.status === 2 ?
+                            : callStatus === true ?
                                 <RoundedButton
                                     onClick={() => { close2(), dispatch(setAlertType('상담완료')), setUserType("") }}
                                     color="orange"
