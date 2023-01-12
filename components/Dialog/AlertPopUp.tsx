@@ -158,7 +158,6 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
 
     const handleDispatch = () => { // 결제요청
         dispatch(setChatBoxOpenState("결제요청"))
-        dispatch(setChatToggle(true))
         dispatch(setStopModal("null"))
         dispatch(setAlertType(''))
     }
@@ -448,7 +447,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                                             </RoundedButton>
                                             <RoundedButton
                                                 onClick={() => {
-                                                    dispatch(setCallFinish("완료")), dispatch(setChatToggle(false)), dispatch(setStopModal("null")), dispatch(setAlertType(''))
+                                                    dispatch(setCallFinish("완료")), dispatch(setStopModal("null")), dispatch(setAlertType(''))
                                                 }}
                                                 color="gray"
                                                 css={{
