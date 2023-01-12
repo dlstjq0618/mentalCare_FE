@@ -178,7 +178,6 @@ function Month(props: Iprops) {
         dispatch(setCounselingStart("start"));
         dispatch(setChatBoxOpenState('시작'));
         dispatch(setImmediate(false));
-        dispatch(setCounselingFinalStep("yes"));
     }
 
     useEffect(() => {

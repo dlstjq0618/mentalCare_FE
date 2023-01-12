@@ -500,6 +500,7 @@ export default function BoxSx() {
 
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         setIsMessage([])
+        console.log("예약승인 보냈다...")
         const data1 = {
             method: "room/reservation_date",
             datas: {
@@ -529,6 +530,7 @@ export default function BoxSx() {
     const room_join = useSelector(selectDashBoardRoomJoin)
 
     async function handleRoomJoin() { // 처음 시작할때 
+        hadnleEmit();
         dispatch(setChatBoxOpenState('시작'))
         handleFinishChatList();
         setIsMessage([])
