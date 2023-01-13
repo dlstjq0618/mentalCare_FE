@@ -449,7 +449,7 @@ export default function TemporaryDrawer(props: IProps) {
     return (
         <>
             <RoundedButton
-                onClick={toggleDrawer("right", true, "")}
+                onClick={toggleDrawer("right", true, "바로상담 대기")}
                 color="orange"
                 css={{
                     fontSize: rem(20),
@@ -460,32 +460,11 @@ export default function TemporaryDrawer(props: IProps) {
                 {props.name}
             </RoundedButton>
 
-            {/* <Divs>
-                <StyledSpan count size={20}>
-                    바로상담 대기
-                </StyledSpan>&nbsp;&nbsp;&nbsp;
-                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
-                    {Number.isNaN(count) ? 0 : count}
-                </StyledSpan>
-                <StyledSpan size={30} count color='black'>
-                    명
-                </StyledSpan>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <StyledSpan count size={20}>
-                    예약상담 대기
-                </StyledSpan>&nbsp;&nbsp;&nbsp;
-                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
-                    {Number.isNaN(count) ? 0 : count}
-                </StyledSpan>
-                <StyledSpan size={30} count color='black'>
-                    명
-                </StyledSpan>
-            </Divs> */}
             <Drawer
                 sx={{ bg: "#f7f7f7" }}
                 anchor={"right"}
                 open={state["right"]}
-                onClose={toggleDrawer("right", false, "")}
+                onClose={toggleDrawer("right", false, "예약상담 대기")}
             >
                 {list("right")}
             </Drawer>

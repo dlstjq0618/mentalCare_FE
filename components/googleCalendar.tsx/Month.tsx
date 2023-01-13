@@ -23,9 +23,11 @@ import {
     selectTestResultValue,
     setCounselingFinalStep,
     setCancelStatus,
-    setImmediate
+    setImmediate,
+    setScheduleSelectModla
 } from "~/store/calendarDetailSlice";
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
+import { CalendarChip } from '../Chip/AvatarChips';
 
 interface Iprops {
     month: any[];
@@ -249,8 +251,10 @@ function Month(props: Iprops) {
                                 </div>
                             </Text>
                             {/* <CalendarChip label='일정변경' /> */}
-                            <div style={{ color: "#666", border: 'solid 1px #d3d3d3', borderRadius: 50, padding: '5px 13px 7px 11px', display: 'flex', height: 29 }}>
-                                <div style={{ placeSelf: 'center', marginRight: 2, marginTop: 3 }}><Image src={calendarIcon} width={15} height={15} /></div>
+                            <div onClick={() => dispatch(setScheduleSelectModla(true))} style={{ cursor: 'pointer', color: "#666", border: 'solid 1px #d3d3d3', borderRadius: 50, padding: '5px 13px 7px 11px', display: 'flex', height: 29 }}>
+                                <div style={{ placeSelf: 'center', marginRight: 2, marginTop: 3 }}>
+                                    <Image src={calendarIcon} width={15} height={15} />
+                                </div>
                                 <span style={{ placeSelf: 'center' }}>일정변경</span>
                             </div>
                         </Div>
