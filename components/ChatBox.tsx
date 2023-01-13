@@ -534,8 +534,10 @@ export default function BoxSx() {
     async function handleRoomJoin() { // 처음 시작할때
         if (select_user.isimmediate) {
             hadnleEmit();
-            handleFinishChatList();
-            setIsMessage([])
+            setTimeout(() => {
+                handleFinishChatList();
+                setIsMessage([]);
+            }, 1000)
             const req = {
                 roomId: select_user.room_id,
                 user_type: 6,
@@ -645,6 +647,8 @@ export default function BoxSx() {
                 user_type: 6
             }
         })
+        //카운트초기화
+        setCount_start(0);
         handleFinishChatList();
     }
 
