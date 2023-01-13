@@ -647,7 +647,6 @@ export default function BoxSx() {
                 user_type: 6
             }
         })
-        //카운트초기화
         setCount_start(0);
         handleFinishChatList();
     }
