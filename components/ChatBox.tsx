@@ -961,7 +961,7 @@ export default function BoxSx() {
                     <div>
                         <MuiBox
                             sx={{
-                                zIndex: 10,
+                                zIndex: 1,
                                 boxShadow: `3px 2px 5px black;`,
                                 width: 500,
                                 maxWidth: rem(500),
@@ -1080,7 +1080,7 @@ export default function BoxSx() {
                         <div>
                             <MuiBox
                                 sx={{
-                                    zIndex: 10,
+                                    zIndex: 1,
                                     boxShadow: `3px 2px 5px black;`,
                                     width: 500,
                                     maxWidth: 500,
@@ -1192,7 +1192,7 @@ export default function BoxSx() {
                             <div>
                                 <MuiBox
                                     sx={{
-                                        zIndex: 10,
+                                        zIndex: 1,
                                         boxShadow: `3px 2px 5px black;`,
                                         width: 500,
                                         maxWidth: 500,
@@ -1317,7 +1317,7 @@ export default function BoxSx() {
                                 <div>
                                     <MuiBox
                                         sx={{
-                                            zIndex: 10,
+                                            zIndex: 1,
                                             boxShadow: `3px 2px 5px black;`,
                                             width: rem(500),
                                             maxWidth: 500,
