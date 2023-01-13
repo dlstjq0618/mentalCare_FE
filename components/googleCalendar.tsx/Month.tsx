@@ -27,8 +27,6 @@ import {
     setScheduleSelectModla
 } from "~/store/calendarDetailSlice";
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
-import { CalendarChip } from '../Chip/AvatarChips';
-
 interface Iprops {
     month: any[];
 }
