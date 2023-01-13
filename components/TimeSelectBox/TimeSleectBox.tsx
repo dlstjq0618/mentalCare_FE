@@ -136,7 +136,7 @@ function TimeSleectBox(props: Iprops) {
     const stop = useSelector(selectStopModal);
 
     const open = () => setCloseStatus(true);
-    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")), dispatch(setAlertType('')), dispatch(setChatToggle(false)) };
+    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")), dispatch(setAlertType('')) };
 
     const handleOpenStatus = (data: any) => {
         console.log("data", data)

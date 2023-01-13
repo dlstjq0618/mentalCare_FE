@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import styled, { css } from 'styled-components';
 import TemporaryDrawer from '../Drawer/Drawer';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectConferenceList, selectAccoutList, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
+import { selectConferenceList, selectAccoutList, selectPaidWaitLis, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface IStyled {
     schedule?: boolean;
@@ -96,7 +96,7 @@ function CalendarHeader() {
     const account_list = useSelector(selectAccoutList);
     const [count, setCount] = useState(0);
     const conference_list = useSelector(selectConferenceList);
-
+    const paidWait_list = useSelector(selectPaidWaitLis);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
     const handleDrawerOpen = () => setDrawerOpen(!drawerOpen)
@@ -120,11 +120,11 @@ function CalendarHeader() {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
         } else if (account_list.count !== undefined) {
-            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count + paidWait_list?.count;
             setCount(totalCount1)
         }
 
-    }, [account_list.count, waitlist.count, conference_list.count])
+    }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
 
     return (
         <>

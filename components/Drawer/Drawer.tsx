@@ -159,11 +159,11 @@ export default function TemporaryDrawer(props: IProps) {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
         } else if (account_list.count !== undefined) {
-            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count + paidWait_list?.count;
             setCount(totalCount1)
         }
 
-    }, [account_list.count, waitlist.count])
+    }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
 
     console.log("count", count);
 
@@ -297,7 +297,18 @@ export default function TemporaryDrawer(props: IProps) {
                                     <Badge color='#666666' border>결제대기</Badge>
                                     <Text left={18} bold size={18}>{list.user_name}</Text>
                                 </div>
-                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                                {list?.isimmediate ?
+                                    <div style={{
+                                        borderBottom: 'solid 1px #999999',
+                                        color: "#999999",
+                                        fontSize: 12,
+                                        height: 20,
+                                        letterSpacing: -0.36,
+                                    }} onClick={() => {
+                                        dispatch(setChatBoxOpenState("협의취소"))
+                                    }}>취소하기</div>
+                                    :
+                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
                             </div>
                             <div style={{ display: "grid" }}>
                                 <Text
@@ -344,7 +355,7 @@ export default function TemporaryDrawer(props: IProps) {
                         }} style={{ background: "#f7f7f7" }}>
                             <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                 <div style={{ display: 'flex' }}>
-                                    <Badge color='#0078D0' border>결제완료</Badge>
+                                    <Badge color='#60ae92' border>결제완료</Badge>
                                     <Text left={18} bold size={18}>{list.user_name}</Text>
                                 </div>
                                 <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
@@ -438,7 +449,7 @@ export default function TemporaryDrawer(props: IProps) {
     return (
         <>
             <RoundedButton
-                onClick={toggleDrawer("right", true, "")}
+                onClick={toggleDrawer("right", true, "바로상담 대기")}
                 color="orange"
                 css={{
                     fontSize: rem(20),
@@ -449,32 +460,11 @@ export default function TemporaryDrawer(props: IProps) {
                 {props.name}
             </RoundedButton>
 
-            {/* <Divs>
-                <StyledSpan count size={20}>
-                    바로상담 대기
-                </StyledSpan>&nbsp;&nbsp;&nbsp;
-                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
-                    {Number.isNaN(count) ? 0 : count}
-                </StyledSpan>
-                <StyledSpan size={30} count color='black'>
-                    명
-                </StyledSpan>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <StyledSpan count size={20}>
-                    예약상담 대기
-                </StyledSpan>&nbsp;&nbsp;&nbsp;
-                <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
-                    {Number.isNaN(count) ? 0 : count}
-                </StyledSpan>
-                <StyledSpan size={30} count color='black'>
-                    명
-                </StyledSpan>
-            </Divs> */}
             <Drawer
                 sx={{ bg: "#f7f7f7" }}
                 anchor={"right"}
                 open={state["right"]}
-                onClose={toggleDrawer("right", false, "")}
+                onClose={toggleDrawer("right", false, "예약상담 대기")}
             >
                 {list("right")}
             </Drawer>

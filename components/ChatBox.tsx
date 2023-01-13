@@ -489,6 +489,8 @@ export default function BoxSx() {
 
     const finish_chat = useSelector(selectFinishChatList)
 
+    console.log("room/reservation", nowTimes, totalTime);
+
 
     useEffect(() => { // 새로운 정보 들어왔는지 확인
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
@@ -529,20 +531,37 @@ export default function BoxSx() {
 
     const room_join = useSelector(selectDashBoardRoomJoin)
 
-    async function handleRoomJoin() { // 처음 시작할때 
-        hadnleEmit();
-        handleFinishChatList();
-        setIsMessage([])
-        const req = {
-            roomId: select_user.room_id,
-            user_type: 6,
-            message: "안녕하세요 상담을 시작하겠습니다."
-        };
-        console.log(req);
-        socket.emit('chat', {
-            "method": "join",
-            "datas": req
-        });
+    async function handleRoomJoin() { // 처음 시작할때
+        if (select_user.isimmediate) {
+            hadnleEmit();
+            setTimeout(() => {
+                handleFinishChatList();
+                setIsMessage([]);
+            }, 1000)
+            const req = {
+                roomId: select_user.room_id,
+                user_type: 6,
+                message: "안녕하세요 상담을 시작하겠습니다."
+            };
+            console.log(req);
+            socket.emit('chat', {
+                "method": "join",
+                "datas": req
+            });
+        } else {
+            handleFinishChatList();
+            setIsMessage([])
+            const req = {
+                roomId: select_user.room_id,
+                user_type: 6,
+                message: "안녕하세요 상담을 시작하겠습니다."
+            };
+            console.log(req);
+            socket.emit('chat', {
+                "method": "join",
+                "datas": req
+            });
+        }
     }
     const alert_status = useSelector(selectAlertControlls);
     const alert_status3 = useSelector(selectAlertControlls);
@@ -628,6 +647,7 @@ export default function BoxSx() {
                 user_type: 6
             }
         })
+        setCount_start(0);
         handleFinishChatList();
     }
 
@@ -644,13 +664,22 @@ export default function BoxSx() {
 
     async function handleCallCounselorting() {
         console.log("전화 핸들러 실행");
-        await hadnleEmit()
-        socket.emit('counsel_submit', {
-            method: 'room/call/join',
-            datas: {
-                roomId: select_user.room_id,
-            }
-        })
+        if (select_user.isimmediate) {
+            hadnleEmit()
+            socket.emit('counsel_submit', {
+                method: 'room/call/join',
+                datas: {
+                    roomId: select_user.room_id,
+                }
+            })
+        } else {
+            socket.emit('counsel_submit', {
+                method: 'room/call/join',
+                datas: {
+                    roomId: select_user.room_id,
+                }
+            })
+        }
         await dispatch(setChatBoxOpenState("null"))
     }
 
@@ -935,7 +964,7 @@ export default function BoxSx() {
                     <div>
                         <MuiBox
                             sx={{
-                                zIndex: 10,
+                                zIndex: 1,
                                 boxShadow: `3px 2px 5px black;`,
                                 width: 500,
                                 maxWidth: rem(500),
@@ -1054,7 +1083,7 @@ export default function BoxSx() {
                         <div>
                             <MuiBox
                                 sx={{
-                                    zIndex: 10,
+                                    zIndex: 1,
                                     boxShadow: `3px 2px 5px black;`,
                                     width: 500,
                                     maxWidth: 500,
@@ -1166,7 +1195,7 @@ export default function BoxSx() {
                             <div>
                                 <MuiBox
                                     sx={{
-                                        zIndex: 10,
+                                        zIndex: 1,
                                         boxShadow: `3px 2px 5px black;`,
                                         width: 500,
                                         maxWidth: 500,
@@ -1291,7 +1320,7 @@ export default function BoxSx() {
                                 <div>
                                     <MuiBox
                                         sx={{
-                                            zIndex: 10,
+                                            zIndex: 1,
                                             boxShadow: `3px 2px 5px black;`,
                                             width: rem(500),
                                             maxWidth: 500,
