@@ -121,6 +121,7 @@ export const LoginFormSection = () => {
         <Image src={counselorLogo} width={146.4} height={58.6} />
         <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
       </div>
+      <div>스테이징</div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div
           css={{
