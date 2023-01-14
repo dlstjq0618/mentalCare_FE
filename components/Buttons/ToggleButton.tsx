@@ -119,10 +119,6 @@ export const ToggleButton = ({ activeState }: Toggle) => {
 
   }, [chat_toggle])
 
-  console.log("activate2", activate2);
-  console.log("chat_toggle", chat_toggle);
-
-  console.log("test", test);
 
   useEffect(() => {
     if (test === true) { // 바로상담건이 있으니 버튼 조작 불가 및 상태 false
