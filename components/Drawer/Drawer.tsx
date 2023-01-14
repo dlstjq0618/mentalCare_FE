@@ -14,8 +14,8 @@ import { TramRounded } from '@mui/icons-material';
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 interface IProps {
-    open: boolean;
-    name: string;
+    open?: boolean;
+    name?: string;
 }
 
 interface IStyled {
@@ -30,6 +30,52 @@ interface IStyled {
     underLine?: boolean;
 
 }
+
+const Divs = styled.div`
+    display: flex;
+    align-items: center;
+`;
+const StyledSpan = styled.span<IStyled>` 
+    font-weight: bold;
+    ${(props) =>
+        props.count === true &&
+        css`
+        font-size: ${rem(props.size)};
+        color: ${props.color};
+    `}
+    ${(props) =>
+        props.underLine === true &&
+        css`
+        border-bottom: 1px solid;
+        cursor: pointer;
+    line-height: 1.2;
+    `}
+`;
+
+const Header = styled.header<IStyled>`
+    justify-content: space-between;
+    display: flex;
+    background: #fff;
+    width: ${rem(1050)};
+    height: ${rem(60)};
+    flex-grow: 0;
+    margin: ${rem(30)} 0 ${rem(25)};
+    padding: ${rem(14)} ${rem(35)} ${rem(14)} ${rem(30)};
+    border-radius: 20px;
+    background-color: #fff;
+    ${(props) =>
+        props.schedule === true &&
+        css`
+    width: ${rem(1050)};
+    height: ${rem(90)};
+    background-color:#f7f7f7;
+    flex-grow: 0;
+    padding: 20px 39px 20px 32px;
+    border-radius: 20px;
+    border: solid ${rem(2)} #eb541e;
+    justify-content: none;
+    `}
+`;
 
 const Title = styled.span<IStyled>`
   flex-grow: 0;
@@ -116,6 +162,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectUserData, setSelectUserData] = useState<any>();
     const account_list = useSelector(selectAccoutList);
+    const [typeList, setTypeList] = useState();
     const conference_list = useSelector(selectConferenceList);
     const paidWait_list = useSelector(selectPaidWaitLis);
     const close = () => setModalOpen(false);
@@ -131,7 +178,6 @@ export default function TemporaryDrawer(props: IProps) {
     const [count, setCount] = useState(0);
 
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
-        console.log("isimmediate", data.isimmediate)
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(false));
             dispatch(setTestResultValueStatus(true));
@@ -164,6 +210,8 @@ export default function TemporaryDrawer(props: IProps) {
         }
 
     }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
+
+
 
     console.log("count", count);
 
@@ -209,7 +257,7 @@ export default function TemporaryDrawer(props: IProps) {
     }
 
     const toggleDrawer =
-        (anchor: Anchor, open: boolean, title?: string) =>
+        (anchor: Anchor, open: boolean, name: string) =>
             (event: React.KeyboardEvent | React.MouseEvent) => {
                 if (
                     event.type === 'keydown' &&
@@ -220,7 +268,7 @@ export default function TemporaryDrawer(props: IProps) {
                 }
 
                 setState({ ...state, [anchor]: open });
-                // setTitle("");
+                setTitle(name);
             };
 
     const list = (anchor: Anchor) => (
@@ -239,8 +287,8 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
-                <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title>
+                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title>
+                {/* <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 <ModalCloseIcon />
             </Div>
             {
@@ -394,61 +442,133 @@ export default function TemporaryDrawer(props: IProps) {
                     )
                 })
             }
+
             {
                 waitlist?.result?.map((list: any, index: number) => {
                     return (
-                        <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
-                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <div style={{ display: 'flex' }}>
-                                    {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
-                                    <Text left={list?.isimmediate ? 0 : 18} bold size={18}>{list.user_name}</Text>
+                        title === "바로상담 대기" && list.isimmediate ?
+                            <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
+                                <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                    <div style={{ display: 'flex' }}>
+                                        {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
+                                        <Text left={list?.isimmediate ? 0 : 18} bold size={18}>{list.user_name}</Text>
+                                    </div>
+                                    {list?.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
+                                        :
+                                        <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
                                 </div>
-                                {list?.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
-                                    :
-                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
-                            </div>
-                            <div style={{ display: "grid" }}>
-                                <Text
-                                    color=' rgba(0, 0, 0, 0.4)'
-                                    bold={false} size={15}>
-                                    요청 시간
+                                <div style={{ display: "grid" }}>
                                     <Text
-                                        subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false} size={15} color="#000">
-                                        {list.crated}
+                                        color=' rgba(0, 0, 0, 0.4)'
+                                        bold={false} size={15}>
+                                        요청 시간
+                                        <Text
+                                            subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false} size={15} color="#000">
+                                            {list.crated}
+                                        </Text>
                                     </Text>
-                                </Text>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
-                                    상담 방식
-                                    <Text subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false}
-                                        size={15}
-                                        color="#000">
-                                        {list.isimmediate === true ?
-                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
-                                                [바로상담]
-                                            </span>
+                                    <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                        상담 방식
+                                        <Text subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false}
+                                            size={15}
+                                            color="#000">
+                                            {list.isimmediate === true ?
+                                                <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                    [바로상담]
+                                                </span>
+                                                :
+                                                <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                    [예약상담]
+                                                </span>}{list.method_str}
+                                        </Text>
+                                    </Text>
+                                </div>
+                            </BoxItem>
+                            :
+                            title === "예약상담 대기" && list.isimmediate === false ?
+                                <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
+                                    <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                        <div style={{ display: 'flex' }}>
+                                            {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
+                                            <Text left={list?.isimmediate ? 0 : 18} bold size={18}>{list.user_name}</Text>
+                                        </div>
+                                        {list?.isimmediate ? <div style={{ padding: '7px 26px', borderRadius: 7, border: 'solid 1px 4px', width: 81, height: 34, background: "#e8440a", color: "#fff" }}>승인</div>
                                             :
-                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                                [예약상담]
-                                            </span>}{list.method_str}
-                                    </Text>
-                                </Text>
-                            </div>
-                        </BoxItem>
+                                            <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
+                                    </div>
+                                    <div style={{ display: "grid" }}>
+                                        <Text
+                                            color=' rgba(0, 0, 0, 0.4)'
+                                            bold={false} size={15}>
+                                            요청 시간
+                                            <Text
+                                                subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false} size={15} color="#000">
+                                                {list.crated}
+                                            </Text>
+                                        </Text>
+                                        <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                            상담 방식
+                                            <Text subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false}
+                                                size={15}
+                                                color="#000">
+                                                {list.isimmediate === true ?
+                                                    <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                        [바로상담]
+                                                    </span>
+                                                    :
+                                                    <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                        [예약상담]
+                                                    </span>}{list.method_str}
+                                            </Text>
+                                        </Text>
+                                    </div>
+                                </BoxItem>
+                                :
+                                <></>
                     )
                 })
             }
         </Box >
     );
 
-    const [title, setTitle] = useState("")
-
+    const [title, setTitle] = useState("");
+    /** Immediately */
     return (
         <>
-            <RoundedButton
+            <Header schedule={true}>
+                <Divs>
+                    <StyledSpan count size={20}>
+                        바로상담 대기
+                    </StyledSpan>&nbsp;&nbsp;&nbsp;
+                    <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
+                        {/* {Number.isNaN(count) ? 0 : count} */}
+                        {0}
+                    </StyledSpan>
+                    <StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <StyledSpan count size={20}>
+                        예약상담 대기
+                    </StyledSpan>&nbsp;&nbsp;&nbsp;
+                    <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
+                        {/* {Number.isNaN(count) ? 0 : count} */}
+                        {0}
+                    </StyledSpan>
+                    <StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>
+                </Divs>
+            </Header>
+            {/* <RoundedButton
                 onClick={toggleDrawer("right", true, "바로상담 대기")}
                 color="orange"
                 css={{
@@ -458,7 +578,7 @@ export default function TemporaryDrawer(props: IProps) {
                 }}
             >
                 {props.name}
-            </RoundedButton>
+            </RoundedButton> */}
 
             <Drawer
                 sx={{ bg: "#f7f7f7" }}

@@ -261,7 +261,10 @@ const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('
 const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
 console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64DecodedText)
 // const socket = io("http://bo.local.api.woozoo.clinic", {
-const socket = io("https://bo.api.woozoo.clinic", {
+// bo.dev.api.woozoo.clinic  개발
+// bo.stag.api 스테이징
+// bo.api 운영
+const socket = io("https://bo.dev.api.woozoo.clinic", {
     // transports: ["websocket"],
     transports: ["polling"],
     extraHeaders: {

@@ -128,7 +128,7 @@ function CalendarHeader() {
 
     return (
         <>
-            <Header>
+            {/* <Header>
                 <Div>
                     <KeyboardArrowLeftIcon style={{ cursor: 'pointer' }} onClick={() => handlePrevMonth()} />
                     <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} onClick={() => handleNextMonth()} />
@@ -151,8 +151,8 @@ function CalendarHeader() {
                 <Div>
                     <TemporaryDrawer open={drawerOpen} name={"스케줄 등록"} />
                 </Div>
-            </Header>
-            {/* <Header schedule={true}> // 새로운 UI 캘린더헤더
+            </Header> */}
+            {/* <Header schedule={true}> 
                 <Div>
                     <StyledSpan count size={20}>
                         바로상담 대기
@@ -175,6 +175,7 @@ function CalendarHeader() {
                     </StyledSpan>
                 </Div>
             </Header> */}
+            <TemporaryDrawer open={drawerOpen} />
         </>
     );
 }
