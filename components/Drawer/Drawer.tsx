@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, setTotalListData } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis } from '~/store/calendarDetailSlice';
 import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
