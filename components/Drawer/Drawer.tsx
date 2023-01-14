@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, setTotalListData } from '~/store/calendarDetailSlice';
 import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -175,7 +175,11 @@ export default function TemporaryDrawer(props: IProps) {
         bottom: false,
         right: false,
     });
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(0); // 토탈 카운트 캘린더 + 대기실 
+
+
+    const [immediate_count, setImmediate_count] = useState(0) // 바로상담 대기자 수
+    const [reservation_count, setReservation_count] = useState(0) // 예약상담 대기자 수
 
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
         if (data.isimmediate) {
@@ -211,24 +215,19 @@ export default function TemporaryDrawer(props: IProps) {
 
     }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
 
-
-
-    console.log("count", count);
-
     useEffect(() => {
-        console.log("이게 실행되는건가?")
         function is_true(element: any) {
             if (element.isimmediate === true) {
                 return true;
             }
         }
-        const true_value = account_list.result?.filter(is_true);
+        const true_value = waitlist.result?.filter(is_true);
         if (true_value?.length > 0) {
-            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled 
+            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
         } else {
             dispatch(setToggleButton(false));
         }
-    }, [account_list])
+    }, [waitlist])
 
 
     const [show, setShow] = useState(false);
@@ -295,151 +294,290 @@ export default function TemporaryDrawer(props: IProps) {
             {
                 conference_list?.result?.map((list: any, index: number) => {
                     return (
-                        <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
-                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <div style={{ display: 'flex' }}>
-                                    <Badge color='#046400' border>협의대기</Badge>
-                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                        title === "바로상담 대기" && list.isimmediate ?
+                            <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
+                                <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                    <div style={{ display: 'flex' }}>
+                                        <Badge color='#046400' border>협의대기</Badge>
+                                        <Text left={18} bold size={18}>{list.user_name}</Text>
+                                    </div>
                                 </div>
-                            </div>
-                            <div style={{ display: "grid" }}>
-                                <Text
-                                    color=' rgba(0, 0, 0, 0.4)'
-                                    bold={false} size={15}>
-                                    요청 시간
+                                <div style={{ display: "grid" }}>
                                     <Text
-                                        subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false} size={15} color="#000">
-                                        {list.crated}
+                                        color=' rgba(0, 0, 0, 0.4)'
+                                        bold={false} size={15}>
+                                        요청 시간
+                                        <Text
+                                            subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false} size={15} color="#000">
+                                            {list.crated}
+                                        </Text>
                                     </Text>
-                                </Text>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
-                                    상담 방식
-                                    <Text subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false}
-                                        size={15}
-                                        color="#000">
-                                        {list.isimmediate === true ?
-                                            <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
-                                                [바로상담]
-                                            </span>
-                                            :
-                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                                [예약상담]
-                                            </span>}{list.method_str}
+                                    <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                        상담 방식
+                                        <Text subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false}
+                                            size={15}
+                                            color="#000">
+                                            {list.isimmediate === true ?
+                                                <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                    [바로상담]
+                                                </span>
+                                                :
+                                                <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                    [예약상담]
+                                                </span>}{list.method_str}
+                                        </Text>
                                     </Text>
-                                </Text>
-                            </div>
-                        </BoxItem>
+                                </div>
+                            </BoxItem>
+                            : title === "예약상담 대기" && list.isimmediate === false ?
+                                <BoxItem key={index} onClick={() => { dispatch(setTestResultValueStatus(true)), dispatch(setDashBoardSelectUser(list)), dispatch(setWatingListBefore(list)), dispatch(setChatBoxOpenState("협의")) }} style={{ background: "#f7f7f7" }}>
+                                    <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                        <div style={{ display: 'flex' }}>
+                                            <Badge color='#046400' border>협의대기</Badge>
+                                            <Text left={18} bold size={18}>{list.user_name}</Text>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: "grid" }}>
+                                        <Text
+                                            color=' rgba(0, 0, 0, 0.4)'
+                                            bold={false} size={15}>
+                                            요청 시간
+                                            <Text
+                                                subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false} size={15} color="#000">
+                                                {list.crated}
+                                            </Text>
+                                        </Text>
+                                        <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                            상담 방식
+                                            <Text subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false}
+                                                size={15}
+                                                color="#000">
+                                                {list.isimmediate === true ?
+                                                    <span style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                        [바로상담]
+                                                    </span>
+                                                    :
+                                                    <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                        [예약상담]
+                                                    </span>}{list.method_str}
+                                            </Text>
+                                        </Text>
+                                    </div>
+                                </BoxItem> : <></>
                     )
                 })
             }
             {
                 paidWait_list?.result?.map((list: any, index: number) => {
                     return (
-                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
-                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <div style={{ display: 'flex' }}>
-                                    <Badge color='#666666' border>결제대기</Badge>
-                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                        title === "바로상담 대기" && list.isimmediate ?
+                            // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                            <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
+                                <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                    <div style={{ display: 'flex' }}>
+                                        <Badge color='#666666' border>결제대기</Badge>
+                                        <Text left={18} bold size={18}>{list.user_name}</Text>
+                                    </div>
+                                    {list?.isimmediate ?
+                                        <div style={{
+                                            borderBottom: 'solid 1px #999999',
+                                            color: "#999999",
+                                            fontSize: 12,
+                                            height: 20,
+                                            letterSpacing: -0.36,
+                                        }} onClick={() => {
+                                            dispatch(setChatBoxOpenState("협의취소"))
+                                        }}>취소하기</div>
+                                        :
+                                        <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
                                 </div>
-                                {list?.isimmediate ?
-                                    <div style={{
-                                        borderBottom: 'solid 1px #999999',
-                                        color: "#999999",
-                                        fontSize: 12,
-                                        height: 20,
-                                        letterSpacing: -0.36,
-                                    }} onClick={() => {
-                                        dispatch(setChatBoxOpenState("협의취소"))
-                                    }}>취소하기</div>
-                                    :
-                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
-                            </div>
-                            <div style={{ display: "grid" }}>
-                                <Text
-                                    color=' rgba(0, 0, 0, 0.4)'
-                                    bold={false} size={15}>
-                                    요청 시간
+                                <div style={{ display: "grid" }}>
                                     <Text
-                                        subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false} size={15} color="#000">
-                                        {list.crated}
+                                        color=' rgba(0, 0, 0, 0.4)'
+                                        bold={false} size={15}>
+                                        요청 시간
+                                        <Text
+                                            subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false} size={15} color="#000">
+                                            {list.crated}
+                                        </Text>
                                     </Text>
-                                </Text>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
-                                    상담 방식
-                                    <Text subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false}
-                                        size={15}
-                                        color="#000">
-                                        {list.isimmediate === true ?
-                                            <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
-                                                [바로상담]
-                                            </span>
+                                    <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                        상담 방식
+                                        <Text subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false}
+                                            size={15}
+                                            color="#000">
+                                            {list.isimmediate === true ?
+                                                <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                    [바로상담]
+                                                </span>
+                                                :
+                                                <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                    [예약상담]
+                                                </span>}{list.method_str}
+                                        </Text>
+                                    </Text>
+                                </div>
+                            </BoxItem>
+                            : title === "예약상담 대기" && list.isimmediate === false ?
+                                <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
+                                    <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                        <div style={{ display: 'flex' }}>
+                                            <Badge color='#666666' border>결제대기</Badge>
+                                            <Text left={18} bold size={18}>{list.user_name}</Text>
+                                        </div>
+                                        {list?.isimmediate === false ?
+                                            <div style={{
+                                                borderBottom: 'solid 1px #999999',
+                                                color: "#999999",
+                                                fontSize: 12,
+                                                height: 20,
+                                                letterSpacing: -0.36,
+                                            }} onClick={() => {
+                                                dispatch(setChatBoxOpenState("협의취소"))
+                                            }}>취소하기</div>
                                             :
-                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                                [예약상담]
-                                            </span>}{list.method_str}
-                                    </Text>
-                                </Text>
-                            </div>
-                        </BoxItem>
+                                            <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />}
+                                    </div>
+                                    <div style={{ display: "grid" }}>
+                                        <Text
+                                            color=' rgba(0, 0, 0, 0.4)'
+                                            bold={false} size={15}>
+                                            요청 시간
+                                            <Text
+                                                subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false} size={15} color="#000">
+                                                {list.crated}
+                                            </Text>
+                                        </Text>
+                                        <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                            상담 방식
+                                            <Text subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false}
+                                                size={15}
+                                                color="#000">
+                                                {list.isimmediate === true ?
+                                                    <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                        [바로상담]
+                                                    </span>
+                                                    :
+                                                    <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                        [예약상담]
+                                                    </span>}{list.method_str}
+                                            </Text>
+                                        </Text>
+                                    </div>
+                                </BoxItem>
+                                : <></>
                     )
                 })
             }
             {
                 account_list?.result?.map((list: any, index: number) => {
                     return (
-                        // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                        <BoxItem key={index} onClick={() => {
-                            list.isimmediate === true ? handleImmediate(list)
-                                :
-                                handleImmediate(list)
-                        }} style={{ background: "#f7f7f7" }}>
-                            <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
-                                <div style={{ display: 'flex' }}>
-                                    <Badge color='#60ae92' border>결제완료</Badge>
-                                    <Text left={18} bold size={18}>{list.user_name}</Text>
+                        title === "바로상담 대기" && list.isimmediate ?
+                            // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
+                            <BoxItem key={index} onClick={() => {
+                                list.isimmediate === true ? handleImmediate(list)
+                                    :
+                                    handleImmediate(list)
+                            }} style={{ background: "#f7f7f7" }}>
+                                <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                    <div style={{ display: 'flex' }}>
+                                        <Badge color='#60ae92' border>결제완료</Badge>
+                                        <Text left={18} bold size={18}>{list.user_name}</Text>
+                                    </div>
+                                    <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
                                 </div>
-                                <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
-                            </div>
-                            <div style={{ display: "grid" }}>
-                                <Text
-                                    color=' rgba(0, 0, 0, 0.4)'
-                                    bold={false} size={15}>
-                                    요청 시간
+                                <div style={{ display: "grid" }}>
                                     <Text
-                                        subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false} size={15} color="#000">
-                                        {list.crated}
+                                        color=' rgba(0, 0, 0, 0.4)'
+                                        bold={false} size={15}>
+                                        요청 시간
+                                        <Text
+                                            subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false} size={15} color="#000">
+                                            {list.crated}
+                                        </Text>
                                     </Text>
-                                </Text>
-                                <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
-                                    상담 방식
-                                    <Text subtitle
-                                        style={{ marginLeft: `${rem(20)}` }}
-                                        bold={false}
-                                        size={15}
-                                        color="#000">
-                                        {list.isimmediate === true ?
-                                            <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
-                                                [바로상담]
-                                            </span>
-                                            :
-                                            <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
-                                                [예약상담]
-                                            </span>}{list.method_str}
+                                    <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                        상담 방식
+                                        <Text subtitle
+                                            style={{ marginLeft: `${rem(20)}` }}
+                                            bold={false}
+                                            size={15}
+                                            color="#000">
+                                            {list.isimmediate === true ?
+                                                <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                    [바로상담]
+                                                </span>
+                                                :
+                                                <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                    [예약상담]
+                                                </span>}{list.method_str}
+                                        </Text>
                                     </Text>
-                                </Text>
-                            </div>
-                        </BoxItem>
+                                </div>
+                            </BoxItem>
+                            : title === "예약상담 대기" && list.isimmediate === false ?
+                                <BoxItem key={index} onClick={() => {
+                                    list.isimmediate === true ? handleImmediate(list)
+                                        :
+                                        handleImmediate(list)
+                                }} style={{ background: "#f7f7f7" }}>
+                                    <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
+                                        <div style={{ display: 'flex' }}>
+                                            <Badge color='#60ae92' border>결제완료</Badge>
+                                            <Text left={18} bold size={18}>{list.user_name}</Text>
+                                        </div>
+                                        <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} />
+                                    </div>
+                                    <div style={{ display: "grid" }}>
+                                        <Text
+                                            color=' rgba(0, 0, 0, 0.4)'
+                                            bold={false} size={15}>
+                                            요청 시간
+                                            <Text
+                                                subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false} size={15} color="#000">
+                                                {list.crated}
+                                            </Text>
+                                        </Text>
+                                        <Text color=' rgba(0, 0, 0, 0.4)' bold={false} size={15}>
+                                            상담 방식
+                                            <Text subtitle
+                                                style={{ marginLeft: `${rem(20)}` }}
+                                                bold={false}
+                                                size={15}
+                                                color="#000">
+                                                {list.isimmediate === true ?
+                                                    <span key={index} style={{ fontWeight: 'bold', color: '#eb541e' }}>
+                                                        [바로상담]
+                                                    </span>
+                                                    :
+                                                    <span style={{ fontWeight: 'bold', color: '#60ae92' }}>
+                                                        [예약상담]
+                                                    </span>}{list.method_str}
+                                            </Text>
+                                        </Text>
+                                    </div>
+                                </BoxItem>
+                                : <></>
                     )
                 })
             }
@@ -449,6 +587,7 @@ export default function TemporaryDrawer(props: IProps) {
                     return (
                         title === "바로상담 대기" && list.isimmediate ?
                             <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
+                                {console.log("바로상담 수")}
                                 <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                     <div style={{ display: 'flex' }}>
                                         {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
