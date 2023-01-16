@@ -255,6 +255,7 @@ const Text = styled.div<IStyled>`
         border-radius: 20px;
     `}
 `;
+// 여긴  디벨롭
 const userId = window?.localStorage?.getItem("userId");
 const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
 const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
@@ -263,7 +264,13 @@ console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64De
 // bo.dev.api.woozoo.clinic  개발
 // bo.stag.api 스테이징
 // bo.api 운영
-const socket = io(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? "https://bo.api.woozoo.clinic" : "https://bo.dev.api.woozoo.clinic"}`, {
+const socket = io(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
+    "https://bo.api.woozoo.clinic" : "https://bo.dev.api.woozoo.clinic"}`, {
+    transports: ["polling"],
+    extraHeaders: {
+        "identity": "counselor",
+        "x-auth-token": base64EncodedText,
+    }
     // log socket connection
 })
 export default function BoxSx() {
