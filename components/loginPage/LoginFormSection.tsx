@@ -17,6 +17,7 @@ import { signIn } from "~/utils/nextAuth.utils";
 import { api } from "~/woozooapi";
 import counselorLogo from '../../public/counser@3x.png';
 import { Image } from "~/components";
+import { api2 } from "~/mentalcareapi";
 
 const LoginFormSectionWrapper = styled("article", {
   position: "relative",
@@ -120,6 +121,11 @@ export const LoginFormSection = () => {
       <div style={{ display: 'flex', alignSelf: 'center', marginBottom: '38.8px' }}>
         <Image src={counselorLogo} width={146.4} height={58.6} />
         <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
+        {/* <button onClick={() => {
+          api2.counselor.test().then((res: any) => {
+            console.log("테스트 api", res)
+          })
+        }}>test</button> */}
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div

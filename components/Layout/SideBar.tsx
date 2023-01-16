@@ -105,11 +105,11 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
 
   const consultingList = useSelector(selectConsultingList); // 상담중
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
-  const waitingList = useSelector(selectWaitlist)
+  const waitingList = useSelector(selectWaitlist);
   const account_list = useSelector(selectAccoutList);
   const conference_list = useSelector(selectConferenceList);
 
-  const watingRoom_count = consultingList.count + reservationList.count + waitingList.count + account_list.count;
+  const watingRoom_count = consultingList?.count + reservationList?.count;
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);
@@ -310,7 +310,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               href="/calendar"
               visiting={path === "/calendar" ? true : false}
             >
-              <span>{Number.isNaN(count) ? 0 : count}</span>
+              <span>{Number.isNaN(watingRoom_count) ? 0 : watingRoom_count}</span>
               <div>대기실</div>
             </SideBarButtons>
             <SideBarButtons
