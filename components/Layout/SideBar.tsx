@@ -109,7 +109,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const account_list = useSelector(selectAccoutList);
   const conference_list = useSelector(selectConferenceList);
 
-  const watingRoom_count = consultingList?.count + reservationList?.count + waitingList?.count + account_list?.count;
+  const watingRoom_count = consultingList?.count + reservationList?.count;
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const shouldNotificate = useSelector(selectShouldNotificate);
