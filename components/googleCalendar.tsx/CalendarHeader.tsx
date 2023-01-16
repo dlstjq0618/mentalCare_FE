@@ -128,7 +128,7 @@ function CalendarHeader() {
 
     return (
         <>
-            {/* <Header>
+            <Header>
                 <Div>
                     <KeyboardArrowLeftIcon style={{ cursor: 'pointer' }} onClick={() => handlePrevMonth()} />
                     <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} onClick={() => handleNextMonth()} />
@@ -139,19 +139,6 @@ function CalendarHeader() {
                     </StyledButton>
                 </Div>
             </Header>
-            <Header schedule={true}>
-                <Div>
-                    <StyledSpan underLine size={30} color='#eb541e' count>{Number.isNaN(count) ? 0 : count}
-                    </StyledSpan><StyledSpan size={30} count color='black'>
-                        명
-                    </StyledSpan>&nbsp;<StyledSpan count size={20}>
-                        상담 대기중 입니다.
-                    </StyledSpan>
-                </Div>
-                <Div>
-                    <TemporaryDrawer open={drawerOpen} name={"스케줄 등록"} />
-                </Div>
-            </Header> */}
             {/* <Header schedule={true}> 
                 <Div>
                     <StyledSpan count size={20}>
