@@ -208,7 +208,6 @@ export default function TemporaryDrawer(props: IProps) {
     useEffect(() => {
         setTotalCount(immediateAccountCount + immediateCount + immediatePaidwait);
         setTotalCount2(reservationAccountCount + reservationCount + reservationPaidwait);
-
     })
 
     useEffect(() => { // 결제완료 리스트 
@@ -344,9 +343,7 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? totalCount : Number.isNaN(reservationCount) ? 0 : reservationCount}</div>건</Title>
-                {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
-                {/* <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
+                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? totalCount : totalCount2}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
             {

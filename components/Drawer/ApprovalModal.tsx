@@ -224,7 +224,6 @@ function ApprovalModal(props: IProps) {
             return alert("일정이 변경되었습니다.")
         }
     }
-    console.log("select_user4444", select_user);
 
     return (
         <>

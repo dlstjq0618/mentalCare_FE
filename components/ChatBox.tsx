@@ -78,10 +78,7 @@ import { format } from 'date-fns';
 import { async } from '@firebase/util';
 import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
-import { CoustomAlertPopUp } from '../components/Dialog'
-
-import { HOST2 } from '~/woozooapi'
-
+import { CoustomAlertPopUp } from '../components/Dialog';
 interface IStyled {
     size?: any;
     bold?: string;
@@ -266,15 +263,7 @@ console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64De
 // bo.dev.api.woozoo.clinic  개발
 // bo.stag.api 스테이징
 // bo.api 운영
-console.log("HOST2", HOST2);
-const socket = io("http://bo.api.woozoo.clinic", {
-    // transports: ["websocket"],
-    transports: ["polling"],
-    extraHeaders: {
-        "identity": "counselor",
-        "x-auth-token": base64EncodedText,
-    }
-});
+const socket = io(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? "https://bo.api.woozoo.clinic" : "https://bo.dev.api.woozoo.clinic"}`, {
 // log socket connection
 
 export default function BoxSx() {
@@ -489,8 +478,6 @@ export default function BoxSx() {
 
 
     const finish_chat = useSelector(selectFinishChatList)
-
-    console.log("room/reservation", nowTimes, totalTime);
 
 
     useEffect(() => { // 새로운 정보 들어왔는지 확인

@@ -27,6 +27,8 @@ import {
     setScheduleSelectModla
 } from "~/store/calendarDetailSlice";
 import { CoustomAlertPopUp } from '../Dialog/AlertPopUp';
+import TestValue from '../TestValue/TestValue';
+
 interface Iprops {
     month: any[];
 }
@@ -180,13 +182,14 @@ function Month(props: Iprops) {
     const [test_modal, setTest_modal] = useState(false);
     const open2 = () => setShow2(true);
     const close4 = () => { setShow2(false), dispatch(setChatBoxOpenState("null")), dispatch(setImmediate(null)), dispatch(setImmediate(false)) }
-    const open3 = () => { setTest_modal(true); }
+    const open3 = () => { setTest_modal(true) }
     const [cancelModal, setCancelModal] = useState(false);
     const [callStatus, setCallStatus] = useState<boolean>(false);
     const cancelOpen = () => setCancelModal(true);
     const [cancelValue, setCancelValue] = useState("");
     const cancelClose = () => setCancelModal(false);
-    const handleCancel = () => dispatch(setCancelStatus(true))
+    const handleCancel = () => dispatch(setCancelStatus(true));
+    const close3 = () => setTest_modal(false);
 
     const close2 = () => {
         dispatch(setCoustomAlert(true));
@@ -209,7 +212,6 @@ function Month(props: Iprops) {
         }
     }, [immediate])
 
-    console.log("typetype", type);
     return (
         <>
             <Divs>
@@ -430,6 +432,7 @@ function Month(props: Iprops) {
                     취소 완료
                 </RoundedButton>
             </BaseDialog2>
+            <TestValue open={test_modal} cancel={close3} />
         </>
     );
 }

@@ -687,3 +687,7 @@ export type DiagnosisCancelHistoryByHospitalUserIdResponse = {
   total: number;
   data: DiagnosisCancelReasonByDiagnosisResultIdResponse[];
 };
+
+export type TestResponse = {
+  data: any;
+}
