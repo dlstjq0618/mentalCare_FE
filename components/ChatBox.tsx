@@ -337,11 +337,6 @@ export default function BoxSx() {
     const default_count = useSelector(selectTimeCount);
 
 
-    console.log("reservationTime", reservationTime, selectNum)
-    console.log("nowTimes", nowTimes);
-
-
-
 
     useEffect(() => {
         socket.on("connect", () => {
