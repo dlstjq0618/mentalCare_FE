@@ -91,6 +91,8 @@ type DiagnosisDetailStoreState = {
   call_finish: "완료" | "";
   paidList: any;
   immediate: any;
+  immediateList: any;
+  nonimmediateList: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -157,6 +159,8 @@ const initialState: DiagnosisDetailStoreState = {
   call_finish: "",
   paidList: [],
   immediate: null,
+  immediateList: 0,
+  nonimmediateList: 0,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -601,6 +605,20 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.immediate = action.payload;
     },
+    setImmediateListCount(
+      // 바로상담 리스트 카운트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["immediateList"]>
+    ) {
+      state.immediateList = action.payload;
+    },
+    setNonImmediateListCount(
+      // 예약상담 카운트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["nonimmediateList"]>
+    ) {
+      state.nonimmediateList = action.payload;
+    },
   },
 });
 
@@ -666,6 +684,8 @@ export const {
   setCallFinish,
   setPaidWaitList,
   setImmediate,
+  setImmediateListCount,
+  setNonImmediateListCount,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -787,5 +807,9 @@ export const selectPaidWaitLis = (state: RootState) =>
 
 export const selectImmediate = (state: RootState) =>
   state.calendarDetail.immediate;
+export const selectImmediateListCount = (state: RootState) =>
+  state.calendarDetail.immediateList;
+export const selectNonImmediateListCount = (state: RootState) =>
+  state.calendarDetail.nonimmediateList;
 
 export default calendarDetailSilce.reducer;

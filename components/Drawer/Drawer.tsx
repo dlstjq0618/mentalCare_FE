@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount, setNonImmediateListCount, selectNonImmediateListCount, setPaidWaitList } from '~/store/calendarDetailSlice';
 import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -161,10 +161,10 @@ export default function TemporaryDrawer(props: IProps) {
     const socketInfo = useSelector(selectSocketData);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectUserData, setSelectUserData] = useState<any>();
-    const account_list = useSelector(selectAccoutList);
+    const account_list = useSelector(selectAccoutList); // 결제완료 
     const [typeList, setTypeList] = useState();
-    const conference_list = useSelector(selectConferenceList);
-    const paidWait_list = useSelector(selectPaidWaitLis);
+    const conference_list = useSelector(selectConferenceList); // 협의대기
+    const paidWait_list = useSelector(selectPaidWaitLis); // 결제대기 
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
     const [wating_add, setWating_add] = useState<any>([])
@@ -175,11 +175,22 @@ export default function TemporaryDrawer(props: IProps) {
         bottom: false,
         right: false,
     });
-    const [count, setCount] = useState(0); // 토탈 카운트 캘린더 + 대기실 
+
+    const [totalCount, setTotalCount] = useState(0); // 바로상담 결제완료 + 대기자 토탈 대기자수
+    const [totalCount2, setTotalCount2] = useState(0); // 예약상담 결제완료  + 대기자수 
 
 
-    const [immediate_count, setImmediate_count] = useState(0) // 바로상담 대기자 수
-    const [reservation_count, setReservation_count] = useState(0) // 예약상담 대기자 수
+
+    const [waiting_count, setWaiting_count] = useState(0);
+
+    const immediateCount = useSelector(selectImmediateListCount);
+    const reservationCount = useSelector(selectNonImmediateListCount);
+
+    const [immediatePaidwait, setImmediatePaidWaitCount] = useState(0) // 바로상담 결제대기 대기자 수
+    const [reservationPaidwait, setReservationPaidwaitCount] = useState(0) // 예약상담 결제대기 대기자수
+
+    const [immediateAccountCount, setImmediateAccountCount] = useState(0) // 바로상담 결제완료 대기자 수
+    const [reservationAccountCount, setReservationAccount] = useState(0) // 예약상담 결제완료 대기자 수
 
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
         if (data.isimmediate) {
@@ -195,39 +206,85 @@ export default function TemporaryDrawer(props: IProps) {
     }
 
     useEffect(() => {
-        const value = account_list.result?.map((res: any) => {
-            return res.isimmediate === true
-        })
+        setTotalCount(immediateAccountCount + immediateCount + immediatePaidwait);
+        setTotalCount2(reservationAccountCount + reservationCount + reservationPaidwait);
+    })
 
-        console.log("value", value)
-    }, [account_list])
-
-
-
-    useEffect(() => {
-        if (account_list.count === undefined) {
-            const totalCount = 0 + waitlist?.count;
-            setCount(totalCount)
-        } else if (account_list.count !== undefined) {
-            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count + paidWait_list?.count;
-            setCount(totalCount1)
-        }
-
-    }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
-
-    useEffect(() => {
+    useEffect(() => { // 결제완료 리스트 
         function is_true(element: any) {
             if (element.isimmediate === true) {
                 return true;
             }
         }
+        function is_false(element: any) {
+            if (element.isimmediate === false) {
+                return true;
+            }
+        }
+        const true_value = account_list.result?.filter(is_true);
+        const false_value = account_list.result?.filter(is_false);
+
+        setImmediateAccountCount(true_value?.length);
+        setReservationAccount(false_value?.length);
+
+        setWaiting_count(account_list.count - true_value?.length);
+        if (true_value?.length > 0) {
+            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
+        } else {
+            dispatch(setToggleButton(false));
+        }
+    }, [account_list])
+
+    useEffect(() => { // 결제대기 리스트
+        function is_true(element: any) {
+            if (element.isimmediate === true) {
+                return true;
+            }
+        }
+        function is_false(element: any) {
+            if (element.isimmediate === false) {
+                return true;
+            }
+        }
+
         const true_value = waitlist.result?.filter(is_true);
+        const false_value = waitlist.result?.filter(is_false);
+
+        dispatch(setImmediateListCount(true_value?.length));
+        dispatch(setNonImmediateListCount(false_value?.length));
+
+        setWaiting_count(waitlist.count - true_value?.length);
         if (true_value?.length > 0) {
             dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
         } else {
             dispatch(setToggleButton(false));
         }
     }, [waitlist])
+
+    useEffect(() => { // 결제대기 리스트
+        function is_true(element: any) {
+            if (element.isimmediate === true) {
+                return true;
+            }
+        }
+        function is_false(element: any) {
+            if (element.isimmediate === false) {
+                return true;
+            }
+        }
+        const true_value = paidWait_list.result?.filter(is_true);
+        const false_value = paidWait_list.result?.filter(is_false);
+
+        setImmediatePaidWaitCount(true_value?.length);
+        setReservationPaidwaitCount(false_value?.length);
+
+        setWaiting_count(waitlist.count - true_value?.length);
+        if (true_value?.length > 0) {
+            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
+        } else {
+            dispatch(setToggleButton(false));
+        }
+    }, [paidWait_list])
 
 
     const [show, setShow] = useState(false);
@@ -286,9 +343,7 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{0}</div>건</Title>
-                {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
-                {/* <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
+                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? totalCount : totalCount2}</div>건</Title>
                 <ModalCloseIcon />
             </Div>
             {
@@ -679,6 +734,8 @@ export default function TemporaryDrawer(props: IProps) {
         </Box >
     );
 
+    console.log("immediateCount", immediateCount);
+
     const [title, setTitle] = useState("");
     /** Immediately */
     return (
@@ -689,8 +746,7 @@ export default function TemporaryDrawer(props: IProps) {
                         바로상담 대기
                     </StyledSpan>&nbsp;&nbsp;&nbsp;
                     <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
-                        {/* {Number.isNaN(count) ? 0 : count} */}
-                        {0}
+                        {Number.isNaN(totalCount) ? 0 : totalCount}
                     </StyledSpan>
                     <StyledSpan size={30} count color='black'>
                         명
@@ -700,8 +756,7 @@ export default function TemporaryDrawer(props: IProps) {
                         예약상담 대기
                     </StyledSpan>&nbsp;&nbsp;&nbsp;
                     <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
-                        {/* {Number.isNaN(count) ? 0 : count} */}
-                        {0}
+                        {Number.isNaN(totalCount2) ? 0 : totalCount2}
                     </StyledSpan>
                     <StyledSpan size={30} count color='black'>
                         명

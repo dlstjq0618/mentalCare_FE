@@ -40,6 +40,7 @@ const BANKS = [
   { label: "한국씨티은행", value: "한국씨티은행" },
   { label: "HSBC은행", value: "HSBC은행" },
   { label: "SC제일은행", value: "SC제일은행" },
+  { label: "토스뱅크", value: "토스뱅크" },
 ];
 
 interface Props {
