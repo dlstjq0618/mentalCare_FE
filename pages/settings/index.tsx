@@ -99,42 +99,42 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                     {
                         weekday: 0,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 1,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 2,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 3,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 4,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 5,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 6,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                     {
                         weekday: 7,
                         startTime: "09:00:00",
-                        endTime: "22:00:00"
+                        endTime: "24:00:00"
                     },
                 ],
                 counseling_subject: data.counseling_subject.length === 0 ? fileUploadDate.counselingSubject : data.counseling_subject,
