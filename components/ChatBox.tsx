@@ -264,8 +264,8 @@ console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64De
 // bo.stag.api 스테이징
 // bo.api 운영
 const socket = io(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? "https://bo.api.woozoo.clinic" : "https://bo.dev.api.woozoo.clinic"}`, {
-// log socket connection
-
+    // log socket connection
+})
 export default function BoxSx() {
     /*
 1. 로그인하면
