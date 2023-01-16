@@ -208,7 +208,6 @@ export default function TemporaryDrawer(props: IProps) {
     useEffect(() => {
         setTotalCount(immediateAccountCount + immediateCount + immediatePaidwait);
         setTotalCount2(reservationAccountCount + reservationCount + reservationPaidwait);
-
     })
 
     useEffect(() => { // 결제완료 리스트 
