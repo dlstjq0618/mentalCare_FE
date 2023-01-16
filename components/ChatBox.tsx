@@ -492,8 +492,6 @@ export default function BoxSx() {
 
     const finish_chat = useSelector(selectFinishChatList)
 
-    console.log("room/reservation", nowTimes, totalTime);
-
 
     useEffect(() => { // 새로운 정보 들어왔는지 확인
         console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
