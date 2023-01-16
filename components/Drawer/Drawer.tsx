@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount, setNonImmediateListCount, selectNonImmediateListCount } from '~/store/calendarDetailSlice';
 import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -161,10 +161,10 @@ export default function TemporaryDrawer(props: IProps) {
     const socketInfo = useSelector(selectSocketData);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectUserData, setSelectUserData] = useState<any>();
-    const account_list = useSelector(selectAccoutList);
+    const account_list = useSelector(selectAccoutList); // 결제완료 
     const [typeList, setTypeList] = useState();
-    const conference_list = useSelector(selectConferenceList);
-    const paidWait_list = useSelector(selectPaidWaitLis);
+    const conference_list = useSelector(selectConferenceList); // 협의대기
+    const paidWait_list = useSelector(selectPaidWaitLis); // 결제대기 
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
     const [wating_add, setWating_add] = useState<any>([])
@@ -178,7 +178,8 @@ export default function TemporaryDrawer(props: IProps) {
     const [count, setCount] = useState(0); // 토탈 카운트 캘린더 + 대기실
     const [waiting_count, setWaiting_count] = useState(0);
 
-    const immediateCount = useSelector(selectImmediateListCount)
+    const immediateCount = useSelector(selectImmediateListCount);
+    const reservationCount = useSelector(selectNonImmediateListCount);
 
 
     const [immediate_count, setImmediate_count] = useState(0) // 바로상담 대기자 수
@@ -209,19 +210,22 @@ export default function TemporaryDrawer(props: IProps) {
 
     }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
 
-    useEffect(() => {
-        // if (waitlist.count !== undefined) {
-        //     const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count + paidWait_list?.count;
-        //     setWaiting_count(totalCount1 - immediateCount);
-        // }
-
+    useEffect(() => { // 대기상태 일때 바로상담과 예약상담 카운트 분리
         function is_true(element: any) {
             if (element.isimmediate === true) {
                 return true;
             }
         }
+        function is_false(element: any) {
+            if (element.isimmediate === false) {
+                return true;
+            }
+        }
         const true_value = waitlist.result?.filter(is_true);
+        const false_value = waitlist.result?.filter(is_false);
         dispatch(setImmediateListCount(true_value?.length));
+        dispatch(setNonImmediateListCount(false_value?.length));
+
         setWaiting_count(waitlist.count - true_value?.length);
         if (true_value?.length > 0) {
             dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
@@ -287,7 +291,7 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? immediateCount : Number.isNaN(waiting_count) ? 0 : waiting_count}</div>건</Title>
+                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? immediateCount : Number.isNaN(reservationCount) ? 0 : reservationCount}</div>건</Title>
                 {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 {/* <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 <ModalCloseIcon />
@@ -702,7 +706,7 @@ export default function TemporaryDrawer(props: IProps) {
                         예약상담 대기
                     </StyledSpan>&nbsp;&nbsp;&nbsp;
                     <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
-                        {Number.isNaN(waiting_count) ? 0 : waiting_count}
+                        {reservationCount === undefined ? 0 : reservationCount}
                     </StyledSpan>
                     <StyledSpan size={30} count color='black'>
                         명
