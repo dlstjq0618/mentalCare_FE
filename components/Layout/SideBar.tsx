@@ -32,6 +32,7 @@ import {
 } from "react-device-detect";
 import {
   selectAccoutList,
+  selectConferenceList,
   selectCalendarUserList,
   selectCancelList,
   selectCompleteList,
@@ -106,6 +107,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
   const waitingList = useSelector(selectWaitlist)
   const account_list = useSelector(selectAccoutList);
+  const conference_list = useSelector(selectConferenceList);
 
   const watingRoom_count = consultingList.count + reservationList.count + waitingList.count + account_list.count;
 
@@ -123,7 +125,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
-        duration: 30000,
+        duration: 10000,
         onScreen: true
       }
     });
@@ -151,6 +153,12 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   useEffect(() => {
     dispatch(setSessionId(sessionId))
   }, [sessionId])
+
+  // useEffect(() => {
+  //   if (count > 0) {
+  //     handleToast() 
+  //   }
+  // }, [count])
 
   // useEffect(() => {
   //   function is_true(element: any) {
@@ -249,11 +257,11 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
       const totalCount = 0 + waitingList?.count;
       setCount(totalCount)
     } else if (account_list.count !== undefined) {
-      const totalCount1 = account_list?.count + waitingList?.count;
+      const totalCount1 = account_list?.count + waitingList?.count + conference_list?.count;
       setCount(totalCount1)
     }
 
-  }, [account_list.count, waitingList.count])
+  }, [account_list.count, waitingList.count, conference_list.count])
 
   return (
     <>

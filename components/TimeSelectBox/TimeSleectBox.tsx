@@ -135,10 +135,8 @@ function TimeSleectBox(props: Iprops) {
     const [closeStatus, setCloseStatus] = useState<boolean>(false)
     const stop = useSelector(selectStopModal);
 
-    console.log("closeStatus", closeStatus);
-
     const open = () => setCloseStatus(true);
-    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")) };
+    const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")), dispatch(setAlertType('')) };
 
     const handleOpenStatus = (data: any) => {
         console.log("data", data)
@@ -178,6 +176,7 @@ function TimeSleectBox(props: Iprops) {
                         <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => {
                             // dispatch(setChatBoxOpenState("협의완료")),
                             dispatch(setCoustomAlert(true)),
+                                dispatch(setChatBoxOpenState("결제요청")),
                                 dispatch(setAlertType('협의완료')),
                                 handleOpenStatus2(),
                                 dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
@@ -210,7 +209,7 @@ function TimeSleectBox(props: Iprops) {
                     </Ul>
                 }
             </Arricle>
-            <BaseDialog2 showDialog={closeStatus} close={close} aria-label="팝업"
+            <BaseDialog2 showDialog={closeStatus} close={() => { console.log("팝업X") }} aria-label="팝업"
                 style={{
                     zIndex: 99,
                     marginTop: '18vh',

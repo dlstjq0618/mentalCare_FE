@@ -55,12 +55,22 @@ export const BankAccountInfoForm = (props: IProps) => {
   const bankInfoData = useSelector(selectCounselingInfoData);
 
   const [bankName, setBankName] = useState();
+  const [textValue, setTextValue] = useState("");
   const [accountNumber, setAccountNumber] = useState();
 
   //   useEffect(() => {
   //     setDayPrice(infoData.consultationFeeDay);
   //     setNightPrice(infoData.consultationFeeNight);
   // }, [infoData.consultationFeeDay, infoData.consultationFeeNight])
+
+  const onlyNumberText = (data: string) => {
+    setTextValue(data)
+    if (data) {
+      const replaceData = data.replace(/[^0-9]/g, "")
+      return setTextValue(replaceData)
+    }
+  };
+
 
   return (
     <>
@@ -145,11 +155,16 @@ export const BankAccountInfoForm = (props: IProps) => {
                 </Label>
                 <Div css={{ display: "flex", gap: rem(10) }}>
                   <Input
+                    value={textValue}
                     id="accountNumber"
-                    type="number"
+                    type='text'
                     usage="registerPage"
                     placeholder={bankInfoData?.accountInfo?.accountNumber}
-                    {...register("accountNumber")}
+                    {...register("accountNumber", {
+                      onChange: (e) => {
+                        onlyNumberText(e.target.value)
+                      }
+                    })}
                     css={{ width: rem(240), flex: "auto" }}
                   />
                 </Div>
@@ -239,11 +254,15 @@ export const BankAccountInfoForm = (props: IProps) => {
               </Label>
               <Div css={{ display: "flex", gap: rem(10) }}>
                 <Input
+                  value={textValue}
                   id="accountNumber"
-                  type="number"
+                  type='text'
                   usage="registerPage"
-                  placeholder="계좌번호를 입력해주세요"
-                  {...register("accountNumber")}
+                  {...register("accountNumber", {
+                    onChange: (e) => {
+                      onlyNumberText(e.target.value)
+                    }
+                  })}
                   css={{ width: rem(240), flex: "auto" }}
                 />
               </Div>
