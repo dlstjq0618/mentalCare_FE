@@ -120,7 +120,6 @@ export const LoginFormSection = () => {
       <div style={{ display: 'flex', alignSelf: 'center', marginBottom: '38.8px' }}>
         <Image src={counselorLogo} width={146.4} height={58.6} />
         <StyledInput style={{ fontSize: 10 }}>마음상담</StyledInput>
-        <div>스테이징</div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Div
