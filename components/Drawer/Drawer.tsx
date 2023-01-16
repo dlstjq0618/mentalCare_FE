@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount, setNonImmediateListCount, selectNonImmediateListCount } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount, setNonImmediateListCount, selectNonImmediateListCount, setPaidWaitList } from '~/store/calendarDetailSlice';
 import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -175,15 +175,22 @@ export default function TemporaryDrawer(props: IProps) {
         bottom: false,
         right: false,
     });
-    const [count, setCount] = useState(0); // 토탈 카운트 캘린더 + 대기실
+
+    const [totalCount, setTotalCount] = useState(0); // 바로상담 결제완료 + 대기자 토탈 대기자수
+    const [totalCount2, setTotalCount2] = useState(0); // 예약상담 결제완료  + 대기자수 
+
+
+
     const [waiting_count, setWaiting_count] = useState(0);
 
     const immediateCount = useSelector(selectImmediateListCount);
     const reservationCount = useSelector(selectNonImmediateListCount);
 
+    const [immediatePaidwait, setImmediatePaidWaitCount] = useState(0) // 바로상담 결제대기 대기자 수
+    const [reservationPaidwait, setReservationPaidwaitCount] = useState(0) // 예약상담 결제대기 대기자수
 
-    const [immediate_count, setImmediate_count] = useState(0) // 바로상담 대기자 수
-    const [reservation_count, setReservation_count] = useState(0) // 예약상담 대기자 수
+    const [immediateAccountCount, setImmediateAccountCount] = useState(0) // 바로상담 결제완료 대기자 수
+    const [reservationAccountCount, setReservationAccount] = useState(0) // 예약상담 결제완료 대기자 수
 
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
         if (data.isimmediate) {
@@ -198,19 +205,13 @@ export default function TemporaryDrawer(props: IProps) {
         }
     }
 
-
     useEffect(() => {
-        if (account_list.count === undefined) {
-            const totalCount = 0 + waitlist?.count;
-            setCount(totalCount)
-        } else if (account_list.count !== undefined) {
-            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count + paidWait_list?.count;
-            setCount(totalCount1)
-        }
+        setTotalCount(immediateAccountCount + immediateCount + immediatePaidwait);
+        setTotalCount2(reservationAccountCount + reservationCount + reservationPaidwait);
 
-    }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
+    })
 
-    useEffect(() => { // 대기상태 일때 바로상담과 예약상담 카운트 분리
+    useEffect(() => { // 결제완료 리스트 
         function is_true(element: any) {
             if (element.isimmediate === true) {
                 return true;
@@ -221,8 +222,35 @@ export default function TemporaryDrawer(props: IProps) {
                 return true;
             }
         }
+        const true_value = account_list.result?.filter(is_true);
+        const false_value = account_list.result?.filter(is_false);
+
+        setImmediateAccountCount(true_value?.length);
+        setReservationAccount(false_value?.length);
+
+        setWaiting_count(account_list.count - true_value?.length);
+        if (true_value?.length > 0) {
+            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
+        } else {
+            dispatch(setToggleButton(false));
+        }
+    }, [account_list])
+
+    useEffect(() => { // 결제대기 리스트
+        function is_true(element: any) {
+            if (element.isimmediate === true) {
+                return true;
+            }
+        }
+        function is_false(element: any) {
+            if (element.isimmediate === false) {
+                return true;
+            }
+        }
+
         const true_value = waitlist.result?.filter(is_true);
         const false_value = waitlist.result?.filter(is_false);
+
         dispatch(setImmediateListCount(true_value?.length));
         dispatch(setNonImmediateListCount(false_value?.length));
 
@@ -233,6 +261,31 @@ export default function TemporaryDrawer(props: IProps) {
             dispatch(setToggleButton(false));
         }
     }, [waitlist])
+
+    useEffect(() => { // 결제대기 리스트
+        function is_true(element: any) {
+            if (element.isimmediate === true) {
+                return true;
+            }
+        }
+        function is_false(element: any) {
+            if (element.isimmediate === false) {
+                return true;
+            }
+        }
+        const true_value = paidWait_list.result?.filter(is_true);
+        const false_value = paidWait_list.result?.filter(is_false);
+
+        setImmediatePaidWaitCount(true_value?.length);
+        setReservationPaidwaitCount(false_value?.length);
+
+        setWaiting_count(waitlist.count - true_value?.length);
+        if (true_value?.length > 0) {
+            dispatch(setToggleButton(true)); // 바로상담이 있을 때 버튼 disabled
+        } else {
+            dispatch(setToggleButton(false));
+        }
+    }, [paidWait_list])
 
 
     const [show, setShow] = useState(false);
@@ -291,7 +344,7 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? immediateCount : Number.isNaN(reservationCount) ? 0 : reservationCount}</div>건</Title>
+                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? totalCount : Number.isNaN(reservationCount) ? 0 : reservationCount}</div>건</Title>
                 {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 {/* <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 <ModalCloseIcon />
@@ -696,7 +749,7 @@ export default function TemporaryDrawer(props: IProps) {
                         바로상담 대기
                     </StyledSpan>&nbsp;&nbsp;&nbsp;
                     <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "바로상담 대기")}>
-                        {immediateCount === undefined ? 0 : immediateCount}
+                        {Number.isNaN(totalCount) ? 0 : totalCount}
                     </StyledSpan>
                     <StyledSpan size={30} count color='black'>
                         명
@@ -706,7 +759,7 @@ export default function TemporaryDrawer(props: IProps) {
                         예약상담 대기
                     </StyledSpan>&nbsp;&nbsp;&nbsp;
                     <StyledSpan underLine size={30} color='#eb541e' count onClick={toggleDrawer("right", true, "예약상담 대기")}>
-                        {reservationCount === undefined ? 0 : reservationCount}
+                        {Number.isNaN(totalCount2) ? 0 : totalCount2}
                     </StyledSpan>
                     <StyledSpan size={30} count color='black'>
                         명
