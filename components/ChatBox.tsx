@@ -80,8 +80,6 @@ import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
 import { CoustomAlertPopUp } from '../components/Dialog'
 
-import { HOST2 } from '~/woozooapi'
-
 interface IStyled {
     size?: any;
     bold?: string;
@@ -266,7 +264,6 @@ console.log("🚀 ~ file: _app.tsx:67 ~ useEffect ~ base64DecodedText", base64De
 // bo.dev.api.woozoo.clinic  개발
 // bo.stag.api 스테이징
 // bo.api 운영
-console.log("HOST2", HOST2);
 const socket = io("http://bo.api.woozoo.clinic", {
     // transports: ["websocket"],
     transports: ["polling"],
