@@ -78,7 +78,7 @@ import { format } from 'date-fns';
 import { async } from '@firebase/util';
 import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
-import { CoustomAlertPopUp } from './Dialog/AlertPopUp';
+import { CoustomAlertPopUp } from '../components/Dialog'
 
 interface IStyled {
     size?: any;

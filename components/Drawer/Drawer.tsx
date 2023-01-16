@@ -287,7 +287,7 @@ export default function TemporaryDrawer(props: IProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바오상담 대기" ? immediateCount : waiting_count}</div>건</Title>
+                <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{title === "바로상담 대기" ? immediateCount : Number.isNaN(waiting_count) ? 0 : waiting_count}</div>건</Title>
                 {/* <Title>{title} &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 {/* <Title>상담대기 &nbsp;<div style={{ color: "#eb541e" }}>{Number.isNaN(count) ? 0 : count}</div>건</Title> */}
                 <ModalCloseIcon />
