@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import styled, { css } from 'styled-components';
 import TemporaryDrawer from '../Drawer/Drawer';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectConferenceList, selectAccoutList, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
+import { selectConferenceList, selectAccoutList, selectPaidWaitLis, selectLoggedUser, selectSocketData, setCalendarMonthState, selectWaitlist, setChatBoxOpenState } from '~/store/calendarDetailSlice';
 
 interface IStyled {
     schedule?: boolean;
@@ -25,7 +25,7 @@ const Header = styled.header<IStyled>`
     justify-content: space-between;
     display: flex;
     background: #fff;
-    width: ${rem(900)};
+    width: ${rem(1050)};
     height: ${rem(60)};
     flex-grow: 0;
     margin: ${rem(30)} 0 ${rem(25)};
@@ -35,13 +35,14 @@ const Header = styled.header<IStyled>`
     ${(props) =>
         props.schedule === true &&
         css`
-    width: ${rem(900)};
+    width: ${rem(1050)};
     height: ${rem(90)};
     background-color:#f7f7f7;
-  flex-grow: 0;
-  padding: 20px 39px 20px 32px;
-  border-radius: 20px;
-  border: solid ${rem(2)} #eb541e;
+    flex-grow: 0;
+    padding: 20px 39px 20px 32px;
+    border-radius: 20px;
+    border: solid ${rem(2)} #eb541e;
+    justify-content: none;
     `}
 `;
 const StyledSpan = styled.span<IStyled>` 
@@ -56,6 +57,7 @@ const StyledSpan = styled.span<IStyled>`
         props.underLine === true &&
         css`
         border-bottom: 1px solid;
+        cursor: pointer;
     line-height: 1.2;
     `}
 `;
@@ -94,7 +96,7 @@ function CalendarHeader() {
     const account_list = useSelector(selectAccoutList);
     const [count, setCount] = useState(0);
     const conference_list = useSelector(selectConferenceList);
-
+    const paidWait_list = useSelector(selectPaidWaitLis);
     const close2 = () => setShow2(false);
     const open2 = () => setShow2(true);
     const handleDrawerOpen = () => setDrawerOpen(!drawerOpen)
@@ -118,18 +120,19 @@ function CalendarHeader() {
             const totalCount = 0 + waitlist?.count;
             setCount(totalCount)
         } else if (account_list.count !== undefined) {
-            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count;
+            const totalCount1 = account_list?.count + waitlist?.count + conference_list?.count + paidWait_list?.count;
             setCount(totalCount1)
         }
 
-    }, [account_list.count, waitlist.count, conference_list.count])
+    }, [account_list.count, waitlist.count, conference_list?.count, paidWait_list?.count])
 
     return (
         <>
-            <Header>
+            {/* <Header>
                 <Div>
                     <KeyboardArrowLeftIcon style={{ cursor: 'pointer' }} onClick={() => handlePrevMonth()} />
                     <KeyboardArrowRightIcon style={{ cursor: 'pointer' }} onClick={() => handleNextMonth()} />
+
                     <StyledDate>{dayjs(new Date(dayjs().year(), monthIndex)).format("YYYY.MM")}</StyledDate>
                     <StyledButton onClick={() => handleReset()}>
                         오늘
@@ -148,7 +151,31 @@ function CalendarHeader() {
                 <Div>
                     <TemporaryDrawer open={drawerOpen} name={"스케줄 등록"} />
                 </Div>
-            </Header>
+            </Header> */}
+            {/* <Header schedule={true}> 
+                <Div>
+                    <StyledSpan count size={20}>
+                        바로상담 대기
+                    </StyledSpan>&nbsp;&nbsp;&nbsp;
+                    <StyledSpan underLine size={30} color='#eb541e' count>
+                        {Number.isNaN(count) ? 0 : count}
+                    </StyledSpan>
+                    <StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <StyledSpan count size={20}>
+                        예약상담 대기
+                    </StyledSpan>&nbsp;&nbsp;&nbsp;
+                    <StyledSpan underLine size={30} color='#eb541e' count>
+                        {Number.isNaN(count) ? 0 : count}
+                    </StyledSpan>
+                    <StyledSpan size={30} count color='black'>
+                        명
+                    </StyledSpan>
+                </Div>
+            </Header> */}
+            <TemporaryDrawer open={drawerOpen} />
         </>
     );
 }
