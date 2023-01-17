@@ -140,7 +140,7 @@ export const RegisterPageLayout: FC = ({ children }) => {
             <BankAccountInfoForm />
             <TermsForm />
             <Input
-              css={{ marginTop: rem(20), cursor: "pointer" }}
+              css={{ marginBottom: rem(50), marginTop: rem(20), cursor: "pointer" }}
               type="submit"
               value="회원가입"
               usage="registerPage"
