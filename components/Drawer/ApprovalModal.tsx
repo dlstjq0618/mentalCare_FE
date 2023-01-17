@@ -225,6 +225,8 @@ function ApprovalModal(props: IProps) {
         }
     }
 
+    console.log("resultresult", result)
+
     return (
         <>
             <BaseDialog2 style={{

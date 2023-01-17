@@ -231,8 +231,8 @@ function Month(props: Iprops) {
                         {select_data.user_name}{" 님"}
                     </Text>
                     {
-                        result.datas?.subject_name ?
-                            <Text style={{ marginBottom: 0, color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
+                        result?.datas?.subject_name ?
+                            <Text style={{ marginBottom: 0, color: '#eb541e' }} size={15}>{result?.datas?.subject_name}</Text>
                             :
                             <Text style={{ marginBottom: 0 }} size={13} button onClick={open3}>
                                 테스트 결과보기

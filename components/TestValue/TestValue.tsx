@@ -57,7 +57,7 @@ function TestValue(props: Iprops) {
         <>
             <BaseDialog2 showDialog={props.open} close={props.cancel} style={{ width: `${rem(570)}`, padding: `${rem(40)}` }}>
                 <Text bold center size={20}>테스트 결과</Text>
-                {result.datas?.length > 0 && result?.datas?.map((res: any, index: number) => {
+                {result?.datas?.length > 0 && result?.datas?.map((res: any, index: number) => {
                     return <Text key={index} discription>
                         <Text size={15} bold>
                             {res?.question}
