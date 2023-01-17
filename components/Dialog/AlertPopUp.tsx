@@ -167,6 +167,13 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
         dispatch(setStopModal("null"))
         dispatch(setAlertType(''))
     }
+
+    async function handleConferenceDispatch() {
+        dispatch(setCoustomAlert(false));
+        await dispatch(setChatBoxOpenState("협의완료"));
+        dispatch(setAlertType(""));
+        dispatch(setChatBoxOpenState("결제요청"));
+    }
     return (
         type === '협의취소' ?
             <BaseDialog2 showDialog={open} close={() => handleClose()} aria-label="협의취소 팝업"
@@ -226,7 +233,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                     </Text>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <RoundedButton
-                            onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("협의완료")), dispatch(setAlertType("")) }}
+                            onClick={() => { handleConferenceDispatch() }}
                             color="orange"
                             css={{
                                 width: '100%',
