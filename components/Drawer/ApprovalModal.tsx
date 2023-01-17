@@ -238,8 +238,8 @@ function ApprovalModal(props: IProps) {
                         {select_user?.user_name} 님
                     </Text>
                     {
-                        result.datas?.subject_name ?
-                            <Text style={{ color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
+                        result?.datas?.subject_name ?
+                            <Text style={{ color: '#eb541e' }} size={15}>{result?.datas?.subject_name}</Text>
                             :
                             <Text size={13} button onClick={open3}>
                                 테스트 결과보기
