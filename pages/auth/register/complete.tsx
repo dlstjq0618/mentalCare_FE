@@ -122,6 +122,8 @@ export default function RegisterCompletedPage() {
             css={{ fontSize: rem(15), height: rem(50) }}
             onClick={() => {
               window.location.href = "https://dev.mentalcare.rocketdoctor.co.kr/auth/login";
+              window.location.href = `${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
+                "https://mentalcare.rocketdoctor.co.kr/auth/login" : "https://dev.mentalcare.rocketdoctor.co.kr/auth/login"}`
             }}
           >
             상담실 둘러보기
