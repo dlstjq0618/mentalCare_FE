@@ -403,10 +403,11 @@ function Month(props: Iprops) {
             </BaseDialog2>
             <BaseDialog2 showDialog={cancelModal} close={cancelClose} aria-label="취소 팝업"
                 style={{
-                    marginTop: '18vh',
+                    marginTop: '27vh',
                     width: `${rem(376)}`,
                     // height: `${rem(422)}`,
                     height: 'auto',
+                    marginLeft: "49%",
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
                 }}>
                 <Text center size={17} color={"#333"}>
