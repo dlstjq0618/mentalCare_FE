@@ -16,7 +16,7 @@ import { styled } from "~/stitches.config";
 
 const Overlay = styled(ReachDialogOverlay, {
   "&[data-reach-dialog-overlay]": {
-    zIndex: "3",
+    zIndex: "5",
     backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
 });
@@ -25,6 +25,8 @@ const Content = styled(ReachDialogContent, {
   position: "relative",
   "&[data-reach-dialog-content]": {
     width: rem(376),
+    marginTop: "10%",
+    marginLeft: "47%",
     "@bp1": {
       width: rem(436),
     },
@@ -71,7 +73,7 @@ export const BaseDialog: React.FC<Props & ComponentProps<typeof Content>> = ({
   ...props
 }) => {
   return (
-    <Overlay isOpen={showDialog}>
+    <Overlay isOpen={showDialog} >
       <Content {...props} aria-label="">
         <Div
           role="button"

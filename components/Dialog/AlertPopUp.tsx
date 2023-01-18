@@ -65,7 +65,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
             style={{
-                marginTop: '23vh',
+                marginTop: `${rem(400)}`,
                 width: `${rem(440)}`,
                 height: `auto`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,

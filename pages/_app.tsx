@@ -36,32 +36,6 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
-  const [isChatting, setIsChatting] = useState<any>([]);
-
-  // useEffect(() => {
-  //   console.log("RECAPTCHA_ENTERPRISE_SITE_KEY", RECAPTCHA_ENTERPRISE_SITE_KEY)
-  //   if (process.env.NODE_ENV !== "production") {
-  //     // @ts-ignore
-  //     // For dev/local env, we need to init debug mode
-  //     globalThis.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-  //   }
-
-  //   initializeAppCheck(firebaseApp, {
-  //     provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_ENTERPRISE_SITE_KEY),
-  //     isTokenAutoRefreshEnabled: true,
-  //   });
-
-  //   // Sign in firestore anonymously
-  //   const auth = getAuth();
-  //   signInAnonymously(auth)
-  //     .then(() => {
-  //       console.log("Sign in anonymously success.");
-  //     })
-  //     .catch((error) => {
-  //       console.log("code", error.code);
-  //     });
-  // }, []);
-
 
   return (
     <>
