@@ -25,8 +25,6 @@ const Content = styled(ReachDialogContent, {
   position: "relative",
   "&[data-reach-dialog-content]": {
     width: rem(376),
-    marginTop: "10%",
-    marginLeft: "47%",
     "@bp1": {
       width: rem(436),
     },

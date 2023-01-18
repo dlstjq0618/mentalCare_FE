@@ -224,7 +224,7 @@ function Month(props: Iprops) {
                 ))}
             </Divs>
 
-            <BaseDialog2 showDialog={immediate} close={close4} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
+            <BaseDialog2 showDialog={immediate} close={close4} aria-label="상담 팝업" style={{ marginLeft: '49vw', width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
                 <StepsBar current={1} />
                 <Div step>
                     <Text style={{ marginBottom: 0 }} size={20}>

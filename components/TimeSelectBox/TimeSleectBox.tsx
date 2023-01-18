@@ -215,6 +215,7 @@ function TimeSleectBox(props: Iprops) {
                     width: `${rem(500)}`,
                     // height: `${rem(422)}`,
                     height: 'auto',
+                    marginLeft: '49vw',
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
                 }}>
                 <Text center size={17} color={"#333"}>
