@@ -347,7 +347,6 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                         type === '상담취소' ?
                             <BaseDialog2 showDialog={open} close={() => handleClose()} aria-label="협의완료 팝업"
                                 style={{
-                                    marginTop: '23vh',
                                     width: `${rem(440)}`,
                                     height: `auto`,
                                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,

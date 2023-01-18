@@ -788,6 +788,7 @@ export default function BoxSx() {
     }
 
     async function handleCancel() {
+        console.log("상담취소 이벤트 보냄")
         socket.emit('counsel_submit', {
             method: 'room/cancel',
             datas: {
@@ -819,7 +820,7 @@ export default function BoxSx() {
         await dispatch(setChatBoxOpenState("null"))
     }
 
-    async function handlePaidWaitList() { // 결제요청
+    async function handlePaidWaitList() { // 결제요
         socket.emit('counsel_submit', {
             method: 'request/payment/confirm/immediate',
             datas: {
@@ -861,7 +862,7 @@ export default function BoxSx() {
         console.log("useOpen", useOpen);
     }, [useOpen])
 
-
+    console.log("selectUser", select_user)
 
 
     useEffect(() => {
@@ -887,11 +888,8 @@ export default function BoxSx() {
     useEffect(() => {
         if (cancel_status) {
             handleCancel();
-            console.log("xxxxx")
         }
     }, [cancel_status])
-
-
 
     useEffect(() => {
         if (!status_alert) {

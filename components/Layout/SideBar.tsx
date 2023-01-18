@@ -118,10 +118,10 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const handleToast = () => {
     Store.addNotification({
       title: "대기실",
-      message: "새로운 환자가 입장하였습니다.",
-      type: "success",
+      message: "새로운 내담자가 기다리고있습니다.",
+      type: "warning",
       insert: "bottom",
-      container: "bottom-right",
+      container: "bottom-left",
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
@@ -156,7 +156,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
 
   // useEffect(() => {
   //   if (count > 0) {
-  //     handleToast() 
+  //     handleToast()
   //   }
   // }, [count])
 
