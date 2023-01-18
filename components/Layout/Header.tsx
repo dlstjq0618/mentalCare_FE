@@ -92,6 +92,7 @@ const Header = ({ notificationsNo }: Props) => {
         </LinkComponent>
       </NavBar>
       <DialogWithCloseButton
+        style={{ marginTop: 0 }}
         aria-label="로그아웃 다이얼로그"
         showDialog={isOpen}
         close={() => {
