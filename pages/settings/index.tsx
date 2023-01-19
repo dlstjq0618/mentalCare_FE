@@ -26,6 +26,7 @@ import { api } from "~/woozooapi";
 import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
 import { selectCounselingInfoData, selectPriceZreo, selectSettingSaveControlls, setChatBoxOpenState } from "~/store/calendarDetailSlice";
 import PriceGrid from "~/components/Grid/PriceGrid";
+import { RowAndColumnSpacing } from "~/components/Grid/Grid";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -185,6 +186,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 <RegisterForm onSubmit={methods.handleSubmit(onSubmit)} style={{ position: 'sticky', zIndex: 1 }}>
                     <SettingInfoForm />
                     <PriceGrid />
+                    <RowAndColumnSpacing />
                     <BankAccountInfoForm title={true} />
                     <OpeningTimeForm />
                     <Div css={{

@@ -7,22 +7,55 @@ import styled, { css } from 'styled-components';
 import { useFormContext } from "react-hook-form";
 import { useSelector } from 'react-redux';
 import { selectCounselingInfoData } from '~/store/calendarDetailSlice';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface IStyled {
   button?: boolean;
+  width?: number;
+  bottom?: number;
 }
+
+const InfoGrid = styled.div<IStyled>`
+  ${(props) =>
+    props.width &&
+    css`
+        width: ${rem(props.width)};
+    `}
+    padding: ${rem(50)} ${rem(150)};
+    height: auto;
+    flex-grow: 0;
+    border-radius: 20px;
+    background-color: #fff;
+    margin-top: 1.875rem;
+`;
+
+const Text = styled.div<IStyled>`
+    box-shadow: 'none';
+    text-align: center;
+    display: flex;
+    color: #666;
+    ${(props) =>
+    props.bottom &&
+    css`
+        margin-bottom: ${rem(props.bottom)};
+    `}
+`;
 
 
 const Item = styled.div<IStyled>`
   border: 1px solid lightgray;
   text-align: center;
-  height: ${rem(35)};
-  padding: ${rem(4.5)};
+  width: ${rem(165)};
+  height: ${rem(50)};
+  padding: ${rem(14.5)} ${rem(24)};
   border-radius: 35px;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
   ${(props) =>
     props.button &&
     css`
-        color: #eb541e;
+        color: #333;
         border: 1px solid #eb541e;
     `}
 `;
@@ -174,36 +207,66 @@ export function RowAndColumnSpacing() {
 
 
   return (
-    <Box sx={{ width: '100%', cursor: 'pointer', marginTop: "1.84375rem" }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={4}>
-          <Item button={checked} onClick={() => { setChecked(!checked), handleCheckControlls(1) }}>대인관계</Item>
+    <InfoGrid width={900}>
+      <Text bottom={30} style={{ fontSize: 18, lineHeight: 1.4, color: '#333', fontWeight: 'bold' }}>상담과목</Text>
+      <Box sx={{ width: '100%', cursor: 'pointer', marginTop: "1.84375rem" }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid item xs={4}>
+            <Item button={checked} onClick={() => { setChecked(!checked), handleCheckControlls(1) }}>
+              대인관계
+              <CheckIcon style={{ paddingBottom: 4, color: checked ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked1} onClick={() => { setChecked1(!checked1), handleCheckControlls2(2) }}>
+              가족/육아
+              <CheckIcon style={{ paddingBottom: 4, color: checked1 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked2} onClick={() => { setChecked2(!checked2), handleCheckControlls3(3) }}>
+              진로/직장
+              <CheckIcon style={{ paddingBottom: 4, color: checked2 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked3} onClick={() => { setChecked3(!checked3), handleCheckControlls4(4) }}>
+              트라우마
+              <CheckIcon style={{ paddingBottom: 4, color: checked3 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked4} onClick={() => { setChecked4(!checked4), handleCheckControlls5(5) }}>
+              고민상담
+              <CheckIcon style={{ paddingBottom: 4, color: checked4 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked5} onClick={() => { setChecked5(!checked5), handleCheckControlls6(6) }}>
+              연애/결혼
+              <CheckIcon style={{ paddingBottom: 4, color: checked5 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked6} onClick={() => { setChecked6(!checked6), handleCheckControlls7(7) }}>
+              청소년
+              <CheckIcon style={{ paddingBottom: 4, color: checked6 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked7} onClick={() => { setChecked7(!checked7), handleCheckControlls8(8) }}>
+              불안/우울
+              <CheckIcon style={{ paddingBottom: 4, color: checked7 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item button={checked8} onClick={() => { setChecked8(!checked8), handleCheckControlls9(9) }}>
+              자존감
+              <CheckIcon style={{ paddingBottom: 4, color: checked8 ? "#eb541e" : "#eee" }} />
+            </Item>
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Item button={checked1} onClick={() => { setChecked1(!checked1), handleCheckControlls2(2) }}>가족/육아</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked2} onClick={() => { setChecked2(!checked2), handleCheckControlls3(3) }}>진로/직장</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked3} onClick={() => { setChecked3(!checked3), handleCheckControlls4(4) }}>트라우마</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked4} onClick={() => { setChecked4(!checked4), handleCheckControlls5(5) }}>고민상담</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked5} onClick={() => { setChecked5(!checked5), handleCheckControlls6(6) }}>연애/결혼</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked6} onClick={() => { setChecked6(!checked6), handleCheckControlls7(7) }}>청소년</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked7} onClick={() => { setChecked7(!checked7), handleCheckControlls8(8) }}>불안/우울</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item button={checked8} onClick={() => { setChecked8(!checked8), handleCheckControlls9(9) }}>자존감</Item>
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </InfoGrid>
   );
 }

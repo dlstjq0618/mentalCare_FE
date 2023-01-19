@@ -544,7 +544,7 @@ function SettingInfoForm(props: IProps) {
                     />
                 </StyledDiv>
 
-                <StyledDiv>
+                {/* <StyledDiv>
                     <Label
                         htmlFor="PmPrice"
                         css={{
@@ -563,7 +563,7 @@ function SettingInfoForm(props: IProps) {
                     <div style={{ width: `${rem(470)}` }}>
                         <RowAndColumnSpacing />
                     </div>
-                </StyledDiv>
+                </StyledDiv> */}
             </InfoGrid>
         </>
     );
