@@ -79,6 +79,8 @@ import { async } from '@firebase/util';
 import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
 import { CoustomAlertPopUp } from '../components/Dialog';
+import Draggable from "react-draggable";
+
 interface IStyled {
     size?: any;
     bold?: string;
@@ -334,6 +336,37 @@ export default function BoxSx() {
     const [time, setTime] = useState(0);
     const [count_start, setCount_start] = useState(0);
     const default_count = useSelector(selectTimeCount);
+
+    const nodeRef = useRef(null);
+
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [position2, setPosition2] = useState({ x: 50, y: 50 });
+
+    const [Opacity, setOpacity] = useState(false);
+    const [Opacity2, setOpacity2] = useState(false);
+
+    const trackPos = (data: any) => {
+        setPosition({ x: data.x, y: data.y });
+    };
+
+    const trackPos2 = (data: any) => {
+        setPosition2({ x: data.x, y: data.y });
+    };
+
+    const handleStart = () => {
+        setOpacity(true);
+    };
+    const handleEnd = () => {
+        setOpacity(false);
+    };
+
+    const handleStart2 = () => {
+        setOpacity2(true);
+    };
+    const handleEnd2 = () => {
+        setOpacity2(false);
+    };
+
 
 
 
@@ -949,252 +982,31 @@ export default function BoxSx() {
     }, [time_count])
 
 
-
     return (
         <>
-            {
-                counselingStatus === 'finish' ?
-                    <div>
-                        <MuiBox
-                            sx={{
-                                zIndex: 1,
-                                boxShadow: `3px 2px 5px black;`,
-                                width: 500,
-                                maxWidth: rem(500),
-                                maxHeight: rem(1000),
-                                Height: rem(1000),
-                                position: 'absolute',
-                                bottom: rem(20),
-                                right: 30,
-                                backgroundColor: 'lightgray',
-                            }}
-                        >
-                            <Div type='main'>
-                                <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-
-                                    <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                        <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(완료)
-                                    </Text>
-                                    <TimeSleectBox />
-                                </Div>
-                                <Text style={{ overflow: 'auto', minHeight: 700 }}>
-                                    <Div type='time' >
-                                        <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
-                                        {/* <Text size={12} type='button' color='#e8440a'>
-                                            상담 경과 44:15 
-                                        </Text> */}
-                                    </Div>
-                                    <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
-                                        {
-                                            finish_chat?.map((res: any, index: number) => (
-                                                <>
-                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                        {
-                                                            res?.type === 'receve' ?
-                                                                <>
-                                                                    <Text type='name'>{select_user?.user_name}</Text>
-                                                                    <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
-                                                                        <Div bg='#ffffe7' type="right">
-                                                                            {res?.message}
-                                                                        </Div>.
-                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                            {format(new Date(res?.time), 'a hh:mm')}
-                                                                        </Div>
-                                                                    </Div>
-
-                                                                </>
-                                                                :
-                                                                res?.type === 'send' ?
-                                                                    <Div type='chat'>
-                                                                        <div />
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                {res?.time && format(new Date(res?.time), 'a hh:mm')}
-                                                                            </Div>
-                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                {res?.message}
-                                                                            </Div>
-                                                                        </Div>
-                                                                    </Div>
-                                                                    : ""
-                                                        }
-                                                    </div>
-                                                    {/* <div ref={messageEndRef} /> */}
-                                                </>
-                                            ))
-                                        }
-                                        {
-                                            <Text type='finish'>
-                                                ----상담이 완료 되었습니다.----
-                                            </Text>
-                                        }
-                                    </Div>
-                                </Text>
-                                <Text height={40}>
-                                    <Box sx={{
-                                        display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
-                                    }}>
-                                        <FormControl sx={{
-                                            m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
-                                            '& fieldset': { top: 0 },
-                                        }} variant="outlined">
-                                            <OutlinedInput
-                                                style={{ height: 40 }}
-                                                disabled={true}
-                                                placeholder={"상담이 완료 되었습니다."}
-                                                id="outlined-adornment-password"
-                                                value={state.message}
-                                                label={"none"}
-                                                size={"small"}
-                                                autoComplete={"off"}
-                                                // onKeyPress={handleEnter}
-                                                // onKeyPress={handleTest}
-                                                onChange={(e) => setState({ message: e.target.value })}
-                                                endAdornment={
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            style={{
-                                                                background: "#c4c4c4", color: "white",
-                                                                marginRight: "-11.2px", width: "35px", height: "35px"
-                                                            }}
-                                                            onMouseDown={handleMouseDownPassword}
-                                                            edge="end"
-                                                        >
-                                                            <ArrowUpwardIcon />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                }
-                                            />
-                                        </FormControl>
-                                    </Box>
-                                </Text>
-                            </Div>
-                        </MuiBox>
-                    </div>
-                    :
-                    useOpen === '시작' ?
-                        <div>
-                            <MuiBox
-                                sx={{
-                                    zIndex: 1,
-                                    boxShadow: `3px 2px 5px black;`,
-                                    width: 500,
-                                    maxWidth: 500,
-                                    maxHeight: rem(1000),
-                                    Height: rem(1000),
-                                    position: 'absolute',
-                                    bottom: rem(20),
-                                    right: 30,
-                                    backgroundColor: 'lightgray',
-                                }}
-                            >
-                                <Div type='main'>
-                                    <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-                                        <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                            <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(시작)
-                                        </Text>
-                                        <div style={{ display: 'flex' }}>
-                                            {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
-                                            <TimeSleectBox />
-                                        </div>
-                                    </Div>
-                                    <Text style={{ overflow: 'auto', minHeight: 700 }}>
-                                        <Div type='time' >
-                                            {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
-                                            <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
-                                        </Div>
-                                        <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
-                                            {
-                                                isMessage && isMessage?.map((res: any, index: number) => (
-                                                    <>
-                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                            {
-                                                                res?.type === 'receve' ?
-                                                                    <>
-                                                                        <Text type='name'>{select_user?.user_name}</Text>
-                                                                        <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
-                                                                            <Div bg='#ffffe7' type="right">
-                                                                                {res?.message}
-                                                                            </Div>
-                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                {res?.timestr ? res?.timestr : format(new Date(res?.time), 'a hh:mm')}
-                                                                            </Div>
-                                                                        </Div>
-                                                                    </>
-                                                                    :
-                                                                    res?.type === 'send' ?
-                                                                        <Div type='chat'>
-                                                                            <div />
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                    {res?.time && format(new Date(res?.time), 'a hh:mm')}
-                                                                                </Div>
-                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                    {res?.message}
-                                                                                </Div>
-                                                                            </Div>
-                                                                        </Div> : ""
-                                                            }
-                                                        </div>
-                                                        <div ref={messageEndRef} />
-                                                    </>
-                                                ))
-
-                                            }
-                                        </Div>
-                                    </Text>
-                                    <Text height={40}>
-                                        <Box sx={{
-                                            display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
-                                        }}>
-                                            <FormControl sx={{
-                                                m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
-                                                '& fieldset': { top: 0 },
-                                            }} variant="outlined">
-                                                <OutlinedInput
-                                                    style={{ height: 40 }}
-                                                    id="outlined-adornment-password"
-                                                    value={state.message}
-                                                    label={"none"}
-                                                    size={"small"}
-                                                    autoComplete={"off"}
-                                                    onKeyPress={handleEnter}
-                                                    // onKeyPress={handleTest}
-                                                    onChange={(e) => setState({ message: e.target.value })}
-                                                    endAdornment={
-                                                        <InputAdornment position="end">
-                                                            <IconButton
-                                                                style={{
-                                                                    background: "#e8440a",
-                                                                    color: "white",
-                                                                    marginRight: "-11.2px", width: "35px", height: "35px"
-                                                                }}
-                                                                onMouseDown={handleMouseDownPassword}
-                                                                edge="end"
-                                                            >
-                                                                <ArrowUpwardIcon />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    }
-                                                />
-                                            </FormControl>
-                                        </Box>
-                                    </Text>
-                                </Div>
-                            </MuiBox>
-                        </div>
-                        : useOpen === '협의' ?
+            <Draggable
+                nodeRef={nodeRef}
+                onDrag={(e, data) => trackPos(data)}
+                onStart={handleStart}
+                onStop={handleEnd}
+            >
+                <div
+                    ref={nodeRef}
+                    className="box"
+                    style={{ opacity: Opacity ? "0.6" : "1" }}
+                >
+                    {
+                        counselingStatus === 'finish' ?
                             <div>
                                 <MuiBox
                                     sx={{
                                         zIndex: 1,
                                         boxShadow: `3px 2px 5px black;`,
                                         width: 500,
-                                        maxWidth: 500,
+                                        maxWidth: rem(500),
                                         maxHeight: rem(1000),
                                         Height: rem(1000),
-                                        position: 'absolute',
+                                        position: 'fixed',
                                         bottom: rem(20),
                                         right: 30,
                                         backgroundColor: 'lightgray',
@@ -1202,37 +1014,37 @@ export default function BoxSx() {
                                 >
                                     <Div type='main'>
                                         <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-                                            <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
-                                                <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
+
+                                            <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
+                                                <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(완료)
                                             </Text>
-                                            <div style={{ display: 'flex' }}>
-                                                <Button style={{ width: `${rem(90)}`, marginRight: `${rem(-10)}` }} onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
-                                                <TimeSleectBox first />
-                                            </div>
+                                            <TimeSleectBox />
                                         </Div>
-                                        <CoustomAlertPopUp />
                                         <Text style={{ overflow: 'auto', minHeight: 700 }}>
                                             <Div type='time' >
-                                                <Text size={13} color='#b53e14' >{"일정을 협의해 주세요."}</Text>
+                                                <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
+                                                {/* <Text size={12} type='button' color='#e8440a'>
+                                            상담 경과 44:15 
+                                        </Text> */}
                                             </Div>
                                             <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                 {
-                                                    isMessage?.map((res: any, index: number) => (
+                                                    finish_chat?.map((res: any, index: number) => (
                                                         <>
                                                             <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
                                                                 {
                                                                     res?.type === 'receve' ?
                                                                         <>
-                                                                            <Text type='name'>{before_wating.user_name}</Text>
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
+                                                                            <Text type='name'>{select_user?.user_name}</Text>
+                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
                                                                                 <Div bg='#ffffe7' type="right">
                                                                                     {res?.message}
-                                                                                </Div>
+                                                                                </Div>.
                                                                                 <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                    {res?.timestr}
+                                                                                    {format(new Date(res?.time), 'a hh:mm')}
                                                                                 </Div>
                                                                             </Div>
+
                                                                         </>
                                                                         :
                                                                         res?.type === 'send' ?
@@ -1240,7 +1052,6 @@ export default function BoxSx() {
                                                                                 <div />
                                                                                 <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                     <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                        {/* {res?.time} */}
                                                                                         {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                                     </Div>
                                                                                     <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
@@ -1248,24 +1059,17 @@ export default function BoxSx() {
                                                                                     </Div>
                                                                                 </Div>
                                                                             </Div>
-                                                                            :
-                                                                            res === undefined ?
-                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
-                                                                                    <Div bg='#ffffe7' type="right">
-                                                                                        {`${before_wating.user_name} 님이 입장하셨습니다.`}
-                                                                                    </Div>
-                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                        {/* {format(res.datas?.time, 'a hh:mm')} */}
-                                                                                        {res?.timestr}
-                                                                                    </Div>
-                                                                                </Div>
-                                                                                : ""
+                                                                            : ""
                                                                 }
                                                             </div>
-                                                            <div ref={messageEndRef} />
+                                                            {/* <div ref={messageEndRef} /> */}
                                                         </>
                                                     ))
-
+                                                }
+                                                {
+                                                    <Text type='finish'>
+                                                        ----상담이 완료 되었습니다.----
+                                                    </Text>
                                                 }
                                             </Div>
                                         </Text>
@@ -1279,22 +1083,24 @@ export default function BoxSx() {
                                                 }} variant="outlined">
                                                     <OutlinedInput
                                                         style={{ height: 40 }}
+                                                        disabled={true}
+                                                        placeholder={"상담이 완료 되었습니다."}
                                                         id="outlined-adornment-password"
                                                         value={state.message}
                                                         label={"none"}
                                                         size={"small"}
                                                         autoComplete={"off"}
-                                                        onKeyPress={handleFirstEnter}
+                                                        // onKeyPress={handleEnter}
+                                                        // onKeyPress={handleTest}
                                                         onChange={(e) => setState({ message: e.target.value })}
                                                         endAdornment={
                                                             <InputAdornment position="end">
                                                                 <IconButton
                                                                     style={{
-                                                                        background: "#e8440a",
-                                                                        color: "white",
+                                                                        background: "#c4c4c4", color: "white",
                                                                         marginRight: "-11.2px", width: "35px", height: "35px"
                                                                     }}
-                                                                    onMouseDown={handleMouseFirstDownPassword}
+                                                                    onMouseDown={handleMouseDownPassword}
                                                                     edge="end"
                                                                 >
                                                                     <ArrowUpwardIcon />
@@ -1309,17 +1115,17 @@ export default function BoxSx() {
                                 </MuiBox>
                             </div>
                             :
-                            useOpen === '진행' ?
+                            useOpen === '시작' ?
                                 <div>
                                     <MuiBox
                                         sx={{
                                             zIndex: 1,
                                             boxShadow: `3px 2px 5px black;`,
-                                            width: rem(500),
+                                            width: 500,
                                             maxWidth: 500,
                                             maxHeight: rem(1000),
                                             Height: rem(1000),
-                                            position: 'absolute',
+                                            position: 'fixed',
                                             bottom: rem(20),
                                             right: 30,
                                             backgroundColor: 'lightgray',
@@ -1328,7 +1134,7 @@ export default function BoxSx() {
                                         <Div type='main'>
                                             <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                                 <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
-                                                    <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{userName}</div></div>(진행)
+                                                    <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(시작)
                                                 </Text>
                                                 <div style={{ display: 'flex' }}>
                                                     {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
@@ -1342,58 +1148,42 @@ export default function BoxSx() {
                                                 </Div>
                                                 <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
                                                     {
-                                                        isMessage?.map((res: any, index: number) => (
+                                                        isMessage && isMessage?.map((res: any, index: number) => (
                                                             <>
-                                                                {
-                                                                    res?.type === 'receve' ?
-                                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                            <Text type='name'>{userName}</Text>
-                                                                            <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
-                                                                                <Div bg='#ffffe7' type="right">
-                                                                                    {res?.message}
+                                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                    {
+                                                                        res?.type === 'receve' ?
+                                                                            <>
+                                                                                <Text type='name'>{select_user?.user_name}</Text>
+                                                                                <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
+                                                                                    <Div bg='#ffffe7' type="right">
+                                                                                        {res?.message}
+                                                                                    </Div>
+                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                        {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                        {res?.timestr ? res?.timestr : format(new Date(res?.time), 'a hh:mm')}
+                                                                                    </Div>
                                                                                 </Div>
-                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                    {res?.timestr ? res?.timestr : res?.time && format(new Date(res?.time), 'a hh:mm')}
-                                                                                </Div>
-                                                                            </Div>
-                                                                        </div>
-                                                                        :
-                                                                        res?.type === 'send' ?
-                                                                            <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                            </>
+                                                                            :
+                                                                            res?.type === 'send' ?
                                                                                 <Div type='chat'>
                                                                                     <div />
                                                                                     <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
                                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                            {format(new Date(res?.time), 'a hh:mm')}
+                                                                                            {res?.time && format(new Date(res?.time), 'a hh:mm')}
                                                                                         </Div>
                                                                                         <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
                                                                                             {res?.message}
                                                                                         </Div>
                                                                                     </Div>
-                                                                                </Div>
-                                                                            </div>
-                                                                            :
-                                                                            res?.type === 'noti' ?
-                                                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
-                                                                                    <Div type='chat'>
-                                                                                        <div />
-                                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
-                                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
-                                                                                                {format(new Date(res?.time), 'a hh:mm')}
-                                                                                            </Div>
-                                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
-                                                                                                {res?.message}
-                                                                                            </Div>
-                                                                                        </Div>
-                                                                                    </Div>
-                                                                                </div>
-                                                                                :
-                                                                                console.log("다른것")
-                                                                }
-                                                                < div ref={messageEndRef} />
+                                                                                </Div> : ""
+                                                                    }
+                                                                </div>
+                                                                <div ref={messageEndRef} />
                                                             </>
-
                                                         ))
+
                                                     }
                                                 </Div>
                                             </Text>
@@ -1436,8 +1226,264 @@ export default function BoxSx() {
                                             </Text>
                                         </Div>
                                     </MuiBox>
-                                </div> : ""
-            }
+                                </div>
+                                : useOpen === '협의' ?
+                                    <div>
+                                        <MuiBox
+                                            sx={{
+                                                zIndex: 1,
+                                                boxShadow: `3px 2px 5px black;`,
+                                                width: 500,
+                                                maxWidth: 500,
+                                                maxHeight: rem(1000),
+                                                Height: rem(1000),
+                                                position: 'fixed',
+                                                bottom: rem(20),
+                                                right: 30,
+                                                backgroundColor: 'lightgray',
+                                            }}
+                                        >
+                                            <Div type='main'>
+                                                <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                                    <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
+                                                        <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
+                                                    </Text>
+                                                    <div style={{ display: 'flex' }}>
+                                                        <Button style={{ width: `${rem(90)}`, marginRight: `${rem(-10)}` }} onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
+                                                        <TimeSleectBox first />
+                                                    </div>
+                                                </Div>
+                                                <CoustomAlertPopUp />
+                                                <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                                    <Div type='time' >
+                                                        <Text size={13} color='#b53e14' >{"일정을 협의해 주세요."}</Text>
+                                                    </Div>
+                                                    <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
+                                                        {
+                                                            isMessage?.map((res: any, index: number) => (
+                                                                <>
+                                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                        {
+                                                                            res?.type === 'receve' ?
+                                                                                <>
+                                                                                    <Text type='name'>{before_wating.user_name}</Text>
+                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
+                                                                                        <Div bg='#ffffe7' type="right">
+                                                                                            {res?.message}
+                                                                                        </Div>
+                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                            {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                            {res?.timestr}
+                                                                                        </Div>
+                                                                                    </Div>
+                                                                                </>
+                                                                                :
+                                                                                res?.type === 'send' ?
+                                                                                    <Div type='chat'>
+                                                                                        <div />
+                                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                                {/* {res?.time} */}
+                                                                                                {res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                                            </Div>
+                                                                                            <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                                {res?.message}
+                                                                                            </Div>
+                                                                                        </Div>
+                                                                                    </Div>
+                                                                                    :
+                                                                                    res === undefined ?
+                                                                                        <Div style={{ display: "flex", marginBottom: `${rem(10)}`, marginTop: `${rem(7)}` }}>
+                                                                                            <Div bg='#ffffe7' type="right">
+                                                                                                {`${before_wating.user_name} 님이 입장하셨습니다.`}
+                                                                                            </Div>
+                                                                                            <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                                {/* {format(res.datas?.time, 'a hh:mm')} */}
+                                                                                                {res?.timestr}
+                                                                                            </Div>
+                                                                                        </Div>
+                                                                                        : ""
+                                                                        }
+                                                                    </div>
+                                                                    <div ref={messageEndRef} />
+                                                                </>
+                                                            ))
+
+                                                        }
+                                                    </Div>
+                                                </Text>
+                                                <Text height={40}>
+                                                    <Box sx={{
+                                                        display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
+                                                    }}>
+                                                        <FormControl sx={{
+                                                            m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
+                                                            '& fieldset': { top: 0 },
+                                                        }} variant="outlined">
+                                                            <OutlinedInput
+                                                                style={{ height: 40 }}
+                                                                id="outlined-adornment-password"
+                                                                value={state.message}
+                                                                label={"none"}
+                                                                size={"small"}
+                                                                autoComplete={"off"}
+                                                                onKeyPress={handleFirstEnter}
+                                                                onChange={(e) => setState({ message: e.target.value })}
+                                                                endAdornment={
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            style={{
+                                                                                background: "#e8440a",
+                                                                                color: "white",
+                                                                                marginRight: "-11.2px", width: "35px", height: "35px"
+                                                                            }}
+                                                                            onMouseDown={handleMouseFirstDownPassword}
+                                                                            edge="end"
+                                                                        >
+                                                                            <ArrowUpwardIcon />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                }
+                                                            />
+                                                        </FormControl>
+                                                    </Box>
+                                                </Text>
+                                            </Div>
+                                        </MuiBox>
+                                    </div>
+                                    :
+                                    useOpen === '진행' ?
+                                        <div>
+                                            <MuiBox
+                                                sx={{
+                                                    zIndex: 1,
+                                                    boxShadow: `3px 2px 5px black;`,
+                                                    width: rem(500),
+                                                    maxWidth: 500,
+                                                    maxHeight: rem(1000),
+                                                    Height: rem(1000),
+                                                    position: 'fixed',
+                                                    bottom: rem(20),
+                                                    right: 30,
+                                                    backgroundColor: 'lightgray',
+                                                }}
+                                            >
+                                                <Div type='main'>
+                                                    <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                                        <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
+                                                            <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{userName}</div></div>(진행)
+                                                        </Text>
+                                                        <div style={{ display: 'flex' }}>
+                                                            {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
+                                                            <TimeSleectBox />
+                                                        </div>
+                                                    </Div>
+                                                    <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                                        <Div type='time' >
+                                                            {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
+                                                            <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
+                                                        </Div>
+                                                        <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
+                                                            {
+                                                                isMessage?.map((res: any, index: number) => (
+                                                                    <>
+                                                                        {
+                                                                            res?.type === 'receve' ?
+                                                                                <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                                    <Text type='name'>{userName}</Text>
+                                                                                    <Div style={{ display: "flex", marginBottom: `${rem(25)}`, marginTop: `${rem(7)}` }}>
+                                                                                        <Div bg='#ffffe7' type="right">
+                                                                                            {res?.message}
+                                                                                        </Div>
+                                                                                        <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
+                                                                                            {res?.timestr ? res?.timestr : res?.time && format(new Date(res?.time), 'a hh:mm')}
+                                                                                        </Div>
+                                                                                    </Div>
+                                                                                </div>
+                                                                                :
+                                                                                res?.type === 'send' ?
+                                                                                    <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                                        <Div type='chat'>
+                                                                                            <div />
+                                                                                            <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                                <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                                    {format(new Date(res?.time), 'a hh:mm')}
+                                                                                                </Div>
+                                                                                                <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                                    {res?.message}
+                                                                                                </Div>
+                                                                                            </Div>
+                                                                                        </Div>
+                                                                                    </div>
+                                                                                    :
+                                                                                    res?.type === 'noti' ?
+                                                                                        <div key={index} style={{ marginBottom: "25px", margin: "0 14px" }}>
+                                                                                            <Div type='chat'>
+                                                                                                <div />
+                                                                                                <Div style={{ display: "flex", marginBottom: `${rem(10)}` }}>
+                                                                                                    <Div style={{ margin: `auto ${rem(6)} ${rem(0)}`, textAlign: 'right' }}>
+                                                                                                        {format(new Date(res?.time), 'a hh:mm')}
+                                                                                                    </Div>
+                                                                                                    <Div type='left' bg='white' style={{ maxHeight: 'auto', height: 'auto' }} >
+                                                                                                        {res?.message}
+                                                                                                    </Div>
+                                                                                                </Div>
+                                                                                            </Div>
+                                                                                        </div>
+                                                                                        :
+                                                                                        console.log("다른것")
+                                                                        }
+                                                                        < div ref={messageEndRef} />
+                                                                    </>
+
+                                                                ))
+                                                            }
+                                                        </Div>
+                                                    </Text>
+                                                    <Text height={40}>
+                                                        <Box sx={{
+                                                            display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
+                                                        }}>
+                                                            <FormControl sx={{
+                                                                m: 0, width: '100%', '& legend': { display: 'none', borderRadius: 'none' },
+                                                                '& fieldset': { top: 0 },
+                                                            }} variant="outlined">
+                                                                <OutlinedInput
+                                                                    style={{ height: 40 }}
+                                                                    id="outlined-adornment-password"
+                                                                    value={state.message}
+                                                                    label={"none"}
+                                                                    size={"small"}
+                                                                    autoComplete={"off"}
+                                                                    onKeyPress={handleEnter}
+                                                                    // onKeyPress={handleTest}
+                                                                    onChange={(e) => setState({ message: e.target.value })}
+                                                                    endAdornment={
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                style={{
+                                                                                    background: "#e8440a",
+                                                                                    color: "white",
+                                                                                    marginRight: "-11.2px", width: "35px", height: "35px"
+                                                                                }}
+                                                                                onMouseDown={handleMouseDownPassword}
+                                                                                edge="end"
+                                                                            >
+                                                                                <ArrowUpwardIcon />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    }
+                                                                />
+                                                            </FormControl>
+                                                        </Box>
+                                                    </Text>
+                                                </Div>
+                                            </MuiBox>
+                                        </div> : ""
+                    }
+                </div>
+            </Draggable>
+
         </>
     );
 }

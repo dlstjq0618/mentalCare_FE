@@ -30,18 +30,20 @@ const { Content } = Layout;
 const LayoutComponent: FC = ({ children }) => {
 
   return (
-    <GlobalMaxWidthWrapper>
-      <MainLayout>
-        <Layout hasSider>
-          <SideBar />
-          <Layout>
-            <Header notificationsNo={0} />
-            <Content id="content">{children}</Content>
+    <>
+      <GlobalMaxWidthWrapper>
+        <MainLayout>
+          <Layout hasSider>
+            <SideBar />
+            <Layout>
+              <Header notificationsNo={0} />
+              <Content id="content">{children}</Content>
+            </Layout>
           </Layout>
-        </Layout>
-      </MainLayout>
-      <GlobalFooter />
-    </GlobalMaxWidthWrapper>
+        </MainLayout>
+        <GlobalFooter />
+      </GlobalMaxWidthWrapper>
+    </>
   );
 };
 
