@@ -368,7 +368,7 @@ export default function BoxSx() {
     };
 
 
-
+    console.log('count_start', count_start);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -398,7 +398,6 @@ export default function BoxSx() {
                     break;
                 case "chat": ; break;
                 case "payment/user/ok": ; // 사용자 결제 완료시 
-                    console.log('사용자 결제 정보 받음', res.datas);
                     // setUserPaymentList([...userPaymentList, res.datas]); // payment
                     dispatch(setSocketData(waitingIofo));
                     setUser_name(res.datas.user_name);
@@ -408,14 +407,11 @@ export default function BoxSx() {
                 case "room/chat/list":
                     const chatList = res.datas?.list // 이전대화 리스트
                     const historyList = res.datas?.list[0]
-                    console.log("chatList", chatList)
                     setFinishChat(chatList); // 이전대화 목록이 들어간다.
                     dispatch(setHistoryChat(historyList));
                     dispatch(setFinishChatList(chatList));
-                    // setIsMessage([...isMessage, ...chatList]); // 기존 배열에 이전 대화 리스트 들어간다.
                     setIsMessage(chatList)
                     setTime_count(res.datas?.start_time);
-                // console.log("chatList", chatList);
 
             }
         })
@@ -488,10 +484,8 @@ export default function BoxSx() {
     useEffect(() => {
         if (object?.roomId !== undefined) {
             if (object?.roomId === select_user?.room_id) {
-                console.log("같음");
                 setIsMessage([...isMessage, object])
             } else {
-                console.log("다름")
             }
         }
     }, [object])
@@ -509,8 +503,6 @@ export default function BoxSx() {
                     }
                     setIsMessage([...isMessage, data1])
                 }
-            } else {
-                console.log("다름")
             }
         }
     }, [hello])
@@ -520,17 +512,11 @@ export default function BoxSx() {
     const finish_chat = useSelector(selectFinishChatList)
 
 
-    useEffect(() => { // 새로운 정보 들어왔는지 확인
-        console.log('받은 결제 정보가 있음 확인해주자!', userPaymentList);
-    }, [userPaymentRequestStatus]);
-
     const finalSetData = useSelector(selectCounselingFinalStepData);
     // nowTime
-    console.log("finalSetData", finalSetData)
 
     async function hadnleEmit() { //예약시간 설정 , emit 보낸후 랜더링 초기화로 한번만 실행, onclick evnet 역할
         setIsMessage([])
-        console.log("예약승인 보냈다...")
         const data1 = {
             method: "room/reservation_date",
             datas: {
@@ -539,7 +525,6 @@ export default function BoxSx() {
             }
         }
         socket.emit('counsel_submit', data1);
-        console.log("emit 실행");
 
         await dispatch(setCounselingFinalStep(""))
         await dispatch(setCounselingTimeStempNumber(0))
@@ -571,7 +556,6 @@ export default function BoxSx() {
                 user_type: 6,
                 message: "안녕하세요 상담을 시작하겠습니다."
             };
-            console.log(req);
             socket.emit('chat', {
                 "method": "join",
                 "datas": req
@@ -584,7 +568,6 @@ export default function BoxSx() {
                 user_type: 6,
                 message: "안녕하세요 상담을 시작하겠습니다."
             };
-            console.log(req);
             socket.emit('chat', {
                 "method": "join",
                 "datas": req
@@ -629,15 +612,12 @@ export default function BoxSx() {
             user_type: 6,
             message: "안녕하세요 상담을 시작하겠습니다."
         };
-        console.log(req);
         socket.emit('chat', {
             "method": "join",
             "datas": req
         });
         await handleFinishChatList();
     }
-
-    console.log("count_srtart", count_start);
 
     const intRoom_id = Number(select_user.room_id)
 
@@ -789,7 +769,7 @@ export default function BoxSx() {
                 datas: chat
             });
 
-            dispatch(setLoggedUser(chat)); // 엔터를 칠때마다 내가친 데이터가 안으로 들어간다. 그럼? 새로고침해도 최근친 데이터는 남아있나?
+            dispatch(setLoggedUser(chat));
             setIsMessage([...isMessage, chat])
             setState({ message: '' })
         }
@@ -891,16 +871,8 @@ export default function BoxSx() {
         } else if (useOpen === "결제요청") {
             handlePaidWaitList()
         }
-
         console.log("useOpen", useOpen);
     }, [useOpen])
-
-    console.log("selectUser", select_user)
-
-
-    useEffect(() => {
-        console.log("counselingStatus", counselingStatus)
-    }, [counselingStatus])
 
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
@@ -913,10 +885,6 @@ export default function BoxSx() {
             hadnleEmit()
         }
     }, [finalStep])
-
-    useEffect(() => {
-        console.log("isMessage", isMessage);
-    }, [isMessage])
 
     useEffect(() => {
         if (cancel_status) {
@@ -940,15 +908,6 @@ export default function BoxSx() {
 
     const select_room_id = Number(select_user.room_id);
 
-    console.log("time_count", time_count); // 시작시간
-
-
-    // if (affter_time < 20 && affter_time >= 0) {
-    //     console.log("타이머 적용")
-
-    // }
-
-
     useEffect(() => {
         if (select_user?.method === 5 || select_user?.method === 6) {
             setTime(30);
@@ -963,7 +922,6 @@ export default function BoxSx() {
         }
     }, 60000);
 
-    console.log("affter", default_count);
     useEffect(() => {
         // 시간 공식
         const times = Number(time_count?.substring(11, 13));
@@ -977,7 +935,6 @@ export default function BoxSx() {
         const get_Times = get_Time * 60 + get_Miu;
         const affter_time = end - get_Times;
 
-        console.log("affter_time", affter_time);
         setCount_start(affter_time); // 남은시간 체크 하기위한 랜더링
     }, [time_count])
 
@@ -1431,7 +1388,7 @@ export default function BoxSx() {
                                                                                             </Div>
                                                                                         </div>
                                                                                         :
-                                                                                        console.log("다른것")
+                                                                                        console.log("")
                                                                         }
                                                                         < div ref={messageEndRef} />
                                                                     </>

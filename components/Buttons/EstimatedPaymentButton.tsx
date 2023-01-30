@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { rem } from "polished";
 import { ComponentProps, VFC } from "react";
 import { RoundedButton } from "~/components";
@@ -9,8 +9,7 @@ export const EstimatedPaymentAddButton: VFC<
   const [subPaymentState, setSubPaymentState] = useState(false)
 
   const handleSubPaymentAlert = () => {
-      setSubPaymentState(false)
-      console.log('subpaymet', subPaymentState);
+    setSubPaymentState(false)
   }
   return (
     <RoundedButton

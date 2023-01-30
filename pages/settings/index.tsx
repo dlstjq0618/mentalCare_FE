@@ -62,7 +62,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
         dispatch(setChatBoxOpenState("null"))
     }, [])
 
-    console.log("price", price);
 
     const onSubmit = (data: any) => { // vi signUp Api request
 

@@ -336,7 +336,6 @@ function DayComponents(props: IProps) {
             close4();
             dispatch(setCallFinish(""));
         }
-        console.log("call_finish", call_finish);
     }, [call_finish])
 
     useEffect(() => {

@@ -108,14 +108,12 @@ export const ToggleButton = ({ activeState }: Toggle) => {
 
   useEffect(() => {
     if (chat_toggle !== null) {
-      console.log("chat_toggle", chat_toggle);
       api.counselor.status2({
         is_immediately: chat_toggle
       }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) }).then(() => {
         api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
       }).then(() => dispatch(setChatToggle(null)))
     }
-    console.log("이건 실행됨?")
 
   }, [chat_toggle])
 

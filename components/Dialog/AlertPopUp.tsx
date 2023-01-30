@@ -159,9 +159,6 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
     }
 
 
-    console.log("open", open);
-    console.log("typetype", type);
-
     const handleDispatch = () => { // 결제요청
         dispatch(setChatBoxOpenState("결제요청"))
         dispatch(setStopModal("null"))

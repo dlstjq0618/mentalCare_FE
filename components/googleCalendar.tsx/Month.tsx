@@ -284,9 +284,6 @@ function Month(props: Iprops) {
                                     </span>
                                 </Text>
                             </Div>
-                            {
-                                console.log("userPhoneNumber", userPhoneNumber)
-                            }
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
                                 {userPhoneNumber && userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
                             </Text>

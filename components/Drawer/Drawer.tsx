@@ -642,7 +642,6 @@ export default function TemporaryDrawer(props: IProps) {
                     return (
                         title === "바로상담 대기" && list.isimmediate ?
                             <BoxItem key={index} onClick={() => { handleIsImmediateDispatch(list) }} style={{ background: "#f7f7f7" }}>
-                                {console.log("바로상담 수")}
                                 <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                     <div style={{ display: 'flex' }}>
                                         {list.isimmediate ? "" : <Badge color='#046400' border>협의대기</Badge>}
@@ -733,8 +732,6 @@ export default function TemporaryDrawer(props: IProps) {
             }
         </Box >
     );
-
-    console.log("immediateCount", immediateCount);
 
     const [title, setTitle] = useState("");
     /** Immediately */

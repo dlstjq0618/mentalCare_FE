@@ -162,8 +162,6 @@ function ApprovalModal(props: IProps) {
     const select_user = useSelector(selectDashBoardSelectUser);
     const select_Time = useSelector(selectCounselingTimeStemp);
 
-    console.log("modalState", modalState);
-
 
     const hour = Number(select_Time.substring(0, 2));
 
@@ -224,8 +222,6 @@ function ApprovalModal(props: IProps) {
             return alert("일정이 변경되었습니다.")
         }
     }
-
-    console.log("resultresult", result)
 
     return (
         <>

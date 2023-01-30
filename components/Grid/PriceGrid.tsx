@@ -95,9 +95,6 @@ export default function PriceGrid() {
         }
 
         const totle_length = am30time.length + pm30time.length + am50time.length + pm50time.length + call_am30time.length + call_pm30time.length + call_am50time.length + call_pm50time.length
-        console.log("totle_length", totle_length)
-
-        console.log("propiocze", priceData)
     })
 
 
