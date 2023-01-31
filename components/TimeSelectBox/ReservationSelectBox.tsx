@@ -71,6 +71,7 @@ const Li = styled.li<IStyled>`
 `
 
 function ReservationSelect(props: Iprops) {
+    // 시간선택은 모든것이 분을 기준으로 선택 
     const [check, setCheck] = useState(false);
     const [select, setSelect] = useState("시간 선택");
     const dispatch = useDispatch();
@@ -83,12 +84,10 @@ function ReservationSelect(props: Iprops) {
     const time = new Date().getHours() * 60; // 시간
     const minut = new Date().getMinutes();  // 분 
     const day = new Date().getDate() * 60 * 24; // 일
-    const month = (new Date().getMonth() + 1) * 60 * 24 * 30 // 월
-
-
+    const month = (new Date().getMonth() + 1) * 60 * 24 * 32 // 월
 
     const days = new Date(selectDate).getDate() * 60 * 24; //선택한 날짜
-    const months = (new Date(selectDate).getMonth() + 1) * 60 * 24 * 30
+    const months = (new Date(selectDate).getMonth() + 1) * 60 * 24 * 32
 
     // 분으로 계산한 후 비교 time*60 + minit
     const lastTime = day + time + minut + month + 1; // 현재시간 
