@@ -4,7 +4,7 @@ import CalendarHeader from "./CalendarHeader";
 import Month from "./Month";
 import GlobalContext from "~/context/GlobalContext";
 import styled from 'styled-components';
-import BoxSx from "../ChatBox";
+import dynamic from "next/dynamic";
 
 const Div = styled.div`
     width: 100%;
@@ -12,11 +12,16 @@ const Div = styled.div`
 
 function CalendarIndex() {
     const [currentMonth, setCurrentMonth] = useState(getMonth())
-    const { monthIndex } = useContext(GlobalContext)
+    const { monthIndex } = useContext(GlobalContext);
+
+    // const DynamicHeader = dynamic(() => import('./CalendarHeader'), {
+    //     ssr: false,
+    // })
 
     useEffect(() => {
         setCurrentMonth(getMonth(monthIndex))
     }, [monthIndex])
+
 
     return (
         <Div>

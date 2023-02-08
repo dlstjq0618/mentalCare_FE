@@ -84,9 +84,7 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   const account_list = useSelector(selectAccoutList);
   const test = useSelector(selectToggleButton); //바로상담 건이 있을때 true , 바로상담은 false 이고 버튼은 disabled
 
-  const chat_toggle = useSelector(selectChatToggle); // 채팅방 알럿을 통해 바로 상담 상태를 나타냄 
-
-
+  const chat_toggle = useSelector(selectChatToggle); // 채팅방 알럿을 통해 바로 상담 상태를 나타냄
 
   const handleToggleState = (data: any) => {
     api.counselor.status({
@@ -102,7 +100,12 @@ export const ToggleButton = ({ activeState }: Toggle) => {
 
   useEffect(() => {
     if (infoData.id) {
-      api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking), dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
+      api.counselor.info(infoData.id).then((res) => {
+        dispatch(setSocketControlls(res.isWorking)),
+          setActivate(res.isWorking),
+          dispatch(setSocketControlls2(res.isImmediately)),
+          setActivate2(res.isImmediately)
+      });
     }
   }, [infoData?.id])
 

@@ -47,7 +47,6 @@ ${(props) =>
 margin: 12px 17px;
   flex-grow: 0;
   border-radius: 6px;
-  border: solid 1px #d3d3d3;
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;
@@ -174,7 +173,6 @@ function TimeSleectBox(props: Iprops) {
                 {
                     props.first ?
                         <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => {
-                            // dispatch(setChatBoxOpenState("협의완료")),
                             dispatch(setCoustomAlert(true)),
                                 dispatch(setAlertType('협의완료')),
                                 handleOpenStatus2(),
@@ -195,7 +193,7 @@ function TimeSleectBox(props: Iprops) {
                     <Ul>
                         {
                             selectType.map((res: { label: string, value: string }, index: number) => {
-                                return <Li check onClick={() => {
+                                return <Li style={{ width: res.label === '상담중' ? rem(110) : 'none' }} check onClick={() => {
                                     setType(res.label),
                                         setCheck(false),
                                         handleOpenStatus(res.value),

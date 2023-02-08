@@ -72,6 +72,7 @@ import {
     setAlertType,
     setCounselingTimeStemp,
     setPaidWaitList,
+    selectSocketControlls2
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
@@ -288,6 +289,7 @@ export default function BoxSx() {
     const [state, setState] = useState({ message: '' });
     const [chatList, setChatList] = useState<any>([]);
     const infoData = useSelector(selectCounselingInfoData);
+    console.log("infoData", infoData)
     const userId = String(infoData?.id);
     const connected = useSelector(selectSocketConnected);
     const counselingStatus = useSelector(selectCounselingState);
@@ -336,7 +338,7 @@ export default function BoxSx() {
     const [time, setTime] = useState(0);
     const [count_start, setCount_start] = useState(0);
     const default_count = useSelector(selectTimeCount);
-
+    const socketImmediely = useSelector(selectSocketControlls2);
     const nodeRef = useRef(null);
 
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -366,9 +368,6 @@ export default function BoxSx() {
     const handleEnd2 = () => {
         setOpacity2(false);
     };
-
-
-    console.log('count_start', count_start);
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -507,11 +506,7 @@ export default function BoxSx() {
         }
     }, [hello])
 
-
-
     const finish_chat = useSelector(selectFinishChatList)
-
-
     const finalSetData = useSelector(selectCounselingFinalStepData);
     // nowTime
 
@@ -671,7 +666,6 @@ export default function BoxSx() {
     }
 
     async function handleCallCounselorting() {
-        console.log("전화 핸들러 실행");
         if (select_user.isimmediate) {
             hadnleEmit()
             socket.emit('counsel_submit', {
@@ -681,6 +675,7 @@ export default function BoxSx() {
                 }
             })
         } else {
+            console.log("전화 핸들러 실행");
             socket.emit('counsel_submit', {
                 method: 'room/call/join',
                 datas: {
@@ -845,6 +840,18 @@ export default function BoxSx() {
 
     const use_last_chat = useSelector(selectFinishChatList);
 
+    async function handleImmediately() {
+        console.log("소캣 바로상담 상태 전송", infoData.id, socketImmediely);
+        socket.emit('counselor', {
+            method: 'request/immediate',
+            datas: {
+                id: infoData.id,
+                immediate: socketImmediely
+
+            }
+        })
+    }
+
     useEffect(() => {
         if (counselingStatus === 'finish') {
             handleFinishChatList()
@@ -873,6 +880,10 @@ export default function BoxSx() {
         }
         console.log("useOpen", useOpen);
     }, [useOpen])
+
+    useEffect(() => {
+        handleImmediately();
+    }, [socketImmediely])
 
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
@@ -958,7 +969,7 @@ export default function BoxSx() {
                                 <MuiBox
                                     sx={{
                                         zIndex: 1,
-                                        boxShadow: `3px 2px 5px black;`,
+                                        boxShadow: `0 30px 30px 0 rgba(0, 0, 0, 0.25)`,
                                         width: 500,
                                         maxWidth: rem(500),
                                         maxHeight: rem(1000),
@@ -1077,7 +1088,7 @@ export default function BoxSx() {
                                     <MuiBox
                                         sx={{
                                             zIndex: 1,
-                                            boxShadow: `3px 2px 5px black;`,
+                                            boxShadow: `0 30px 30px 0 rgba(0, 0, 0, 0.25)`,
                                             width: 500,
                                             maxWidth: 500,
                                             maxHeight: rem(1000),
@@ -1189,7 +1200,7 @@ export default function BoxSx() {
                                         <MuiBox
                                             sx={{
                                                 zIndex: 1,
-                                                boxShadow: `3px 2px 5px black;`,
+                                                boxShadow: `0 30px 30px 0 rgba(0, 0, 0, 0.25)`,
                                                 width: 500,
                                                 maxWidth: 500,
                                                 maxHeight: rem(1000),
@@ -1206,7 +1217,7 @@ export default function BoxSx() {
                                                         <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                                     </Text>
                                                     <div style={{ display: 'flex' }}>
-                                                        <Button style={{ width: `${rem(90)}`, marginRight: `${rem(-10)}` }} onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
+                                                        <Button style={{ border: 'none', width: `${rem(90)}`, marginRight: `${rem(-10)}` }} onClick={() => { dispatch(setCoustomAlert(true)), dispatch(setAlertType("협의취소")) }} type={"finish"}>{"협의취소"}</Button>
                                                         <TimeSleectBox first />
                                                     </div>
                                                 </Div>
@@ -1314,7 +1325,7 @@ export default function BoxSx() {
                                             <MuiBox
                                                 sx={{
                                                     zIndex: 1,
-                                                    boxShadow: `3px 2px 5px black;`,
+                                                    boxShadow: `0 30px 30px 0 rgba(0, 0, 0, 0.25)`,
                                                     width: rem(500),
                                                     maxWidth: 500,
                                                     maxHeight: rem(1000),
