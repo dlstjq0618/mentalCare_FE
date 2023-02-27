@@ -302,6 +302,9 @@ export default function BoxSx() {
     const nowTimes = new Date().getTime() / 1000
     const selectNum = useSelector(selectCounselingTimeStempNumber);
     const totalTime = reservationTime + selectNum
+    console.log("reservationTime", reservationTime);
+    console.log("selectNum", selectNum)
+    console.log("storeData", storeData);
     const roomJoin = useSelector(selectCounselingStart);
     const watingList = useSelector(selectSocketData);
     const [lastChatlist, setLastChatList] = useState<any>([])
@@ -381,18 +384,14 @@ export default function BoxSx() {
     useEffect(() => {
         socket.on("counsel_noti", (res: any) => {
             const { method, datas } = res;
-            console.log("counsel_noti", method);
-            console.log("counsel_noti_ res", res);
             const waitingIofo = datas?.waitingList;
             switch (method) {
                 case "payment/user/ok": ;
 
                 case "room/test/result":
-                    console.log("테스트결과값", res)
                     dispatch(setTestResultValue(res.datas))
                     break;
                 case "room/call/join/":
-                    console.log("전화상담 데이터", res);
                     dispatch(setUserCallNumber(res.datas))
                     break;
                 case "chat": ; break;
@@ -421,7 +420,6 @@ export default function BoxSx() {
         // dashboard 내용 받기 count 리랜더링 되어야함 
         socket.on('dashboard', (res: any) => {
             const { method, datas } = res;
-            console.log("🚀 ~ file: ChatBox.tsx:234 ~ socket.on dashboard ~ method", method, datas)
 
             const waitingInfoList = datas.waitingList
             switch (method) {
@@ -437,35 +435,30 @@ export default function BoxSx() {
 
             if (method === 'reservationList') {
                 const result = datas.list;
-                console.log("예약", result)
                 dispatch(setDashBoardReservationList(result))
             } else if (method === "waitlist") {
                 const result0 = datas.list;
-                console.log("대기", result0);
                 dispatch(setDashBoardWatingList(result0))
             } else if (method === 'consultingList') {
                 const result1 = datas.list;
-                console.log("상담중", result1);
                 dispatch(setDashBoardConsultingList(result1))
             } else if (method === 'completeList') {
                 const result2 = datas.list;
-                console.log("완료됨", result2);
                 dispatch(setDashBoardCompleteList(result2))
             } else if (method === 'cancelList') {
                 const result3 = datas.list;
-                console.log("취소", result3);
+
                 dispatch(setDashBoardCancelList(result3))
             } else if (method === 'paidList') {
                 const result4 = datas.list;
-                console.log("결제완료", result4)
+
                 dispatch(setAccountList(result4));
             } else if (method === 'confirmRequestList') {
                 const result5 = datas.list;
                 dispatch(setConferenceList(result5))
-                console.log("협의중인 데이터", result5)
+
             } else if (method === 'paidWaitList') {
                 const result6 = datas.list;
-                console.log("결제대기", result6);
                 dispatch(setPaidWaitList(result6));
             }
         })
@@ -525,6 +518,7 @@ export default function BoxSx() {
         await dispatch(setCounselingTimeStempNumber(0))
         await dispatch(setCounselingTimeStemp(""))
     }
+    console.log("totalTime", totalTime);
 
     async function handleTest() {
         const data1 = {

@@ -33,7 +33,7 @@ function Index() {
                         paddingBottom: rem(20),
                     }}
                 >
-                    공지사항
+                    커뮤니티
                 </Heading>
                 <Notice data={noticeData} />
             </Section>

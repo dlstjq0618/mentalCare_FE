@@ -19,10 +19,6 @@ import { api } from "~/woozooapi";
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCounselorName } from '~/store/doctorInfoForChangeSlice';
 import { selectCounselingInfoData, setCounselingProfileImage, selectCounselingProfileImage, setSettingSaveControlls } from '~/store/calendarDetailSlice';
-import { info } from 'console';
-import { RowAndColumnSpacing } from '../Grid/Grid';
-import PriceGrid from '../Grid/PriceGrid';
-
 interface IProps {
 
 }

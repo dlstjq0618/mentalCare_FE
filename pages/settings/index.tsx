@@ -47,16 +47,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     });
     const router = useRouter();
 
-    useEffect(() => {
-        router.events.on('routeChangeStart', () => setOpen(true))
-        return () => {
-            if (open && state === "edit") {
-                if (!confirm("저장하지 않고 나가시겠습니까?")) {
-                    router.push("/settings")
-                }
-            }
-        }
-    }, [open])
 
     useEffect(() => {
         dispatch(setChatBoxOpenState("null"))

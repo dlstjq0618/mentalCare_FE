@@ -1,0 +1,17 @@
+
+
+export const CommunityIcon = () => (
+    <svg
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <circle cx="15" cy="8" r="4" stroke="#fff" strokeWidth="1.5" fill="#272729" />
+        <circle cx="5.5" cy="22.5" r="3.5" stroke="#fff" strokeWidth="1.5" fill="#272729" />
+        <circle cx="25" cy="21" r="4" stroke="#fff" strokeWidth="1.5" fill="#272729" />
+        <path d="m12.5 11.5-5 7.5M9.5 23l11-1.5m2-4.5L18 11.5" stroke="#fff" strokeWidth="1.5" />
+    </svg>
+)
+

@@ -3,6 +3,10 @@ import { ComponentProps, useEffect } from "react";
 import Select, { GroupBase, Props } from "react-select";
 import { PROFILE_PIC_FILE_SIZE } from "~/utils/form.utils";
 
+interface Iprops {
+  border?: number
+}
+
 const customStyles: ComponentProps<typeof Dropdown>["styles"] = {
   placeholder: (provided) => ({
     ...provided,

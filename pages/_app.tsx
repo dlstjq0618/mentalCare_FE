@@ -4,7 +4,6 @@ import {
   initializeAppCheck,
   ReCaptchaEnterpriseProvider,
 } from "firebase/app-check";
-import { getAuth, signInAnonymously } from "firebase/auth";
 import { NextPage } from "next";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
@@ -15,12 +14,11 @@ import { Provider as ReduxProvider, useDispatch } from "react-redux";
 import "antd/dist/antd.css";
 import "~/styles/globals.css";
 import { store } from "~/store";
-import { firebaseApp, RECAPTCHA_ENTERPRISE_SITE_KEY } from "~/utils/firebase";
 import { ReactNotifications } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import ContextWrapper from '../context/ContextWrapper'
-import { io } from "socket.io-client";
 import _footer from "./_footer";
+import 'react-quill/dist/quill.snow.css';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

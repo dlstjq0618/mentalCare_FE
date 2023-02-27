@@ -204,7 +204,9 @@ function ApprovalModal(props: IProps) {
         },
     });
     const selectedDate = watch("date");
+    const selectedDate2 = new Date().setHours(0, 0, 0, 0);
     const selectedTime = watch("time");
+
 
     const handleDateChange = useCallback(
         (date) => {
@@ -300,7 +302,7 @@ function ApprovalModal(props: IProps) {
                 </div>
             </BaseDialog2>
             {
-                datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
+                datePicker && <DatePicker open={datePicker} date={new Date(selectedDate2)} setDate={handleDateChange} />
             }
             <BaseDialog2 showDialog={show} close={close} style={{
                 marginTop: '15vh', textAlign: 'center', marginLeft: "50vw", paddingBottom: `${rem(40)}`, width: `${rem(376)}`

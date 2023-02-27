@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { rem } from "polished";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from 'next/image'
+import Image from 'next/image';
 import {
   RocketDoctorLogo,
   PreviousCounselingIcon,
@@ -30,12 +30,11 @@ import { selectDiagnosisCallStatus, selectDiagnosisNotificationNumber, setDiagno
 import {
   isMobile
 } from "react-device-detect";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import {
   selectAccoutList,
   selectConferenceList,
   selectCalendarUserList,
-  selectCancelList,
-  selectCompleteList,
   selectConsultingList,
   selectReservationList,
   selectSocketData,
@@ -43,10 +42,10 @@ import {
   setCounselingInfoData,
   setSessionId,
   setSocketControlls,
-  setToggleButton
 } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 import counselorLogo from '../../public/counser.png'
+import { CommunityIcon } from "../icons/CommunityIcon";
 
 const { Sider } = Layout;
 
@@ -313,6 +312,13 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               <span>{Number.isNaN(watingRoom_count) ? 0 : watingRoom_count}</span>
               <div>대기실</div>
             </SideBarButtons>
+            {/* <SideBarButtons
+              href="/notice"
+              visiting={path === "/notice" ? true : false}
+            >
+              <CommunityIcon />
+              <div>커뮤니티</div>
+            </SideBarButtons> */}
             <SideBarButtons
               href="/settings"
               visiting={path === "/settings" ? true : false}

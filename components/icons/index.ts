@@ -59,3 +59,4 @@ export * from "./LoadingIcon";
 export * from "./CallingIcon";
 export * from "./DiagnosisFinishedStepCheckIcon";
 export * from "./PayReadyBadgeIcon";
+export * from "./LockIcon";

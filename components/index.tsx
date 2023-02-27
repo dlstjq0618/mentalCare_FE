@@ -18,6 +18,7 @@ export * from "./Dialog";
 export * from "./Elements";
 export * from "./Checkbox";
 export * from "./RadioGroup";
+export * from "./Notice/TitleInput";
 
 // page related components
 export * from "./loginPage";
