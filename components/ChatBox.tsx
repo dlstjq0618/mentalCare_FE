@@ -302,9 +302,6 @@ export default function BoxSx() {
     const nowTimes = new Date().getTime() / 1000
     const selectNum = useSelector(selectCounselingTimeStempNumber);
     const totalTime = reservationTime + selectNum
-    console.log("reservationTime", reservationTime);
-    console.log("selectNum", selectNum)
-    console.log("storeData", storeData);
     const roomJoin = useSelector(selectCounselingStart);
     const watingList = useSelector(selectSocketData);
     const [lastChatlist, setLastChatList] = useState<any>([])
