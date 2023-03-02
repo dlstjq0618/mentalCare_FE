@@ -339,7 +339,7 @@ export default function BoxSx() {
     const default_count = useSelector(selectTimeCount);
     const socketImmediely = useSelector(selectSocketControlls2);
     const nodeRef = useRef(null);
-
+    const [clickPosition, setClickPosition] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [position2, setPosition2] = useState({ x: 50, y: 50 });
 
@@ -939,10 +939,10 @@ export default function BoxSx() {
         setCount_start(affter_time); // 남은시간 체크 하기위한 랜더링
     }, [time_count])
 
-
     return (
         <>
             <Draggable
+                cancel=".no-drag"
                 nodeRef={nodeRef}
                 onDrag={(e, data) => trackPos(data)}
                 onStart={handleStart}
@@ -951,7 +951,7 @@ export default function BoxSx() {
                 <div
                     ref={nodeRef}
                     className="box"
-                    style={{ opacity: Opacity ? "0.6" : "1" }}
+                    style={{ opacity: Opacity && clickPosition ? "0.6" : "1" }}
                 >
                     {
                         counselingStatus === 'finish' ?
@@ -971,14 +971,13 @@ export default function BoxSx() {
                                     }}
                                 >
                                     <Div type='main'>
-                                        <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-
+                                        <Div onPointerDown={() => setClickPosition(true)} onPointerUp={() => setClickPosition(false)} bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                             <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
                                                 <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(완료)
                                             </Text>
                                             <TimeSleectBox />
                                         </Div>
-                                        <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                        <Text className='no-drag' style={{ overflow: 'auto', minHeight: 700 }}>
                                             <Div type='time' >
                                                 <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text>
                                                 {/* <Text size={12} type='button' color='#e8440a'>
@@ -1090,7 +1089,7 @@ export default function BoxSx() {
                                         }}
                                     >
                                         <Div type='main'>
-                                            <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                            <Div onPointerDown={() => setClickPosition(true)} onPointerUp={() => setClickPosition(false)} bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                                 <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
                                                     <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{select_user?.user_name}</div></div>(시작)
                                                 </Text>
@@ -1099,7 +1098,7 @@ export default function BoxSx() {
                                                     <TimeSleectBox />
                                                 </div>
                                             </Div>
-                                            <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                            <Text className='no-drag' style={{ overflow: 'auto', minHeight: 700 }}>
                                                 <Div type='time' >
                                                     {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
                                                     <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
@@ -1202,8 +1201,8 @@ export default function BoxSx() {
                                             }}
                                         >
                                             <Div type='main'>
-                                                <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
-                                                    <Text size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
+                                                <Div onPointerDown={() => setClickPosition(true)} onPointerUp={() => setClickPosition(false)} bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                                    <Text className='no-drag' size={17} bold="600" color='#000' type='title' style={{ display: 'flex' }}>
                                                         <div style={{ color: '#b53e14' }}>{before_wating.user_name}</div>(협의)
                                                     </Text>
                                                     <div style={{ display: 'flex' }}>
@@ -1212,7 +1211,7 @@ export default function BoxSx() {
                                                     </div>
                                                 </Div>
                                                 <CoustomAlertPopUp />
-                                                <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                                <Text className='no-drag' style={{ overflow: 'auto', minHeight: 700 }}>
                                                     <Div type='time' >
                                                         <Text size={13} color='#b53e14' >{"일정을 협의해 주세요."}</Text>
                                                     </Div>
@@ -1327,7 +1326,7 @@ export default function BoxSx() {
                                                 }}
                                             >
                                                 <Div type='main'>
-                                                    <Div bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
+                                                    <Div onPointerDown={() => setClickPosition(true)} onPointerUp={() => setClickPosition(false)} bg='#fff' style={{ display: 'flex', justifyContent: 'space-between', maxHeight: 59 }}>
                                                         <Text size={17} bold="600" color='#000' type='title' style={{ display: "flex" }}>
                                                             <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{userName}</div></div>(진행)
                                                         </Text>
@@ -1336,7 +1335,7 @@ export default function BoxSx() {
                                                             <TimeSleectBox />
                                                         </div>
                                                     </Div>
-                                                    <Text style={{ overflow: 'auto', minHeight: 700 }}>
+                                                    <Text className='no-drag' style={{ overflow: 'auto', minHeight: 700 }}>
                                                         <Div type='time' >
                                                             {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
                                                             <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
@@ -1398,7 +1397,7 @@ export default function BoxSx() {
                                                             }
                                                         </Div>
                                                     </Text>
-                                                    <Text height={40}>
+                                                    <Text height={40} >
                                                         <Box sx={{
                                                             display: 'flex', flexWrap: 'wrap', background: "white", height: rem(40), marginTop: rem(12)
                                                         }}>

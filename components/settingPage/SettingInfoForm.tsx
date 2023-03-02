@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { ChangeEvent, useRef } from 'react';
 import { rem } from 'polished';
 import { Reducer, ReducerState, useEffect, useReducer, useState } from "react";
 import { validateImageFile } from "~/utils/validation.utils";
@@ -19,6 +19,7 @@ import { api } from "~/woozooapi";
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCounselorName } from '~/store/doctorInfoForChangeSlice';
 import { selectCounselingInfoData, setCounselingProfileImage, selectCounselingProfileImage, setSettingSaveControlls } from '~/store/calendarDetailSlice';
+import { phoneNumberAutoFormat } from "../../utils/phoneAutoFormat";
 interface IProps {
 
 }
@@ -163,6 +164,7 @@ function SettingInfoForm(props: IProps) {
     const [registerFormState, dispatch] = useReducer(reducer, initialState);
     const dispatch2 = useDispatch();
     const [textValue, setTextValue] = useState("");
+    const [phoneValue, setPhoneValue] = useState("");
     const { register, setValue, setError, trigger, getValues, formState, watch } =
         useFormContext();
     const password = useRef({});
@@ -179,6 +181,11 @@ function SettingInfoForm(props: IProps) {
     const [phoneNumberChange, setPhoneNumberChange] = useState(false);
 
     const [isPhoneNumber, setIsPhoneNumber] = useState('');
+
+    const PhoneOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const targetValue = phoneNumberAutoFormat(e.target.value);
+        setPhoneValue(targetValue);
+    };
 
     const phoneNumber = infoData.mobile?.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '0$2-$3-$4');
     const phoneNumber2 = infoData.mobile?.substr(0, 3) + '-' + infoData.mobile?.substr(3, 4) + '-' + infoData.mobile?.substr(7, 4)
@@ -271,7 +278,6 @@ function SettingInfoForm(props: IProps) {
         setIsPhoneNumber(infoData.mobile)
     }, [infoData])
 
-
     return (
         <>
             <InfoGrid width={900}>
@@ -297,22 +303,24 @@ function SettingInfoForm(props: IProps) {
                             <Text size={17} color={"#999"} style={{ width: `${rem(80)}` }}>
                                 {"휴대폰번호"}
                             </Text>
-                            <Text size={17} color={"#333"} style={{ width: `${rem(225)}`, marginLeft: 21 }}>
+                            <Text size={17} color={"#333"} style={{ width: `${rem(235)}`, marginLeft: 20 }}>
                                 {
                                     !phoneNumberChange ?
                                         <div style={{ textAlign: `left`, display: 'flex' }}>
-                                            {infoData?.mobile?.length === 11 ? phoneNumber2 : phoneNumber}
+                                            {infoData?.mobile}
                                             <Button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>수정</Button>
                                         </div>
                                         :
                                         <div style={{ display: 'flex' }}>
-                                            <Input css={{ height: rem(31), width: rem(150) }}
-                                                value={textValue}
+                                            <Input css={{ height: rem(31), width: rem(180) }}
                                                 autoComplete='false'
+                                                value={phoneValue}
                                                 onChange={(e) => {
-                                                    // setValue('mobile', e.target.value)
-                                                    onlyNumberText(e.target.value)
-                                                }} maxLength={11} />
+                                                    PhoneOnChange(e),
+                                                        setValue('mobile', e.target.value)
+                                                }
+                                                }
+                                                maxLength={13} />
                                             <Button onClick={() => setPhoneNumberChange(!phoneNumberChange)}>취소</Button>
                                         </div>
                                 }

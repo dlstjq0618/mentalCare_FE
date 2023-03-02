@@ -11,8 +11,6 @@ import {
     Toggle2Payload
 } from "~/interfaces";
 
-import { useDispatch } from "react-redux";
-
 export const counselor = {
     signUp: async (payload: Counselor) => {
         const sessions = await getSession();
