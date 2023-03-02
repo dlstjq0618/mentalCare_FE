@@ -192,6 +192,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [immediateAccountCount, setImmediateAccountCount] = useState(0) // 바로상담 결제완료 대기자 수
     const [reservationAccountCount, setReservationAccount] = useState(0) // 예약상담 결제완료 대기자 수
 
+
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(false));
@@ -207,7 +208,7 @@ export default function TemporaryDrawer(props: IProps) {
 
     useEffect(() => {
         setTotalCount(immediateAccountCount + immediateCount + immediatePaidwait);
-        setTotalCount2(reservationAccountCount + reservationCount + reservationPaidwait);
+        setTotalCount2(reservationAccountCount + reservationCount + reservationPaidwait + conference_list?.count);
     })
 
     useEffect(() => { // 결제완료 리스트 

@@ -11,6 +11,8 @@ import {
     Toggle2Payload
 } from "~/interfaces";
 
+import { useDispatch } from "react-redux";
+
 export const counselor = {
     signUp: async (payload: Counselor) => {
         const sessions = await getSession();
@@ -43,6 +45,7 @@ export const counselor = {
                 Authorization: `jwt ${sessions?.accessToken}`,
             },
         });
+
         return data;
     },
 

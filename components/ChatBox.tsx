@@ -289,7 +289,6 @@ export default function BoxSx() {
     const [state, setState] = useState({ message: '' });
     const [chatList, setChatList] = useState<any>([]);
     const infoData = useSelector(selectCounselingInfoData);
-    console.log("infoData", infoData)
     const userId = String(infoData?.id);
     const connected = useSelector(selectSocketConnected);
     const counselingStatus = useSelector(selectCounselingState);
