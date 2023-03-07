@@ -230,11 +230,12 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
           icon: "/doctor@3x.png",
         })
         notify.onclick = (e) => {
-          router.push(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://mentalcare.rocketdoctor.co.kr/calendar' : 'https://dev.mentalcare.rocketdoctor.co.kr/calendar'}`)
+          router.push(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
+            'https://mentalcare.rocketdoctor.co.kr/calendar' : 'https://dev.mentalcare.rocketdoctor.co.kr/calendar'}`)
         }
       }
     }
-  }, 10000);
+  }, 30000);
 
   console.log("storeFocus", storeFocus, focus);
   useEffect(() => {
@@ -247,7 +248,8 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               icon: "/doctor@3x.png",
             })
             notify.onclick = (e) => {
-              router.push(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ? 'https://mentalcare.rocketdoctor.co.kr/calendar' : 'https://dev.mentalcare.rocketdoctor.co.kr/calendar'}`)
+              router.push(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
+                'https://mentalcare.rocketdoctor.co.kr/calendar' : 'https://dev.mentalcare.rocketdoctor.co.kr/calendar'}`)
             }
           }
         }
