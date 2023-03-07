@@ -95,7 +95,7 @@ function Register() {
         </Heading>
         <TitleInput />
         <Div>
-          <QuillNoSSRWrapper
+          <QuillNoSSRWrapper // 게시판 라이브러리
             style={{
               background: "white",
             }}

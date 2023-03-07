@@ -93,6 +93,7 @@ type DiagnosisDetailStoreState = {
   immediate: any;
   immediateList: any;
   nonimmediateList: any;
+  focus: boolean | null;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -161,6 +162,7 @@ const initialState: DiagnosisDetailStoreState = {
   immediate: null,
   immediateList: 0,
   nonimmediateList: 0,
+  focus: null,
 };
 
 export const calendarDetailSilce = createSlice({
@@ -619,6 +621,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.nonimmediateList = action.payload;
     },
+    setStoreFocus(
+      // 예약상담 카운트
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["focus"]>
+    ) {
+      state.focus = action.payload;
+    },
   },
 });
 
@@ -686,6 +695,7 @@ export const {
   setImmediate,
   setImmediateListCount,
   setNonImmediateListCount,
+  setStoreFocus,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -811,5 +821,8 @@ export const selectImmediateListCount = (state: RootState) =>
   state.calendarDetail.immediateList;
 export const selectNonImmediateListCount = (state: RootState) =>
   state.calendarDetail.nonimmediateList;
+
+export const selectStoreFocus = (state: RootState) =>
+  state.calendarDetail.focus;
 
 export default calendarDetailSilce.reducer;
