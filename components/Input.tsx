@@ -17,13 +17,12 @@ export const Input = styled("input", {
         borderRadius: 100,
 
         padding: "13px 20px 14px",
-
         "&:focus": {
           borderColor: "$red",
         },
 
         "&::placeholder": {
-          color: "$gray05",
+          color: "black",
           fontSize: rem(15),
         },
         '&[type="submit"]': {

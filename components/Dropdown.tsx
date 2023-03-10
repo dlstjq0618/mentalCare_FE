@@ -11,7 +11,7 @@ const customStyles: ComponentProps<typeof Dropdown>["styles"] = {
   placeholder: (provided) => ({
     ...provided,
     fontSize: rem(15),
-    color: "var(--colors-gray05)",
+    color: "black",
     paddingLeft: rem(20),
   }),
   control: (base) => ({
