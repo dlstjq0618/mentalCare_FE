@@ -8,7 +8,7 @@ import styled, { css } from 'styled-components';
 import ApprovalModal from './ApprovalModal';
 import { AlertPopUp, AlertPopUp3, CoustomAlertPopUp } from '../Dialog/AlertPopUp';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTestResultValueStatus, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount, setNonImmediateListCount, selectNonImmediateListCount, setPaidWaitList } from '~/store/calendarDetailSlice';
+import { setTestResultValueStatus, selectDashBoardSelectUser, setImmediateListCount, selectSocketData, setCounselingDate, setCounselingTimes, selectWaitlist, setChatBoxOpenState, setWatingListBefore, setAlertControlls, setDashBoardSelectUser, setScheduleSelectModla, selectAccoutList, selectConferenceList, setToggleButton, setAlertType, setImmediate, selectPaidWaitLis, selectImmediateListCount, setNonImmediateListCount, selectNonImmediateListCount, setPaidWaitList } from '~/store/calendarDetailSlice';
 import { TramRounded } from '@mui/icons-material';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -167,7 +167,8 @@ export default function TemporaryDrawer(props: IProps) {
     const paidWait_list = useSelector(selectPaidWaitLis); // 결제대기 
     const close = () => setModalOpen(false);
     const dispatch = useDispatch()
-    const [wating_add, setWating_add] = useState<any>([])
+    const [wating_add, setWating_add] = useState<any>([]);
+    const select_user = useSelector(selectDashBoardSelectUser);
     const waitlist = useSelector(selectWaitlist); // 상담 대기 > 스케줄등록 O 
     const [state, setState] = React.useState({
         top: false,
@@ -179,7 +180,7 @@ export default function TemporaryDrawer(props: IProps) {
     const [totalCount, setTotalCount] = useState(0); // 바로상담 결제완료 + 대기자 토탈 대기자수
     const [totalCount2, setTotalCount2] = useState(0); // 예약상담 결제완료  + 대기자수 
 
-
+    console.log("결제대기", select_user)
 
     const [waiting_count, setWaiting_count] = useState(0);
 
@@ -194,6 +195,7 @@ export default function TemporaryDrawer(props: IProps) {
 
 
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
+        console.log("data", data)
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(false));
             dispatch(setTestResultValueStatus(true));
@@ -436,7 +438,7 @@ export default function TemporaryDrawer(props: IProps) {
                     return (
                         title === "바로상담 대기" && list.isimmediate ?
                             // <BoxItem key={index} onClick={() => { setModalOpen(true), setSelectUserData(list), handleDispatch() }}>
-                            <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
+                            <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { dispatch(setDashBoardSelectUser(list)), console.log("결제대기 누르는중./..", selectUserData) }}>
                                 <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                     <div style={{ display: 'flex' }}>
                                         <Badge color='#666666' border>결제대기</Badge>
@@ -487,7 +489,7 @@ export default function TemporaryDrawer(props: IProps) {
                                 </div>
                             </BoxItem>
                             : title === "예약상담 대기" && list.isimmediate === false ?
-                                <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { console.log("결제대기 누르는중./..") }}>
+                                <BoxItem key={index} style={{ background: "#f7f7f7" }} onClick={() => { dispatch(setDashBoardSelectUser(list)), console.log("결제대기 누르는중./..") }}>
                                     <div style={{ display: "flex", justifyContent: 'space-between', marginBottom: `${rem(16)}` }}>
                                         <div style={{ display: 'flex' }}>
                                             <Badge color='#666666' border>결제대기</Badge>

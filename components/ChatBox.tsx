@@ -923,6 +923,8 @@ export default function BoxSx() {
         }
     }, 60000);
 
+    console.log("select_user.room_id", select_user.room_id)
+
     useEffect(() => {
         // 시간 공식
         const times = Number(time_count?.substring(11, 13));

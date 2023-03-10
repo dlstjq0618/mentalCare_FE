@@ -2,8 +2,8 @@ import { DateStringKebab } from "~/interfaces";
 
 export const HOST =
   process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
-    ? "https://httpbin.org" // TODO: production api base url
-    : "https://httpbin.org";
+    ? "https://bo.api.woozoo.clinic" // TODO: production api base url
+    : "https://bo.dev.api.woozoo.clinic";
 
 console.log({ HOST });
 
@@ -17,5 +17,6 @@ export const URLS = {
     STATUS: "/api/user/v1/counselor/activate",
     STATUS2: "/api/user/v1/counselor/immediately",
     TEST: "/get",
+    BOARD: "/counselor-board/post",
   },
 };

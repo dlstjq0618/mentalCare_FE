@@ -55,4 +55,16 @@ export const counselor = {
     });
     return data;
   },
+  board: async (payload: any) => {
+    // const sessions = await getSession();
+    const { data } = await axios.request<
+      DoctorInfoResponse,
+      AxiosResponse<DoctorInfoResponse>
+    >({
+      url: URLS.COUNSELOR.BOARD,
+      data: payload,
+      method: "POST",
+    });
+    return data;
+  },
 };

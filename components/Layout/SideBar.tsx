@@ -225,7 +225,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   useInterval(() => { //notification 반복 조건
     if (!isMobile) {
       if (storeFocus === false && !focus) {
-        const notify = new Notification("우주약방", {
+        const notify = new Notification("우주약방 마음상담", {
           body: "진료를 기다리는 환자가 있습니다.",
           icon: "/doctor@3x.png",
         })
@@ -237,13 +237,12 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
     }
   }, 30000);
 
-  console.log("storeFocus", storeFocus, focus);
   useEffect(() => {
     if (!isMobile) {
       if (Notification.permission === "granted") {
         if (totalCount && totalCount > 0) {
           if (storeFocus === false) {
-            const notify = new Notification("우주약방", {
+            const notify = new Notification("우주약방 마음상담", {
               body: "진료를 기다리는 환자가 있습니다.",
               icon: "/doctor@3x.png",
             })
