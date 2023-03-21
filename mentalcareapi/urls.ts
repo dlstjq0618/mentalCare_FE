@@ -16,7 +16,12 @@ export const URLS = {
       `/api/psychological/v1/calculate/${id}?diff=${year}`,
     STATUS: "/api/user/v1/counselor/activate",
     STATUS2: "/api/user/v1/counselor/immediately",
-    TEST: "/get",
     BOARD: "/counselor-board/post",
+    BOARD_PUT: "/counselor-board/post",
+    COMMENT: `/counselor-board/post/comment`,
+    CHAT: `/counseling/chat`,
+    LIST: `/counselor-board/post/all`,
+    LISTS: (id: number) => `/counselor-board/post/${id}`,
+    DETAIL: (id: number) => `/counselor-board/post/detail/${id}`,
   },
 };

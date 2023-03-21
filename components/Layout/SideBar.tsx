@@ -118,8 +118,6 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const nonImmediateCount = useSelector(selectNonImmediateListCount);
   const totalCount = immediateCount + nonImmediateCount;
 
-  console.log("immediate", totalCount);
-
   const watingRoom_count = consultingList?.count + reservationList?.count;
 
   const audioRef = useRef<HTMLAudioElement>(null);

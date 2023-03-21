@@ -260,6 +260,11 @@ export interface TutorialOpeningTimes {
   openingTimes: Openingtime[];
 };
 
+export interface RestMessageType {
+  message: string;
+  roomId: number;
+}
+
 export interface Hospital {
   id: number;
   name: string;

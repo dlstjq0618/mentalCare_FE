@@ -3,10 +3,19 @@ import { RoundedButton } from "~/components";
 import { rem } from "polished";
 import { Heading, Section } from "~/components";
 import LayoutComponent from "~/components/Layout";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useRouter } from "next/router";
+import CheckIcon from "@mui/icons-material/Check";
 import styled, { css } from "styled-components";
+import { Input } from "~/components";
 import dynamic from "next/dynamic";
 import TitleInput from "../../../components/Notice/TitleInput";
+import { Arricle, Button, Ul, Li } from "../container/Notice";
+import { api, api2 } from "../../../mentalcareapi";
+import { useDispatch, useSelector } from "react-redux";
+import { setHtmlFiles, selectHtmlFiles } from "~/store/calendarDetailSlice";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Div = styled.div`
   width: ${rem(1050)};
@@ -14,11 +23,6 @@ const Div = styled.div`
 `;
 
 function Register() {
-  const QuillNoSSRWrapper = dynamic(import("react-quill"), {
-    ssr: false,
-    loading: () => <p>{console.log("loading...with editor")}</p>,
-  });
-
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -64,6 +68,12 @@ function Register() {
 
   const router = useRouter();
   const [editorLoaded, setEditorLoaded] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [type, setType] = useState("카테고리");
+  const [title, setTitle] = useState("");
+  const dispatch = useDispatch();
+  const [value, setValue] = useState();
+  const contents = useSelector(selectHtmlFiles);
 
   const [open, setOpen] = useState(false);
 
@@ -71,8 +81,22 @@ function Register() {
     setEditorLoaded(true);
   }, []);
 
-  const handleOnchange = (content) => {
-    console.log("content", content);
+  const handleChange = (content) => {
+    dispatch(setHtmlFiles(content));
+  };
+
+  const handleSubmit = () => {
+    console.log("html 데이터 전송");
+    console.log("content", contents);
+    api2.counselor
+      .board({
+        title: title,
+        content: contents,
+        isSecret: false,
+        contentData: 0,
+        fileUrls: [],
+      })
+      .then((res) => console.log("res", res));
   };
 
   return (
@@ -93,21 +117,74 @@ function Register() {
         >
           커뮤니티
         </Heading>
-        <TitleInput />
+        <Arricle style={{ justifyContent: "flex-start", marginBottom: 10 }}>
+          <div>
+            <Button select onClick={() => setCheck(!check)}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {type}
+              </div>
+              <KeyboardArrowDownIcon />
+            </Button>
+            {check && (
+              <Ul style={{ zIndex: 10, position: "fixed" }}>
+                {NOTICE_FILTER.map((res, index) => {
+                  return (
+                    <Li
+                      style={{ zIndex: 10 }}
+                      check
+                      onClick={() => {
+                        setType(res.label), setCheck(false);
+                      }}
+                      key={index}
+                      value={res.value}
+                    >
+                      {res.label}
+                      {type === res.label ? (
+                        <CheckIcon style={{ color: "#eb541e" }} />
+                      ) : (
+                        <CheckIcon style={{ color: "#fff" }} />
+                      )}
+                    </Li>
+                  );
+                })}
+              </Ul>
+            )}
+          </div>
+          <Input
+            value={title}
+            placeholder="제목을 입력해주세요."
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            css={{
+              width: "100%",
+              marginLeft: rem(8),
+              borderRadius: "10px",
+              paddingLeft: rem(24),
+              "&::placeholder": {
+                fontSize: rem(14),
+              },
+            }}
+          />
+        </Arricle>
         <Div>
-          <QuillNoSSRWrapper // 게시판 라이브러리
+          <ReactQuill // 게시판 라이브러리
             style={{
               background: "white",
             }}
             modules={modules}
             formats={formats}
-            onChange={handleOnchange}
+            onChange={(e) => {
+              handleChange(e);
+            }}
             theme="snow"
           />
         </Div>
         <div style={{ width: rem(1055) }}>
           <RoundedButton
-            onClick={() => alert("등록 완료")}
+            onClick={() => {
+              handleSubmit();
+            }}
             css={{
               marginTop: "2vh",
               background: "#eb541e",

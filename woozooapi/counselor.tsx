@@ -43,7 +43,6 @@ export const counselor = {
                 Authorization: `jwt ${sessions?.accessToken}`,
             },
         });
-
         return data;
     },
 

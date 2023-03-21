@@ -94,6 +94,7 @@ type DiagnosisDetailStoreState = {
   immediateList: any;
   nonimmediateList: any;
   focus: boolean | null;
+  htmlFiles: any;
 };
 
 const initialState: DiagnosisDetailStoreState = {
@@ -163,6 +164,7 @@ const initialState: DiagnosisDetailStoreState = {
   immediateList: 0,
   nonimmediateList: 0,
   focus: null,
+  htmlFiles: "",
 };
 
 export const calendarDetailSilce = createSlice({
@@ -628,6 +630,13 @@ export const calendarDetailSilce = createSlice({
     ) {
       state.focus = action.payload;
     },
+    setHtmlFiles(
+      // html files
+      state,
+      action: PayloadAction<DiagnosisDetailStoreState["htmlFiles"]>
+    ) {
+      state.htmlFiles = action.payload;
+    },
   },
 });
 
@@ -696,6 +705,7 @@ export const {
   setImmediateListCount,
   setNonImmediateListCount,
   setStoreFocus,
+  setHtmlFiles,
 } = calendarDetailSilce.actions;
 
 export const selectDiagnosisCallStatus = (state: RootState) =>
@@ -824,5 +834,7 @@ export const selectNonImmediateListCount = (state: RootState) =>
 
 export const selectStoreFocus = (state: RootState) =>
   state.calendarDetail.focus;
+export const selectHtmlFiles = (state: RootState) =>
+  state.calendarDetail.htmlFiles;
 
 export default calendarDetailSilce.reducer;

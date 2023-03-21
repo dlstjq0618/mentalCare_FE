@@ -8,6 +8,7 @@ import { api } from "~/woozooapi";
 import styled, { css } from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 import CheckIcon from '@mui/icons-material/Check';
+import PaginationControlled from "~/components/Pagination";
 import {
     Div,
     Dropdown,
@@ -25,10 +26,12 @@ import moment from "moment";
 import { NOTICE_FILTER } from '~/utils/constants';
 import { selectNoticeCount, selectNoticeDescription } from "~/store/settingsSlice";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import PaginationControlled from "~/components/Pagination";
+
 
 interface INoticeProps {
     data?: [] | undefined;
+    value?: any;
+    pages?: any;
 }
 interface IStyled {
     margin?: number;
@@ -138,6 +141,7 @@ function Notice(props: INoticeProps) {
     const [check, setCheck] = useState(false);
     const router = useRouter();
     const [type, setType] = useState("전체");
+    const [pages, setPages] = useState(0);
     const [reservationList, setReservationList] =
         useState<PrivateDiagnosisReservationListResponse>();
 
@@ -149,6 +153,8 @@ function Notice(props: INoticeProps) {
         })
         setTeams(filter_data)
     }
+
+
 
 
     useEffect(() => {
@@ -166,6 +172,7 @@ function Notice(props: INoticeProps) {
             setTempState(false);
         }
     })
+
     useEffect(() => {
         setTeams(totalDescription)
     }, [totalDescription])
@@ -181,49 +188,54 @@ function Notice(props: INoticeProps) {
             {
                 tempState ?
                     <Details style={{ marginTop: rem(30), width: rem(1055), height: rem(640) }}>
-                        <div style={{ fontWeight: "bold", display: "flex", justifyContent: "space-between", margin: `0 ${rem(30)} 0 ${rem(30)}` }}>
-                            <div>No</div>
-                            <div>분류</div>
-                            <div>제목</div>
-                            <div>작성자</div>
-                            <div>조회</div>
-                            <div>등록일</div>
+                        <div style={{ fontWeight: "bold", display: "flex" }}>
+                            <div style={{ width: rem(20), marginRight: rem(53), marginLeft: rem(53) }}>No</div>
+                            <div style={{ width: rem(30) }}>분류</div>
+                            <div style={{ width: rem(483), textAlign: 'center' }}>제목</div>
+                            <div style={{ width: rem(136) }}>작성자</div>
+                            <div style={{ width: rem(41) }}>조회</div>
+                            <div style={{ width: rem(170), textAlign: 'center' }}>등록일</div>
                         </div>
                         <Divider style={{ background: "#000", margin: `${rem(14)} 0` }} />
                         {
-                            teams && teams.map((data: any, index: number) => (
+                            teams && teams?.map((data: any, index: number) => (
                                 <>
-                                    <div style={{ display: "flex", fontSize: rem(14), textAlign: "center" }}>
-                                        <Div css={{ width: rem(61), minWidth: rem(63), letterSpacing: `${rem(-0.56)}`, marginLeft: rem(14), marginRight: rem(50) }}>
-                                            {data.title && data.title.length >= 7 ? data.title.substr(0, 7) + "..." : data.title}
+                                    <div key={index} style={{ display: "flex", fontSize: rem(14) }}>
+                                        <div style={{ width: rem(120), textAlign: 'center' }}>
+                                            {index}
+                                        </div>
+
+                                        <Div key={index} css={{ width: `3.5rem`, letterSpacing: `${rem(-0.56)}`, textAlign: 'center', marginRight: rem(25) }}>
+                                            {data.contentType && data.contentType.length >= 7 ? data.contentType.substr(0, 7) + "..." : data.contentType}
                                         </Div>
-                                        <div style={{ display: "flex", width: "100%", letterSpacing: `${rem(-0.56)}`, justifyContent: "space-between" }}>
-                                            <Div css={{ cursor: "pointer", display: "flex" }} onClick={() => router.push(`/notice/${index}`)}>
+
+                                        <div key={index} style={{ width: rem(483), letterSpacing: `${rem(-0.56)}`, justifyContent: "space-between" }}>
+                                            <Div css={{ cursor: "pointer", display: "flex" }} onClick={() => router.push(`/notice/${data.id}`)}>
                                                 <div style={{ marginRight: '2px' }}>
-                                                    {data.description.indexOf("/") > 0 ?
-                                                        data.description.substr(0, data.description.indexOf("/")) + ""
-                                                        :
-                                                        data.description.indexOf("/") > 28 ? data.description.substr(0, 28) + "..."
-                                                            :
-                                                            data.description.length >= 28 ? data.description.substr(0, 28) + "..."
-                                                                :
-                                                                data.description
+                                                    {
+                                                        data.title && data.title > 10 ? data.title.slice(0, 3) + '...' : data.title
                                                     }
                                                 </div>
                                                 {
                                                     <div>
                                                         {
-                                                            new Date(data.createAt).getTime() + 604800000 > new Date().getTime() ?
+                                                            new Date(data.created).getTime() + 604800000 > new Date().getTime() ?
                                                                 <Image priority src="/ico_new@2x.png" alt="empty" width={12} height={12} />
                                                                 : ""
                                                         }
                                                     </div>
                                                 }
                                             </Div>
-                                            <Div css={{ marginRight: rem(14), letterSpacing: `${rem(-0.56)}`, color: "rgba(0, 0, 0, 0.3)" }}>
-                                                {moment(new Date(data.createAt)).format('YYYY.MM.DD')}
-                                            </Div>
                                         </div>
+                                        <div key={index} style={{ width: rem(136) }}>
+                                            {data?.userName}
+                                        </div>
+                                        <div style={{ width: rem(110), paddingLeft: rem(16) }}>
+                                            {data?.readCount}
+                                        </div>
+                                        <Div key={index} css={{ width: rem(133), letterSpacing: `${rem(-0.56)}`, color: "rgba(0, 0, 0, 0.3)" }}>
+                                            {moment(new Date(data.created)).format('YYYY.MM.DD')}
+                                        </Div>
                                     </div>
                                     <Divider style={{ margin: `${rem(14)} 0` }} />
                                 </>
@@ -241,6 +253,10 @@ function Notice(props: INoticeProps) {
                         </div>
                     </Details>
             }
+            <Arricle style={{ marginBottom: 50 }}>
+                <PaginationControlled pages={props.pages} />
+            </Arricle>
+
             <Arricle>
                 <div>
                     <Button select onClick={() => setCheck(!check)}>

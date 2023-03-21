@@ -81,6 +81,7 @@ import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
 import { CoustomAlertPopUp } from '../components/Dialog';
 import Draggable from "react-draggable";
+import { api2 } from '~/mentalcareapi';
 
 interface IStyled {
     size?: any;
@@ -514,7 +515,6 @@ export default function BoxSx() {
         await dispatch(setCounselingTimeStempNumber(0))
         await dispatch(setCounselingTimeStemp(""))
     }
-    console.log("totalTime", totalTime);
 
     async function handleTest() {
         const data1 = {
@@ -703,13 +703,17 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
+            api2.counselor.chat({
+                roomId: intRoom_id,
+                message: chat?.message
+            });
             dispatch(setLoggedUser(chat))
             setIsMessage([...isMessage, chat])
             setState({ message: '' })
         }
     };
 
-    const handleMouseFirstDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 채팅방에서 마우스 클릭
+    const handleMouseFirstDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => { // 일정 협의 채팅방에서 마우스 클릭
         if (state.message !== '') {
             const chat = {
                 datas: {
@@ -727,6 +731,12 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
+
+            api2.counselor.chat({
+                roomId: intRoom_id,
+                message: chat?.message
+            });
+
             dispatch(setLoggedUser(chat))
             setState({ message: '' })
             setIsMessage([...isMessage, chat])
@@ -754,9 +764,14 @@ export default function BoxSx() {
                 datas: chat
             });
 
+            api2.counselor.chat({
+                roomId: intRoom_id,
+                message: chat?.message
+            });
+
             dispatch(setLoggedUser(chat));
-            setIsMessage([...isMessage, chat])
-            setState({ message: '' })
+            setIsMessage([...isMessage, chat]);
+            setState({ message: '' });
         }
     }
 
@@ -779,6 +794,10 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
+            api2.counselor.chat({
+                roomId: intRoom_id,
+                message: chat?.message
+            }).then((res) => res);
             dispatch(setLoggedUser(chat));
             setIsMessage([...isMessage, chat]);
             setState({ message: '' })
@@ -832,7 +851,7 @@ export default function BoxSx() {
 
     async function handleImmediately() {
         console.log("소캣 바로상담 상태 전송", infoData.id, socketImmediely);
-        socket.emit('counselor', {
+        await socket.emit('counselor', {
             method: 'request/immediate',
             datas: {
                 id: infoData.id,
@@ -841,6 +860,8 @@ export default function BoxSx() {
             }
         })
     }
+
+    console.log("infoData.id", socketImmediely);
 
     useEffect(() => {
         if (counselingStatus === 'finish') {
@@ -868,12 +889,15 @@ export default function BoxSx() {
         } else if (useOpen === "결제요청") {
             handlePaidWaitList()
         }
-        console.log("useOpen", useOpen);
     }, [useOpen])
 
     useEffect(() => {
-        handleImmediately();
+        if (socketImmediely.length !== 0) {
+            handleImmediately();
+        }
     }, [socketImmediely])
+
+    console.log("길이", socketImmediely.length)
 
     useEffect(() => { // 테스트 결과보기
         if (test_status) {

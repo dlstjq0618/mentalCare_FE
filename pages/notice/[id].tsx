@@ -16,6 +16,9 @@ import PaginationControlled from '~/components/Pagination';
 import Image from 'next/image';
 import icon_lock from '../../public/icon_lock@2x.png'
 import commentIcon from '../../public/comment@3x.png'
+import { api2 } from '~/mentalcareapi';
+import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
+import { selectNoticeCount, selectNoticeDescription } from "~/store/settingsSlice";
 
 
 interface IStyeldProps {
@@ -63,30 +66,73 @@ const Line = styled.div`
 
 function NoticeDetail() {
     const router = useRouter();
+    const dispatch = useDispatch()
     const { id } = router.query;
-    const [seat, setSeat] = useState([]);
+    const ids = Number(id);
+    const [seat, setSeat] = useState<any>([]);
     const [noticeGroup, setNoticeGroup] = useState<string>();
     const [noticeValue, setNoticeValue] = useState<any>();
     const [noticeDate, setNoticeDate] = useState<any>();
     const [comment, setComment] = useState(false);
-    const [userName, setUserName] = useState("")
-    const dispatch = useDispatch()
+    const [userName, setUserName] = useState("");
+    const [privateCheck, setPrivateCheck] = useState(false); // 댓글 비밀상태 체크
+    const [replyPrivateCheck, setReplyPrivateCheck] = useState(false); // 답글 비밀상태체크
+    const [commentValue, setCommentValue] = useState("");
+    const [reply, setReply] = useState("");
+    const info = useSelector(selectCounselingInfoData);
 
-    useEffect(() => {
-        api.diagnosis.getNoticeListMain().then((res: any) => {
-            setSeat(res.results)
+    const handleSubmitComment = () => { // 댓글
+        api2.counselor.comment({
+            comment: commentValue,
+            isSecret: privateCheck,
+            nestCommentId: null,
+            counselor_id: info?.id,
+            postId: 8,
+        }).then(() => alert("댓글이 저장되었습니다."))
+    }
+
+    const handleSubmitReply = () => { // 답글
+        api2.counselor.comment({
+            content: reply,
+            isSecret: privateCheck,
+            postId: 8,
+            nestCommentId: null
+        }).then(() => alert("답글이 저장되었습니다.")).then(() => {
+            return api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
         })
-    }, [])
+    }
+
+    const handleOnDelete = () => {
+        api2.counselor.delete({
+            deletePostIds: ids // 해당 게시물 상세정보에 같이 오는 ID 값
+        })
+    }
 
     useEffect(() => {
-        seat.filter((team: any, index: number) => {
-            if (index === Number(id)) {
+        api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result))
+    }, [id])
+
+    // useEffect(() => {
+    //     seat.filter((team: any, index: number) => {
+    //         if (index === Number(id)) {
+    //             setNoticeGroup(team.title)
+    //             setNoticeValue(team.description)
+    //             setNoticeDate(team.createAt)
+    //         }
+    //     })
+    // });
+
+    useEffect(() => {
+        if (seat.length > 0) {
+            seat && seat.filter((team: any, index: number) => {
                 setNoticeGroup(team.title)
-                setNoticeValue(team.description)
-                setNoticeDate(team.createAt)
-            }
-        })
-    })
+                setNoticeValue(team.content)
+                setNoticeDate(team.created)
+            })
+        }
+    });
+
+    console.log("seat", seat);
 
     return (
         <>
@@ -110,26 +156,16 @@ function NoticeDetail() {
                     <Details style={{ marginBottom: rem(0), height: rem(697), width: rem(1055), borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}>
                         <div style={{
                             flexGrow: 0,
-                            margin: `0 ${rem(12)} 0 0`,
-                            fontSize: rem(14),
-                            lineHeight: 1.4,
-                            letterSpacing: rem(-0.56),
-                            textAlign: "left",
-                        }}>
-                            {noticeGroup}
-                        </div>
-                        <div style={{
-                            flexGrow: 0,
                             margin: `${rem(12)} 0 ${rem(5)}`,
                             fontSize: rem(20),
                             lineHeight: 1.4,
                             textAlign: "left",
                             fontWeight: "600"
                         }}>
-                            {noticeValue?.indexOf("/") > 0 ? noticeValue.substr(0, noticeValue.indexOf("/")) : noticeValue}
+                            {noticeGroup}
                         </div>
                         <div>
-                            <Button cursor width={69} height={32}>수정</Button>
+                            <Button style={{ marginRight: 20 }} cursor width={69} height={32}>수정</Button>
                             <Button cursor style={{ marginRight: 6 }} width={69} height={32}>삭제</Button>
                         </div>
                         <div style={{
@@ -144,8 +180,9 @@ function NoticeDetail() {
                         }}
                         >
                             {moment(new Date(noticeDate)).format('YYYY.MM.DD')}
-                            <div style={{ marginLeft: '12px' }}>조회 5</div>
+                            <div style={{ marginLeft: '12px' }}>조회 {seat[0]?.readCount}</div>
                         </div>
+                        <Line></Line>
                         <div style={{
                             flexGrow: 0,
                             margin: `${rem(30)} 0 0`,
@@ -155,14 +192,14 @@ function NoticeDetail() {
                             textAlign: "left",
                             color: "#000"
                         }}>
-                            {noticeValue?.indexOf("/") > 0 ? noticeValue.slice(noticeValue.indexOf("/") + 1) : ""}
+                            {noticeValue}
                             {/* <Button>댓글</Button> */}
                         </div>
                     </Details>
                     <div style={{ height: 'auto', background: '#fff', width: 1055, padding: '26px 40px' }}>
                         <div>
-                            <Button width={117} height={40} style={{ paddingTop: 11, display: 'flex' }}>
-                                <Image src={commentIcon} width={20} height={20}></Image>   댓글 <strong color='#e8440a'>33</strong>
+                            <Button width={117} height={40} style={{ paddingTop: 11, display: 'flex', justifyContent: 'space-evenly' }}>
+                                <Image src={commentIcon} width={20} height={20}></Image> 댓글 <strong>{seat[0]?.comments?.length}</strong>
                             </Button>
                             <Line></Line>
                         </div>
@@ -170,26 +207,118 @@ function NoticeDetail() {
                             <div style={{ color: '#333333', fontWeight: 'bold', fontSize: '14px' }}>
                                 {"User"}
                             </div>
-                            <div style={{ cursor: 'pointer', border: '1px solid #b4b4b4', height: '26px', width: 47, textAlign: 'center' }}>
+                            <div
+                                onClick={() => handleOnDelete()}
+                                style={{
+                                    cursor: 'pointer',
+                                    border: '1px solid #b4b4b4',
+                                    height: '26px',
+                                    width: 47,
+                                    textAlign: 'center'
+                                }}>
                                 삭제
                             </div>
                         </div>
-                        <div>
-                            {"내용 ex) 15만원에 거래가능한데 지역이 어디세요? 근처면 직거래 괜찮을까요?"}
-                        </div>
-                        <div style={{ color: '#000', fontSize: '12px', opacity: 0.5, marginTop: '4px' }}>{"2023/0209 10:22"}</div>
-                        <div onClick={() => { setComment(!comment), setUserName("User_name") }} style={{ cursor: 'pointer', marginTop: '12px', border: '1px solid #b4b4b4', height: '26px', width: 47, textAlign: 'center', marginBottom: 20 }}>
-                            답글
-                        </div>
+                        {
+                            seat && seat[0]?.comments.map((data: any, index: number) => {
+                                return <>
+                                    <div key={index}>
+                                        {data?.content}
+                                    </div>
+                                    <div style={{ color: '#000', fontSize: '12px', opacity: 0.5, marginTop: '4px' }}>
+                                        {data?.created}
+                                    </div>
+                                    <div onClick={() => {
+                                        setComment(!comment),
+                                            setUserName("User_name")
+                                    }} style={{ cursor: 'pointer', marginTop: '12px', border: '1px solid #b4b4b4', height: '26px', width: 47, textAlign: 'center', marginBottom: 20 }}>
+                                        답글
+                                    </div>
+                                    <Line></Line>
+                                </>
+                            })
+
+                        }
                         {
                             comment &&
-                            <div style={{ display: 'flex', height: '184px', background: 'rgba(0, 0, 0, 0.03)', padding: '26px 40px' }}>
-                                <SubdirectoryArrowRightIcon /><textarea style={{ resize: 'none', width: '100%', height: '100%' }} ></textarea>
+                            <div style={{ height: '221px', background: 'rgba(0, 0, 0, 0.03)', padding: '26px 40px' }}>
+                                <div style={{ display: 'flex' }}>
+                                    <SubdirectoryArrowRightIcon />
+                                    <textarea
+                                        value={reply}
+                                        onChange={(e) => {
+                                            setReply(e.target.value);
+                                        }}
+                                        style={{
+                                            resize: 'none',
+                                            width: '100%',
+                                            height: rem(144)
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'end',
+                                        alignItems: 'center'
+                                    }}>
+                                    <Image src={icon_lock} width={20} height={20} />
+                                    <div onClick={() => setReplyPrivateCheck(!replyPrivateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
+                                    <div onClick={() => handleSubmitReply()}
+                                        style={{
+                                            cursor: 'pointer',
+                                            marginTop: '9px',
+                                            border: '1px solid #b4b4b4',
+                                            height: '32px',
+                                            width: 69,
+                                            textAlign: 'center',
+                                            float: 'right',
+                                            paddingTop: '3px',
+                                            background: '#fff'
+                                        }}>
+                                        등록
+                                    </div>
+                                </div>
                             </div>
                         }
-                        <PaginationControlled />
-                        <textarea placeholder='댓글을 남겨보세요' style={{ outline: 'none', border: '1px solid rgba(0, 0, 0, 0.1)', minHeight: '144px', marginTop: '34px', resize: 'none', width: '100%', height: '100%', padding: '20px' }} />
-                        <div style={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}><Image src={icon_lock} width={20} height={20} /><div style={{ marginRight: '30px' }}>비밀댓글</div><div style={{ cursor: 'pointer', marginTop: '9px', border: '1px solid #b4b4b4', height: '32px', width: 69, textAlign: 'center', float: 'right', paddingTop: '3px' }}>등록</div></div>
+                        <PaginationControlled pages={10} />
+                        <textarea
+                            value={commentValue}
+                            placeholder='댓글을 남겨보세요'
+                            onChange={(e) => {
+                                setCommentValue(e.target.value)
+                            }}
+                            style={{
+                                outline: 'none',
+                                border: '1px solid rgba(0, 0, 0, 0.1)',
+                                minHeight: '144px',
+                                marginTop: '34px',
+                                resize: 'none',
+                                width: '100%',
+                                height: '100%',
+                                padding: '20px'
+                            }} />
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'end',
+                                alignItems: 'center'
+                            }}>
+                            <Image src={icon_lock} width={20} height={20} />
+                            <div onClick={() => setPrivateCheck(!privateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
+                            <div onClick={() => handleSubmitComment()} style={{
+                                cursor: 'pointer',
+                                marginTop: '9px',
+                                border: '1px solid #b4b4b4',
+                                height: '32px',
+                                width: 69,
+                                textAlign: 'center',
+                                float: 'right',
+                                paddingTop: '3px'
+                            }}>
+                                등록
+                            </div>
+                        </div>
                     </div>
                     <div style={{ width: rem(1055), marginTop: rem(20) }}>
                         <Button cursor width={75} height={48} onClick={() => router.push('/notice')} style={{ background: '#fff', paddingTop: 16 }}>
