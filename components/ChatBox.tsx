@@ -703,10 +703,10 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-            api2.counselor.chat({
-                roomId: intRoom_id,
-                message: chat?.message
-            });
+            // api2.counselor.chat({
+            //     roomId: intRoom_id,
+            //     message: chat?.message
+            // });
             dispatch(setLoggedUser(chat))
             setIsMessage([...isMessage, chat])
             setState({ message: '' })
@@ -732,10 +732,10 @@ export default function BoxSx() {
                 datas: chat
             });
 
-            api2.counselor.chat({
-                roomId: intRoom_id,
-                message: chat?.message
-            });
+            // api2.counselor.chat({
+            //     roomId: intRoom_id,
+            //     message: chat?.message
+            // });
 
             dispatch(setLoggedUser(chat))
             setState({ message: '' })
@@ -764,10 +764,10 @@ export default function BoxSx() {
                 datas: chat
             });
 
-            api2.counselor.chat({
-                roomId: intRoom_id,
-                message: chat?.message
-            });
+            // api2.counselor.chat({
+            //     roomId: intRoom_id,
+            //     message: chat?.message
+            // });
 
             dispatch(setLoggedUser(chat));
             setIsMessage([...isMessage, chat]);
@@ -794,10 +794,12 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-            api2.counselor.chat({
-                roomId: intRoom_id,
-                message: chat?.message
-            }).then((res) => res);
+            // api2.counselor.chat({
+            //     roomId: intRoom_id,
+            //     message: chat?.message
+            // }).then((res) => res);
+
+
             dispatch(setLoggedUser(chat));
             setIsMessage([...isMessage, chat]);
             setState({ message: '' })
@@ -860,8 +862,6 @@ export default function BoxSx() {
             }
         })
     }
-
-    console.log("infoData.id", socketImmediely);
 
     useEffect(() => {
         if (counselingStatus === 'finish') {

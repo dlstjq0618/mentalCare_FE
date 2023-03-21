@@ -59,7 +59,7 @@ const Line = styled.div`
     width: ${rem(975)};
   height: 1px;
   flex-grow: 0;
-  margin: 28px 0;
+  margin: 28px 0 0 0;
   background-color: #d9d9d9;
 `;
 
@@ -80,15 +80,18 @@ function NoticeDetail() {
     const [commentValue, setCommentValue] = useState("");
     const [reply, setReply] = useState("");
     const info = useSelector(selectCounselingInfoData);
+    const [commentNumber, setCommentNumber] = useState<number>();
 
     const handleSubmitComment = () => { // 댓글
         api2.counselor.comment({
-            comment: commentValue,
+            content: commentValue,
             isSecret: privateCheck,
             nestCommentId: null,
             counselor_id: info?.id,
             postId: 8,
-        }).then(() => alert("댓글이 저장되었습니다."))
+        }).then(() => alert("댓글이 저장되었습니다.")).then(() => {
+            api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
+        })
     }
 
     const handleSubmitReply = () => { // 답글
@@ -97,8 +100,8 @@ function NoticeDetail() {
             isSecret: privateCheck,
             postId: 8,
             nestCommentId: null
-        }).then(() => alert("답글이 저장되었습니다.")).then(() => {
-            return api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
+        }).then(() => {
+            api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
         })
     }
 
@@ -112,15 +115,6 @@ function NoticeDetail() {
         api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result))
     }, [id])
 
-    // useEffect(() => {
-    //     seat.filter((team: any, index: number) => {
-    //         if (index === Number(id)) {
-    //             setNoticeGroup(team.title)
-    //             setNoticeValue(team.description)
-    //             setNoticeDate(team.createAt)
-    //         }
-    //     })
-    // });
 
     useEffect(() => {
         if (seat.length > 0) {
@@ -131,8 +125,6 @@ function NoticeDetail() {
             })
         }
     });
-
-    console.log("seat", seat);
 
     return (
         <>
@@ -153,7 +145,13 @@ function NoticeDetail() {
                     >
                         커뮤니티
                     </Heading>
-                    <Details style={{ marginBottom: rem(0), height: rem(697), width: rem(1055), borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}>
+                    <Details style={{
+                        marginBottom: rem(0),
+                        height: rem(697),
+                        width: rem(1055),
+                        borderBottomLeftRadius: 0,
+                        borderBottomRightRadius: 0
+                    }}>
                         <div style={{
                             flexGrow: 0,
                             margin: `${rem(12)} 0 ${rem(5)}`,
@@ -203,85 +201,89 @@ function NoticeDetail() {
                             </Button>
                             <Line></Line>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div style={{ color: '#333333', fontWeight: 'bold', fontSize: '14px' }}>
-                                {"User"}
-                            </div>
-                            <div
-                                onClick={() => handleOnDelete()}
-                                style={{
-                                    cursor: 'pointer',
-                                    border: '1px solid #b4b4b4',
-                                    height: '26px',
-                                    width: 47,
-                                    textAlign: 'center'
-                                }}>
-                                삭제
-                            </div>
-                        </div>
                         {
                             seat && seat[0]?.comments.map((data: any, index: number) => {
                                 return <>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: rem(20) }}>
+                                        <div style={{ color: '#333333', fontWeight: 'bold', fontSize: '14px' }}>
+                                            {data?.userName}
+                                        </div>
+                                        <div
+                                            onClick={() => handleOnDelete()}
+                                            style={{
+                                                cursor: 'pointer',
+                                                border: '1px solid #b4b4b4',
+                                                height: '26px',
+                                                width: 47,
+                                                textAlign: 'center'
+                                            }}>
+                                            삭제
+                                        </div>
+                                    </div>
                                     <div key={index}>
                                         {data?.content}
                                     </div>
                                     <div style={{ color: '#000', fontSize: '12px', opacity: 0.5, marginTop: '4px' }}>
-                                        {data?.created}
+                                        {moment(new Date(data.created)).format('YYYY/MM/DD hh:mm')}
                                     </div>
                                     <div onClick={() => {
                                         setComment(!comment),
-                                            setUserName("User_name")
+                                            setUserName("User_name"),
+                                            setCommentNumber(index);
                                     }} style={{ cursor: 'pointer', marginTop: '12px', border: '1px solid #b4b4b4', height: '26px', width: 47, textAlign: 'center', marginBottom: 20 }}>
                                         답글
                                     </div>
                                     <Line></Line>
+                                    {
+                                        comment && commentNumber === index ?
+                                            <div key={index} style={{ height: '221px', background: 'rgba(0, 0, 0, 0.03)', padding: '26px 40px' }}>
+                                                <div style={{ display: 'flex' }}>
+                                                    <SubdirectoryArrowRightIcon />
+                                                    <textarea
+                                                        value={reply}
+                                                        onChange={(e) => {
+                                                            setReply(e.target.value);
+                                                        }}
+                                                        style={{
+                                                            resize: 'none',
+                                                            width: '100%',
+                                                            height: rem(144)
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'end',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                    <Image src={icon_lock} width={20} height={20} />
+                                                    <div onClick={() => setReplyPrivateCheck(!replyPrivateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
+                                                    <div onClick={() => handleSubmitReply()}
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            marginTop: '9px',
+                                                            border: '1px solid #b4b4b4',
+                                                            height: '32px',
+                                                            width: 69,
+                                                            textAlign: 'center',
+                                                            float: 'right',
+                                                            paddingTop: '3px',
+                                                            background: '#fff'
+                                                        }}>
+                                                        등록
+                                                    </div>
+                                                </div>
+                                            </div> : null
+                                    }
                                 </>
                             })
 
                         }
-                        {
-                            comment &&
-                            <div style={{ height: '221px', background: 'rgba(0, 0, 0, 0.03)', padding: '26px 40px' }}>
-                                <div style={{ display: 'flex' }}>
-                                    <SubdirectoryArrowRightIcon />
-                                    <textarea
-                                        value={reply}
-                                        onChange={(e) => {
-                                            setReply(e.target.value);
-                                        }}
-                                        style={{
-                                            resize: 'none',
-                                            width: '100%',
-                                            height: rem(144)
-                                        }}
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'end',
-                                        alignItems: 'center'
-                                    }}>
-                                    <Image src={icon_lock} width={20} height={20} />
-                                    <div onClick={() => setReplyPrivateCheck(!replyPrivateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
-                                    <div onClick={() => handleSubmitReply()}
-                                        style={{
-                                            cursor: 'pointer',
-                                            marginTop: '9px',
-                                            border: '1px solid #b4b4b4',
-                                            height: '32px',
-                                            width: 69,
-                                            textAlign: 'center',
-                                            float: 'right',
-                                            paddingTop: '3px',
-                                            background: '#fff'
-                                        }}>
-                                        등록
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        <PaginationControlled pages={10} />
+                        <div style={{ marginTop: rem(20) }}>
+                            <PaginationControlled pages={seat[0]?.comments?.length} />
+                            {console.log("seat[0]?.comments?.length", seat[0]?.comments?.length)}
+                        </div>
                         <textarea
                             value={commentValue}
                             placeholder='댓글을 남겨보세요'
@@ -297,7 +299,8 @@ function NoticeDetail() {
                                 width: '100%',
                                 height: '100%',
                                 padding: '20px'
-                            }} />
+                            }}
+                        />
                         <div
                             style={{
                                 display: 'flex',
