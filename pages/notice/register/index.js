@@ -14,7 +14,6 @@ import { Arricle, Button, Ul, Li } from "../container/Notice";
 import { api, api2 } from "../../../mentalcareapi";
 import { useDispatch, useSelector } from "react-redux";
 import { setHtmlFiles, selectHtmlFiles } from "~/store/calendarDetailSlice";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const Div = styled.div`
@@ -23,6 +22,11 @@ const Div = styled.div`
 `;
 
 function Register() {
+  const Quill = dynamic(import("react-quill"), {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  });
+
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -168,7 +172,7 @@ function Register() {
           />
         </Arricle>
         <Div>
-          <ReactQuill // 게시판 라이브러리
+          <Quill // 게시판 라이브러리
             style={{
               background: "white",
             }}
