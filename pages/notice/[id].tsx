@@ -19,6 +19,7 @@ import commentIcon from '../../public/comment@3x.png'
 import { api2 } from '~/mentalcareapi';
 import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
 import { selectNoticeCount, selectNoticeDescription } from "~/store/settingsSlice";
+import { CircularProgress } from '@mui/material';
 
 
 interface IStyeldProps {
@@ -62,6 +63,10 @@ const Line = styled.div`
   margin: 28px 0 0 0;
   background-color: #d9d9d9;
 `;
+const Progress = styled.div`
+    text-align: center;
+    margin-top: ${rem(250)};
+`;
 
 
 function NoticeDetail() {
@@ -82,6 +87,7 @@ function NoticeDetail() {
     const info = useSelector(selectCounselingInfoData);
     const [html, setHtml] = useState('');
     const [commentNumber, setCommentNumber] = useState<number>();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmitComment = () => { // 댓글
         api2.counselor.comment({
@@ -128,7 +134,7 @@ function NoticeDetail() {
 
     useEffect(() => {
         api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result));
-        api2.counselor.detail_List(id).then((res: any) => setHtml(res.query?.result[0]?.content))
+        api2.counselor.detail_List(id).then((res: any) => setHtml(res.query?.result[0]?.content)).then(() => setLoading(true))
     }, [id])
 
     useEffect(() => {
@@ -205,8 +211,11 @@ function NoticeDetail() {
                             textAlign: "left",
                             color: "#000"
                         }}>
-                            <div dangerouslySetInnerHTML={{ __html: html }}>
-                            </div>
+                            {
+                                loading ? <div dangerouslySetInnerHTML={{ __html: html }} /> : <Progress>
+                                    <CircularProgress />
+                                </Progress>
+                            }
                             {/* <Button>댓글</Button> */}
                         </div>
                     </Details>
