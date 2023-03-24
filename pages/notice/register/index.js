@@ -237,7 +237,6 @@ function Register() {
           <ReactQuill // 게시판 라이브러리
             style={{
               background: "white",
-              height: 560,
             }}
             modules={modules}
             formats={formats}
