@@ -233,11 +233,11 @@ function Register() {
           />
         </Arricle>
         {/* <FileProfileInput2 handleFile={handleProfilePicUpload} /> */}
-        <Div style={{ height: "auto" }}>
+        <Div style={{ height: 650 }}>
           <ReactQuill // 게시판 라이브러리
             style={{
               background: "white",
-              height: "auto",
+              height: "600px",
             }}
             modules={modules}
             formats={formats}
