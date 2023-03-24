@@ -40,7 +40,7 @@ function Register() {
     return {
       toolbar: [
         [{ header: "1" }, { header: "2" }, { font: [] }],
-        [{ size: ["small", false, "large", "huge"] }, { color: [] }],
+        [/*{ size: ["small", false, "large", "huge"] },*/ { color: [] }],
         ["bold", "italic", "underline", "strike", "blockquote"],
         [
           { list: "ordered" },
@@ -48,7 +48,7 @@ function Register() {
           { indent: "-1" },
           { indent: "+1" },
         ],
-        ["link", "image", "video"],
+        ["link", /**"image", */ "video"],
         ["clean"],
       ],
 
@@ -66,7 +66,7 @@ function Register() {
     "header",
     "color",
     "font",
-    "size",
+    // "size",
     "bold",
     "italic",
     "underline",
