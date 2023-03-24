@@ -33,7 +33,6 @@ const Div = styled.div`
 `;
 const ReactQuill = dynamic(import("react-quill"), {
   ssr: false,
-  loading: () => <p>Loading...</p>,
 });
 
 function Register() {
@@ -49,9 +48,10 @@ function Register() {
           { indent: "-1" },
           { indent: "+1" },
         ],
-        ["link", "video"],
+        ["link", "image", "video"],
         ["clean"],
       ],
+
       clipboard: {
         matchVisual: false,
       },
@@ -61,6 +61,7 @@ function Register() {
    * Quill editor formats
    * See https://quilljs.com/docs/formats/
    */
+
   const formats = [
     "header",
     "color",
@@ -74,6 +75,7 @@ function Register() {
     "list",
     "bullet",
     "indent",
+    "image",
     "link",
     "video",
   ];
@@ -91,8 +93,9 @@ function Register() {
   const quillRef = useRef(null);
   // const contents = useSelector(selectHtmlFiles);
 
+  console.log(content);
+
   const handleProfilePicUpload = async (file) => {
-    console.log("file", file);
     const result = validateImageFile(file);
     // if (!result.valid) {
     //   setError("profilePic", {
@@ -234,6 +237,8 @@ function Register() {
           <ReactQuill // 게시판 라이브러리
             style={{
               background: "white",
+              height: "auto",
+              minHeight: rem(600),
             }}
             modules={modules}
             formats={formats}
