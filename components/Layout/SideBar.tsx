@@ -335,13 +335,13 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
               <span>{Number.isNaN(watingRoom_count) ? 0 : watingRoom_count}</span>
               <div>대기실</div>
             </SideBarButtons>
-            {/* <SideBarButtons
+            <SideBarButtons
               href="/notice"
               visiting={path === "/notice" ? true : false}
             >
               <CommunityIcon />
               <div>커뮤니티</div>
-            </SideBarButtons> */}
+            </SideBarButtons>
             <SideBarButtons
               href="/settings"
               visiting={path === "/settings" ? true : false}

@@ -24,8 +24,10 @@ import {
 } from "~/interfaces";
 import moment from "moment";
 import { NOTICE_FILTER } from '~/utils/constants';
-import { selectNoticeCount, selectNoticeDescription } from "~/store/settingsSlice";
+import { selectNoticeCount, selectNoticeDescription, selectNoticeDescription2 } from "~/store/settingsSlice";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { selectNotificationAllList } from "~/store/notificationSlice";
+
 
 
 interface INoticeProps {
@@ -58,6 +60,7 @@ export const Button = styled.div<IStyled>`
         props.select &&
         css`
         width: ${rem(129)};
+        border: 1px solid #d3d3d3;
         justify-content: space-between;
         display: flex;
         height: ${rem(50)};
@@ -142,26 +145,33 @@ function Notice(props: INoticeProps) {
     const router = useRouter();
     const [type, setType] = useState("전체");
     const [pages, setPages] = useState(0);
+    const all_list = useSelector(selectNotificationAllList);
     const [reservationList, setReservationList] =
         useState<PrivateDiagnosisReservationListResponse>();
 
+    const noticeDiscription = useSelector(selectNoticeDescription2);
     const inputRef = useRef<HTMLInputElement>(null);
-
-    const handleFilter = (type: string) => {
-        const filter_data = props.data && props.data.filter((data: any) => {
-            return data.title === `${type}`
+    const handleFilter = (type: any) => {
+        const filter_data = props.value && props.value.filter((data: any) => {
+            return data.contentType === Number(type)
         })
         setTeams(filter_data)
     }
-
-
 
 
     useEffect(() => {
         if (teams === undefined || type === "전체") {
             setTeams(totalDescription)
         } else if (type !== "전체") {
-            handleFilter(type)
+            if (type === '공지') {
+                handleFilter(1)
+            } else if (type === '일반') {
+                handleFilter(2)
+            } else if (type === '질문') {
+                handleFilter(3)
+            } else {
+                handleFilter(4)
+            }
         }
     }, [type])
 
@@ -174,7 +184,9 @@ function Notice(props: INoticeProps) {
     })
 
     useEffect(() => {
-        setTeams(totalDescription)
+        if (search.length < 1) {
+            setTeams(totalDescription)
+        }
     }, [totalDescription])
 
     useEffect(() => {
@@ -187,7 +199,7 @@ function Notice(props: INoticeProps) {
         <>
             {
                 tempState ?
-                    <Details style={{ marginTop: rem(30), width: rem(1055), height: rem(640) }}>
+                    <Details style={{ marginTop: rem(30), width: rem(1055), minHeight: rem(840), height: 'auto' }}>
                         <div style={{ fontWeight: "bold", display: "flex" }}>
                             <div style={{ width: rem(20), marginRight: rem(53), marginLeft: rem(53) }}>No</div>
                             <div style={{ width: rem(30) }}>분류</div>
@@ -198,22 +210,66 @@ function Notice(props: INoticeProps) {
                         </div>
                         <Divider style={{ background: "#000", margin: `${rem(14)} 0` }} />
                         {
-                            teams && teams?.map((data: any, index: number) => (
+                            noticeDiscription && noticeDiscription.map((data: any, index: number) => (
                                 <>
                                     <div key={index} style={{ display: "flex", fontSize: rem(14) }}>
                                         <div style={{ width: rem(120), textAlign: 'center' }}>
-                                            {index}
+                                            {"공지"}
                                         </div>
 
                                         <Div key={index} css={{ width: `3.5rem`, letterSpacing: `${rem(-0.56)}`, textAlign: 'center', marginRight: rem(25) }}>
-                                            {data.contentType && data.contentType.length >= 7 ? data.contentType.substr(0, 7) + "..." : data.contentType}
+                                            {data.contentType && data.contentType === 1 ? '공지' : data.contentType === 2 ? '일반' : data.contentType === 3 ? '질문' : data.contentType === 4 ? '답글' : ''}
                                         </Div>
 
                                         <div key={index} style={{ width: rem(483), letterSpacing: `${rem(-0.56)}`, justifyContent: "space-between" }}>
                                             <Div css={{ cursor: "pointer", display: "flex" }} onClick={() => router.push(`/notice/${data.id}`)}>
                                                 <div style={{ marginRight: '2px' }}>
                                                     {
-                                                        data.title && data.title > 10 ? data.title.slice(0, 3) + '...' : data.title
+                                                        data.title && data.title.length > 10 ? data.title.slice(0, 7) + '...' : data.title
+                                                    }
+                                                </div>
+                                                {
+                                                    <div>
+                                                        {
+                                                            new Date(data.created).getTime() + 604800000 > new Date().getTime() ?
+                                                                <Image priority src="/ico_new@2x.png" alt="empty" width={12} height={12} />
+                                                                : ""
+                                                        }
+                                                    </div>
+                                                }
+                                            </Div>
+                                        </div>
+                                        <div key={index} style={{ width: rem(136) }}>
+                                            {data?.userName}
+                                        </div>
+                                        <div style={{ width: rem(110), paddingLeft: rem(16) }}>
+                                            {data?.readCount}
+                                        </div>
+                                        <Div key={index} css={{ width: rem(133), letterSpacing: `${rem(-0.56)}`, color: "rgba(0, 0, 0, 0.3)" }}>
+                                            {moment(new Date(data.created)).format('YYYY.MM.DD')}
+                                        </Div>
+                                    </div>
+                                    <Divider style={{ margin: `${rem(14)} 0` }} />
+                                </>
+                            ))
+                        }
+                        {
+                            teams && teams.map((data: any, index: number) => (
+                                <>
+                                    <div key={index} style={{ display: "flex", fontSize: rem(14) }}>
+                                        <div style={{ width: rem(120), textAlign: 'center' }}>
+                                            {index + 1}
+                                        </div>
+
+                                        <Div key={index} css={{ width: `3.5rem`, letterSpacing: `${rem(-0.56)}`, textAlign: 'center', marginRight: rem(25) }}>
+                                            {data.contentType && data.contentType === 1 ? '공지' : data.contentType === 2 ? '일반' : data.contentType === 3 ? '질문' : data.contentType === 4 ? '답글' : ''}
+                                        </Div>
+
+                                        <div key={index} style={{ width: rem(483), letterSpacing: `${rem(-0.56)}`, justifyContent: "space-between" }}>
+                                            <Div css={{ cursor: "pointer", display: "flex" }} onClick={() => router.push(`/notice/${data.id}`)}>
+                                                <div style={{ marginRight: '2px' }}>
+                                                    {
+                                                        data.title && data.title.length > 10 ? data.title.slice(0, 7) + '...' : data.title
                                                     }
                                                 </div>
                                                 {
@@ -253,10 +309,11 @@ function Notice(props: INoticeProps) {
                         </div>
                     </Details>
             }
-            <Arricle style={{ marginBottom: 50 }}>
-                <PaginationControlled pages={props.pages} />
-            </Arricle>
-
+            {
+                search?.length > 0 ? null : <Arricle style={{ marginBottom: 50 }}>
+                    <PaginationControlled pages={props.pages} />
+                </Arricle>
+            }
             <Arricle>
                 <div>
                     <Button select onClick={() => setCheck(!check)}>
@@ -289,10 +346,12 @@ function Notice(props: INoticeProps) {
                         },
                     }}
                     onChange={e => {
-                        const test = totalDescription && totalDescription.filter((team: any) => {
-                            return team.description.toLowerCase().includes(e.target.value.toLowerCase())
+                        const test = all_list && all_list.filter((team: any) => {
+                            return team.title.toLowerCase().includes(e.target.value.toLowerCase())
                         });
-                        setTeams(test);
+                        if (e.target.value.length > 0) {
+                            setTeams(test);
+                        }
                         setSearch(e.target.value);
                     }}
                     ref={inputRef}

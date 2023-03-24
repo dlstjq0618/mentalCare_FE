@@ -80,6 +80,7 @@ function NoticeDetail() {
     const [commentValue, setCommentValue] = useState("");
     const [reply, setReply] = useState("");
     const info = useSelector(selectCounselingInfoData);
+    const [html, setHtml] = useState('');
     const [commentNumber, setCommentNumber] = useState<number>();
 
     const handleSubmitComment = () => { // 댓글
@@ -88,9 +89,9 @@ function NoticeDetail() {
             isSecret: privateCheck,
             nestCommentId: null,
             counselor_id: info?.id,
-            postId: 8,
+            postId: id,
         }).then(() => alert("댓글이 저장되었습니다.")).then(() => {
-            api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
+            api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => { setComment(false), setCommentValue("") });
         })
     }
 
@@ -98,7 +99,7 @@ function NoticeDetail() {
         api2.counselor.comment({
             content: reply,
             isSecret: privateCheck,
-            postId: 8,
+            postId: id,
             nestCommentId: null
         }).then(() => {
             api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
@@ -106,15 +107,29 @@ function NoticeDetail() {
     }
 
     const handleOnDelete = () => {
-        api2.counselor.delete({
-            deletePostIds: ids // 해당 게시물 상세정보에 같이 오는 ID 값
+        api2.counselor.delete(id).then(() => alert('게시물 삭제 완료')).then(() => router.push('/notice'))
+    }
+
+
+    // const handleDelectComment = (ids: any) => {
+    //     console.log("ids", ids);
+    //     api2.counselor.comment_delete({
+    //         deletecommentid: ids
+    //     }).then(() => alert("댓글이 삭제되었습니다.")).then(() => {
+    //         api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
+    //     })
+    // }
+
+    const handleDelectComment = (ids: any) => {
+        api2.counselor.comment_delete(ids).then(() => alert("댓글이 삭제되었습니다.")).then(() => {
+            api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
         })
     }
 
     useEffect(() => {
-        api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result))
+        api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result));
+        api2.counselor.detail_List(id).then((res: any) => setHtml(res.query?.result[0]?.content))
     }, [id])
-
 
     useEffect(() => {
         if (seat.length > 0) {
@@ -163,8 +178,8 @@ function NoticeDetail() {
                             {noticeGroup}
                         </div>
                         <div>
-                            <Button style={{ marginRight: 20 }} cursor width={69} height={32}>수정</Button>
-                            <Button cursor style={{ marginRight: 6 }} width={69} height={32}>삭제</Button>
+                            {/* <Button style={{ marginRight: 20 }} cursor width={69} height={32}>수정</Button> */}
+                            <Button onClick={() => handleOnDelete()} cursor style={{ marginRight: 6 }} width={69} height={32}>삭제</Button>
                         </div>
                         <div style={{
                             display: 'flex',
@@ -190,7 +205,7 @@ function NoticeDetail() {
                             textAlign: "left",
                             color: "#000"
                         }}>
-                            {noticeValue}
+                            <div dangerouslySetInnerHTML={{ __html: html }}></div>
                             {/* <Button>댓글</Button> */}
                         </div>
                     </Details>
@@ -209,7 +224,8 @@ function NoticeDetail() {
                                             {data?.userName}
                                         </div>
                                         <div
-                                            onClick={() => handleOnDelete()}
+                                            key={index}
+                                            onClick={() => handleDelectComment(data.id)}
                                             style={{
                                                 cursor: 'pointer',
                                                 border: '1px solid #b4b4b4',
@@ -226,13 +242,13 @@ function NoticeDetail() {
                                     <div style={{ color: '#000', fontSize: '12px', opacity: 0.5, marginTop: '4px' }}>
                                         {moment(new Date(data.created)).format('YYYY/MM/DD hh:mm')}
                                     </div>
-                                    <div onClick={() => {
+                                    {/* <div onClick={() => {
                                         setComment(!comment),
                                             setUserName("User_name"),
                                             setCommentNumber(index);
                                     }} style={{ cursor: 'pointer', marginTop: '12px', border: '1px solid #b4b4b4', height: '26px', width: 47, textAlign: 'center', marginBottom: 20 }}>
                                         답글
-                                    </div>
+                                    </div> */}
                                     <Line></Line>
                                     {
                                         comment && commentNumber === index ?
@@ -280,10 +296,12 @@ function NoticeDetail() {
                             })
 
                         }
-                        <div style={{ marginTop: rem(20) }}>
-                            <PaginationControlled pages={seat[0]?.comments?.length} />
-                            {console.log("seat[0]?.comments?.length", seat[0]?.comments?.length)}
-                        </div>
+                        {/* { // 페이지네이션 작업
+                            Math.floor(seat[0]?.comments?.length / 10) < 1 ? null : <div style={{ marginTop: rem(20) }}>
+                                <PaginationControlled pages={Math.floor(seat[0]?.comments?.length / 10)} />
+                                {console.log("seat[0]?.comments?.length", seat[0]?.comments?.length)}
+                            </div>
+                        } */}
                         <textarea
                             value={commentValue}
                             placeholder='댓글을 남겨보세요'
@@ -308,7 +326,7 @@ function NoticeDetail() {
                                 alignItems: 'center'
                             }}>
                             <Image src={icon_lock} width={20} height={20} />
-                            <div onClick={() => setPrivateCheck(!privateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
+                            <div onClick={() => setPrivateCheck(!privateCheck)} style={{ fontWeight: privateCheck ? 'bold' : '', marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
                             <div onClick={() => handleSubmitComment()} style={{
                                 cursor: 'pointer',
                                 marginTop: '9px',

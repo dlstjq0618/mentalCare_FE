@@ -132,7 +132,7 @@ export const counselor = {
     return data;
   },
 
-  delete: async (payload: any) => {
+  delete: async (id: any) => {
     // const sessions = await getSession();
     const userId = window?.localStorage?.getItem("userId");
     const base64EncodedText = Buffer.from(
@@ -145,10 +145,10 @@ export const counselor = {
     >({
       url: URLS.COUNSELOR.BOARD,
       method: "DELETE",
-      data: payload,
       headers: {
         identity: "counselor",
         "x-auth-token": base64EncodedText,
+        deletepostid: id,
       },
     });
     return data;
@@ -178,7 +178,7 @@ export const counselor = {
   },
 
   Lists: async (id: any) => {
-    // 전체 게시글 리스트 검색용으로 사용
+    // 페이지네이션 작업 용도
     const sessions = await getSession();
     const userId = window?.localStorage?.getItem("userId");
     const base64EncodedText = Buffer.from(
@@ -218,6 +218,28 @@ export const counselor = {
       headers: {
         identity: "counselor",
         "x-auth-token": base64EncodedText,
+      },
+    });
+    return data;
+  },
+
+  comment_delete: async (id: any) => {
+    // const sessions = await getSession();
+    const userId = window?.localStorage?.getItem("userId");
+    const base64EncodedText = Buffer.from(
+      userId + "_doraemon01",
+      "utf8"
+    ).toString("base64");
+    const { data } = await axios.request<
+      RestMessageType,
+      AxiosResponse<RestMessageType>
+    >({
+      url: URLS.COUNSELOR.COMMENT,
+      method: "DELETE",
+      headers: {
+        identity: "counselor",
+        "x-auth-token": base64EncodedText,
+        deletecommentid: id,
       },
     });
     return data;

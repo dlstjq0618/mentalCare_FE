@@ -18,6 +18,7 @@ export const URLS = {
     STATUS2: "/api/user/v1/counselor/immediately",
     BOARD: "/counselor-board/post",
     BOARD_PUT: "/counselor-board/post",
+    // COMMENT: `/counselor-board/post/comment`,
     COMMENT: `/counselor-board/post/comment`,
     CHAT: `/counseling/chat`,
     LIST: `/counselor-board/post/all`,
