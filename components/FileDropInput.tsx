@@ -155,9 +155,9 @@ export const FileProfileInput2: FC<
 
   return (
     <>
-      <FileInputWrapper hide={hide} {...getRootProps()} css={{ border: 'none', maxHeight: `${rem(107)}`, height: 1, width: 17 }}>
+      <FileInputWrapper hide={hide} {...getRootProps()} css={{ border: 'none', maxHeight: `${rem(107)}`, height: 20, width: 17 }}>
         <Input {...getInputProps()} {...rest} />
-        {/* <ImageIcon /> */}
+        <ImageIcon />
       </FileInputWrapper>
     </>
   );

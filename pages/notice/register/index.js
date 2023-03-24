@@ -49,7 +49,7 @@ function Register() {
           { indent: "-1" },
           { indent: "+1" },
         ],
-        ["link", "image", "video"],
+        ["link", "video"],
         ["clean"],
       ],
       clipboard: {
@@ -75,7 +75,6 @@ function Register() {
     "bullet",
     "indent",
     "link",
-    "image",
     "video",
   ];
 
@@ -121,7 +120,7 @@ function Register() {
     api2.counselor
       .board({
         title: title,
-        content: value2,
+        content: content,
         isSecret: false,
         contentType: Number(contentType),
         fileUrls: [],

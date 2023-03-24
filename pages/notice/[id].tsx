@@ -205,7 +205,8 @@ function NoticeDetail() {
                             textAlign: "left",
                             color: "#000"
                         }}>
-                            <div dangerouslySetInnerHTML={{ __html: html }}></div>
+                            <div dangerouslySetInnerHTML={{ __html: html }}>
+                            </div>
                             {/* <Button>댓글</Button> */}
                         </div>
                     </Details>
