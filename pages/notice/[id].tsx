@@ -283,8 +283,8 @@ function NoticeDetail() {
                                                         justifyContent: 'end',
                                                         alignItems: 'center'
                                                     }}>
-                                                    <Image src={icon_lock} width={20} height={20} />
-                                                    <div onClick={() => setReplyPrivateCheck(!replyPrivateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
+                                                    {/* <Image src={icon_lock} width={20} height={20} /> */}
+                                                    {/* <div onClick={() => setReplyPrivateCheck(!replyPrivateCheck)} style={{ marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div> */}
                                                     <div onClick={() => handleSubmitReply()}
                                                         style={{
                                                             cursor: 'pointer',
@@ -335,8 +335,8 @@ function NoticeDetail() {
                                 justifyContent: 'end',
                                 alignItems: 'center'
                             }}>
-                            <Image src={icon_lock} width={20} height={20} />
-                            <div onClick={() => setPrivateCheck(!privateCheck)} style={{ fontWeight: privateCheck ? 'bold' : '', marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div>
+                            {/* <Image src={icon_lock} width={20} height={20} /> */}
+                            {/* <div onClick={() => setPrivateCheck(!privateCheck)} style={{ fontWeight: privateCheck ? 'bold' : '', marginRight: '30px', cursor: 'pointer' }}>비밀댓글</div> */}
                             <div onClick={() => handleSubmitComment()} style={{
                                 cursor: 'pointer',
                                 marginTop: '9px',
