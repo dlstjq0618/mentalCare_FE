@@ -27,6 +27,7 @@ import { NOTICE_FILTER } from '~/utils/constants';
 import { selectNoticeCount, selectNoticeDescription, selectNoticeDescription2 } from "~/store/settingsSlice";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { selectNotificationAllList } from "~/store/notificationSlice";
+import { debounce } from "lodash";
 
 
 
@@ -150,6 +151,7 @@ function Notice(props: INoticeProps) {
         useState<PrivateDiagnosisReservationListResponse>();
 
     const noticeDiscription = useSelector(selectNoticeDescription2);
+    const search_value = teams?.slice(0, 10);
     const inputRef = useRef<HTMLInputElement>(null);
     const handleFilter = (type: any) => {
         const filter_data = props.value && props.value.filter((data: any) => {
@@ -157,7 +159,10 @@ function Notice(props: INoticeProps) {
         })
         setTeams(filter_data)
     }
-
+    const handleInput = debounce((value) => {
+        console.log(value);
+        setTeams(value)
+    }, 700);
 
     useEffect(() => {
         if (teams === undefined || type === "전체") {
@@ -195,11 +200,13 @@ function Notice(props: INoticeProps) {
         }
     }, [search])
 
+    console.log("search_value", search_value)
+
     return (
         <>
             {
                 tempState ?
-                    <Details style={{ marginTop: rem(30), width: rem(1055), minHeight: rem(840), height: 'auto' }}>
+                    <Details style={{ marginTop: rem(30), width: rem(1055), minHeight: rem(840), height: 'auto', maxHeight: rem(840) }}>
                         <div style={{ fontWeight: "bold", display: "flex" }}>
                             <div style={{ width: rem(20), marginRight: rem(53), marginLeft: rem(53) }}>No</div>
                             <div style={{ width: rem(30) }}>분류</div>
@@ -254,7 +261,7 @@ function Notice(props: INoticeProps) {
                             ))
                         }
                         {
-                            teams && teams.map((data: any, index: number) => (
+                            search_value && search_value.map((data: any, index: number) => (
                                 <>
                                     <div key={index} style={{ display: "flex", fontSize: rem(14) }}>
                                         <div style={{ width: rem(120), textAlign: 'center' }}>
@@ -350,7 +357,8 @@ function Notice(props: INoticeProps) {
                             return team.title.toLowerCase().includes(e.target.value.toLowerCase())
                         });
                         if (e.target.value.length > 0) {
-                            setTeams(test);
+                            // setTeams(test);
+                            handleInput(test);
                         }
                         setSearch(e.target.value);
                     }}
