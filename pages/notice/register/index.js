@@ -26,7 +26,6 @@ const Div = styled.div`
   width: ${rem(1050)};
   min-height: 500;
 `;
-const Quill = dynamic(() => import("quill"));
 
 function Register() {
   const modules = useMemo(() => {
