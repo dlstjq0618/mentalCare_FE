@@ -235,7 +235,7 @@ function Notice(props: INoticeProps) {
                                             <Div css={{ cursor: "pointer", display: "flex" }} onClick={() => router.push(`/notice/${data.id}`)}>
                                                 <div style={{ marginRight: '2px' }}>
                                                     {
-                                                        data.title && data.title.length > 10 ? data.title.slice(0, 7) + '...' : data.title
+                                                        data.title && data.title.length > 25 ? data.title.slice(0, 25) + '...' : data.title
                                                     }
                                                 </div>
                                                 {
@@ -250,7 +250,7 @@ function Notice(props: INoticeProps) {
                                             </Div>
                                         </div>
                                         <div key={index} style={{ width: rem(136) }}>
-                                            {data?.userName}
+                                            {data?.userName === "admin" ? "관리자" : data?.userName}
                                         </div>
                                         <div style={{ width: rem(110), paddingLeft: rem(16) }}>
                                             {data?.readCount}
@@ -279,7 +279,7 @@ function Notice(props: INoticeProps) {
                                             <Div css={{ cursor: "pointer", display: "flex" }} onClick={() => router.push(`/notice/${data.id}`)}>
                                                 <div style={{ marginRight: '2px' }}>
                                                     {
-                                                        data.title && data.title.length > 10 ? data.title.slice(0, 7) + '...' : data.title
+                                                        data.title && data.title.length > 25 ? data.title.slice(0, 25) + '...' : data.title
                                                     }
                                                 </div>
                                                 {
@@ -294,7 +294,7 @@ function Notice(props: INoticeProps) {
                                             </Div>
                                         </div>
                                         <div key={index} style={{ width: rem(136) }}>
-                                            {data?.userName}
+                                            {data?.userName === "admin" ? "관리자" : data?.userName}
                                         </div>
                                         <div style={{ width: rem(110), paddingLeft: rem(16) }}>
                                             {data?.readCount}
