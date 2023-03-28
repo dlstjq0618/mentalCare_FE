@@ -26,8 +26,7 @@ const Div = styled.div`
   width: ${rem(1050)};
   min-height: 500;
 `;
-// const Quill = dynamic(() => import("quill"));
-// Quill?.register("modules/ImageResize", ImageResize);
+const Quill = dynamic(() => import("quill"));
 
 function Register() {
   const modules = useMemo(() => {
@@ -55,6 +54,11 @@ function Register() {
    * See https://quilljs.com/docs/formats/
    */
 
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     Quill?.register("modules/ImageResize", ImageResize);
+  //   }
+  // });
   const formats = [
     "header",
     "color",

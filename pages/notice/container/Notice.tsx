@@ -151,7 +151,9 @@ function Notice(props: INoticeProps) {
 
     const noticeDiscription = useSelector(selectNoticeDescription2);
     const search_value = teams?.slice(0, 10);
+
     const inputRef = useRef<HTMLInputElement>(null);
+
     const handleFilter = (type: any) => {
         const filter_data = props.value && props.value.filter((data: any) => {
             return data.contentType === Number(type)
@@ -164,10 +166,6 @@ function Notice(props: INoticeProps) {
         });
         setTeams(test)
     }, 800);
-
-    useEffect(() => {
-
-    }, [])
 
     useEffect(() => {
         if (teams === undefined || type === "전체") {
@@ -312,10 +310,10 @@ function Notice(props: INoticeProps) {
                         <div style={{
                             marginTop: "21%"
                         }}>
-                            <Image priority src="/empty.png" alt="empty" width={40} height={40} />
+                            {/* <Image priority src="/empty.png" alt="empty" width={40} height={40} />
                             <div style={{ textAlign: "center" }}>
                                 검색어와 일치하는 결과가 없습니다.
-                            </div>
+                            </div> */}
                         </div>
                     </Details>
             }
