@@ -20,6 +20,7 @@ import { api2 } from '~/mentalcareapi';
 import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
 import { selectNoticeCount, selectNoticeDescription } from "~/store/settingsSlice";
 import { CircularProgress } from '@mui/material';
+import { setRecovery, setRecoveryConfirm } from '~/store/notificationSlice';
 
 
 interface IStyeldProps {
@@ -120,6 +121,16 @@ function NoticeDetail() {
         }
     }
 
+    const handleOnRecovery = () => {
+
+        if (confirm("수정하시겠습니까?")) {
+            router.push('/notice/register');
+            dispatch(setRecovery(seat));
+            dispatch(setRecoveryConfirm(true));
+        } else {
+        }
+    }
+
     const handleDelectComment = (ids: any) => {
         api2.counselor.comment_delete(ids).then(() => alert("댓글이 삭제되었습니다.")).then(() => {
             api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
@@ -140,6 +151,10 @@ function NoticeDetail() {
             })
         }
     });
+
+    useEffect(() => {
+        console.log("html", seat[0])
+    }, [html])
 
     return (
         <>
@@ -178,7 +193,9 @@ function NoticeDetail() {
                             {noticeGroup}
                         </div>
                         <div>
-                            {/* <Button style={{ marginRight: 20 }} cursor width={69} height={32}>수정</Button> */}
+                            {
+                                info?.id === seat[0]?.userId || info?.username === 'admin' ? <Button onClick={() => handleOnRecovery()} style={{ marginRight: 20 }} cursor width={69} height={32}>수정</Button> : null
+                            }
                             <Button onClick={() => handleOnDelete()} cursor style={{ marginRight: 6 }} width={69} height={32}>삭제</Button>
                         </div>
                         <div style={{

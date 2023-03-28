@@ -26,7 +26,7 @@ import moment from "moment";
 import { NOTICE_FILTER } from '~/utils/constants';
 import { selectNoticeCount, selectNoticeDescription, selectNoticeDescription2 } from "~/store/settingsSlice";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { selectNotificationAllList } from "~/store/notificationSlice";
+import { selectNotificationAllList, selectRecoveryConfirm } from "~/store/notificationSlice";
 import { debounce } from "lodash";
 
 
@@ -146,6 +146,7 @@ function Notice(props: INoticeProps) {
     const [type, setType] = useState("전체");
     const [pages, setPages] = useState(0);
     const all_list = useSelector(selectNotificationAllList);
+    const confirm = useSelector(selectRecoveryConfirm);
     const [reservationList, setReservationList] =
         useState<PrivateDiagnosisReservationListResponse>();
 
@@ -202,6 +203,10 @@ function Notice(props: INoticeProps) {
             setType("전체");
         }
     }, [search])
+
+    useEffect(() => {
+        console.log("confirm", confirm);
+    }, [confirm])
 
     return (
         <>

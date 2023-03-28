@@ -138,7 +138,6 @@ function TimeSleectBox(props: Iprops) {
     const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")), dispatch(setAlertType('')) };
 
     const handleOpenStatus = (data: any) => {
-        console.log("data", data)
         if (data === 'finish') {
             dispatch(setSelectBoxControlls('완료'));
             dispatch(setChatBoxOpenState("완료"));
@@ -161,7 +160,6 @@ function TimeSleectBox(props: Iprops) {
     }
 
     useEffect(() => {
-        console.log("stop", stop)
         if (stop === '완료') {
             setCloseStatus(true)
         }

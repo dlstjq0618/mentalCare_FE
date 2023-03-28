@@ -13,36 +13,48 @@ import dynamic from "next/dynamic";
 import { Arricle, Button, Ul, Li } from "../container/Notice";
 import { api2 } from "../../../mentalcareapi";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  setRecoveryConfirm,
+  selectRecoveryConfirm,
+  selectRecovery,
+} from "~/store/notificationSlice";
+
 import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
 import {
   NOTICE_CONTENT_TYPE,
   NOTICE_CONTENT_TYPE_ADMIN,
 } from "~/utils/constants";
 import "react-quill/dist/quill.snow.css";
-
 import ImageResize from "@looop/quill-image-resize-module-react";
 
 const Div = styled.div`
   width: ${rem(1050)};
   min-height: 500;
 `;
+const Quill = typeof window === "object" ? require("quill") : () => false;
 
 function Register() {
+  // Quill.register("modules/ImageResize", ImageResize);
+
+  console.log("Quill", Quill);
   const modules = useMemo(() => {
     return {
-      toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
-        [/*{ size: ["small", false, "large", "huge"] },*/ { color: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-          { list: "ordered" },
-          { list: "bullet" },
-          { indent: "-1" },
-          { indent: "+1" },
+      toolbar: {
+        container: [
+          [{ header: "1" }, { header: "2" }, { font: [] }],
+          [/*{ size: ["small", false, "large", "huge"] },*/ { color: [] }],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [
+            { list: "ordered" },
+            { list: "bullet" },
+            { indent: "-1" },
+            { indent: "+1" },
+          ],
+          ["link", "image", "video"],
+          ["clean"],
         ],
-        ["link", "image", "video"],
-        ["clean"],
-      ],
+      },
+      // ImageResize: { modules: ["Resize"] },
       clipboard: {
         matchVisual: false,
       },
@@ -77,6 +89,7 @@ function Register() {
   ];
 
   const router = useRouter();
+  const { id } = router.query;
   const [editorLoaded, setEditorLoaded] = useState(false);
   const [check, setCheck] = useState(false);
   const [type, setType] = useState("일반");
@@ -87,6 +100,8 @@ function Register() {
   const [content, setContent] = useState("");
   const quillRef = useRef(null);
   const [isOpen, setOpen] = useState(false);
+  const confirm = useSelector(selectRecoveryConfirm);
+  const store_contents = useSelector(selectRecovery);
 
   let ReactQuill =
     typeof window === "object" ? require("react-quill") : () => false;
@@ -95,19 +110,53 @@ function Register() {
     setEditorLoaded(true);
   }, []);
 
+  useEffect(() => {
+    console.log("content", content);
+  }, [content]);
+
+  useEffect(() => {
+    console.log("store_contents", store_contents);
+  }, [confirm]);
+
+  useEffect(() => {
+    return () => {
+      dispatch2(setRecoveryConfirm(false));
+    };
+  }, []);
+
   const handleSubmit = () => {
-    api2.counselor
-      .board({
-        title: title,
-        content: content,
-        isSecret: false,
-        contentType: Number(contentType),
-        fileUrls: [],
-      })
-      .then(() => alert("등록 완료"))
-      .then(() => router.push("/notice"));
+    if (confirm) {
+      api2.counselor
+        .board_put({
+          postId: store_contents[0].postId,
+          content: content,
+          isSecret: false,
+          fileUrls: null,
+          title: title,
+          contentType: Number(contentType),
+        })
+        .then(() => alert("수정 완료"))
+        .then(() => router.push("/notice"));
+    } else {
+      api2.counselor
+        .board({
+          title: title,
+          content: content,
+          isSecret: false,
+          contentType: Number(contentType),
+          fileUrls: [],
+        })
+        .then(() => alert("등록 완료"))
+        .then(() => router.push("/notice"));
+    }
   };
 
+  useEffect(() => {
+    if (confirm) {
+      setContent(store_contents[0]?.content);
+      setTitle(store_contents[0]?.title);
+    }
+  }, []);
   return (
     <LayoutComponent>
       <Section
@@ -216,6 +265,7 @@ function Register() {
               onChange={setContent}
               theme="snow"
               value={content}
+              defaultValue={"기본값으로 지정한다."}
             />
           )}
         </Div>
@@ -235,7 +285,7 @@ function Register() {
               marginLeft: "8px",
             }}
           >
-            등록
+            {confirm ? "수정" : "등록"}
           </RoundedButton>
           <RoundedButton
             onClick={() => router.push("/notice")}

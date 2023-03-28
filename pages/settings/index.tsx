@@ -55,7 +55,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
 
     const onSubmit = (data: any) => { // vi signUp Api request
 
-        console.log("data.opening_times", data.opening_times);
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
         }

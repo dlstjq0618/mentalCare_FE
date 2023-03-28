@@ -6,6 +6,8 @@ type NotificationStoreState = {
   shouldNotificate: boolean;
   all_list: any;
   imageUrl: any;
+  recovery: any;
+  put: boolean;
 };
 
 const initialState: NotificationStoreState = {
@@ -13,6 +15,8 @@ const initialState: NotificationStoreState = {
   shouldNotificate: false,
   all_list: "",
   imageUrl: "",
+  recovery: "",
+  put: false,
 };
 
 export const notificationSlice = createSlice({
@@ -32,6 +36,18 @@ export const notificationSlice = createSlice({
       action: PayloadAction<NotificationStoreState["imageUrl"]>
     ) {
       state.imageUrl = action.payload;
+    },
+    setRecovery(
+      state,
+      action: PayloadAction<NotificationStoreState["recovery"]>
+    ) {
+      state.recovery = action.payload;
+    },
+    setRecoveryConfirm(
+      state,
+      action: PayloadAction<NotificationStoreState["put"]>
+    ) {
+      state.put = action.payload;
     },
 
     setDiagnosisIdForNotification(
@@ -58,6 +74,8 @@ export const {
   setDiagnosisIdForNotification,
   setNotificationAllList,
   setNoticeImage,
+  setRecovery,
+  setRecoveryConfirm,
 } = notificationSlice.actions;
 
 export const selectShouldNotificate = (state: RootState) =>
@@ -67,5 +85,8 @@ export const selectNotificationAllList = (state: RootState) =>
   state.notification.all_list;
 export const selectNoticeImage = (state: RootState) =>
   state.notification.imageUrl;
+export const selectRecovery = (state: RootState) => state.notification.recovery;
+export const selectRecoveryConfirm = (state: RootState) =>
+  state.notification.put;
 
 export default notificationSlice.reducer;

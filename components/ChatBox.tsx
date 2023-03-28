@@ -1414,7 +1414,7 @@ export default function BoxSx() {
                                                                                             </Div>
                                                                                         </div>
                                                                                         :
-                                                                                        console.log("")
+                                                                                        null
                                                                         }
                                                                         < div ref={messageEndRef} />
                                                                     </>
