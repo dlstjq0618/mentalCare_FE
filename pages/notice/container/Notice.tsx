@@ -186,7 +186,7 @@ function Notice(props: INoticeProps) {
     }, [type])
 
     useEffect(() => {
-        if (teams && teams.length > 0) {
+        if (totalDescription?.length > 0 || noticeDiscription?.length > 0) {
             setTempState(true);
         } else {
             setTempState(false);
@@ -250,7 +250,7 @@ function Notice(props: INoticeProps) {
                                             </Div>
                                         </div>
                                         <div key={index} style={{ width: rem(136) }}>
-                                            {data?.userName === "admin" ? "관리자" : data?.userName}
+                                            {data?.userName === "admin" && "관리자"}
                                         </div>
                                         <div style={{ width: rem(110), paddingLeft: rem(16) }}>
                                             {data?.readCount}
