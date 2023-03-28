@@ -120,16 +120,6 @@ function NoticeDetail() {
         }
     }
 
-
-    // const handleDelectComment = (ids: any) => {
-    //     console.log("ids", ids);
-    //     api2.counselor.comment_delete({
-    //         deletecommentid: ids
-    //     }).then(() => alert("댓글이 삭제되었습니다.")).then(() => {
-    //         api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
-    //     })
-    // }
-
     const handleDelectComment = (ids: any) => {
         api2.counselor.comment_delete(ids).then(() => alert("댓글이 삭제되었습니다.")).then(() => {
             api2.counselor.detail_List(id).then((res: any) => setSeat(res.query?.result)).then(() => setComment(false));
@@ -243,18 +233,20 @@ function NoticeDetail() {
                                         <div style={{ color: '#333333', fontWeight: 'bold', fontSize: '14px' }}>
                                             {data?.userName}
                                         </div>
-                                        <div
-                                            key={index}
-                                            onClick={() => handleDelectComment(data.id)}
-                                            style={{
-                                                cursor: 'pointer',
-                                                border: '1px solid #b4b4b4',
-                                                height: '26px',
-                                                width: 47,
-                                                textAlign: 'center'
-                                            }}>
-                                            삭제
-                                        </div>
+                                        {
+                                            info?.username === 'admin' ? <div
+                                                key={index}
+                                                onClick={() => handleDelectComment(data.id)}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    border: '1px solid #b4b4b4',
+                                                    height: '26px',
+                                                    width: 47,
+                                                    textAlign: 'center'
+                                                }}>
+                                                삭제
+                                            </div> : null
+                                        }
                                     </div>
                                     <div key={index}>
                                         {data?.content}
