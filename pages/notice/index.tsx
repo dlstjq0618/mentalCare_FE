@@ -44,11 +44,6 @@ function Index() {
             dispatch(setNotificationAllList(res.query?.result))
         })
     })
-
-    const onSubmit = () => {
-        console.log("aaaaa")
-    }
-
     return (
         <LayoutComponent>
             <Section

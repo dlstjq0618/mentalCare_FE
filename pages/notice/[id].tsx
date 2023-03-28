@@ -113,7 +113,11 @@ function NoticeDetail() {
     }
 
     const handleOnDelete = () => {
-        api2.counselor.delete(id).then(() => alert('게시물 삭제 완료')).then(() => router.push('/notice'))
+        if (info?.id === seat[0]?.userId || info?.username === 'admin') {
+            api2.counselor.delete(id).then(() => alert('게시물 삭제 완료')).then(() => router.push('/notice'))
+        } else {
+            alert("권한이 없습니다.")
+        }
     }
 
 
@@ -138,6 +142,7 @@ function NoticeDetail() {
     }, [id])
 
     useEffect(() => {
+        console.log("seat", seat)
         if (seat.length > 0) {
             seat && seat.filter((team: any, index: number) => {
                 setNoticeGroup(team.title)
@@ -209,12 +214,17 @@ function NoticeDetail() {
                             lineHeight: 1.4,
                             letterSpacing: rem(-0.56),
                             textAlign: "left",
-                            color: "#000"
+                            color: "#000",
+                            width: "100%"
                         }}>
                             {
-                                loading ? <div dangerouslySetInnerHTML={{ __html: html }} /> : <Progress>
-                                    <CircularProgress />
-                                </Progress>
+                                <div className='content'>
+                                    {
+                                        loading ? <div dangerouslySetInnerHTML={{ __html: html }} /> : <Progress>
+                                            <CircularProgress />
+                                        </Progress>
+                                    }
+                                </div>
                             }
                             {/* <Button>댓글</Button> */}
                         </div>

@@ -30,7 +30,6 @@ import { selectNotificationAllList } from "~/store/notificationSlice";
 import { debounce } from "lodash";
 
 
-
 interface INoticeProps {
     data?: [] | undefined;
     value?: any;
@@ -159,10 +158,16 @@ function Notice(props: INoticeProps) {
         })
         setTeams(filter_data)
     }
-    const handleInput = debounce((value) => {
-        console.log(value);
-        setTeams(value)
-    }, 700);
+    const handleInput = debounce((e) => {
+        const test = all_list && all_list.filter((team: any) => {
+            return team.title.toLowerCase().includes(e.target.value.toLowerCase())
+        });
+        setTeams(test)
+    }, 800);
+
+    useEffect(() => {
+
+    }, [])
 
     useEffect(() => {
         if (teams === undefined || type === "전체") {
@@ -200,13 +205,11 @@ function Notice(props: INoticeProps) {
         }
     }, [search])
 
-    console.log("search_value", search_value)
-
     return (
         <>
             {
                 tempState ?
-                    <Details style={{ marginTop: rem(30), width: rem(1055), minHeight: rem(840), height: 'auto', maxHeight: rem(840) }}>
+                    <Details style={{ marginTop: rem(30), width: rem(1055), minHeight: rem(840), height: 'auto' }}>
                         <div style={{ fontWeight: "bold", display: "flex" }}>
                             <div style={{ width: rem(20), marginRight: rem(53), marginLeft: rem(53) }}>No</div>
                             <div style={{ width: rem(30) }}>분류</div>
@@ -353,12 +356,9 @@ function Notice(props: INoticeProps) {
                         },
                     }}
                     onChange={e => {
-                        const test = all_list && all_list.filter((team: any) => {
-                            return team.title.toLowerCase().includes(e.target.value.toLowerCase())
-                        });
                         if (e.target.value.length > 0) {
                             // setTeams(test);
-                            handleInput(test);
+                            handleInput(e);
                         }
                         setSearch(e.target.value);
                     }}

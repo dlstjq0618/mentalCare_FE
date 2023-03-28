@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useReducer } from "react";
+// import ReactQuill from "react-quill";
 import { RoundedButton } from "~/components";
 import { rem } from "polished";
 import { Heading, Section } from "~/components";
@@ -7,25 +8,20 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useRouter } from "next/router";
 import CheckIcon from "@mui/icons-material/Check";
 import styled from "styled-components";
-import {
-  Input,
-  FileProfileInput,
-  FileProfileInput2,
-} from "../../../components";
+import { Input } from "../../../components";
 import dynamic from "next/dynamic";
-import TitleInput from "../../../components/Notice/TitleInput";
 import { Arricle, Button, Ul, Li } from "../container/Notice";
-import { validateImageFile } from "../../../utils/validation.utils";
 import { api2 } from "../../../mentalcareapi";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCounselingInfoData } from "~/store/calendarDetailSlice";
-import { setNoticeImage } from "../../../store/notificationSlice";
 import {
   NOTICE_CONTENT_TYPE,
   NOTICE_CONTENT_TYPE_ADMIN,
 } from "~/utils/constants";
 import "react-quill/dist/quill.snow.css";
-import { api } from "../../../woozooapi";
+// import Quill from 'quill';
+// import  ImageResize  from '@looop/quill-image-resize-module-react'
+// Quill.register('modules/ImageResize', ImageResize)
 
 const Div = styled.div`
   width: ${rem(1050)};
@@ -48,10 +44,9 @@ function Register() {
           { indent: "-1" },
           { indent: "+1" },
         ],
-        ["link", /**"image", */ "video"],
+        ["link", "image", "video"],
         ["clean"],
       ],
-
       clipboard: {
         matchVisual: false,
       },
@@ -91,29 +86,26 @@ function Register() {
   const [content, setContent] = useState("");
   const [imageCount, setImageCount] = useState(0);
   const quillRef = useRef(null);
-  // const contents = useSelector(selectHtmlFiles);
+  const [value, setValue] = useState("");
+  const [ImageResize, setImageResize] = useState(null);
 
-  console.log(content);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const loadQuillImageResize = async () => {
+        const module = await import("quill-image-resize-module");
+        setImageResize(module.default);
+      };
+      loadQuillImageResize;
+    }
+  }, []);
 
-  const handleProfilePicUpload = async (file) => {
-    const result = validateImageFile(file);
-    // if (!result.valid) {
-    //   setError("profilePic", {
-    //     types: result.message,
-    //   });
-    //   return;
-    // }
-
-    const res = await api
-      .fileUpload({
-        file,
-        prefix: "image",
-        name: "image",
-      })
-      .then((data) => {
-        return dispatch2(setNoticeImage(data.url));
-      });
-  };
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (ImageResize) {
+        ReactQuill.Quill.register("modules/imageResize", ImageResize);
+      }
+    }
+  }, [ImageResize]);
 
   useEffect(() => {
     setEditorLoaded(true);
@@ -131,12 +123,6 @@ function Register() {
       .then(() => alert("등록 완료"))
       .then(() => router.push("/notice"));
   };
-
-  // useEffect(() => {
-  //   if (content.indexOf("data:image") > -1) {
-  //     handleProfilePicUpload;
-  //   }
-  // }, [content]);
 
   return (
     <LayoutComponent>
@@ -233,11 +219,11 @@ function Register() {
           />
         </Arricle>
         {/* <FileProfileInput2 handleFile={handleProfilePicUpload} /> */}
-        <Div style={{ height: 650 }}>
+        <Div style={{ height: 850 }}>
           <ReactQuill // 게시판 라이브러리
             style={{
               background: "white",
-              height: 600,
+              height: 800,
             }}
             modules={modules}
             formats={formats}
