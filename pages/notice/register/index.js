@@ -19,17 +19,13 @@ import {
   NOTICE_CONTENT_TYPE_ADMIN,
 } from "~/utils/constants";
 import "react-quill/dist/quill.snow.css";
-// import Quill from 'quill';
-// import  ImageResize  from '@looop/quill-image-resize-module-react'
-// Quill.register('modules/ImageResize', ImageResize)
+
+import ImageResize from "@looop/quill-image-resize-module-react";
 
 const Div = styled.div`
   width: ${rem(1050)};
   min-height: 500;
 `;
-const ReactQuill = dynamic(import("react-quill"), {
-  ssr: false,
-});
 
 function Register() {
   const modules = useMemo(() => {
@@ -84,28 +80,11 @@ function Register() {
   const infoData = useSelector(selectCounselingInfoData);
   const [contentType, setContentType] = useState(2);
   const [content, setContent] = useState("");
-  const [imageCount, setImageCount] = useState(0);
   const quillRef = useRef(null);
-  const [value, setValue] = useState("");
-  const [ImageResize, setImageResize] = useState(null);
+  const [isOpen, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const loadQuillImageResize = async () => {
-        const module = await import("quill-image-resize-module");
-        setImageResize(module.default);
-      };
-      loadQuillImageResize;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (ImageResize) {
-        ReactQuill.Quill.register("modules/imageResize", ImageResize);
-      }
-    }
-  }, [ImageResize]);
+  let ReactQuill =
+    typeof window === "object" ? require("react-quill") : () => false;
 
   useEffect(() => {
     setEditorLoaded(true);
@@ -220,18 +199,20 @@ function Register() {
         </Arricle>
         {/* <FileProfileInput2 handleFile={handleProfilePicUpload} /> */}
         <Div style={{ height: 850 }}>
-          <ReactQuill // 게시판 라이브러리
-            style={{
-              background: "white",
-              height: 800,
-            }}
-            modules={modules}
-            formats={formats}
-            ref={quillRef}
-            onChange={setContent}
-            theme="snow"
-            value={content}
-          />
+          {ReactQuill && (
+            <ReactQuill // 게시판 라이브러리
+              style={{
+                background: "white",
+                height: 800,
+              }}
+              modules={modules}
+              formats={formats}
+              ref={quillRef}
+              onChange={setContent}
+              theme="snow"
+              value={content}
+            />
+          )}
         </Div>
         <div style={{ width: rem(1055) }}>
           <RoundedButton

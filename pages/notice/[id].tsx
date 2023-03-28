@@ -132,7 +132,6 @@ function NoticeDetail() {
     }, [id])
 
     useEffect(() => {
-        console.log("seat", seat)
         if (seat.length > 0) {
             seat && seat.filter((team: any, index: number) => {
                 setNoticeGroup(team.title)
@@ -234,18 +233,19 @@ function NoticeDetail() {
                                             {data?.userName}
                                         </div>
                                         {
-                                            info?.username === 'admin' ? <div
-                                                key={index}
-                                                onClick={() => handleDelectComment(data.id)}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                    border: '1px solid #b4b4b4',
-                                                    height: '26px',
-                                                    width: 47,
-                                                    textAlign: 'center'
-                                                }}>
-                                                삭제
-                                            </div> : null
+                                            info?.username === 'admin' || Number(data?.userId) === info?.id ?
+                                                <div
+                                                    key={index}
+                                                    onClick={() => handleDelectComment(data.id)}
+                                                    style={{
+                                                        cursor: 'pointer',
+                                                        border: '1px solid #b4b4b4',
+                                                        height: '26px',
+                                                        width: 47,
+                                                        textAlign: 'center'
+                                                    }}>
+                                                    삭제
+                                                </div> : null
                                         }
                                     </div>
                                     <div key={index}>
