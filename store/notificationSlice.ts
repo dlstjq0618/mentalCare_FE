@@ -86,6 +86,7 @@ export const selectNotificationAllList = (state: RootState) =>
 export const selectNoticeImage = (state: RootState) =>
   state.notification.imageUrl;
 export const selectRecovery = (state: RootState) => state.notification.recovery;
+
 export const selectRecoveryConfirm = (state: RootState) =>
   state.notification.put;
 

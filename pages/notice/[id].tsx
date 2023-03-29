@@ -196,7 +196,9 @@ function NoticeDetail() {
                             {
                                 info?.id === seat[0]?.userId || info?.username === 'admin' ? <Button onClick={() => handleOnRecovery()} style={{ marginRight: 20 }} cursor width={69} height={32}>수정</Button> : null
                             }
-                            <Button onClick={() => handleOnDelete()} cursor style={{ marginRight: 6 }} width={69} height={32}>삭제</Button>
+                            {
+                                info?.id === seat[0]?.userId || info?.username === 'admin' ? <Button onClick={() => handleOnDelete()} cursor style={{ marginRight: 6 }} width={69} height={32}>삭제</Button> : null
+                            }
                         </div>
                         <div style={{
                             display: 'flex',
