@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo, useReducer } from "react";
-// import ReactQuill from "react-quill";
 import { RoundedButton } from "~/components";
 import { rem } from "polished";
 import { Heading, Section } from "~/components";
@@ -25,18 +24,12 @@ import {
   NOTICE_CONTENT_TYPE_ADMIN,
 } from "~/utils/constants";
 import "react-quill/dist/quill.snow.css";
-import ImageResize from "@looop/quill-image-resize-module-react";
 
 const Div = styled.div`
   width: ${rem(1050)};
   min-height: 500;
 `;
-const Quill = typeof window === "object" ? require("quill") : () => false;
-
 function Register() {
-  // Quill.register("modules/ImageResize", ImageResize);
-
-  console.log("Quill", Quill);
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -65,11 +58,6 @@ function Register() {
    * See https://quilljs.com/docs/formats/
    */
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     Quill?.register("modules/ImageResize", ImageResize);
-  //   }
-  // });
   const formats = [
     "header",
     "color",
@@ -109,14 +97,6 @@ function Register() {
   useEffect(() => {
     setEditorLoaded(true);
   }, []);
-
-  useEffect(() => {
-    console.log("content", content);
-  }, [content]);
-
-  useEffect(() => {
-    console.log("store_contents", store_contents);
-  }, [confirm]);
 
   useEffect(() => {
     return () => {

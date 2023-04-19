@@ -234,7 +234,6 @@ function NoticeDetail() {
                                     }
                                 </div>
                             }
-                            {/* <Button>댓글</Button> */}
                         </div>
                     </Details>
                     <div style={{ height: 'auto', background: '#fff', width: 1055, padding: '26px 40px' }}>

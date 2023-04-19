@@ -57,7 +57,7 @@ export const RegisterPageLayout: FC = ({ children }) => {
       .signUp({
         email: data.email,
         password: data.password,
-        mobile: data.mobile,
+        mobile: data.mobile.split("-").join(""),
         username: data.username,
         certificate_image: data.certificate_image,
         bank_name: data.bankName,

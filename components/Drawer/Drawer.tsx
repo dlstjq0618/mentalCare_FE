@@ -180,7 +180,6 @@ export default function TemporaryDrawer(props: IProps) {
     const [totalCount, setTotalCount] = useState(0); // 바로상담 결제완료 + 대기자 토탈 대기자수
     const [totalCount2, setTotalCount2] = useState(0); // 예약상담 결제완료  + 대기자수 
 
-    console.log("결제대기", select_user)
 
     const [waiting_count, setWaiting_count] = useState(0);
 
@@ -195,7 +194,7 @@ export default function TemporaryDrawer(props: IProps) {
 
 
     const handleImmediate = (data: any) => { // 즉시 시작일 때 
-        console.log("data", data)
+
         if (data.isimmediate) {
             dispatch(setScheduleSelectModla(false));
             dispatch(setTestResultValueStatus(true));

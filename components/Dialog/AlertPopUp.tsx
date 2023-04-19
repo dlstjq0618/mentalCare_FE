@@ -160,9 +160,17 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
 
 
     const handleDispatch = () => { // 결제요청
-        dispatch(setChatBoxOpenState("결제요청"))
-        dispatch(setStopModal("null"))
-        dispatch(setAlertType(''))
+        dispatch(setChatBoxOpenState("결제요청"));
+        // let i = 0;
+        // setTimeout(() => {
+        //     i++
+        //     if (i < 4) {
+        //         dispatch(setChatBoxOpenState("결제요청"));
+        //         console.log("결제요청")
+        //     }
+        // }, 15000)
+        dispatch(setStopModal("null"));
+        dispatch(setAlertType(''));
     }
 
     async function handleConferenceDispatch() {

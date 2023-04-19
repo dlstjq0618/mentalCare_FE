@@ -430,34 +430,72 @@ export default function BoxSx() {
                     if (!waitingIofo.status) alert(`대쉬보드데이터를 받는중 error가 발생 하엿습니다. (${waitingIofo.message})`); return;
             }
 
-            if (method === 'reservationList') {
-                const result = datas.list;
-                dispatch(setDashBoardReservationList(result))
-            } else if (method === "waitlist") {
-                const result0 = datas.list;
-                dispatch(setDashBoardWatingList(result0))
-            } else if (method === 'consultingList') {
-                const result1 = datas.list;
-                dispatch(setDashBoardConsultingList(result1))
-            } else if (method === 'completeList') {
-                const result2 = datas.list;
-                dispatch(setDashBoardCompleteList(result2))
-            } else if (method === 'cancelList') {
-                const result3 = datas.list;
-
-                dispatch(setDashBoardCancelList(result3))
-            } else if (method === 'paidList') {
-                const result4 = datas.list;
-
-                dispatch(setAccountList(result4));
-            } else if (method === 'confirmRequestList') {
-                const result5 = datas.list;
-                dispatch(setConferenceList(result5))
-
-            } else if (method === 'paidWaitList') {
-                const result6 = datas.list;
-                dispatch(setPaidWaitList(result6));
+            switch (method) {
+                case 'reservationList':
+                    const result = datas.list;
+                    dispatch(setDashBoardReservationList(result));
+                    break;
+                case 'waitlist':
+                    const result0 = datas.list;
+                    dispatch(setDashBoardWatingList(result0));
+                    break;
+                case 'consultingList':
+                    const result1 = datas.list;
+                    dispatch(setDashBoardConsultingList(result1));
+                    break;
+                case 'completeList':
+                    const result2 = datas.list;
+                    dispatch(setDashBoardCompleteList(result2));
+                    break;
+                case 'cancelList':
+                    const result3 = datas.list;
+                    dispatch(setDashBoardCancelList(result3));
+                    break;
+                case 'paidList':
+                    const result4 = datas.list;
+                    dispatch(setAccountList(result4));
+                    break;
+                case 'confirmRequestList':
+                    const result5 = datas.list;
+                    dispatch(setConferenceList(result5));
+                    break;
+                case 'paidWaitList':
+                    const result6 = datas.list;
+                    dispatch(setPaidWaitList(result6));
+                    break;
+                default:
+                    // 기본 동작
+                    break;
             }
+
+            // if (method === 'reservationList') {
+            //     const result = datas.list;
+            //     dispatch(setDashBoardReservationList(result))
+            // } else if (method === "waitlist") {
+            //     const result0 = datas.list;
+            //     dispatch(setDashBoardWatingList(result0))
+            // } else if (method === 'consultingList') {
+            //     const result1 = datas.list;
+            //     dispatch(setDashBoardConsultingList(result1))
+            // } else if (method === 'completeList') {
+            //     const result2 = datas.list;
+            //     dispatch(setDashBoardCompleteList(result2))
+            // } else if (method === 'cancelList') {
+            //     const result3 = datas.list;
+
+            //     dispatch(setDashBoardCancelList(result3))
+            // } else if (method === 'paidList') {
+            //     const result4 = datas.list;
+
+            //     dispatch(setAccountList(result4));
+            // } else if (method === 'confirmRequestList') {
+            //     const result5 = datas.list;
+            //     dispatch(setConferenceList(result5))
+
+            // } else if (method === 'paidWaitList') {
+            //     const result6 = datas.list;
+            //     dispatch(setPaidWaitList(result6));
+            // }
         })
     }, [user_dashborad, user_name])
 
@@ -839,7 +877,7 @@ export default function BoxSx() {
         await dispatch(setChatBoxOpenState("null"))
     }
 
-    async function handlePaidWaitList() { // 결제요
+    async function handlePaidWaitList() { // 결제요청
         socket.emit('counsel_submit', {
             method: 'request/payment/confirm/immediate',
             datas: {
