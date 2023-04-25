@@ -55,8 +55,6 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
 
     const onSubmit = (data: any) => { // vi signUp Api request
 
-        console.log("asdasda", data.mobile.split("-").join(""))
-
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
         }
@@ -70,7 +68,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             .update(userId, {
                 password: data.password,
                 introduction: data.introduction === "" ? fileUploadDate.inintroduction : data.introduction,
-                mobile: data.mobile.split("-").join(""),
+                mobile: data.mobile === "" ? fileUploadDate.mobile : data?.mobile?.split("-").join(""),
                 image: data.image === "" ? fileUploadDate.image : data.image,
                 certificate_image: data.certificate_image === "" ? fileUploadDate.certificateImage : data.certificate_image,
                 career: data.career,

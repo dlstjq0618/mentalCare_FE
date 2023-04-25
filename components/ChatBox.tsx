@@ -372,7 +372,6 @@ export default function BoxSx() {
     useEffect(() => {
         socket.on("connect", () => {
             console.log("SOCKET CONNECTED!", socket.id);
-            // connection id 바꼇으면 감지하여 룸입장 다시해야함
         });
     }, [])
 

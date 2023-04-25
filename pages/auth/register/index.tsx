@@ -89,18 +89,6 @@ export const RegisterPageLayout: FC = ({ children }) => {
     if (e.phone) {
       return alert("휴대폰 번호를 확인해주세요.")
     }
-    // if (e.doctorLicense) {
-    //   return alert(e.doctorLicense.message)
-    // }
-    // if (e.profilePic) {
-    //   return alert(e.profilePic.message)
-    // }
-    // if (e.accountHolder) {
-    //   return alert(e.accountHolder.message)
-    // }
-    // if (e.hospitalRegister) {
-    //   return alert(e.hospitalRegister.message)
-    // }
   };
 
   const handleSubmit: FormEventHandler = (e) => {
