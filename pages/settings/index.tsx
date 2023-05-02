@@ -160,6 +160,9 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 if (error.response.data.counselingSubject) {
                     return alert('상담과목을 선택해 주세요.')
                 }
+                if (error.response.data.detail === "User account is disabled.") {
+                    return alert('비활성화 된 계정 입니다. 관리자에게 문의해 주세요.')
+                }
                 // if (data.opening_times.length === 0) {
                 //     return alert('상담시간을 선택해 주세요.')
                 // }
