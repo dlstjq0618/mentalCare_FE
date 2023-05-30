@@ -351,22 +351,11 @@ export default function BoxSx() {
         setPosition({ x: data.x, y: data.y });
     };
 
-    const trackPos2 = (data: any) => {
-        setPosition2({ x: data.x, y: data.y });
-    };
-
     const handleStart = () => {
         setOpacity(true);
     };
     const handleEnd = () => {
         setOpacity(false);
-    };
-
-    const handleStart2 = () => {
-        setOpacity2(true);
-    };
-    const handleEnd2 = () => {
-        setOpacity2(false);
     };
 
     useEffect(() => {
