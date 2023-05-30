@@ -92,11 +92,11 @@
 
 - url: `/`
 - file: `/pages/index.tsx`
-- `rocketdoctor.co.kr`을 입력하고 엔터를 치면 요 페이지에 액세스합니다.
+- `https://mentalcare.rocketdoctor.co.kr/`을 입력하고 엔터를 치면 요 페이지에 액세스합니다.
 - `auth` 정보를 확인하여
   - 가입된 회원이 아니면`/auth/login`으로 redirect 합니다.
   - 가입은 되어있으나 아직 승인 되지 않은 경우 `/auth/register/standby`로 redirect 합니다.
-  - 가입된 회원이고 승인 까지 완료 되었으면 `/diagnosis`로 redirect 합니다.
+  - 가입된 회원이고 승인 까지 완료 되었으면 `/calender`로 redirect 합니다.
 
 ### 가입 페이지
 
@@ -119,7 +119,7 @@
         - 조건: `useGetDoctorInfoQuery` 의 `error.status`가 403일 경우
       - 승인이 완료 되었으나 필수 정보가 입력되지 않은 유저는 `/settings`로 redirect 하여 추가 정보를 입력하게 합니다.
         - 조건: `useGetDoctorInfoQuery` 의 `data.hospitalUser.isSatisfied`가 `false` 일 경우
-      - 승인 및 필수 정보 입력이 완료된 유저라면 진료실 페이지 `/diagnosis` 로 redirect 합니다.
+      - 승인 및 필수 정보 입력이 완료된 유저라면 진료실 페이지 `/calendar` 로 redirect 합니다.
 
 ### 설정 페이지
 
@@ -127,9 +127,9 @@
 - file: `/settings.tsx`
 - 영역
   - 기본 정보
-  - 진료 정보
-  - 병원 정보
-  - 운영 시간
+  - 상담비 입력
+  - 상담 과목
+  - 계좌 정보
 - 각 영역별로 `idle`/`edit` 상태가 있으며, `수정` 버튼 클릭시 `edit` 상태로 변경됩니다.
 
   - 해당 상태는 리덕스 스토어 `settingsSlice`에서 관리합니다.
