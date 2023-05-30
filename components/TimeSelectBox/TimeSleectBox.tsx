@@ -47,7 +47,6 @@ ${(props) =>
 margin: 12px 17px;
   flex-grow: 0;
   border-radius: 6px;
-  border: solid 1px #d3d3d3;
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;
@@ -139,7 +138,6 @@ function TimeSleectBox(props: Iprops) {
     const close = () => { setCloseStatus(false), dispatch(setCounselingState("null")), dispatch(setAlertType('')) };
 
     const handleOpenStatus = (data: any) => {
-        console.log("data", data)
         if (data === 'finish') {
             dispatch(setSelectBoxControlls('완료'));
             dispatch(setChatBoxOpenState("완료"));
@@ -162,7 +160,6 @@ function TimeSleectBox(props: Iprops) {
     }
 
     useEffect(() => {
-        console.log("stop", stop)
         if (stop === '완료') {
             setCloseStatus(true)
         }
@@ -174,9 +171,7 @@ function TimeSleectBox(props: Iprops) {
                 {
                     props.first ?
                         <Button style={{ width: `${rem(90)}`, paddingLeft: `${rem(10)}` }} onClick={() => {
-                            // dispatch(setChatBoxOpenState("협의완료")),
                             dispatch(setCoustomAlert(true)),
-                                dispatch(setChatBoxOpenState("결제요청")),
                                 dispatch(setAlertType('협의완료')),
                                 handleOpenStatus2(),
                                 dispatch(setScheduleSelectModla(false)) // 날짜, 시간 선택하는 모달 팝업 컨트롤
@@ -196,7 +191,7 @@ function TimeSleectBox(props: Iprops) {
                     <Ul>
                         {
                             selectType.map((res: { label: string, value: string }, index: number) => {
-                                return <Li check onClick={() => {
+                                return <Li style={{ width: res.label === '상담중' ? rem(110) : 'none' }} check onClick={() => {
                                     setType(res.label),
                                         setCheck(false),
                                         handleOpenStatus(res.value),
@@ -216,6 +211,7 @@ function TimeSleectBox(props: Iprops) {
                     width: `${rem(500)}`,
                     // height: `${rem(422)}`,
                     height: 'auto',
+                    marginLeft: '49vw',
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
                 }}>
                 <Text center size={17} color={"#333"}>

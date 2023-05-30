@@ -1,4 +1,4 @@
-# Spacepharmacy-DoctorSideFE
+# mentalcare
 
 ## 설치
 
@@ -14,8 +14,8 @@
 ## 배포 환경
 
 - vercel을 사용해 배포하고 있습니다.
-- develop 브랜치에 PR을 보내면 자동으로 preview build가 되고, PR 머지시 test.rocketdoctor.co.kr에 자동으로 배포됩니다.
-- release에 최신 develop을 머지시 rocketdoctor.co.kr에 자동으로 배포되며, 필요한 경우 vercel.com에서 테스트 배포본을 `Promote to Production` 하여 프로덕션에 배포하는 것도 가능합니다.
+- develop 브랜치에 PR을 보내면 자동으로 preview build가 되고, PR 머지시 dev.mentalcare.rocketdoctor.co.kr에 자동으로 배포됩니다.
+- release에 최신 develop을 머지시 mentalcare.rocketdoctor.co.kr에 자동으로 배포되며, 필요한 경우 vercel.com에서 테스트 배포본을 `Promote to Production` 하여 프로덕션에 배포하는 것도 가능합니다.
   <img width="1212" alt="Screen Shot 2022-05-02 at 15 36 46" src="https://user-images.githubusercontent.com/31644638/166194108-360fed6a-38b8-4ded-ace3-5673efe76c5c.png">
 
 ## 사용 라이브러리
@@ -33,7 +33,7 @@
     - 실제 폼엔 react-hook-form에서 제공하는 yupResolver를 사용해 선언한 스키마를 폼에 바인딩합니다(`LoginFormSection.tsx`).
   - 전화번호 검증을 위해 [yup-phone-lite](https://www.npmjs.com/package/yup-phone-lite), [libphonenumber-js](https://www.npmjs.com/package/libphonenumber-js)을 사용합니다.
 - 스타일링
-  - [stitches](https://stitches.dev)
+  - [styled-components]
     - 메인으로 사용중인 css-in-js 툴입니다.
   - [polished](https://polished.js.org)
     - css-in-js 사용시 편리한 헬퍼 함수들을 제공하는 라이브러리입니다. 주로 `rem` 함수(픽셀 값을 rem으로 변경)가 사용되었습니다.
@@ -46,6 +46,8 @@
   - [antd](https://ant.design)
     - 국외 협업자였던 Annie가 사용한 부분들에 쓰였습니다.
     - 진료실 레이아웃, 진료 리스트 페이지네이션 등에 쓰였는데 이후 마이그레이션이 필요할 것 같습니다.
+  - [MUI](https://mui.com/)
+    - mui component UI 개발
   - [downshift](https://github.com/downshift-js/downshift)
   - [react-select](https://react-select.com)
   - [h6s/calendar](https://h6s.dev/docs/calendar/get-started)
@@ -53,8 +55,8 @@
     - 예약 접수 데이트피커에 쓰였습니다.
   -
 - 그 외
-  - `firebase`
-    - firestore store 리스너, app-check 설정을 위해 사용합니다.
+  - `socket.io`
+    - 실시간 채팅 상담 및 유저상태 체크를 위해 사용
   - moment, [date-fns](https://date-fns.org)
     - `Date`를 다루기 위해 사용되었습니다.
   - [react-daum-postcode](https://www.npmjs.com/package/react-daum-postcode)
@@ -119,38 +121,6 @@
         - 조건: `useGetDoctorInfoQuery` 의 `data.hospitalUser.isSatisfied`가 `false` 일 경우
       - 승인 및 필수 정보 입력이 완료된 유저라면 진료실 페이지 `/diagnosis` 로 redirect 합니다.
 
-### 진료실 페이지
-
-- 일반
-  - 리스트
-    - url: `/diagnosis`
-    - file: `/pages/diagnosis/index.tsx`
-  - 상세
-    - url: `/diagnosis/[id]`
-    - file: `/pages/diagnosis/[id].tsx`
-  - 스테이션
-    - url: `/diagnosis/station`
-    - file: `/pages/diagnosis/station.tsx`
-  - 지난 진료
-    - url: `/diagnosis/past`
-    - file: `/pages/diagnosis/past.tsx`
-- 프라이빗
-  - 리스트
-    - url: `/diagnosis/private/reservation`
-    - file: `/pages/diagnosis/private/reservation.tsx`
-  - 상세
-    - url: `/diagnosis/private/reservation/[id]`
-    - file: `/pages/diagnosis/private/reservation/[id].tsx`
-  - 즉시 접수
-    - url: `/diagnosis/private`
-    - file: `/pages/diagnosis/private.tsx`
-  - 예약 접수 (대기실 리스트 조회 api 연동필요, mason)
-    - url: `/diagnosis/private/reservation/register`
-    - file: `/pages/diagnosis/private/reservation/register.tsx`
-  - 상담안내 문구 설정
-    - api url: devserver.woozoo.clinic/api/base/v1/notice (Jay)
-    - Django 에서 문구설정 가능
-
 ### 설정 페이지
 
 - url: `/settings`
@@ -164,6 +134,6 @@
 
   - 해당 상태는 리덕스 스토어 `settingsSlice`에서 관리합니다.
 
-  ### 정산 페이지
+  ### Socket 연결
 
-개발은 되어있으나(api, ui 모두 추가, 합계금액, 추가 수정이 필요함)
+  -ChatBox.tsx component 에서 socket handler 및 connect

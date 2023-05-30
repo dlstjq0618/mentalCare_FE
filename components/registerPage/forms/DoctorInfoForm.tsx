@@ -1,6 +1,6 @@
 import { Result } from "antd";
 import { rem } from "polished";
-import { Reducer, ReducerState, useEffect, useReducer, useState } from "react";
+import { ChangeEvent, Reducer, ReducerState, useEffect, useReducer, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { PhoneNumberCertificationResult } from "~//interfaces";
 import {
@@ -9,6 +9,7 @@ import {
   LicenceField,
 } from "~/components";
 import { validateImageFile } from "~/utils/validation.utils";
+import { phoneNumberAutoFormat } from "../../../utils/phoneAutoFormat";
 import { api } from "~/woozooapi";
 
 const reducer: Reducer<
@@ -37,6 +38,7 @@ const initialState: ReducerState<typeof reducer> = {
 };
 
 export const DoctorInfoForm = () => {
+  const [phoneValue, setPhoneValue] = useState("");
   const [registerFormState, dispatch] = useReducer(reducer, initialState);
   const { register, setValue, setError, trigger, getValues, formState } =
     useFormContext();
@@ -129,6 +131,11 @@ export const DoctorInfoForm = () => {
     }
   };
 
+  const PhoneOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const targetValue = phoneNumberAutoFormat(e.target.value);
+    setPhoneValue(targetValue);
+  };
+
   return (
     <RegisterFormSection>
       <RegisterFormRowItem
@@ -141,15 +148,16 @@ export const DoctorInfoForm = () => {
         {...register("username")}
       />
       <RegisterFormRowItem
-        value={textValue}
+        value={phoneValue}
         label="휴대폰 번호"
         placeholder="숫자만 입력해주세요."
-        maxLength={11}
+        maxLength={13}
         type="mobile"
         required
         {...register("mobile", {
           onChange: (e) => {
-            onlyNumberText(e.target.value)
+            PhoneOnChange(e),
+              setValue('mobile', e.target.value);
           }
         })}
       >

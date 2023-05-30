@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { rem } from "polished";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from 'next/image'
+import Image from 'next/image';
 import {
   RocketDoctorLogo,
   PreviousCounselingIcon,
@@ -30,12 +30,11 @@ import { selectDiagnosisCallStatus, selectDiagnosisNotificationNumber, setDiagno
 import {
   isMobile
 } from "react-device-detect";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import {
   selectAccoutList,
   selectConferenceList,
   selectCalendarUserList,
-  selectCancelList,
-  selectCompleteList,
   selectConsultingList,
   selectReservationList,
   selectSocketData,
@@ -43,10 +42,14 @@ import {
   setCounselingInfoData,
   setSessionId,
   setSocketControlls,
-  setToggleButton
+  selectImmediateListCount,
+  selectNonImmediateListCount,
+  setStoreFocus,
+  selectStoreFocus,
 } from "~/store/calendarDetailSlice";
 import { api } from "~/woozooapi";
 import counselorLogo from '../../public/counser.png'
+import { CommunityIcon } from "../icons/CommunityIcon";
 
 const { Sider } = Layout;
 
@@ -94,7 +97,7 @@ const StyledSider = styled(Sider, {
 const SideBar = (props: { total?: number; doctorName?: string }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [focus, setFocus] = useState<boolean>(true);
+  const [focus, setFocus] = useState<boolean>();
   const notifyNum: any = useSelector(selectDiagnosisNotificationNumber); // 스토어에 들어가있는 값
   const notifyState: any = useSelector(selectDiagnosisCallStatus);
   const socketInfo = useSelector(selectSocketData);
@@ -103,11 +106,17 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const sessionId = typeof window !== 'undefined' ? JSON.parse(localStorage?.getItem('session') as any) : "";
   const userName = useSelector(selectCounselorName);
 
+  const storeFocus = useSelector(selectStoreFocus);
+
   const consultingList = useSelector(selectConsultingList); // 상담중
   const reservationList = useSelector(selectReservationList); // 예약 확정 O
   const waitingList = useSelector(selectWaitlist);
   const account_list = useSelector(selectAccoutList);
   const conference_list = useSelector(selectConferenceList);
+
+  const immediateCount = useSelector(selectImmediateListCount);
+  const nonImmediateCount = useSelector(selectNonImmediateListCount);
+  const totalCount = immediateCount + nonImmediateCount;
 
   const watingRoom_count = consultingList?.count + reservationList?.count;
 
@@ -118,10 +127,10 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   const handleToast = () => {
     Store.addNotification({
       title: "대기실",
-      message: "새로운 환자가 입장하였습니다.",
-      type: "success",
+      message: "새로운 내담자가 기다리고있습니다.",
+      type: "warning",
       insert: "bottom",
-      container: "bottom-right",
+      container: "bottom-left",
       animationIn: ["animate__animated", "animate__fadeIn"],
       animationOut: ["animate__animated", "animate__fadeOut"],
       dismiss: {
@@ -138,6 +147,8 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   useEffect(() => {
     const userId = window?.localStorage?.getItem("userId");
     const sessionId = window?.localStorage?.getItem("session");
+
+    console.log(sessionId, sessionId);
     const working = window?.localStorage?.getItem("status");
 
     dispatch(setSocketControlls(working));
@@ -156,7 +167,7 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
 
   // useEffect(() => {
   //   if (count > 0) {
-  //     handleToast() 
+  //     handleToast()
   //   }
   // }, [count])
 
@@ -174,72 +185,78 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
   //   const true_value = reservationList.result?.filter(is_true);
   //   const status_value = reservationList.result?.filter(is_status);
 
-  //   console.log("status_value", status_value);
-  //   console.log("true_value", true_value);
-
   //   if (true_value?.length > 0 && status_value?.length > 0) {
   //     dispatch(setToggleButton(true));
-  //     console.log("맞아");
   //   } else {
   //     dispatch(setToggleButton(false));
-  //     console.log("맞아2")
   //   }
   // }, [reservationList])
 
-  // useEffect(() => {
-  //   if (waitingCount !== notifyNum && focus) {
-  //     dispatch(setDiagnosisNotificationNumber(waitingCount))
-  //     console.log("store")
-  //   }
-  // }, [focus]);
+  useEffect(() => {
+    if (focus) {
+      dispatch(setDiagnosisNotificationNumber(totalCount))
+    }
+  }, [focus]);
 
-  // useEffect(() => {
-  //   window.addEventListener('focus', function () {
-  //     setFocus(true)
-  //   }, false);
-  //   window.addEventListener('blur', function () {
-  //     setFocus(false)
-  //   }, false)
-  // }, [focus])
+  useEffect(() => {
+    if (focus === false) {
+      dispatch(setStoreFocus(false))
+    }
+  }, [totalCount])
 
-  // useInterval(() => {
-  //   if (waitingListInfo?.results && !focus && !isMobile) {
-  //     const notify = new Notification("우주약방", {
-  //       body: "진료를 기다리는 환자가 있습니다.",
-  //       icon: "/doctor@3x.png",
-  //     })
-  //     notify.onclick = (e) => {
-  //       router.push("/calendaer")
-  //     }
-  //   }
-  // }, 30000);
 
-  // useEffect(() => {
-  //   if (!isMobile) {
-  //     if (Notification.permission === "granted") {
-  //       if (waitingListInfo && waitingListInfo.count > 0) {
-  //         if (waitingCount !== notifyNum) {
-  //           const notify = new Notification("우주약방", {
-  //             body: "진료를 기다리는 환자가 있습니다.",
-  //             icon: "/doctor@3x.png",
-  //           })
-  //           notify.onclick = (e) => {
-  //             router.push("/diagnosis")
-  //           }
-  //         }
-  //       }
-  //     } else {
-  //       Notification.requestPermission().then((data: any) => {
-  //         if (data === "granted") {
-  //           console.log("grated");// 권한 허용 받은 직후 로직
-  //         } else {
-  //           console.log("not suss")
-  //         }
-  //       })
-  //     }
-  //   }
-  //   dispatch(setDiagnosisNotificationNumber(waitingCount))
-  // }, [waitingListInfo?.results, focus])
+  useEffect(() => {
+    window.addEventListener('focus', function () {
+      setFocus(true);
+      dispatch(setStoreFocus(true));
+    }, false);
+    window.addEventListener('blur', function () {
+      setFocus(false);
+    }, false)
+  }, [focus])
+
+  useInterval(() => { //notification 반복 조건
+    if (!isMobile) {
+      if (storeFocus === false && !focus) {
+        const notify = new Notification("우주약방 마음상담", {
+          body: "진료를 기다리는 환자가 있습니다.",
+          icon: "/doctor@3x.png",
+        })
+        notify.onclick = (e) => {
+          router.push(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
+            'https://mentalcare.rocketdoctor.co.kr/calendar' : 'https://dev.mentalcare.rocketdoctor.co.kr/calendar'}`)
+        }
+      }
+    }
+  }, 30000);
+
+  useEffect(() => {
+    if (!isMobile) {
+      if (Notification.permission === "granted") {
+        if (totalCount && totalCount > 0) {
+          if (storeFocus === false) {
+            const notify = new Notification("우주약방 마음상담", {
+              body: "진료를 기다리는 환자가 있습니다.",
+              icon: "/doctor@3x.png",
+            })
+            notify.onclick = (e) => {
+              router.push(`${process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
+                'https://mentalcare.rocketdoctor.co.kr/calendar' : 'https://dev.mentalcare.rocketdoctor.co.kr/calendar'}`)
+            }
+          }
+        }
+      } else {
+        Notification.requestPermission().then((data: any) => {
+          if (data === "granted") {
+            console.log("grated");// 권한 허용 받은 직후 로직
+          } else {
+            console.log("not suss")
+          }
+        })
+      }
+    }
+  }, [totalCount, storeFocus])
+
 
   // useEffect(() => { /** 새로운 환자 입장 시 TTS */
   //   dispatch(setDiagnosisIdForNotification(waitingListInfo?.results?.[0]?.id));
@@ -312,6 +329,13 @@ const SideBar = (props: { total?: number; doctorName?: string }) => {
             >
               <span>{Number.isNaN(watingRoom_count) ? 0 : watingRoom_count}</span>
               <div>대기실</div>
+            </SideBarButtons>
+            <SideBarButtons
+              href="/notice"
+              visiting={path === "/notice" ? true : false}
+            >
+              <CommunityIcon />
+              <div>커뮤니티</div>
             </SideBarButtons>
             <SideBarButtons
               href="/settings"

@@ -10,21 +10,18 @@ import BoxSx from "~/components/ChatBox";
 // api는 page component 안에서 호출 및 스토어 저장
 
 interface Iprops {
-    chat?: any
 }
 
 function ScheduleIndex(props: Iprops) {
 
-    useEffect(() => {
-
-    }, []);
-
     return (
-        <LayoutComponent>
-            <BoxSx />
-            <MainTitle>대기실</MainTitle>
-            <CalendarIndex />
-        </LayoutComponent>
+        <>
+            <LayoutComponent>
+                <MainTitle>대기실</MainTitle>
+                <CalendarIndex />
+                <BoxSx />
+            </LayoutComponent>
+        </>
     );
 };
 

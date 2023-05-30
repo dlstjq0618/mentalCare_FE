@@ -179,7 +179,6 @@ function OpeningTimeForm() {
 
     const onRemove = (id: number) => {
         setUsers(users.filter((user: { weekday: number; }) => user.weekday !== id));
-        console.log("onRemove")
     };
 
     const onCreate = (res: any) => {

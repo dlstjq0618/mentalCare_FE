@@ -224,15 +224,15 @@ function Month(props: Iprops) {
                 ))}
             </Divs>
 
-            <BaseDialog2 showDialog={immediate} close={close4} aria-label="상담 팝업" style={{ width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
+            <BaseDialog2 showDialog={immediate} close={close4} aria-label="상담 팝업" style={{ marginLeft: '49vw', width: `${rem(540)}`, padding: `${rem(24)} ${rem(68)} 0 ${rem(76)}` }}>
                 <StepsBar current={1} />
                 <Div step>
                     <Text style={{ marginBottom: 0 }} size={20}>
                         {select_data.user_name}{" 님"}
                     </Text>
                     {
-                        result.datas?.subject_name ?
-                            <Text style={{ marginBottom: 0, color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
+                        result?.datas?.subject_name ?
+                            <Text style={{ marginBottom: 0, color: '#eb541e' }} size={15}>{result?.datas?.subject_name}</Text>
                             :
                             <Text style={{ marginBottom: 0 }} size={13} button onClick={open3}>
                                 테스트 결과보기
@@ -284,9 +284,6 @@ function Month(props: Iprops) {
                                     </span>
                                 </Text>
                             </Div>
-                            {
-                                console.log("userPhoneNumber", userPhoneNumber)
-                            }
                             <Text size={18} bold='bold' style={{ marginLeft: `${rem(51)}`, lineHeight: 0.4 }}>
                                 {userPhoneNumber && userPhoneNumber?.VirtualNumber?.substr(0, 3) + '-' + userPhoneNumber?.VirtualNumber?.substr(3, 4) + '-' + userPhoneNumber?.VirtualNumber?.substr(7, 4)}
                             </Text>
@@ -403,10 +400,11 @@ function Month(props: Iprops) {
             </BaseDialog2>
             <BaseDialog2 showDialog={cancelModal} close={cancelClose} aria-label="취소 팝업"
                 style={{
-                    marginTop: '18vh',
+                    marginTop: '27vh',
                     width: `${rem(376)}`,
                     // height: `${rem(422)}`,
                     height: 'auto',
+                    marginLeft: "49%",
                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
                 }}>
                 <Text center size={17} color={"#333"}>

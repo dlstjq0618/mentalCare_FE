@@ -26,6 +26,7 @@ import { api } from "~/woozooapi";
 import { selectCounselorId } from "~/store/doctorInfoForChangeSlice";
 import { selectCounselingInfoData, selectPriceZreo, selectSettingSaveControlls, setChatBoxOpenState } from "~/store/calendarDetailSlice";
 import PriceGrid from "~/components/Grid/PriceGrid";
+import { RowAndColumnSpacing } from "~/components/Grid/Grid";
 
 export default function SettingsPage({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
@@ -46,31 +47,18 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
     });
     const router = useRouter();
 
-    useEffect(() => {
-        router.events.on('routeChangeStart', () => setOpen(true))
-        return () => {
-            if (open && state === "edit") {
-                if (!confirm("저장하지 않고 나가시겠습니까?")) {
-                    router.push("/settings")
-                }
-            }
-        }
-    }, [open])
 
     useEffect(() => {
         dispatch(setChatBoxOpenState("null"))
     }, [])
 
-    console.log("price", price);
 
     const onSubmit = (data: any) => { // vi signUp Api request
 
-        console.log("data.opening_times", data.opening_times);
         if (!passwordSave) {
             return alert("비밀번호가 일치하지 않습니다.")
         }
         const isMobile = data.mobile?.replace('010', '');
-        const customMobile = "0810" + isMobile
 
         // if (price) {
         //     return alert("가격 0원이상 입력해 주세요.")
@@ -80,7 +68,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
             .update(userId, {
                 password: data.password,
                 introduction: data.introduction === "" ? fileUploadDate.inintroduction : data.introduction,
-                mobile: data.mobile,
+                mobile: data.mobile === "" ? fileUploadDate.mobile : data?.mobile?.split("-").join(""),
                 image: data.image === "" ? fileUploadDate.image : data.image,
                 certificate_image: data.certificate_image === "" ? fileUploadDate.certificateImage : data.certificate_image,
                 career: data.career,
@@ -172,6 +160,9 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 if (error.response.data.counselingSubject) {
                     return alert('상담과목을 선택해 주세요.')
                 }
+                if (error.response.data.detail === "User account is disabled.") {
+                    return alert('비활성화 된 계정 입니다. 관리자에게 문의해 주세요.')
+                }
                 // if (data.opening_times.length === 0) {
                 //     return alert('상담시간을 선택해 주세요.')
                 // }
@@ -185,6 +176,7 @@ export default function SettingsPage({ children }: { children: ReactNode }) {
                 <RegisterForm onSubmit={methods.handleSubmit(onSubmit)} style={{ position: 'sticky', zIndex: 1 }}>
                     <SettingInfoForm />
                     <PriceGrid />
+                    <RowAndColumnSpacing />
                     <BankAccountInfoForm title={true} />
                     <OpeningTimeForm />
                     <Div css={{

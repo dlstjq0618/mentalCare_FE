@@ -5,6 +5,7 @@ import { FileUploadIcon, Div, Input } from "~/components";
 import { styled } from "~/stitches.config";
 import BadgeAvatars from "./settingPage/AvatarBadge";
 import { useFormContext } from "react-hook-form";
+import ImageIcon from '@mui/icons-material/Image';
 
 const FileInputWrapper = styled("div", {
   display: "flex",
@@ -128,6 +129,35 @@ export const FileProfileInput: FC<
       <FileInputWrapper hide={hide} {...getRootProps()} css={{ border: 'none', maxHeight: `${rem(107)}`, height: 124 }}>
         <Input {...getInputProps()} {...rest} />
         <BadgeAvatars />
+      </FileInputWrapper>
+    </>
+  );
+};
+
+export const FileProfileInput2: FC<
+  ComponentProps<typeof Input> & {
+    handleFile: (arg0: File) => void;
+    hide?: boolean;
+  }
+> = ({ accept, name, multiple, hide, handleFile, ...rest }) => {
+  const onDrop = useCallback(
+    ([acceptedFile]: File[]) => {
+      handleFile(acceptedFile);
+    },
+    [handleFile]
+  );
+
+  const { getRootProps, getInputProps, open } = useDropzone({
+    onDrop,
+    accept,
+    multiple,
+  });
+
+  return (
+    <>
+      <FileInputWrapper hide={hide} {...getRootProps()} css={{ border: 'none', maxHeight: `${rem(107)}`, height: 20, width: 17 }}>
+        <Input {...getInputProps()} {...rest} />
+        <ImageIcon />
       </FileInputWrapper>
     </>
   );

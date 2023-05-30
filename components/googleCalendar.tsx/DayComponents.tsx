@@ -336,7 +336,6 @@ function DayComponents(props: IProps) {
             close4();
             dispatch(setCallFinish(""));
         }
-        console.log("call_finish", call_finish);
     }, [call_finish])
 
     useEffect(() => {
@@ -345,7 +344,6 @@ function DayComponents(props: IProps) {
         }
     }, [type2])
 
-    // 영어 => 월화수목금토일 한글로  
     useEffect(() => {
         if (day_ko === 'Sun') {
             return setDay_ko("일")
@@ -363,6 +361,7 @@ function DayComponents(props: IProps) {
             return setDay_ko("토")
         }
     }, [])
+
 
 
     const handleFinishDispatch = () => {

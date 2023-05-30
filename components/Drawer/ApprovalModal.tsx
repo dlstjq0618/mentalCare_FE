@@ -162,8 +162,6 @@ function ApprovalModal(props: IProps) {
     const select_user = useSelector(selectDashBoardSelectUser);
     const select_Time = useSelector(selectCounselingTimeStemp);
 
-    console.log("modalState", modalState);
-
 
     const hour = Number(select_Time.substring(0, 2));
 
@@ -206,7 +204,9 @@ function ApprovalModal(props: IProps) {
         },
     });
     const selectedDate = watch("date");
+    const selectedDate2 = new Date().setHours(0, 0, 0, 0);
     const selectedTime = watch("time");
+
 
     const handleDateChange = useCallback(
         (date) => {
@@ -231,15 +231,16 @@ function ApprovalModal(props: IProps) {
                 paddingBottom: `${rem(40)}`,
                 marginTop: `${rem(240)}`,
                 maxHeight: `${rem(490)}`,
-                minHeight: `${rem(490)}`
+                minHeight: `${rem(490)}`,
+                marginLeft: `49vw`
             }} showDialog={modalState} close={modalClose} >
                 <Div button>
                     <Text size={20} bold="bold">
                         {select_user?.user_name} 님
                     </Text>
                     {
-                        result.datas?.subject_name ?
-                            <Text style={{ color: '#eb541e' }} size={15}>{result.datas?.subject_name}</Text>
+                        result?.datas?.subject_name ?
+                            <Text style={{ color: '#eb541e' }} size={15}>{result?.datas?.subject_name}</Text>
                             :
                             <Text size={13} button onClick={open3}>
                                 테스트 결과보기
@@ -301,10 +302,10 @@ function ApprovalModal(props: IProps) {
                 </div>
             </BaseDialog2>
             {
-                datePicker && <DatePicker open={datePicker} date={new Date(selectedDate)} setDate={handleDateChange} />
+                datePicker && <DatePicker open={datePicker} date={new Date(selectedDate2)} setDate={handleDateChange} />
             }
             <BaseDialog2 showDialog={show} close={close} style={{
-                textAlign: 'center', marginTop: " 20vh", paddingBottom: `${rem(40)}`, width: `${rem(376)}`
+                marginTop: '15vh', textAlign: 'center', marginLeft: "50vw", paddingBottom: `${rem(40)}`, width: `${rem(376)}`
             }}>
                 <Text size={17} bold='normal' center>
                     <Text>{select_user?.user_name}</Text>님에게

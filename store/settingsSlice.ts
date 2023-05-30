@@ -26,6 +26,8 @@ const initialState: {
   toggleState: boolean | undefined;
   noticeCount: boolean | undefined;
   noticeDescription: any;
+  noticeDescription2: any;
+
   waitingData: boolean;
   openingTimes: any;
   openingTime: any;
@@ -58,6 +60,7 @@ const initialState: {
   waitingData: false,
   openingTimes: [],
   imageUrl: "",
+  noticeDescription2: []
 };
 
 export const settingsSlice = createSlice({
@@ -222,6 +225,12 @@ export const settingsSlice = createSlice({
     ) {
       state.noticeDescription = action.payload;
     },
+    setNoticeDescription2(
+      state,
+      action: PayloadAction<typeof initialState["noticeDescription2"]>
+    ) {
+      state.noticeDescription2 = action.payload;
+    },
     setWaitingData(
       state,
       action: PayloadAction<typeof initialState["waitingData"]>
@@ -270,6 +279,7 @@ export const {
   setToggleState,
   setNoticeCount,
   setNoticeDescription,
+  setNoticeDescription2,
   setWaitingData,
   setCounselorOpeningTimes,
   setCounselorProfileIamge,
@@ -321,6 +331,8 @@ export const selectNoticeCount = (state: RootState) =>
   state.settings.noticeCount;
 export const selectNoticeDescription = (state: RootState) =>
   state.settings.noticeDescription;
+  export const selectNoticeDescription2 = (state: RootState) =>
+  state.settings.noticeDescription2;
 export const selectWaitingData = (state: RootState) =>
   state.settings.waitingData;
 export const selectCounselorOpeningTimes = (state: RootState) =>

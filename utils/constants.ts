@@ -885,3 +885,23 @@ export const UPDATE_OPEN_TIMES_PM = [
 ];
 
 export const DIAGNOSIS_STEPS_CANCELED = ["상담대기", "상담 실패"];
+
+export const NOTICE_FILTER = [
+  { label: "전체", value: "전체" },
+  { label: "공지", value: "1" },
+  { label: "일반", value: "2" },
+  { label: "질문", value: "3" },
+];
+
+export const NOTICE_CONTENT_TYPE_ADMIN = [
+  // 관리자
+  { label: "공지", value: "1" },
+  { label: "일반", value: "2" },
+  { label: "질문", value: "3" },
+];
+
+export const NOTICE_CONTENT_TYPE = [
+  // 사용자
+  { label: "일반", value: "2" },
+  { label: "질문", value: "3" },
+];

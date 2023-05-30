@@ -65,7 +65,7 @@ export function AlertPopUp(props: IProps) { // 협의 팝업
     return (
         <BaseDialog2 showDialog={open} close={handleClose} aria-label="채팅방 입장 팝업"
             style={{
-                marginTop: '23vh',
+                marginTop: `${rem(400)}`,
                 width: `${rem(440)}`,
                 height: `auto`,
                 padding: `${rem(22)} ${rem(20)} ${rem(20)}`,
@@ -159,13 +159,25 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
     }
 
 
-    console.log("open", open);
-    console.log("typetype", type);
-
     const handleDispatch = () => { // 결제요청
-        dispatch(setChatBoxOpenState("결제요청"))
-        dispatch(setStopModal("null"))
-        dispatch(setAlertType(''))
+        dispatch(setChatBoxOpenState("결제요청"));
+        // let i = 0;
+        // setTimeout(() => {
+        //     i++
+        //     if (i < 4) {
+        //         dispatch(setChatBoxOpenState("결제요청"));
+        //         console.log("결제요청")
+        //     }
+        // }, 15000)
+        dispatch(setStopModal("null"));
+        dispatch(setAlertType(''));
+    }
+
+    async function handleConferenceDispatch() {
+        dispatch(setCoustomAlert(false));
+        await dispatch(setChatBoxOpenState("협의완료"));
+        dispatch(setAlertType(""));
+        dispatch(setChatBoxOpenState("결제요청"));
     }
     return (
         type === '협의취소' ?
@@ -226,7 +238,7 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                     </Text>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <RoundedButton
-                            onClick={() => { dispatch(setCoustomAlert(false)), dispatch(setChatBoxOpenState("협의완료")), dispatch(setAlertType("")) }}
+                            onClick={() => { handleConferenceDispatch() }}
                             color="orange"
                             css={{
                                 width: '100%',
@@ -340,7 +352,6 @@ export function CoustomAlertPopUp(props: IProps) { // 협의 팝업
                         type === '상담취소' ?
                             <BaseDialog2 showDialog={open} close={() => handleClose()} aria-label="협의완료 팝업"
                                 style={{
-                                    marginTop: '23vh',
                                     width: `${rem(440)}`,
                                     height: `auto`,
                                     padding: `${rem(22)} ${rem(20)} ${rem(20)}`,

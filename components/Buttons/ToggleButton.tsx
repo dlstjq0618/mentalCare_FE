@@ -5,7 +5,7 @@ import { styled } from "~/stitches.config";
 import { api, doctor } from "~/woozooapi";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToggleState, setToggleState } from "~/store/settingsSlice";
-import { selectAccoutList, selectChatToggle, selectCounselingInfoData, selectSocketControlls, selectSocketControlls2, selectToggleButton, setChatToggle, setSocketControlls, setSocketControlls2 } from "~/store/calendarDetailSlice";
+import { setToggleButton, selectAccoutList, selectChatToggle, selectConsultingList, selectCounselingInfoData, selectSocketControlls, selectSocketControlls2, selectToggleButton, setChatToggle, setSocketControlls, setSocketControlls2 } from "~/store/calendarDetailSlice";
 
 interface Toggle {
   checkedContent?: string;
@@ -83,10 +83,9 @@ export const ToggleButton = ({ activeState }: Toggle) => {
   const infoData = useSelector(selectCounselingInfoData);
   const account_list = useSelector(selectAccoutList);
   const test = useSelector(selectToggleButton); //바로상담 건이 있을때 true , 바로상담은 false 이고 버튼은 disabled
+  const consultingList = useSelector(selectConsultingList); // 상담중
 
-  const chat_toggle = useSelector(selectChatToggle); // 채팅방 알럿을 통해 바로 상담 상태를 나타냄 
-
-
+  const chat_toggle = useSelector(selectChatToggle); // 채팅방 알럿을 통해 바로 상담 상태를 나타냄
 
   const handleToggleState = (data: any) => {
     api.counselor.status({
@@ -102,20 +101,23 @@ export const ToggleButton = ({ activeState }: Toggle) => {
 
   useEffect(() => {
     if (infoData.id) {
-      api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls(res.isWorking)), setActivate(res.isWorking), dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
+      api.counselor.info(infoData.id).then((res) => {
+        dispatch(setSocketControlls(res.isWorking)),
+          setActivate(res.isWorking),
+          dispatch(setSocketControlls2(res.isImmediately)),
+          setActivate2(res.isImmediately)
+      });
     }
   }, [infoData?.id])
 
   useEffect(() => {
     if (chat_toggle !== null) {
-      console.log("chat_toggle", chat_toggle);
       api.counselor.status2({
         is_immediately: chat_toggle
       }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) }).then(() => {
         api.counselor.info(infoData.id).then((res) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(res.isImmediately) });
       }).then(() => dispatch(setChatToggle(null)))
     }
-    console.log("이건 실행됨?")
 
   }, [chat_toggle])
 
@@ -127,6 +129,16 @@ export const ToggleButton = ({ activeState }: Toggle) => {
       }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(false) })
     }
   }, [test])
+
+  useEffect(() => {
+    if (consultingList?.count > 0) {
+      api.counselor.status2({
+        is_immediately: false
+      }).then((res: any) => { dispatch(setSocketControlls2(res.isImmediately)), setActivate2(false), dispatch(setToggleButton(true)) })
+    } else {
+      dispatch(setToggleButton(false))
+    }
+  })
 
 
   return (
