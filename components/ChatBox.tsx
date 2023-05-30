@@ -76,7 +76,6 @@ import {
 } from '~/store/calendarDetailSlice';
 import TimeSleectBox from './TimeSelectBox/TimeSleectBox';
 import { format } from 'date-fns';
-import { async } from '@firebase/util';
 import { setTimeout } from 'timers';
 import useInterval from '~/utils/hook/useInterval';
 import { CoustomAlertPopUp } from '../components/Dialog';
@@ -259,7 +258,7 @@ const Text = styled.div<IStyled>`
         border-radius: 20px;
     `}
 `;
-// 여긴  디벨롭
+
 const userId = window?.localStorage?.getItem("userId");
 const base64EncodedText = Buffer.from(userId + "_doraemon01", "utf8").toString('base64');
 const base64DecodedText = Buffer.from(base64EncodedText, 'base64').toString('utf8');
@@ -456,34 +455,6 @@ export default function BoxSx() {
                     break;
             }
 
-            // if (method === 'reservationList') {
-            //     const result = datas.list;
-            //     dispatch(setDashBoardReservationList(result))
-            // } else if (method === "waitlist") {
-            //     const result0 = datas.list;
-            //     dispatch(setDashBoardWatingList(result0))
-            // } else if (method === 'consultingList') {
-            //     const result1 = datas.list;
-            //     dispatch(setDashBoardConsultingList(result1))
-            // } else if (method === 'completeList') {
-            //     const result2 = datas.list;
-            //     dispatch(setDashBoardCompleteList(result2))
-            // } else if (method === 'cancelList') {
-            //     const result3 = datas.list;
-
-            //     dispatch(setDashBoardCancelList(result3))
-            // } else if (method === 'paidList') {
-            //     const result4 = datas.list;
-
-            //     dispatch(setAccountList(result4));
-            // } else if (method === 'confirmRequestList') {
-            //     const result5 = datas.list;
-            //     dispatch(setConferenceList(result5))
-
-            // } else if (method === 'paidWaitList') {
-            //     const result6 = datas.list;
-            //     dispatch(setPaidWaitList(result6));
-            // }
         })
     }, [user_dashborad, user_name])
 
@@ -729,10 +700,6 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-            // api2.counselor.chat({
-            //     roomId: intRoom_id,
-            //     message: chat?.message
-            // });
             dispatch(setLoggedUser(chat))
             setIsMessage([...isMessage, chat])
             setState({ message: '' })
@@ -789,12 +756,6 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-
-            // api2.counselor.chat({
-            //     roomId: intRoom_id,
-            //     message: chat?.message
-            // });
-
             dispatch(setLoggedUser(chat));
             setIsMessage([...isMessage, chat]);
             setState({ message: '' });
@@ -820,12 +781,6 @@ export default function BoxSx() {
                 method: "chat",
                 datas: chat
             });
-            // api2.counselor.chat({
-            //     roomId: intRoom_id,
-            //     message: chat?.message
-            // }).then((res) => res);
-
-
             dispatch(setLoggedUser(chat));
             setIsMessage([...isMessage, chat]);
             setState({ message: '' })
@@ -922,8 +877,6 @@ export default function BoxSx() {
             handleImmediately();
         }
     }, [socketImmediely])
-
-    console.log("길이", socketImmediely.length)
 
     useEffect(() => { // 테스트 결과보기
         if (test_status) {
@@ -1281,7 +1234,6 @@ export default function BoxSx() {
                                                                                             {res?.message}
                                                                                         </Div>
                                                                                         <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                            {/* {format(res.datas?.time, 'a hh:mm')} */}
                                                                                             {res?.timestr}
                                                                                         </Div>
                                                                                     </Div>
@@ -1307,7 +1259,6 @@ export default function BoxSx() {
                                                                                                 {`${before_wating.user_name} 님이 입장하셨습니다.`}
                                                                                             </Div>
                                                                                             <Div style={{ margin: `auto ${rem(6)} ${rem(0)}` }}>
-                                                                                                {/* {format(res.datas?.time, 'a hh:mm')} */}
                                                                                                 {res?.timestr}
                                                                                             </Div>
                                                                                         </Div>
@@ -1383,13 +1334,11 @@ export default function BoxSx() {
                                                             <div style={{ color: '#b53e14' }}>  <div style={{ color: '#b53e14' }}>{userName}</div></div>(진행)
                                                         </Text>
                                                         <div style={{ display: 'flex' }}>
-                                                            {/* <button onClick={() => dispatch(setChatBoxOpenState('닫기'))}>닫기</button> */}
                                                             <TimeSleectBox />
                                                         </div>
                                                     </Div>
                                                     <Text className='no-drag' style={{ overflow: 'auto', minHeight: 700 }}>
                                                         <Div type='time' >
-                                                            {/* <Text size={13} color='#b53e14' >{"상담예약 날짜" + " " + `${select_user?.reservation_date?.substr(0, 11)}`}</Text> */}
                                                             <Text size={13} color='#b53e14' >{"상담 시간이" + ` ${count_start < 0 ? 0 : count_start}` + "분 남았습니다."}</Text>
                                                         </Div>
                                                         <Div className='chat_main' style={{ height: 'auto', maxHeight: rem(700), maxWidth: rem(500), overflowX: 'hidden', overflowY: 'auto' }}>
